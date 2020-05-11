@@ -78,3 +78,5 @@ for (i in unique(mem)) {
   print(describe(hs_subset$pct_white))
   print(describe(hs_subset$avgmedian_inc_2564))
 }
+
+  #in-state & out-of-state? 
