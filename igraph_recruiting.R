@@ -56,7 +56,7 @@ privhs_events %>% count(event_type)
 
   # programming approach
   univ_vec <- unique(events$univ_id_req) %>% str_sort(numeric = TRUE)
-
+  univ_vec
   # manual approach
   univ_sample <- c("100751", "106397", "110635_req", "110653_req", "110671_req", "110680_req", "115409", "120254", "123165", "126614_req", "126678", "127060", "128902", "139658", "139959_req", "147767", "152080","155317_req", "160755", "164924", "166629_req", "167835", "168148", "168218", "168342", "173902", "181464", "186380_req", "186867", "196097_req", "199193", "201645", "201885_req", "204501","215293", "216287", "216597", "218663_req", "221519", "223232", "228246", "228875", "230959") %>%
     str_sort(numeric = TRUE)
@@ -86,12 +86,13 @@ privhs_events %>% count(event_type)
     #NOTE: below vector created from dataframe privhs_events; and thus only contains IDs of visited private high schools  
   
     privhs_vec <- unique(privhs_events$school_id) %>% str_sort(numeric = TRUE)
+    str(privhs_vec) # length = 1,742 elements
   
 # Create affiliation matrix
 
   # create empty affiliation matrix, where  # of rows = # of HS, # of cols = # of univs
   m <- matrix(0, length(privhs_vec), length(univ_vec))
-  #str(m)  
+  str(m)  
   
   # add dimension name attributes; row name = NCES high school ID; column name = univ_id_req
   dimnames(m) <- list(
@@ -127,6 +128,64 @@ privhs_events %>% count(event_type)
     # two_mode_network <- graph.incidence(affiliation_matrix) # is this same as above?
   class(two_mode_network) # class = igraph
 
+
+# Try creating igraph object with vertex attributes based on school, university characteristics
+  #approach: using the two_mode_network igraph object already created:
+    #create an edge list dataset
+    # create a vertext attributes dataset
+    # and then using igraph::graph_from_data_frame(), recreate the igraph object, but this time w/ vertex attributes
+  
+  
+  
+  
+  # CREATE AN EDGE LIST DATAFRAME
+  elist_2mode <- as_tibble(x = cbind(as_edgelist(graph = two_mode_network, names = TRUE),E(two_mode_network)$weight), .name_repair = ~ c("ppin","unitid","weight")) %>%
+    mutate(weight = as.integer(weight))
+  str(elist_2mode)
+  attributes(elist_2mode)
+  
+  # CREATE A VERTICES DATA FRAME
+  # NULL FOR NOW
+  V(two_mode_network)$name
+  str(V(two_mode_network)$name)
+  
+  V(two_mode_network)$type
+  str(V(two_mode_network)$type)
+  
+  #as_tibble(x = V(two_mode_network)$type, .name_repair = ~ c("type")) %>% str()
+  #enframe(x = V(two_mode_network)$type, name = NULL, value = "type") %>% str()
+  #v_attr_2mode <- enframe(x = V(two_mode_network)$type, name = NULL, value = "type")
+  
+  tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type)
+  #print(x = v_attr_2mode, n = 2000)
+  #print(x = tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type), n=2000)
+  
+  v_attr_2mode <- tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type)
+  v_attr_2mode
+  str(v_attr_2mode)
+  
+  # RECREATE IGRAPH OBJECT
+  #?graph_from_data_frame
+  #g_2mode <- graph_from_data_frame(d = elist_2mode, directed = FALSE, vertices = NULL)
+  g_2mode <- graph_from_data_frame(
+    d = elist_2mode, 
+    directed = FALSE, 
+    vertices = v_attr_2mode
+  )
+  is_bipartite(graph = g_2mode)
+  
+  elist_2mode
+  v_attr_2mode
+  
+  g_2mode
+  two_mode_network
+  
+  ecount(g_2mode)
+  ecount(two_mode_network)
+  
+  vcount(g_2mode)
+  vcount(two_mode_network)    
+  
 # create object for one mode analysis
   
   one_mode_network <- bipartite.projection(two_mode_network)  
