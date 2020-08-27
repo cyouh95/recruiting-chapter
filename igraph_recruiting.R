@@ -32,7 +32,7 @@ library(haven)
     #privatehs %>% var_label() # variable labels
     #privatehs %>% val_labels() # variable labels
   
-# university data  
+  # university data  
 
 #read in data on visits by universities; one obs per university-event
 
@@ -85,6 +85,7 @@ privhs_events %>% count(event_type)
     str_sort(univ_vec,numeric = TRUE) == str_sort(univ_sample,numeric = TRUE)
       #str_sort(univ_vec,numeric = TRUE)
       #str_sort(univ_sample,numeric = TRUE)
+    univ_vec
   rm(univ_sample)
   
 # Create vector containing ID of private high schools
@@ -187,14 +188,21 @@ privhs_events %>% count(event_type)
     v_attr_2mode <- tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type) %>% 
       mutate(
         ppin = if_else(type == FALSE,name,NA_character_),
-        unitid = if_else(type == TRUE,name,NA_character_),
-      )
+        #unitid = if_else(type == TRUE,name,NA_character_)
+        unitid = if_else(type == TRUE,str_replace(string = name, pattern = "_req", replacement = ""),NA_character_) , # remove suffix "_req"
+      ) 
+      #str_replace(string = v_attr_2mode$unitid[v_attr_2mode$type == TRUE], pattern = "_req", replacement = "")
+    
       str(v_attr_2mode)
+      
     # check
+      
       all(v_attr_2mode$name[v_attr_2mode$type == FALSE] == v_attr_2mode$ppin[v_attr_2mode$type == FALSE])
       
-      all(v_attr_2mode$name[v_attr_2mode$type == TRUE] == v_attr_2mode$unitid[v_attr_2mode$type == TRUE])
-      
+      #all(v_attr_2mode$name[v_attr_2mode$type == TRUE] == v_attr_2mode$unitid[v_attr_2mode$type == TRUE])
+
+# next step, merge private high school and university characteristics to v_attr_2mode
+
   # merge in private high school characteristics
       # NOTE FOR IRMA/CRYSTAL, 8/27/2020
         # 278 private high schools that received at least one visit were not in the 2017-18 PSS data
@@ -230,11 +238,12 @@ privhs_events %>% count(event_type)
     # perform left join
         attributes(privatehs_somevars$ncessch_pss)
         attributes(v_attr_2mode$ppin)
+
+        v_attr_2mode <- v_attr_2mode %>% left_join(privatehs_somevars, by = c("ppin" = "ncessch_pss"))
+        #v_attr_ljoin <- v_attr_2mode %>% left_join(privatehs_somevars, by = c("ppin" = "ncessch_pss"))
+        glimpse(v_attr_2mode)
         
-        v_attr_ljoin <- v_attr_2mode %>% left_join(privatehs_somevars, by = c("ppin" = "ncessch_pss"))
-        glimpse(v_attr_ljoin)
-        
-        v_attr_ljoin %>% count(school_type_pss) # missing for 321 obs, so merge is not high quality [~278 are private schools that should have merged, 43 are universities that should not have merged]
+        v_attr_2mode %>% count(school_type_pss) # missing for 321 obs, so merge is not high quality [~278 are private schools that should have merged, 43 are universities that should not have merged]
         
       # anti join to check quality of merge
         # these are values of ppin that were in the "events" data, but not the 2017-18 PSS data
@@ -286,59 +295,68 @@ privhs_events %>% count(event_type)
             
         # remove anti-join type datasets
           rm(school_ajoin,school_ajoin_ljoin_events,school_ajoin_ljoin_hsdata)
+          #rm(v_attr_ljoin)
           rm(hs_data,hs_data2)
 
-
-
   # merge in university characteristics
+
+    # read data          
+    univ_data <- read.csv("./data/univ_data.csv", header = TRUE, na.strings='', colClasses = c('univ_id' = 'character')) %>% as_tibble() %>%
+      # remove variables you know you won't use right away
+      select(-fips_county_code,-county_name,-cbsa_code,-sector,-school_url,-search_sector,-search_length,-fips_state_code,-starts_with("pop_"))
+
+    #add suffix _pss to all variables
+      names(univ_data) <- str_c(names(univ_data),"ipeds",sep="_")
+      #names(univ_data)
+      
+      univ_data %>% glimpse()
+
+    # left join
+
+      v_attr_2mode <- v_attr_2mode %>% left_join(univ_data, by = c("unitid" = "univ_id_ipeds"))
+
+      v_attr_2mode %>% count(control_ipeds) # convey number of unitids that merged; looks good
     
-    if_else(condition, true, false, missing = NULL)
-    
-    #print(v_attr_2mode, n=2000)
-    str(v_attr_2mode)
-  
-    # next step, merge private high school and university characteristics to v_attr_2mode
-    
-      # from v_attr_2mode$name [character vector that has ID of school/university], create separate ID variables for private HS (ppin) and for university (unitid)
-        # for unitid get rid of suffix "_req"
-    
-      # merge in private high school characteristics by ppin
-    
-      # merge in university characteristics by unitid
-  
+      v_attr_2mode %>% glimpse()
+
   # RECREATE IGRAPH OBJECT
-  #?graph_from_data_frame
-  #g_2mode <- graph_from_data_frame(d = elist_2mode, directed = FALSE, vertices = NULL)
+    #?graph_from_data_frame
+    elist_2mode %>% glimpse()
+    v_attr_2mode %>% glimpse()
+      
   g_2mode <- graph_from_data_frame(
     d = elist_2mode, 
     directed = FALSE, 
     vertices = v_attr_2mode
   )
   is_bipartite(graph = g_2mode)
+
+  # compare to original igraph object you created  
+    two_mode_network
+    g_2mode # what does this error mean?: Error in seq_len(no) : argument must be coercible to non-negative integer
   
-  g_2mode
+    ecount(g_2mode)
+    ecount(two_mode_network)
+    
+    vcount(g_2mode)
+    vcount(two_mode_network)    
+    
+    vertex_attr_names(g_2mode)
+    vertex_attr_names(two_mode_network)
+    
+    vertex_attr(graph = g_2mode, name = "name")
+    vertex_attr(graph = g_2mode, name = "type")
+    
+    edge_attr_names(g_2mode)
+    edge_attr_names(two_mode_network)
+    
+    edge_attr(graph = g_2mode, name = "weight")
   
-  vertex_attr_names(g_2mode)
-  
-  vertex_attr(graph = g_2mode, name = "name")
-  vertex_attr(graph = g_2mode, name = "type")
-  
-  edge_attr_names(g_2mode)
-  
-  edge_attr(graph = g_2mode, name = "weight")
-  
-  two_mode_network
-  
-  ecount(g_2mode)
-  ecount(two_mode_network)
-  
-  vcount(g_2mode)
-  vcount(two_mode_network)    
-  
+
 # create object for one mode analysis
   ?bipartite.projection
   one_mode_network <- bipartite.projection(two_mode_network)
-  one_mode_network <- bipartite.projection(g_2mode)
+  #one_mode_network <- bipartite.projection(g_2mode)
   
   
   class(one_mode_network) # class = list
