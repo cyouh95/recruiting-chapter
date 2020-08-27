@@ -1,27 +1,45 @@
 # CLEAR MEMORY
 rm(list = ls())
 
-options(max.print=99)
+options(max.print=999)
 
 library(igraph)
 library(tidyverse)
 library(Hmisc)
+library(labelled)
+library(haven) 
+
+#### READ IN CSV DATA/LOAD RDATA
 
 # read in hs data; has data on both publics and privates
-  hs_data <- read.csv('./data/hs_data.csv', header = TRUE, na.strings='', colClasses = c('school_type' = 'character', 'ncessch' = 'character', 'state_code' = 'character', 'zip_code' = 'character'))
-  hs_data %>% count(school_type)
+  #hs_data <- read.csv('./data/hs_data.csv', header = TRUE, na.strings='', colClasses = c('school_type' = 'character', 'ncessch' = 'character', 'state_code' = 'character', 'zip_code' = 'character'))
+  #hs_data %>% count(school_type)
 
 # read in zip_code level data
   zip_data <- read.csv('./data/zip_to_state.csv', header = TRUE, na.strings='', colClasses = c('state_code' = 'character', 'zip_name' = 'character', 'zip_code' = 'character'))
 
 # merge hs school-level data to zipcode-level data  
-  data <- full_join(hs_data, zip_data, by = 'zip_code')
+  #data <- full_join(hs_data, zip_data, by = 'zip_code')
+  
+# load 2017-2018 PSS data
+  load(file = "./data/pss_1718.RData")
+  class(privatehs)
+  glimpse(privatehs)
+  
+  #remove variables we definitely won't use
+  privatehs <- privatehs %>% select(-starts_with("rep"),-starts_with("f_"))
+  
+    #privatehs %>% var_label() # variable labels
+    #privatehs %>% val_labels() # variable labels
+  
+# university data  
 
 #read in data on visits by universities; one obs per university-event
 
   #events <- read.csv('./data/events_data.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character'))
   events <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character')) %>% as_tibble()
 
+#####  
 # Create data frame of events at private high schoools
 
   privhs_events <- events %>% filter(event_type == "priv_hs") %>% 
@@ -115,54 +133,178 @@ privhs_events %>% count(event_type)
       
     }
   }
+  rm(i,j)
 
 ###### Create igraph objects for network analysis
 
   affiliation_matrix <- m
   str(affiliation_matrix)
   str(m)
+  rm(m)
   
 # Create object for two mode [bipartite] analysis
   
   two_mode_network <- graph_from_incidence_matrix(affiliation_matrix, weighted = TRUE)
     # two_mode_network <- graph.incidence(affiliation_matrix) # is this same as above?
   class(two_mode_network) # class = igraph
+  two_mode_network
 
 
-# Try creating igraph object with vertex attributes based on school, university characteristics
-  #approach: using the two_mode_network igraph object already created:
-    #create an edge list dataset
-    # create a vertext attributes dataset
+# Create igraph object with vertex attributes based on school, university characteristics
+  #STEPS: 
+    # create an edge list dataset, using the two_mode_network igraph object already created:
+    # create a vertext attributes dataset with "name" and "type", using two_mode_network igraph object already created:
+      # merge in desired private school characteristics by ppin
+      # merge in university characteristics by unitid
     # and then using igraph::graph_from_data_frame(), recreate the igraph object, but this time w/ vertex attributes
+
   
-  
-  
-  
-  # CREATE AN EDGE LIST DATAFRAME
+# CREATE AN EDGE LIST DATAFRAME
   elist_2mode <- as_tibble(x = cbind(as_edgelist(graph = two_mode_network, names = TRUE),E(two_mode_network)$weight), .name_repair = ~ c("ppin","unitid","weight")) %>%
     mutate(weight = as.integer(weight))
   str(elist_2mode)
   attributes(elist_2mode)
   
-  # CREATE A VERTICES DATA FRAME
-  # NULL FOR NOW
-  V(two_mode_network)$name
-  str(V(two_mode_network)$name)
+# CREATE A VERTICES DATA FRAME
   
-  V(two_mode_network)$type
-  str(V(two_mode_network)$type)
+  # basic inputs of "name" and "type" attribute
+    V(two_mode_network)$name
+    str(V(two_mode_network)$name)
+    
+    V(two_mode_network)$type
+    str(V(two_mode_network)$type)
+
+  # some old code    
+    #as_tibble(x = V(two_mode_network)$type, .name_repair = ~ c("type")) %>% str()
+    #enframe(x = V(two_mode_network)$type, name = NULL, value = "type") %>% str()
+    #v_attr_2mode <- enframe(x = V(two_mode_network)$type, name = NULL, value = "type")
+    
+    tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type)
+    #print(x = v_attr_2mode, n = 2000)
+    #print(x = tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type), n=2000)
+
+  # create data frame and add separate id variables for private high school (ppin) and universities (unitid)
+    v_attr_2mode <- tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type) %>% 
+      mutate(
+        ppin = if_else(type == FALSE,name,NA_character_),
+        unitid = if_else(type == TRUE,name,NA_character_),
+      )
+      str(v_attr_2mode)
+    # check
+      all(v_attr_2mode$name[v_attr_2mode$type == FALSE] == v_attr_2mode$ppin[v_attr_2mode$type == FALSE])
+      
+      all(v_attr_2mode$name[v_attr_2mode$type == TRUE] == v_attr_2mode$unitid[v_attr_2mode$type == TRUE])
+      
+  # merge in private high school characteristics
+      # NOTE FOR IRMA/CRYSTAL, 8/27/2020
+        # 278 private high schools that received at least one visit were not in the 2017-18 PSS data
+        # below, I merge these 278 obs to high-school-level data from events.csv [all obs merge] and to high-school-level data from hs_data.csv [all obs merge]
+        # One of you take the lead in investigating these 278 obs
+          # confirm that these schools were in previous iteration of PSS      
+          # we need to figure out why they were not in the 2017-18 PSS data
+            # did the school close?
+        # after investigating, need to decide what to do about these 278 schools
+          # e.g., should we use non-missing data from previous iteration of PSS?
+
+      
+      glimpse(privatehs)
+      all(nchar(privatehs$ncessch) ==8) # assert private school id variable is 8 characters long
+      
+    # create dataframe with subset of variables and rename variables with suffix _pss
+      #privatehs %>% var_label() # variable labels
+      #privatehs %>% val_labels() # variable labels
+      privatehs_somevars <- privatehs %>% 
+        select(ncessch,name,address,city,state_code,zip_code,pzip4,county_fips_code,county_name,address_2,pl_cit,pl_stabb,pl_zip,pl_zip4,region,state_fips_code,
+               locale_code,latitude,longitude,logr2018,higr2018,pct_to_4yr,school_type,typology,relig,orient,diocese,level,total_students,size,total_09,total_10,
+               total_11,total_12,total_enrolled,total_hispanic,total_white,total_black,total_asian,total_nativehawaii,total_amerindian,total_tworaces,
+               total_teachers,community_type,pct_amerindian,pct_asian,pct_nativehawaii,pct_hispanic,pct_white,pct_black,pct_tworaces,sttch_rt)
+      
+    #add suffix _pss to all variables
+        names(privatehs_somevars)
+          #str(names(privatehs_somevars)) # character vector
+        str_c(names(privatehs_somevars),"pss",sep="_")
+          #paste(names(privatehs_somevars),"pss",sep="_") # same same
+
+        names(privatehs_somevars) <- str_c(names(privatehs_somevars),"pss",sep="_")
+
+    # perform left join
+        attributes(privatehs_somevars$ncessch_pss)
+        attributes(v_attr_2mode$ppin)
+        
+        v_attr_ljoin <- v_attr_2mode %>% left_join(privatehs_somevars, by = c("ppin" = "ncessch_pss"))
+        glimpse(v_attr_ljoin)
+        
+        v_attr_ljoin %>% count(school_type_pss) # missing for 321 obs, so merge is not high quality [~278 are private schools that should have merged, 43 are universities that should not have merged]
+        
+      # anti join to check quality of merge
+        # these are values of ppin that were in the "events" data, but not the 2017-18 PSS data
+        school_ajoin <- v_attr_2mode %>% anti_join(privatehs_somevars, by = c("ppin" = "ncessch_pss")) %>%
+          # get rid of the 43 obs where the vertex is a university rather than a high school
+          filter(type == FALSE) %>% select(ppin)
   
-  #as_tibble(x = V(two_mode_network)$type, .name_repair = ~ c("type")) %>% str()
-  #enframe(x = V(two_mode_network)$type, name = NULL, value = "type") %>% str()
-  #v_attr_2mode <- enframe(x = V(two_mode_network)$type, name = NULL, value = "type")
+          glimpse(school_ajoin)
+        
+        # See if you can get other data on characterics from the hs_data.csv data and from the events.csv dataset
+        
+            #data from hs_data.csv
+            hs_data <- read.csv('./data/hs_data.csv', header = TRUE, na.strings='', colClasses = c('school_type' = 'character', 'ncessch' = 'character', 'state_code' = 'character', 'zip_code' = 'character')) %>%
+              filter(school_type == "Private")
+              
+              hs_data %>% glimpse()
+              hs_data %>% count(school_type)
+              
+              all(nchar(hs_data$ncessch) ==8) # do all have 8 characters
+            
+            #data from events_data_2020-07-27.csv
+            hs_data2 <- events %>% filter(event_type == "priv_hs") %>% 
+              select(school_id,event_location_name,event_state,event_city,school_type_pri,locale_code,level_pri,total_enrolled_pri,total_students_pri,total_09,total_10,total_11,total_12,pct_white_pri,pct_black_pri,pct_asian_pri,pct_hispanic_pri,pct_amerindian_pri,pct_nativehawaii_pri,pct_tworaces_pri,titlei_status_pri,pct_to_4yr) %>%
+              arrange(school_id) %>%
+              # keep only one obs per school_id
+              group_by(school_id) %>% filter(row_number()==1) %>% mutate(one = 1)
+
+              all(nchar(hs_data2$school_id) ==8) # do all have 8 characters?
+              
+              glimpse(hs_data2)
+            
+          # merge anti-join dataframe to hs data from events_data_2020-07-27.csv
+            school_ajoin_ljoin_events <- school_ajoin %>% left_join(hs_data2, by = c("ppin" = "school_id"))
+          
+            glimpse(school_ajoin_ljoin_events)
+            
+            school_ajoin_ljoin_events %>% count(one) # conveys number/percent of obs that merge
+            
+            school_ajoin_ljoin_events %>% select(ppin,event_location_name,event_state,event_city,total_12,pct_to_4yr) %>% print(n=300)
+            
+          # merge anti-join dataframe to hs data hs_data.csv
+            school_ajoin_ljoin_hsdata <- school_ajoin %>% left_join(hs_data, by = c("ppin" = "ncessch"))
+            
+            glimpse(school_ajoin_ljoin_hsdata)
+            
+            school_ajoin_ljoin_hsdata %>% count(school_type) # conveys number/percent of obs that merge
+            
+            school_ajoin_ljoin_hsdata %>% select(ppin,name,state_code,total_students,pct_white,pct_black,pct_hispanic,pct_asian) %>% print(n=300)
+            
+        # remove anti-join type datasets
+          rm(school_ajoin,school_ajoin_ljoin_events,school_ajoin_ljoin_hsdata)
+          rm(hs_data,hs_data2)
+
+
+
+  # merge in university characteristics
+    
+    if_else(condition, true, false, missing = NULL)
+    
+    #print(v_attr_2mode, n=2000)
+    str(v_attr_2mode)
   
-  tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type)
-  #print(x = v_attr_2mode, n = 2000)
-  #print(x = tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type), n=2000)
-  
-  v_attr_2mode <- tibble(name = V(two_mode_network)$name, type = V(two_mode_network)$type)
-  v_attr_2mode
-  str(v_attr_2mode)
+    # next step, merge private high school and university characteristics to v_attr_2mode
+    
+      # from v_attr_2mode$name [character vector that has ID of school/university], create separate ID variables for private HS (ppin) and for university (unitid)
+        # for unitid get rid of suffix "_req"
+    
+      # merge in private high school characteristics by ppin
+    
+      # merge in university characteristics by unitid
   
   # RECREATE IGRAPH OBJECT
   #?graph_from_data_frame
@@ -174,10 +316,17 @@ privhs_events %>% count(event_type)
   )
   is_bipartite(graph = g_2mode)
   
-  elist_2mode
-  v_attr_2mode
-  
   g_2mode
+  
+  vertex_attr_names(g_2mode)
+  
+  vertex_attr(graph = g_2mode, name = "name")
+  vertex_attr(graph = g_2mode, name = "type")
+  
+  edge_attr_names(g_2mode)
+  
+  edge_attr(graph = g_2mode, name = "weight")
+  
   two_mode_network
   
   ecount(g_2mode)
@@ -187,8 +336,10 @@ privhs_events %>% count(event_type)
   vcount(two_mode_network)    
   
 # create object for one mode analysis
+  ?bipartite.projection
+  one_mode_network <- bipartite.projection(two_mode_network)
+  one_mode_network <- bipartite.projection(g_2mode)
   
-  one_mode_network <- bipartite.projection(two_mode_network)  
   
   class(one_mode_network) # class = list
   str(one_mode_network) # two lists (each w/ 10 elements); list 1 name = "proj1"; list 2 name = "proj2"
@@ -202,6 +353,8 @@ privhs_events %>% count(event_type)
   class(one_mode_network$proj1)
   
   hs_graph <- one_mode_network$proj1
+  vertex_attr_names(hs_graph)
+  edge_attr_names(hs_graph)
   class(hs_graph)
   
   #get.adjacency(hs_graph, sparse = FALSE, attr = 'weight')
