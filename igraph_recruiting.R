@@ -1,7 +1,20 @@
+################################################################################
+##
+## [ PROJ ] Recruiting chapter for Stephen Burd
+## [ FILE ] igraph_recruiting.R
+## [ AUTH ] Ozan, Crystal, Irma
+## [ INIT ] July 1, 2020
+##
+################################################################################
+
 # CLEAR MEMORY
 rm(list = ls())
 
 options(max.print=999)
+
+## ---------------------------
+## libraries
+## ---------------------------
 
 library(igraph)
 library(tidyverse)
@@ -9,7 +22,10 @@ library(Hmisc)
 library(labelled)
 library(haven) 
 
-#### READ IN CSV DATA/LOAD RDATA
+## ---------------------------
+## Read in csv data; load R data
+## ---------------------------
+
 
 # read in hs data; has data on both publics and privates
   #hs_data <- read.csv('./data/hs_data.csv', header = TRUE, na.strings='', colClasses = c('school_type' = 'character', 'ncessch' = 'character', 'state_code' = 'character', 'zip_code' = 'character'))
@@ -39,55 +55,21 @@ library(haven)
   #events <- read.csv('./data/events_data.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character'))
   events <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character')) %>% as_tibble()
 
-#####  
-# Create data frame of events at private high schoools
 
+
+# Create data frame of events at private high schoools
   privhs_events <- events %>% filter(event_type == "priv_hs") %>% 
     select(univ_id,univ_id_req,contains("event"),cbsa_code,pid,school_id,determined_zip,categorized_location_type,latitude,longitude,locale_code,contains("school_type"))
-
-  # VARS FROM NCES PRIVATE SCHOOL DATA (PSS); NOT KEEPING FOR NOW. BETTER TO GET DIRECTLY FROM A PSS DATASET
-    #$ level_pri                    <int> NA, NA, 2, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 3, 3, 2, NA, NA, NA, NA, NA, NA, NA, NA...
-    #$ total_enrolled_pri           <dbl> NA, NA, 1113, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 1604, 644, 1200, NA, NA, NA, NA, NA,...
-    #$ total_students_pri           <dbl> NA, NA, 1113, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 1604, 623, 1200, NA, NA, NA, NA, NA,...
-    #$ total_09                     <dbl> NA, NA, 286, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 132, 72, 300, NA, NA, NA, NA, NA, NA,...
-    #$ total_10                     <dbl> NA, NA, 314, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 135, 61, 300, NA, NA, NA, NA, NA, NA,...
-    #$ total_11                     <dbl> NA, NA, 239, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 138, 67, 320, NA, NA, NA, NA, NA, NA,...
-    #$ total_12                     <dbl> NA, NA, 274, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 121, 65, 280, NA, NA, NA, NA, NA, NA,...
-    #$ pct_white_pri                <dbl> NA, NA, 54.7170, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 85.0998, 78.1701, 83.3333, NA, NA...
-    #$ pct_black_pri                <dbl> NA, NA, 26.2354, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5.7980, 9.6308, 10.8333, NA, NA, ...
-    #$ pct_asian_pri                <dbl> NA, NA, 4.6721, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 4.8005, 6.7416, 3.3333, NA, NA, NA...
-    #$ pct_hispanic_pri             <dbl> NA, NA, 9.7035, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 0.7481, 5.1364, 1.6667, NA, NA, NA...
-    #$ pct_amerindian_pri           <dbl> NA, NA, 0.1797, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 0.0000, 0.0000, 0.1667, NA, NA, NA...
-    #$ pct_nativehawaii_pri         <dbl> NA, NA, 0.0000, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 0.3741, 0.3210, 0.4167, NA, NA, NA...
-    #$ pct_tworaces_pri             <dbl> NA, NA, 4.4924, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 3.1796, 0.0000, 0.2500, NA, NA, NA...
-    #$ titlei_status_pri            <dbl> NA, NA, 0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 0, 0, 0, NA, NA, NA, NA, NA, NA, NA, NA...
-    #$ pct_to_4yr                   <dbl> NA, NA, 99, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 100, 100, 98, NA, NA, NA, NA, NA, NA, ...
-
-  # FILTER CREATED BY CRYSTAL; THINK GOAL WAS TO GRAB VISITS TO PUBLIC HIGH SCHOOLS
-    #df <- select(events, event_type, univ_id_req, school_id, avgmedian_inc_2564, pct_white_zip, pct_black_zip, pct_asian_zip, pct_hispanic_zip, pct_amerindian_zip, pct_nativehawaii_zip, pct_tworaces_zip, pct_otherrace_zip) %>% filter(nchar(school_id) == 12, univ_id_req %in% univ_sample)
 
 events %>% count(event_type)
 #df %>% count(event_type)
 privhs_events %>% count(event_type)
 
-# Create character vector containing unitid of universities in event data; element should have subscript "_req" if using requested data rather than scrapted data
 
-  # programming approach
-  univ_vec <- unique(events$univ_id_req) %>% str_sort(numeric = TRUE)
-  univ_vec
-  # manual approach
-  univ_sample <- c("100751", "106397", "110635_req", "110653_req", "110671_req", "110680_req", "115409", "120254", "123165", "126614_req", "126678", "127060", "128902", "139658", "139959_req", "147767", "152080","155317_req", "160755", "164924", "166629_req", "167835", "168148", "168218", "168342", "173902", "181464", "186380_req", "186867", "196097_req", "199193", "201645", "201885_req", "204501","215293", "216287", "216597", "218663_req", "221519", "223232", "228246", "228875", "230959") %>%
-    str_sort(numeric = TRUE)
-    # below is original line of code, containing only public universities
-    #univ_sample <- c('196097_req', '186380_req', '215293', '201885_req', '181464', '139959_req', '218663_req', '100751', '199193', '110635_req', '110653_req', '110671_req', '110680_req', '126614_req', '155317_req', '106397', '166629_req')
+## ---------------------------
+## create vectors of private HS IDs (mode 1) and vector of university IDs (mode 2), which are inputs to igraph object
+## ---------------------------
 
-    #assert these two are the same  
-    str_sort(univ_vec,numeric = TRUE) == str_sort(univ_sample,numeric = TRUE)
-      #str_sort(univ_vec,numeric = TRUE)
-      #str_sort(univ_sample,numeric = TRUE)
-    univ_vec
-  rm(univ_sample)
-  
 # Create vector containing ID of private high schools
 
   # check on values of school_id from data frame privhs_events
@@ -106,9 +88,29 @@ privhs_events %>% count(event_type)
   
     privhs_vec <- unique(privhs_events$school_id) %>% str_sort(numeric = TRUE)
     str(privhs_vec) # length = 1,742 elements
-  
-# Create affiliation matrix
+    
+# Create character vector containing unitid of universities in event data; element should have subscript "_req" if using requested data rather than scrapted data
 
+  # programming approach
+  univ_vec <- unique(events$univ_id_req) %>% str_sort(numeric = TRUE)
+  univ_vec
+  # manual approach
+  univ_sample <- c("100751", "106397", "110635_req", "110653_req", "110671_req", "110680_req", "115409", "120254", "123165", "126614_req", "126678", "127060", "128902", "139658", "139959_req", "147767", "152080","155317_req", "160755", "164924", "166629_req", "167835", "168148", "168218", "168342", "173902", "181464", "186380_req", "186867", "196097_req", "199193", "201645", "201885_req", "204501","215293", "216287", "216597", "218663_req", "221519", "223232", "228246", "228875", "230959") %>%
+    str_sort(numeric = TRUE)
+    # below is original line of code, containing only public universities
+    #univ_sample <- c('196097_req', '186380_req', '215293', '201885_req', '181464', '139959_req', '218663_req', '100751', '199193', '110635_req', '110653_req', '110671_req', '110680_req', '126614_req', '155317_req', '106397', '166629_req')
+
+    #assert these two are the same  
+    str_sort(univ_vec,numeric = TRUE) == str_sort(univ_sample,numeric = TRUE)
+      #str_sort(univ_vec,numeric = TRUE)
+      #str_sort(univ_sample,numeric = TRUE)
+    univ_vec
+  rm(univ_sample)
+
+## ---------------------------
+## Create affiliation matrix, which is input to igraph object
+## ---------------------------
+    
   # create empty affiliation matrix, where  # of rows = # of HS, # of cols = # of univs
   m <- matrix(0, length(privhs_vec), length(univ_vec))
   str(m)  
@@ -136,6 +138,10 @@ privhs_events %>% count(event_type)
   }
   rm(i,j)
 
+## ---------------------------
+## Create bipartite/two-mode igraph object
+## ---------------------------
+  
 ###### Create igraph objects for network analysis
 
   affiliation_matrix <- m
@@ -150,7 +156,10 @@ privhs_events %>% count(event_type)
   class(two_mode_network) # class = igraph
   two_mode_network
 
-
+## ---------------------------
+## Create data frames of vertex attributes, both HS characteristics and university characteristics
+## ---------------------------
+  
 # Create igraph object with vertex attributes based on school, university characteristics
   #STEPS: 
     # create an edge list dataset, using the two_mode_network igraph object already created:
@@ -319,6 +328,10 @@ privhs_events %>% count(event_type)
     
       v_attr_2mode %>% glimpse()
 
+## ---------------------------
+## Create igraph object, but this time with vertex attributes consisting of HS and university characteristics
+## ---------------------------
+      
   # RECREATE IGRAPH OBJECT
     #?graph_from_data_frame
     elist_2mode %>% glimpse()
@@ -353,40 +366,248 @@ privhs_events %>% count(event_type)
     edge_attr(graph = g_2mode, name = "weight")
   
 
-# create object for one mode analysis
-  ?bipartite.projection
-  one_mode_network <- bipartite.projection(two_mode_network)
-  #one_mode_network <- bipartite.projection(g_2mode)
+## ---------------------------
+## Create igraph objects for one-mode analysis, but this time with vertex attributes consisting of HS and university characteristics
+## ---------------------------
+    
+# what is a projection?
+    # from: https://toreopsahl.com/tnet/two-mode-networks/
+    # Transforming a two-mode network into a one-mode network is often referred to as projection. Although it is preferable to analyse networks in their original form, few methods exist for analysing two-mode networks. As such, projection is the only way to analyse these networks. The process works by selecting one set of nodes, and linking two nodes if they are connected to the same node of the other set. 
+
+# Prior to creating projection, investigate "weight" attribute in igraph object g_2mode
+  is_weighted(g_2mode) # TRUE
+    
+  edge_attr(graph = g_2mode, name = "weight", index = E(g_2mode))
+  
+  class(E(g_2mode)$weight) # integer
+  attributes(E(g_2mode)$weight) # null
+  
+  E(g_2mode)$weight
+  
+  ecount(g_2mode) # 11034 edges; and edges have values weight values of 1 or more
+  
+  str(edge_attr(graph = g_2mode, name = "weight", index = E(g_2mode))) # integer vector of length = 11034
+  str(E(g_2mode)$weight)
+  
+
+  # interpreting what the wights represent
+    
+    # first, what does each edge represent
+      # g_2mode is a bipartite igraph object where vertices consist of two modes:
+        # mode 1 = private high schools
+        # mode 2 = postsecondary institutions
+      # because g_2mode is a bipartite igraph object, edges can only exist between vertices of different modes
+        # i.e., a high school (a vertex from mode 1) can receive a vist from a university (a vertex from mode 2)
+        # but a high school (mode 1) cannot receive a visit from another high school (mode 1)
+        # and a university (mode 2) cannot visit another university (mode 2)
+      # edges occur between pairs of vertices; each pair consists of one high school (mode 1) and one university (mode 2)
+        # the presence of an edge means that there was at least one visit from that university (mode 2) to that high school (mode 1)
+      # there are 11,034 edges
+        # this means that there were 11,034 pairs (each pair consisting of a spcific HS and a specific university) where the university visited the high school at least once
+  
+    # what do weights represent
+      # there are 11034 edges and the edge attribute "weight" is a numeric vector of length == 11,034
+        # in other words, each edge has a weight
+        ecount(g_2mode)
+        str(E(g_2mode)$weight) # length = 11,034
+      # For a given edge (unique pair of a high school and a university) the weight attribute represents the number of visits from that university to that high school
+        # minimum weight is 1 meaning that for that pair, there was only one visit from the university to the high school
+          min(E(g_2mode)$weight)
+        # maximum weight is 6 meaning that for that pair of high school i and university j, there were 6 visits from the university to the high school
+          max(E(g_2mode)$weight)
+  
+  , edges only exist between 
+  
+  max(E(g_2mode)$weight)
+  
+# familiarize yourself w/ igraph::bipartite.projectio()
+   ?bipartite.projection
+  # syntax
+    # bipartite_projection(graph, types = NULL, multiplicity = TRUE, probe1 = NULL, which = c("both", "true", "false"), remove.type = TRUE)
+  
+  # arguments
+    # graph: 
+      # input graph object
+    # types
+      # An optional vertex type vector to use instead of the ‘type’ vertex attribute. You must supply this argument if the graph has no ‘type’ vertex attribute.
+    # multiplicity
+      # If TRUE, then igraph keeps the multiplicity of the edges as an edge attribute called ‘weight’. E.g. if there is an A-C-B and also an A-D-B triple in the bipartite graph (but no more X, such that A-X-B is also in the graph), then the multiplicity of the A-B edge in the projection will be 2.
+      # own: don't understand this
+    # which = = c("both", "true", "false")
+      # A character scalar to specify which projection(s) to calculate. The default is to calculate both.
+    # probe1
+      # This argument can be used to specify the order of the projections in the resulting list. If given, then it is considered as a vertex id (or a symbolic vertex name); the projection containing this vertex will be the first one in the result list
+    # remove.type
+      # Logical scalar, whether to remove the type vertex attribute from the projections. This makes sense because these graphs are not bipartite any more. However if you want to combine them with each other (or other bipartite graphs), then it is worth keeping this attribute. By default it will be removed
+  
+  vertex_attr_names(g_2mode)
+  edge_attr_names(g_2mode)
+  
+    
+  
+# Create object that contains both one-mode objects; resulting object is a list of two elements, each element is a one-mode igraph object
+  projection  <- bipartite_projection(graph = g_2mode, types = NULL, multiplicity = TRUE, which = c("both"), probe1 = NULL, remove.type = TRUE)
+    # note: if multiplicity = FALSE, then resulting igraph objects will not contain the edge attribute "weight"
+      # for one mode projection where vertices = private high schools:
+        # each edge will represent a pair of high schools i and j that for which at least one university in the sample visited both high schools i and j
+        # and the "weight" attribute will represent the number of universities in the sample that visited both high school i and high school j
+      # for one mode pprojection where vertices = universities:
+        # each edge will represent a pair of universities i and j that visited at least one high school in common
+        # and the "weight" attribute will represent the number of private high schools that received a visit from both university i and university j
+  
+  temp <- bipartite_projection(graph = g_2mode, types = NULL, multiplicity = FALSE, which = c("both"), probe1 = NULL, remove.type = TRUE)
+  temp_hs <- temp[["proj1"]]
+  
+  vertex_attr_names(temp_hs)
+  edge_attr_names(temp_hs)
   
   
-  class(one_mode_network) # class = list
-  str(one_mode_network) # two lists (each w/ 10 elements); list 1 name = "proj1"; list 2 name = "proj2"
+  class(projection) # class = list
+  #str(projection) # two lists (each w/ 10 elements); list 1 name = "proj1"; list 2 name = "proj2"
+
+# Create one mode igraph object where vertices are private high schools
+  g_1mode_hs <- projection[["proj1"]]
   
-  # element name = proj 1; one-mode network where each HS is a node
-  # ??? and edge defined as number of visits to that HS [? or is it number of universities that visited the HS]
+  # investigate
+  class(g_1mode_hs)
+  g_1mode_hs
   
-  # below 3 lines are all equivalent
-  class(one_mode_network[[1]])
-  class(one_mode_network[["proj1"]])
-  class(one_mode_network$proj1)
+  # number of nodes
+  vcount(g_1mode_hs)
   
-  hs_graph <- one_mode_network$proj1
-  vertex_attr_names(hs_graph)
-  edge_attr_names(hs_graph)
-  class(hs_graph)
+  # number of edges
+  ecount(g_1mode_hs) # 745,145 edges
+    
+  # maximum number of edges (undirected graph) = n(n-1)/2
+    vcount(g_1mode_hs)*(vcount(g_1mode_hs) -1)/2 # = 1742*(1742-1)/2 = 1,516,411
+    # so the network contains 745,145 of the potential 1,516,411 number of edges
+    
+  vertex_attr_names(g_1mode_hs)
+  edge_attr_names(g_1mode_hs)
   
-  #get.adjacency(hs_graph, sparse = FALSE, attr = 'weight')
-  #str(get.adjacency(hs_graph, sparse = FALSE, attr = 'weight')) # 1742 by 1742 matrix
+  # delete vertex attributes that are associated with university characteristics
   
-  #plot(hs_graph, edge.label = E(univ_graph)$weight)
+    # create character vector that contains names of the vertex attributes you want to delete (i.e., those that end w/ suffix "_ipeds")
+      str(vertex_attr_names(g_1mode_hs)) # character vector of length = 86
+      
+      ipeds_vattr <- str_subset(string = vertex_attr_names(g_1mode_hs), pattern = "_ipeds")
+
+    # create loop that iterates once for each vertix attribute with suffix "_ipeds"; for each iteration, the loop deletes vertex attribute (with assignment)
+      for (i in ipeds_vattr){
+        #print(i)
+        #g2<-delete_vertex_attr(g2, i)
+        g_1mode_hs <- delete_vertex_attr(graph = g_1mode_hs, name = i)
+      }
+      vertex_attr_names(g_1mode_hs)
+      str(vertex_attr_names(g_1mode_hs)) # now fewer vertex attributes
+      
+      rm(ipeds_vattr)
+      rm(i)
+      
+  # what does each vertex/node represent
+    # g_1mode_hs is an igraph object where each vertex represents a private high school
+  #what does each "edge" represent?
+    # the 1-mode data has "edges" between individual high schools
+    # the presence of an edge connecting high school i and high school j means that at least one college/university visited both high school i and high school j
+
+  # what does the edge attribute named "weight" from g1_mode_hs 
   
-  # element name = proj2; one-mode network where each university is a node
-  # ??? and edge defined as number of ???
+    # for a given edge (two high schools that received a visit from the same college/university for at least one postsecondary institution in our sample),
+      # weight attribute identifies that number of postsecondary institutions that visited both of these high schools
   
-  class(one_mode_network[[2]])
+    is_weighted(g_1mode_hs)
+    E(g_1mode_hs)$weight
+    
+    ecount(g_1mode_hs) # 745,145 edges
+    str(E(g_1mode_hs)$weight) # numeric vector of length = 745,145
+    
+    
+    max(E(g_1mode_hs)$weight) # max edge weight = 28
+      # interpretation: for this edge (i.e., a pair of high schools), there were 28 colleges/universities in our sample that visited both of these two high schools
+    
+  # QUESTION: how could/are the "weight" attribute from the orignal 2-mode igraph object g_2mode incorporated into the 1-mode object?
+    
+    #E(g_2mode)$weight
+      # each edge in g_2mode represents at least one vist to a pariticular high school i (mode 1) from a particular university j (mode 2)
+      # E(g_2mode)$weight represents the number of visits to the pariticular high school i (mode 1) from a particular university j (mode 2)
+    
+    #E(g_1mode_hs)$weight
+      # the presence of an edge connecting high school i and high school j means that at least one college/university visited both high school i and high school j      
+      # for an edge connecting high school i and high school j, E(g_1mode_hs)$weight represents the number of universities in the sample that visited both high school i and high school j
+
+    # ANSWER: Because E(g_2mode)$weight is an attribute of an edge between a particular university and a particular high school;
+      # don't see how E(g_2mode)$weight could become part of the one-mode igraph object where vertices represent high schools and edges represent pairs of high schools that both receive at least one visit from university i
+    
+
+  #get.adjacency(g_1mode_hs, sparse = FALSE, attr = 'weight')
+  #str(get.adjacency(g_1mode_hs, sparse = FALSE, attr = 'weight')) # 1742 by 1742 matrix
   
-  univ_graph <- one_mode_network$proj2
-  class(univ_graph)
+  #plot(g_1mode_hs, edge.label = E(g_1mode_hs)$weight)
+
+# Create one mode igraph object where vertices are postsecondary institutions
+  
+  g_1mode_psi <- projection[["proj2"]]
+  
+  # investigate
+  class(g_1mode_psi)
+  g_1mode_psi
+  
+  vcount(g_1mode_psi)
+  ecount(g_1mode_psi)
+  
+  # maximum number of number of possible edges (undirected graph) = n(n-1)/2
+    vcount(g_1mode_psi)*(vcount(g_1mode_psi) -1)/2 # = 43*(43 - 1)/2 = 903
+    # so the network contains 897 of 903 potential edges; pretty saturated  
+    
+  
+  vertex_attr_names(g_1mode_psi)
+  edge_attr_names(g_1mode_psi)
+
+  # delete vertex attributes that are associated with university characteristics
+  
+    # create character vector that contains names of the vertex attributes you want to delete (i.e., those that end w/ suffix "_ipeds")
+      str(vertex_attr_names(g_1mode_psi)) # character vector of length = 86
+      
+      pss_vattr <- str_subset(string = vertex_attr_names(g_1mode_psi), pattern = "_pss")
+      str(pss_vattr)
+
+    # create loop that iterates once for each vertix attribute with suffix "_ipeds"; for each iteration, the loop deletes vertex attribute (with assignment)
+      for (i in pss_vattr){
+        #print(i)
+        #g2<-delete_vertex_attr(g2, i)
+        
+        # modify code so that below line is only run if the vertex attribute exists
+        g_1mode_psi <- delete_vertex_attr(graph = g_1mode_psi, name = i)
+      }
+      vertex_attr_names(g_1mode_psi)
+      str(vertex_attr_names(g_1mode_psi)) # now fewer vertex attributes
+      rm(pss_vattr)
+      rm(i)
+  
+  # what does each vertex/node represent
+    # g_1mode_psi is a 1-mode igraph object where each vertex represents a postsecondary institution
+  #what does each "edge" represent?
+    # the 1-mode data has "edges" between individual postsecondary institutions
+    # each edge will represent a pair of universities i and j that visited at least one high school i in common
+  # what does edge attribute "weight" represent; E(g_1mode_psi)$weight
+    # the "weight" attribute will represent the number of private high schools that received a visit from both university i and university j
+
+  # investigating weight attribute
+    is_weighted(g_1mode_psi)
+    
+    E(g_1mode_psi)$weight
+    
+    ecount(g_1mode_psi) # 897
+    str(E(g_1mode_psi)$weight) # numeric vector of length = 897
+    
+    # minimum weight attached to each edge == 1
+      # for this edge (the pair of university i and university j), only one private high school received a visit from both university i and university j
+      min(E(g_1mode_psi)$weight) # = 1
+      
+    # minimum weight attached to each edge == 329
+      # for this edge (the pair of university i and university j), there were 329 private high schools that received a visit from both university i and university j
+      max(E(g_1mode_psi)$weight) # = 329
+      
 
 #######################    
 #investigate two_mode_network object
