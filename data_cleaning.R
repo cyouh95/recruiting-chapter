@@ -66,6 +66,7 @@ hs_direct_dict <- hs_dictionary %>% select(Variable.Name, Description)
 names(hs_direct_dict) <- tolower(names(hs_direct_dict))
 hs_direct_dict <- hs_direct_dict %>% mutate(names_lc = tolower(variable.name))
 
+
 #Loop to label data with dictionary
 for (i in names(hs_directory)) { #loop executed 65 times, first iteration of loop = school_year -> last variable igoffered
   description <- (hs_direct_dict %>% filter(names_lc == i))$description 
@@ -84,13 +85,13 @@ hs_directory %>% select(recon_status, out_of_state_flag, charter_text, nogrades,
 
 hs_directory <- hs_directory %>% set_value_labels( 
   sy_status = c("open" = "1", 
-                  "closed" = "2",
-                  "new" = "3",
-                  "added" = "4",
-                  "changed boundary/agency" = "5",
-                  "inactive" = "6",
-                  "future" = "7",
-                  "reopened" = "8"),
+                "closed" = "2",
+                "new" = "3",
+                "added" = "4",
+                "changed boundary/agency" = "5",
+                "inactive" = "6",
+                "future" = "7",
+                "reopened" = "8"),
   updated_status = c("open" = "1",
                      "closed" = "2",
                      "new" = "3",
@@ -257,7 +258,7 @@ nrow(hs_directory %>% filter(nchar(lzip4) == 4)) #59,923 have 4 digits
 #Check effective date
 hs_directory$effective_date
 nrow(hs_directory %>% filter(nchar(effective_date) == 10)) #all are 10 character long, which the accurate length for a date mm/dd/yyyy
-     
+
 #Check charter authorizer state ID (1)
 hs_directory$chartauth1 #a lot of NAs
 hs_directory %>% filter(is.na(chartauth1)) %>% count()#95,584, most missing
@@ -290,21 +291,21 @@ hs_directory <- hs_directory %>% rename(year = "school_year",
                                         state_code = "st",
                                         state_fips_code = "fipst",
                                         name = "sch_name",
-                                        address = "mstreet1", #what do I do about mstreet2 & mstreet3
+                                        address = "mstreet1", 
                                         city = "mcity",
-                                        zip_code = "mzip", #what do I do about mzip4
-                                        address_2 = "lstreet1") #what do I do about lstreet2 & lstreet3
-                                        
-                                        
-                                        
-                                        
-                                        
-                                  
+                                        zip_code = "mzip", 
+                                        address_2 = "lstreet1") 
+
+
+
+
+
+
 names(hs_directory)                                  
 
 ##Loading & investigating data: CCD School Characteristics Data for 2017-2018
 hs_character<- read.csv('./data/ccd_school_characteristics_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character',
-                                                                                                                      'SHARED_TIME' = 'character', 'TITLEI_STATUS' = 'character', 'TITLEI_STATUS_TEXT' = 'character', 'MAGNET_TEXT' = 'character', 'NSLP_STATUS' = 'character', 'NSLP_STATUS_TEXT' = 'character', 'VIRTUAL' = 'character', 'VIRTUAL_TEXT' = 'character'))
+                                                                                                                           'SHARED_TIME' = 'character', 'TITLEI_STATUS' = 'character', 'TITLEI_STATUS_TEXT' = 'character', 'MAGNET_TEXT' = 'character', 'NSLP_STATUS' = 'character', 'NSLP_STATUS_TEXT' = 'character', 'VIRTUAL' = 'character', 'VIRTUAL_TEXT' = 'character'))
 str(hs_character) # structure of the data frame
 
 nrow(hs_character) #num of rows (obs): 99,899 observations
@@ -334,7 +335,7 @@ for (i in names(hs_character)) {
 
 #Check variable labels
 hs_character %>% var_label() # variable labels
-  
+
 #Adding value labels
 hs_character %>% select(shared_time, titlei_status, titlei_status_text, magnet_text, nslp_status, nslp_status_text, virtual, virtual_text) %>% glimpse() #already text & labeled
 
@@ -548,3 +549,300 @@ for(i in names(hs_lunch)) {
 #union: 482,440 missing
 #student count: 199,399 missing
 
+##Loading & investigating data: CCD School Membership Data for 2017-2018
+hs_membership <- read.csv('./data/ccd_school_membership_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'GRADE' = 'character', 'RACE_ETHNICITY' = 'character', 'SEX' = 'character', 'TOTAL_INDICATOR' = 'character', 'DMS_FLAG' = 'character'))
+
+#Investigate the data & data frame
+str(hs_membership) # structure of the data frame
+
+nrow(hs_membership) #num of rows (obs): 1,937,490 observations
+ncol(hs_membership) #num of columns: 19 variables
+
+names(hs_membership) # variable names 
+names(hs_membership) <- tolower(names(hs_membership)) #convert to lowercase
+glimpse(hs_membership)
+head(hs_membership) 
+
+hs_membership %>% arrange(school_year,sch_name, ncessch, race_ethnicity, sex) %>% head()
+
+
+##Labeling variables 
+#Importing data dictionary
+hs_membership_dict <- read.csv('./data/ccd_school_membership_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
+hs_membership_dict_subset <- hs_membership_dict %>% select(Variable.Name, Description)
+
+#Lowercase variable names in dictionary
+names(hs_membership_dict_subset) <- tolower(names(hs_membership_dict_subset))
+hs_membership_dict_subset <- hs_membership_dict_subset %>% mutate(names_lc = tolower(variable.name))
+
+
+#Loop to label data with dictionary
+for (i in names(hs_membership)) {
+  description5 <- (hs_membership_dict_subset %>% filter(names_lc == i))$description 
+  var_label(hs_membership[[i]]) <- description5
+} 
+
+#Check variable labels
+hs_membership %>% var_label() # variable labels
+
+#recode race & ethnicity
+hs_membership %>% group_by(race_ethnicity) %>% count()
+
+#create race,grade,gender & then pivot wider
+hs_membership <-hs_membership %>% mutate(race_grade_gender = case_when(
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 9' & sex == 'Female' ~ 'am09f', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 9' & sex == 'Male' ~ 'am09m', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'am09ns', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 10' & sex == 'Female' ~ 'am10f', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 10' & sex == 'Male' ~ 'am10m', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'am10ns', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 11' & sex == 'Female' ~ 'am11f', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 11' & sex == 'Male' ~ 'am11m', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'am11ns', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 12' & sex == 'Female' ~ 'am12f', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 12' & sex == 'Male' ~ 'am12m', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'am12ns', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 13' & sex == 'Female' ~ 'am13f', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 13' & sex == 'Male' ~ 'am13m', 
+  race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'am13ns', 
+  race_ethnicity == 'Asian' & grade == 'Grade 9' & sex == 'Female' ~ 'as09f',
+  race_ethnicity == 'Asian' & grade == 'Grade 9' & sex == 'Male' ~ 'as09m',
+  race_ethnicity == 'Asian' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'as09ns',
+  race_ethnicity == 'Asian' & grade == 'Grade 10' & sex == 'Female' ~ 'as10f',
+  race_ethnicity == 'Asian' & grade == 'Grade 10' & sex == 'Male' ~ 'as10m',
+  race_ethnicity == 'Asian' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'as10ns',
+  race_ethnicity == 'Asian' & grade == 'Grade 11' & sex == 'Female' ~ 'as11f',
+  race_ethnicity == 'Asian' & grade == 'Grade 11' & sex == 'Male' ~ 'as11m',
+  race_ethnicity == 'Asian' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'as11ns',
+  race_ethnicity == 'Asian' & grade == 'Grade 12' & sex == 'Female' ~ 'as12f',
+  race_ethnicity == 'Asian' & grade == 'Grade 12' & sex == 'Male' ~ 'as12m',
+  race_ethnicity == 'Asian' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'as12ns',
+  race_ethnicity == 'Asian' & grade == 'Grade 13' & sex == 'Female' ~ 'as13f',
+  race_ethnicity == 'Asian' & grade == 'Grade 13' & sex == 'Male' ~ 'as13m',
+  race_ethnicity == 'Asian' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'as13ns',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 9' & sex == 'Female' ~ 'bl09f',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 9' & sex == 'Male' ~ 'bl09m',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'bl09ns', 
+  race_ethnicity == 'Black or African American' & grade == 'Grade 10' & sex == 'Female' ~ 'bl10f',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 10' & sex == 'Male' ~ 'bl10m',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'bl10ns', 
+  race_ethnicity == 'Black or African American' & grade == 'Grade 11' & sex == 'Female' ~ 'bl11f',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 11' & sex == 'Male' ~ 'bl11m',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'bl11ns',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 12' & sex == 'Female' ~ 'bl12f',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 12' & sex == 'Male' ~ 'bl12m',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'bl12ns', 
+  race_ethnicity == 'Black or African American' & grade == 'Grade 13' & sex == 'Female' ~ 'bl13f',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 13' & sex == 'Male' ~ 'bl13m',
+  race_ethnicity == 'Black or African American' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'bl13ns', 
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 9' & sex == 'Female' ~ 'hi09f',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 9' & sex == 'Male' ~ 'hi09m',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'hi09ns',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 10' & sex == 'Female' ~ 'hi10f',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 10' & sex == 'Male' ~ 'hi10m',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'hi10ns',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 11' & sex == 'Female' ~ 'hi11f',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 11' & sex == 'Male' ~ 'hi11m',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'hi11ns',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 12' & sex == 'Female' ~ 'hi12f',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 12' & sex == 'Male' ~ 'hi12m',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'hi12ns',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 13' & sex == 'Female' ~ 'hi13f',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 13' & sex == 'Male' ~ 'hi13m',
+  race_ethnicity == 'Hispanic/Latino' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'hi13ns',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 9' & sex == 'Female' ~ 'hp09f',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 9' & sex == 'Male' ~ 'hp09m',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'hp09ns',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 10' & sex == 'Female' ~ 'hp10f',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 10' & sex == 'Male' ~ 'hp10m',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'hp10ns',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 11' & sex == 'Female' ~ 'hp11f',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 11' & sex == 'Male' ~ 'hp11m',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'hp11ns',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 12' & sex == 'Female' ~ 'hp12f',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 12' & sex == 'Male' ~ 'hp12m',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'hp12ns',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 13' & sex == 'Female' ~ 'hp13f',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 13' & sex == 'Male' ~ 'hp13m',
+  race_ethnicity == 'Native Hawaiian or Other Pacific Islander' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'hp13ns',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 9' & sex == 'Female' ~ 'ns09f',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 9' & sex == 'Male' ~ 'ns09m',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'ns09ns',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 10' & sex == 'Female' ~ 'ns10f',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 10' & sex == 'Male' ~ 'ns10m',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'ns10ns',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 11' & sex == 'Female' ~ 'ns11f',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 11' & sex == 'Male' ~ 'ns11m',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'ns11ns',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 12' & sex == 'Female' ~ 'ns12f',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 12' & sex == 'Male' ~ 'ns12m',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'ns12ns',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 13' & sex == 'Female' ~ 'ns13f',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 13' & sex == 'Male' ~ 'ns13m',
+  race_ethnicity == 'Not Specified' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'ns13ns',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 9' & sex == 'Female' ~ 'tr09f',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 9' & sex == 'Male' ~ 'tr09m',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'tr09ns',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 10' & sex == 'Female' ~ 'tr10f',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 10' & sex == 'Male' ~ 'tr10m',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'tr10ns',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 11' & sex == 'Female' ~ 'tr11f',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 11' & sex == 'Male' ~ 'tr11m',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'tr11ns',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 12' & sex == 'Female' ~ 'tr12f',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 12' & sex == 'Male' ~ 'tr12m',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'tr12ns',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 13' & sex == 'Female' ~ 'tr13f',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 13' & sex == 'Male' ~ 'tr13m',
+  race_ethnicity == 'Two or more races' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'tr13ns',
+  race_ethnicity == 'White' & grade == 'Grade 9' & sex == 'Female' ~ 'wh09f',
+  race_ethnicity == 'White' & grade == 'Grade 9' & sex == 'Male' ~ 'wh09m',
+  race_ethnicity == 'White' & grade == 'Grade 9' & sex == 'Not Specified' ~ 'wh09ns',
+  race_ethnicity == 'White' & grade == 'Grade 10' & sex == 'Female' ~ 'wh10f',
+  race_ethnicity == 'White' & grade == 'Grade 10' & sex == 'Male' ~ 'wh10m',
+  race_ethnicity == 'White' & grade == 'Grade 10' & sex == 'Not Specified' ~ 'wh10ns',
+  race_ethnicity == 'White' & grade == 'Grade 11' & sex == 'Female' ~ 'wh11f',
+  race_ethnicity == 'White' & grade == 'Grade 11' & sex == 'Male' ~ 'wh11m',
+  race_ethnicity == 'White' & grade == 'Grade 11' & sex == 'Not Specified' ~ 'wh11ns',
+  race_ethnicity == 'White' & grade == 'Grade 12' & sex == 'Female' ~ 'wh12f',
+  race_ethnicity == 'White' & grade == 'Grade 12' & sex == 'Male' ~ 'wh12m',
+  race_ethnicity == 'White' & grade == 'Grade 12' & sex == 'Not Specified' ~ 'wh12ns',
+  race_ethnicity == 'White' & grade == 'Grade 13' & sex == 'Female' ~ 'wh13f',
+  race_ethnicity == 'White' & grade == 'Grade 13' & sex == 'Male' ~ 'wh13m',
+  race_ethnicity == 'White' & grade == 'Grade 13' & sex == 'Not Specified' ~ 'wh13ns',
+))
+
+#other code option: hs_membership <- hs_membership %>% mutate(race_grade_gender = str_c(race_ethnicity, grade, sex, sep = '_'))
+
+hs_membership %>% group_by(race_grade_gender) %>% count()
+
+hs_membership<- reshape(data = hs_membership, idvar = 'ncessch', v.names = 'student_count', timevar = 'race_grade_gender', direction = 'wide') 
+
+#rename race_grade_gender variables
+hs_membership <- hs_membership %>% rename(
+  'am09f' = 'student_count.am09f',
+  'am09m' = 'student_count.am09m',
+  #'am09ns' = 'student_count.am09ns',
+  'am10f' = 'student_count.am10f',
+  'am10m' = 'student_count.am10m',
+  #'am10ns' = 'student_count.am10ns',
+  'am11f' = 'student_count.am11f',
+  'am11m' = 'student_count.am11m',
+  #'am11ns' = 'student_count.am11ns',
+  'am12f' = 'student_count.am12f',
+  'am12m' = 'student_count.am12m',
+  #'am12ns' = 'student_count.am12ns',
+  'am13f' = 'student_count.am13f',
+  'am13m' = 'student_count.am13m',
+  #'am13ns' = 'student_count.am13ns',
+  'as09f' = 'student_count.as09f',
+  'as09m' = 'student_count.as09m',
+  #'as09ns' = 'student_count.as09ns',
+  'as10f' = 'student_count.as10f',
+  'as10m' = 'student_count.as10m',
+  #'as10ns' = 'student_count.as10ns',
+  'as11f' = 'student_count.as11f',
+  'as11m' = 'student_count.as11m',
+  #'as11ns' = 'student_count.as11ns',
+  'as12f' = 'student_count.as12f',
+  'as12m' = 'student_count.as12m',
+  #'as12ns' = 'student_count.as12ns',
+  'as13f' = 'student_count.as13f',
+  'as13m' = 'student_count.as13m',
+  #'as13ns' = 'student_count.as13ns',
+  'bl09f' = 'student_count.bl09f',
+  'bl09m' = 'student_count.bl09m',
+  #'bl09ns' = 'student_count.bl09ns',
+  'bl10f' = 'student_count.bl10f',
+  'bl10m' = 'student_count.bl10m',
+  #'bl10ns' = 'student_count.bl10ns',
+  'bl11f' = 'student_count.bl11f',
+  'bl11m' = 'student_count.bl11m',
+  #'bl11ns' = 'student_count.bl11ns',
+  'bl12f' = 'student_count.bl12f',
+  'bl12m' = 'student_count.bl12m',
+  #'bl12ns' = 'student_count.bl12ns',
+  'bl13f' = 'student_count.bl13f',
+  'bl13m' = 'student_count.bl13m',
+  #'bl13ns' = 'student_count.bl13ns',
+  'wh09f' = 'student_count.wh09f',
+  'wh09m' = 'student_count.wh09m',
+  #'wh09ns' = 'student_count.wh09ns',
+  'wh10f' = 'student_count.wh10f',
+  'wh10m' = 'student_count.wh10m',
+  #'wh10ns' = 'student_count.wh10ns',
+  'wh11f' = 'student_count.wh11f',
+  'wh11m' = 'student_count.wh11m',
+  #'wh11ns' = 'student_count.wh11ns',
+  'wh12f' = 'student_count.wh12f',
+  'wh12m' = 'student_count.wh12m',
+  #'wh12ns' = 'student_count.wh12ns',
+  'wh13f' = 'student_count.wh13f',
+  'wh13m' = 'student_count.wh13m',
+  #'wh13ns' = 'student_count.wh13ns',
+  'hp09f' = 'student_count.hp09f',
+  'hp09m' = 'student_count.hp09m',
+  #'hp09ns' = 'student_count.hp09ns',
+  'hp10f' = 'student_count.hp10f',
+  'hp10m' = 'student_count.hp10m',
+  #'hp10ns' = 'student_count.hp10ns',
+  'hp11f' = 'student_count.hp11f',
+  'hp11m' = 'student_count.hp11m',
+  #'hp11ns' = 'student_count.hp11ns',
+  'hp12f' = 'student_count.hp12f',
+  'hp12m' = 'student_count.hp12m',
+  #'hp12ns' = 'student_count.hp12ns',
+  'hp13f' = 'student_count.hp13f',
+  'hp13m' = 'student_count.hp13m',
+  #'hp13ns' = 'student_count.hp13ns',
+  'hi09f' = 'student_count.hi09f',
+  'hi09m' = 'student_count.hi09m',
+  #'hi09ns' = 'student_count.hi09ns',
+  'hi10f' = 'student_count.hi10f',
+  'hi10m' = 'student_count.hi10m',
+  #'hi10ns' = 'student_count.hi10ns',
+  'hi11f' = 'student_count.hi11f',
+  'hi11m' = 'student_count.hi11m',
+  #'hi11ns' = 'student_count.hi11ns',
+  'hi12f' = 'student_count.hi12f',
+  'hi12m' = 'student_count.hi12m',
+  #'hi12ns' = 'student_count.hi12ns',
+  'hi13f' = 'student_count.hi13f',
+  'hi13m' = 'student_count.hi13m',
+  #'hi13ns' = 'student_count.hi13ns',
+  'tr09f' = 'student_count.tr09f',
+  'tr09m' = 'student_count.tr09m',
+  #'tr09ns' = 'student_count.tr09ns',
+  'tr10f' = 'student_count.tr10f',
+  'tr10m' = 'student_count.tr10m',
+  #'tr10ns' = 'student_count.tr10ns',
+  'tr11f' = 'student_count.tr11f',
+  'tr11m' = 'student_count.tr11m',
+  #'tr11ns' = 'student_count.tr11ns',
+  'tr12f' = 'student_count.tr12f',
+  'tr12m' = 'student_count.tr12m',
+  #'tr12ns' = 'student_count.tr12ns',
+  'tr13f' = 'student_count.tr13f',
+  'tr13m' = 'student_count.tr13m',
+  #'tr13ns' = 'student_count.tr13ns',
+  #'ns09f' = 'student_count.ns09f',
+  #'ns09m' = 'student_count.ns09m',
+  'ns09ns' = 'student_count.ns09ns',
+  #'ns10f' = 'student_count.ns10f',
+  #'ns10m' = 'student_count.ns10m',
+  'ns10ns' = 'student_count.ns10ns',
+  #'ns11f' = 'student_count.ns11f',
+  #'ns11m' = 'student_count.ns11m',
+  'ns11ns' = 'student_count.ns11ns',
+  #'ns12f' = 'student_count.ns12f',
+  #'ns12m' = 'student_count.ns12m',
+  'ns12ns' = 'student_count.ns12ns',
+  #'ns13f' = 'student_count.ns13f',
+  #'ns13m' = 'student_count.ns13m',
+  'ns13ns' = 'student_count.ns13ns')
+
+#Sum male (amalm) | female (amalf) | together (am) 
+hs_membership$am <- rowSums(hs_membership[,c('am09f','am09m','am10f','am10m','am11f','am11m','am12f','am12m','am13f','am13m')], na.rm = TRUE)
+
+#besides race_grade_gender, what other totals?
+#to do: additional variables, merge (merge all ccd?), rename, anything else?
