@@ -841,8 +841,37 @@ hs_membership <- hs_membership %>% rename(
   #'ns13m' = 'student_count.ns13m',
   'ns13ns' = 'student_count.ns13ns')
 
-#Sum male (amalm) | female (amalf) | together (am) 
-hs_membership$am <- rowSums(hs_membership[,c('am09f','am09m','am10f','am10m','am11f','am11m','am12f','am12m','am13f','am13m')], na.rm = TRUE)
+#Sum race & gender
+hs_membership$amalf <- rowSums(hs_membership[,c('am09f','am10f','am11f','am12f','am13f')], na.rm = TRUE)
+hs_membership$amalm <- rowSums(hs_membership[,c('am09m','am10m','am11m','am12m','am13m')], na.rm = TRUE)
+hs_membership$am <- rowSums(hs_membership[,c('amalf','amalm')], na.rm = TRUE)
 
-#besides race_grade_gender, what other totals?
-#to do: additional variables, merge (merge all ccd?), rename, anything else?
+hs_membership$asalf <- rowSums(hs_membership[,c('as09f','as10f','as11f','as12f','as13f')], na.rm = TRUE)
+hs_membership$asalm <- rowSums(hs_membership[,c('as09m','as10m','as11m','as12m','as13m')], na.rm = TRUE)
+hs_membership$as <- rowSums(hs_membership[,c('asalf','asalm')], na.rm = TRUE)
+
+hs_membership$blalf <- rowSums(hs_membership[,c('bl09f','bl10f','bl11f','bl12f','bl13f')], na.rm = TRUE)
+hs_membership$blalm <- rowSums(hs_membership[,c('bl09m','bl10m','bl11m','bl12m','bl13m')], na.rm = TRUE)
+hs_membership$bl <- rowSums(hs_membership[,c('blalf','blalm')], na.rm = TRUE)
+
+hs_membership$whalf <- rowSums(hs_membership[,c('wh09f','wh10f','wh11f','wh12f','wh13f')], na.rm = TRUE)
+hs_membership$whalm <- rowSums(hs_membership[,c('wh09m','wh10m','wh11m','wh12m','wh13m')], na.rm = TRUE)
+hs_membership$wh <- rowSums(hs_membership[,c('whalf','whalm')], na.rm = TRUE)
+
+hs_membership$hpalf <- rowSums(hs_membership[,c('hp09f','hp10f','hp11f','hp12f','hp13f')], na.rm = TRUE)
+hs_membership$hpalm <- rowSums(hs_membership[,c('hp09m','hp10m','hp11m','hp12m','hp13m')], na.rm = TRUE)
+hs_membership$hp <- rowSums(hs_membership[,c('hpalf','hpalm')], na.rm = TRUE)
+
+hs_membership$hialf <- rowSums(hs_membership[,c('hi09f','hi10f','hi11f','hi12f','hi13f')], na.rm = TRUE)
+hs_membership$hialm <- rowSums(hs_membership[,c('hi09m','hi10m','hi11m','hi12m','hi13m')], na.rm = TRUE)
+hs_membership$hi <- rowSums(hs_membership[,c('hialf','hialm')], na.rm = TRUE)
+
+hs_membership$tralf <- rowSums(hs_membership[,c('tr09f','tr10f','tr11f','tr12f','tr13f')], na.rm = TRUE)
+hs_membership$tralm <- rowSums(hs_membership[,c('tr09m','tr10m','tr11m','tr12m','tr13m')], na.rm = TRUE)
+hs_membership$tr <- rowSums(hs_membership[,c('tralf','tralm')], na.rm = TRUE)
+
+hs_membership$ns <- rowSums(hs_membership[,c('ns09ns', 'ns10ns', 'ns11ns', 'ns12ns', 'ns13ns')], na.rm = TRUE)
+
+
+#to do: merge (merge all ccd), rename, anything else?
+
