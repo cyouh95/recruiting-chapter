@@ -10,7 +10,7 @@
 # CLEAR MEMORY
 rm(list = ls())
 
-options(max.print=999)
+options(max.print=2000)
 
 ## ---------------------------
 ## libraries
@@ -104,9 +104,13 @@ privhs_events %>% count(event_type)
     str_sort(univ_vec,numeric = TRUE) == str_sort(univ_sample,numeric = TRUE)
       #str_sort(univ_vec,numeric = TRUE)
       #str_sort(univ_sample,numeric = TRUE)
-    univ_vec
+    
   rm(univ_sample)
 
+  # decision: don't want the ID number for universities to have suffix "_req"
+  univ_vec <- str_extract(univ_vec, pattern = "\\d*") # this uses regular expressions to extract the "155317" from "155317_req"
+  univ_vec
+  
 ## ---------------------------
 ## Create affiliation matrix, which is input to igraph object
 ## ---------------------------
@@ -130,8 +134,8 @@ privhs_events %>% count(event_type)
       #writeLines(str_c("hs id=",i,"; univ id=",j))
 
       # for each combination of private high school and university, if number of by that university to that high school >0, replace value of matrix cell to the total number of visits by that university to that high school      
-      if (nrow(privhs_events %>% filter(school_id == i, univ_id_req == j)) > 0) {
-        m[i, j] <- privhs_events %>% filter(school_id == i, univ_id_req == j) %>% nrow()
+      if (nrow(privhs_events %>% filter(school_id == i, univ_id == j)) > 0) {
+        m[i, j] <- privhs_events %>% filter(school_id == i, univ_id == j) %>% nrow()
       }
       
     }
@@ -416,8 +420,6 @@ privhs_events %>% count(event_type)
         # maximum weight is 6 meaning that for that pair of high school i and university j, there were 6 visits from the university to the high school
           max(E(g_2mode)$weight)
   
-  , edges only exist between 
-  
   max(E(g_2mode)$weight)
   
 # familiarize yourself w/ igraph::bipartite.projectio()
@@ -455,9 +457,7 @@ privhs_events %>% count(event_type)
         # each edge will represent a pair of universities i and j that visited at least one high school in common
         # and the "weight" attribute will represent the number of private high schools that received a visit from both university i and university j
   
-  temp <- bipartite_projection(graph = g_2mode, types = NULL, multiplicity = FALSE, which = c("both"), probe1 = NULL, remove.type = TRUE)
-  temp_hs <- temp[["proj1"]]
-  
+
   vertex_attr_names(temp_hs)
   edge_attr_names(temp_hs)
   
@@ -609,109 +609,114 @@ privhs_events %>% count(event_type)
       max(E(g_1mode_psi)$weight) # = 329
       
 
-#######################    
-#investigate two_mode_network object
-#######################  
+## ---------------------------
+## Create ego network igraph objects 
+## ---------------------------
 
-# number of vertices and edges  
-  V(two_mode_network) # number of vertices = 1785 = 43+1742 = number of universities + number of private hS that got at least one visit
-    
-  E(two_mode_network) # number of edges; each edge is a relation between a high school and a university
-  str(E(two_mode_network)) # class = igraph edge sequence; type = integer vector of lendgth == 11034
-  
-  is_weighted(two_mode_network)
-  
-# print command    
-  #print_all(two_mode_network)
-  print(two_mode_network)
-    
-  summary(two_mode_network)
-  
-# print representations for graph
-  
-  # edge list representation
-    igraph::as_edgelist(two_mode_network) # not sure if this is capturing weights (i.e., number of visits vs. presence of visit)
-  
-  # adjacency list representation
-    as_adjacency_matrix(two_mode_network)
-    
-# investigate attributes using regular attributes() function
-    
-    attributes(two_mode_network) # has a class attribute; class = igraph
-    
-    attributes(V(two_mode_network))
-    
-    attributes(E(two_mode_network))
-    
-    
-# investigate/modify vertext attributes using igraph attribute functions
+#?igraph::make_ego_graph
 
-  # vertex attributes    
-    
-    igraph::vertex_attr_names(graph = two_mode_network) # two attributes: "type" "name"
-    
-    vertex_attr(graph = two_mode_network, name = "name") # names of the nodes
-      str(vertex_attr(graph = two_mode_network, name = "name")) # character vector of 1785 elements
+# syntax:
+  #make_ego_graph(graph, order = 1, nodes = V(graph), mode = c("all","out", "in"), mindist = 0)
+
+#arguments      
+  #graph	
+    #The input graph.
+  #order	
+    #Integer giving the order of the neighborhood.
+  #nodes	
+    #The vertices for which the calculation is performed.
+    # default is all nodes (i.e., nodes = V(graph))
+  #mode	
+    #Character constant, it specifies how to use the direction of the edges if a directed graph is analyzed. 
+      #For ‘out’ only the outgoing edges are followed, so all vertices reachable from the source vertex in at most order steps are counted. For ‘"in"’ all vertices from which the source vertex is reachable in at most order steps are counted. ‘"all"’ ignores the direction of the edges. This argument is ignored for undirected graphs.
+  #mindist	
+    #The minimum distance to include the vertex in the result.  
+
+# create objects, where each element is an ego network
       
-    vertex_attr(graph = two_mode_network, name = "type") # 
-      str(vertex_attr(graph = two_mode_network, name = "type")) # logical vector of 1785 elements which is number of private High schools (that got visits) + number of universities
+  # Choosing which nodes from igraph object to make ego network for
+    # PSI (make one ego network igraph object for each PSI)
+      length(make_ego_graph(graph = g_2mode, order = 1, nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], mindist = 0))
       
-      sum(vertex_attr(graph = two_mode_network, name = "type")) # sum = 43; so type == TRUE if element is a university
+    # high school (make one ego network igraph object for each high school)
+      length(make_ego_graph(graph = g_2mode, order = 1, nodes = V(graph = g_2mode)[V(g_2mode)$type == FALSE], mindist = 0))
+      
+      ego(graph = g_2mode, order =1, nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], mindist = 0)[2] # 160 of 1785 vertices
+      ego(graph = g_2mode, order =1, nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], mindist = 1)[2] # 159 of 1785 vertices
+      ego(graph = g_2mode, order =2, nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], mindist = 1)[2] # 201 of 1785 vertices
+      
+      ego_size(graph = g_2mode, order =2, nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], mindist = 1)[2] # 202 of 1785 vertices
+      
+  # create one ego network per private HS
+    egos_hs <- make_ego_graph(graph = g_2mode, order = 2, nodes = V(graph = g_2mode)[V(g_2mode)$type == FALSE], mindist = 0)
     
-  # edge attributes
+    # assign name for each ego network
+      # object has one element per ego network; assign name of element equal to the NCES school ID #
+      #names(egos_hs)
+      #length(egos_hs)
+      #length(privhs_vec)
+      names(egos_hs) <- privhs_vec
+      
+  # create one ego network per psi
+    #?make_ego_graph
+    egos_psi <- make_ego_graph(
+      graph = g_2mode, 
+      order = 2, # The neighborhood of a given order o of a vertex v includes all vertices which are closer to v than the order. Ie. order 0 is always v itself, order 1 is v plus its immediate neighbors, order 2 is order 1 plus the immediate neighbors of the vertices in order 1, etc.
+      nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], 
+      mindist = 0 # default = 0 means include itself as a node
+    )
     
-    igraph::edge_attr_names(graph = two_mode_network) # one attribute: weight 
-  
-    edge_attr(graph = two_mode_network, name = "weight")
-      str(edge_attr(graph = two_mode_network, name = "weight")) # numeric vector of length = 11034; each element is the weight associated with that edge
-  
-##########################    
-########################## descriptive analysis of igraph object univ_graph, where nodes are universities
-##########################    
-
     
+    # assign name for each ego network
+      # object has one element per ego network; assign name of element equal to the IPEDS ID #
+      names(egos_psi) <- str_extract(univ_vec, pattern = "\\d*") # this uses regular expressions to extract the "_req" from "155317_req"
+        #names(egos_psi) <- univ_vec # this doesn't extract "_req" from "155317_req"
+  
+    # remove attributes that don't have utility for ego network? 
+      # no. potentially all of them could be used
+
+    # investigate creating edge order as an edge attribute for one element (i.e., one ego network of a university) from object egos_psi
+      
+      #edge where the attribute name of the edge contains "106397"
+        str_subset(string = attr(x = E(egos_psi[["106397"]]), which = "vnames"), pattern ="106397")
+        str_detect(string = attr(x = E(egos_psi[["106397"]]), which = "vnames"), pattern ="106397")
+
+      #edge where the attribute name of the edge contains does not contain "106397"
+        str_subset(string = attr(x = E(egos_psi[["106397"]]), which = "vnames"), pattern ="^((?!106397).)*$")
+      
+    # loop through each element and assign order as an edge attribute
+      # edge order = 1: edges for visits by ego to private high schools
+      # edge order = 2: for private high schools visited by ego, which universities also visited the high school
+        
+      length(egos_psi)
+      names(egos_psi)
+      length(names(egos_psi))
+
+      for (i in 1:length(egos_psi)) {
+      
+        writeLines(str_c("i=",i,"; univ id=",names(egos_psi)[[i]]))
+        
+        E(egos_psi[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_psi[[i]]), which = "vnames"), pattern =names(egos_psi)[[i]]),1,2)
+
+        # investigate        
+          #print(edge_attr_names(egos_psi[[i]]))
+        
+          # summary table of edge attribute order
+          print(table(E(egos_psi[[i]])$order))
+      }
+      rm(i)
+      
+  # try plotting ego network for one university
+    # to do: modify plot to eliminate lines for edge order = 1
+    plot.igraph(
+      x = egos_psi[["100751"]], # egos_psi[["106397"]] = uarkansas
+      #vertex.label = "",
+      vertex.label = if_else(V(egos_psi[["100751"]])$type, V(egos_psi[["100751"]])$univ_abbrev_ipeds, ""),
+      vertex.shape = if_else(V(egos_psi[["100751"]])$type, "square", "circle"),
+      vertex.color = if_else(V(egos_psi[["100751"]])$type, "lightblue", "salmon"),
+      vertex.size = if_else(V(egos_psi[["100751"]])$type, 5, 3),
+      layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      main = "my plot name folks"
+    )
     
-  get.adjacency(univ_graph, sparse = FALSE, attr = 'weight')
-  str(get.adjacency(univ_graph, sparse = FALSE, attr = 'weight')) # 43 by 43 matrix
-  
-  plot(univ_graph, edge.label = E(univ_graph)$weight)
-
-# Cluster univ graph
-
-cw <- cluster_fast_greedy(univ_graph)
-plot(cw, univ_graph, edge.label = E(univ_graph)$weight)
-
-mem <- membership(cw)
-
-
-for (i in unique(mem)) {
-  
-  univs <- names(mem[mem == i])
-  
-  # Plot each cluster
-  
-  univ_subgraph <- induced.subgraph(univ_graph, univs)
-  plot(univ_subgraph, edge.label = E(univ_subgraph)$weight)
-  
-  # Affiliation matrix for cluster
-  
-  univ_matrix <- affiliation_matrix[, univs]
-  univ_matrix <- cbind(univ_matrix, total = rowSums(univ_matrix))
-  
-  hs_union <- rownames(univ_matrix[univ_matrix[, 'total'] > 0, ])
-  hs_intersect <- rownames(univ_matrix[univ_matrix[, 'total'] == length(univs), ])
-  hs <- rownames(univ_matrix[univ_matrix[, 'total'] > 1, ]) # visited by more than 1 univ
-  print(paste(length(hs_union), length(hs_intersect), length(hs)))
-  
-  # HS characteristics
-  
-  # Data not available yet for some ncessch that were manually inputted
-  # hs_subset <- (hs_data %>% filter(ncessch %in% hs))$ncessch
-  # print(hs[!(hs %in% hs_subset)])
-  
-  hs_subset <- (data %>% filter(ncessch %in% hs))
-  print(describe(hs_subset$pct_white))
-  print(describe(hs_subset$avgmedian_inc_2564))
-}
-
-  #in-state & out-of-state? 
+      
