@@ -369,7 +369,8 @@ privhs_events %>% count(event_type)
     
     edge_attr(graph = g_2mode, name = "weight")
   
-
+  rm(two_mode_network)
+  
 ## ---------------------------
 ## Create igraph objects for one-mode analysis, but this time with vertex attributes consisting of HS and university characteristics
 ## ---------------------------
@@ -458,10 +459,6 @@ privhs_events %>% count(event_type)
         # and the "weight" attribute will represent the number of private high schools that received a visit from both university i and university j
   
 
-  vertex_attr_names(temp_hs)
-  edge_attr_names(temp_hs)
-  
-  
   class(projection) # class = list
   #str(projection) # two lists (each w/ 10 elements); list 1 name = "proj1"; list 2 name = "proj2"
 
@@ -705,18 +702,4 @@ privhs_events %>% count(event_type)
           print(table(E(egos_psi[[i]])$order))
       }
       rm(i)
-      
-  # try plotting ego network for one university
-    # to do: modify plot to eliminate lines for edge order = 1
-    plot.igraph(
-      x = egos_psi[["100751"]], # egos_psi[["106397"]] = uarkansas
-      #vertex.label = "",
-      vertex.label = if_else(V(egos_psi[["100751"]])$type, V(egos_psi[["100751"]])$univ_abbrev_ipeds, ""),
-      vertex.shape = if_else(V(egos_psi[["100751"]])$type, "square", "circle"),
-      vertex.color = if_else(V(egos_psi[["100751"]])$type, "lightblue", "salmon"),
-      vertex.size = if_else(V(egos_psi[["100751"]])$type, 5, 3),
-      layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
-      main = "my plot name folks"
-    )
-    
       

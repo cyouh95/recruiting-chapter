@@ -94,7 +94,7 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
 
     plot(
       x = g_1mode_psi, 
-      vertex.label = V(g_2mode)$univ_abbrev_ipeds)
+      vertex.label = V(g_2mode)$univ_abbrev_ipeds
     )    
 
     # color of node should depend on whether it is a public or private university
@@ -139,8 +139,7 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
     
   # one mode objects
     #this time let's set them using igraph_options
-    igraph_options()
-    
+
     igraph_options(
       edge.color = "lightgrey", 
       edge.lty = 2, # 0 and “blank” mean no edges, 1 and “solid” are for solid lines, the other possible values are: 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
@@ -315,31 +314,665 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
       layout = layout.bipartite,
       vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, "")
     )      
+
+# graphing large networks
+
+  # one mode
     
+    # conventional methods: here, layout_with_kk
+    plot.igraph(
+      x = g_1mode_psi, 
+      vertex.color = if_else(V(g_1mode_psi)$control_ipeds == "Public", "green", "red"),
+      vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds,
+      layout = layout_with_kk,
+    )
     
-  ###########
+    # visualization method VxOrd for visualizing large networks
+      # VxOrd [4], a visualization package produced by Sandia Labs, is an enhanced version of the spring-embedder methodology. 
+        # It attempts to place vertices in clusters on the two-dimensional plane, with the help of sophisticated optimization methods to 
+        # more efficiently search the space of possible graph drawings and a grid that helps reduce computation time from the typical O(N2v ) down to O(Nv). 
+      #In addition, it employs edge-cutting criteria, designed towards producing drawings that balance the detail with which both local 
+        #and global structure are shown.
+      plot.igraph(
+        x = g_1mode_psi, 
+        vertex.color = 5,
+        vertex.label = NA,
+        layout = layout_with_drl
+      )    
+    # doesn't look that much different than layout_with_kk
+      
+    # recommendations for graphing large networks from Csardi chapter 3
+      
+      # basically, recommends "coarsening" a network graph, which means reducing number of nodes by "replacing groups of vertices with single meta-vertices"
+      # this can be done by using some vertex attribute as the meta-node (e.g., US news prestige tier) or by using graph partitioning methods (i.e., community detection)
     
-  V(g_1mode_psi)$univ_abbrev_ipeds
-  
-  plot(x = g_1mode_psi, vertex.size = 20, vertex.frame.color = "pink", vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds)
-  
-  plot(x = g_1mode_psi, vertex.size = 20, vertex.color = "SkyBlue2", vertex.frame.color = "pink", vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds)
-  
-  plot(x = g_1mode_psi, axes = FALSE, add = FALSE, xlim = c(-1, 1), ylim = c(-1, 1), mark.shape = 1/2, mark.expand = 15)    
-  
-  plot(x = g_1mode_psi, vertex.size = 20, vertex.color = "SkyBlue2", vertex.frame.color = "pink", vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds)
-  
-  plot(x = g_1mode_psi, axes = FALSE, add = FALSE, xlim = c(-1, 1), ylim = c(-1, 1), mark.shape = 1/2, mark.expand = 15, vertex.size = 20)
-  
-       mark.groups = list(), 
-    mark.col = rainbow(length(mark.groups), alpha = 0.3),mark.border = rainbow(length(mark.groups), alpha = 1), mark.expand = 15)
+# Experiment graphing ego networks
+
+  # try plotting ego network for one university
+    # to do: modify plot to eliminate lines for edge order = 1
+    plot.igraph(
+      x = egos_psi[["100751"]], # egos_psi[["106397"]] = uarkansas
+      #vertex.label = "",
+      vertex.label = if_else(V(egos_psi[["100751"]])$type, V(egos_psi[["100751"]])$univ_abbrev_ipeds, ""),
+      vertex.shape = if_else(V(egos_psi[["100751"]])$type, "square", "circle"),
+      vertex.color = if_else(V(egos_psi[["100751"]])$type, "lightblue", "salmon"),
+      vertex.size = if_else(V(egos_psi[["100751"]])$type, 5, 3),
+      layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      main = "my plot name folks"
+    )
+
+    # create subgraph based on edges rather than based on vertices?
+
+      subgraph.edges(
+        graph = egos_psi[["139658"]], 
+        eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]
+      )
+      
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1])
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]) %>% vcount()
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]) %>% ecount()
+      
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]) %>% V() %>% print(full = T)
+
+
+      E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]
+      E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]
+
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2])
+      
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]) %>% vcount()
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]) %>% ecount()
+      
+      #plot
+      plot.igraph(
+        x = egos_psi[["139658"]], # emory
+        #vertex.label = "",
+        vertex.label = if_else(V(egos_psi[["139658"]])$type, V(egos_psi[["139658"]])$univ_abbrev_ipeds, ""),
+        vertex.shape = if_else(V(egos_psi[["139658"]])$type, "square", "circle"),
+        vertex.color = if_else(V(egos_psi[["139658"]])$type, "lightblue", "salmon"),
+        vertex.size = if_else(V(egos_psi[["139658"]])$type, 5, 3),
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      )
+      
+      # plot subgraph, order =1
+      plot.igraph(
+        x = subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]), # emory
+        vertex.label = NA,
+        vertex.shape = "circle",
+        vertex.color = "lightblue",
+        vertex.size = 5,        
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      )
+      
+      # plot subgraph, order = 2
+        egos_psi[["139658"]] # emory
+        
+        # vertices
+        subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]) %>% V() %>% print(full = T)
+        
+        # edges
+        subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]) %>% E() %>% print(full = T)
+        
+        plot.igraph(
+          x = subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]), # emory
+          vertex.label = NA,
+          vertex.shape = "circle",
+          vertex.color = "lightblue",
+          vertex.size = 5,        
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )      
+        
+        ego_emory_order2 <- subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2])
+        
+        plot.igraph(
+          x = ego_emory_order2, # emory
+          vertex.label = if_else(V(ego_emory_order2)$type, V(ego_emory_order2)$univ_abbrev_ipeds, ""),
+          vertex.shape = if_else(V(ego_emory_order2)$type, "square", "circle"),
+          vertex.color = if_else(V(ego_emory_order2)$type, "lightblue", "salmon"),
+          vertex.size = if_else(V(ego_emory_order2)$type, 5,3),
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )
+        
+      # compare to plot that includes edges of order 1 and order 2
+      plot.igraph(
+        x = egos_psi[["139658"]], # emory
+        #vertex.label = "",
+        vertex.label = if_else(V(egos_psi[["139658"]])$type, V(egos_psi[["139658"]])$univ_abbrev_ipeds, ""),
+        vertex.shape = if_else(V(egos_psi[["139658"]])$type, "square", "circle"),
+        vertex.color = if_else(V(egos_psi[["139658"]])$type, "lightblue", "salmon"),
+        vertex.size = if_else(V(egos_psi[["139658"]])$type, 5, 3),
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      )
+        
+                    
+  # properties of ego networks that networks people research
+    #note:  alters = nodes ego is directly connected to (order =1)
+    
+    #Size
+      #How many total alters?
+      # based on ego-alter ties  
+    #Diversity
+      # variation in alter attributes
+    # homophily/heterophily
+      # ties to alters that are the same or different from ego
+      # compare ego attributes to alter attributes
+      # ego network homophily index
+        # canonical: share of ties that are same race vs. different race as you
+        # university reruiting ego networks
+          # order = 1 (ties from ego to private high schools)
+            # share of alters (privae high schools) that are high prestige vs. low-prestige
+          # order = 2 (of the high schools visited by ego, which universities also visited those high schools)
+            # e.g., of high schools visited by notre dame university, how similar to notre dame university (on some metric like religious affiliation) were other universities that visited those high schools
+      # ego network heterogeneity index (from Blau)
+        # this is same as structural diversity inex you used for tuition rich mission poor paper
+    #Composition
+      #Prop. of certain types of alter
+      # based on ego-alter ties, and bringing in attributes as necessary
+    #Clustering
+      #How many ties between alters?      
+      # based on alter-alter ties
+      # clustering coefficient: 
+        # number of alters who have ties to one another compared to number of possible ties between your alters
+        # = (number of edges of order = 2)/(N*(N-1)/2)
+        # own: likely operationalize differently for bipartite networks
+    # centrality
+      # for order = 2: of high schools visited by ego (order =1), which high schools are most visited by other universities in your sample
+      # different measures of centrality
+        # degree centrality
+        # k-path centrality
+        # closeness centrality
+        # betweenness centrality
+          # don't know how relevant this would be for bipartite networks of off-campus recruiting
+        # eigenvector centrality
+    
+##
+##        
 ## ---------------------------
-## Practice descriptive analysis of network graph characteristics from Kolaczyk and Csardi (2020), chapter 4
+## Kolaczyk and Csardi (2020), chapter 4: descriptive analysis of network graph characteristics from 
 ## ---------------------------
+##
+##
+    
+## ---------------------------
+## 4.2 vertex and edge characteristics
+## ---------------------------
+    
+# vertex degree
+  
+  # definition of vertex degree:
+    # degree of a vertex d_v is the number of edges the vertex is directly connected to
+    
+    
+  # one mode (vertices = universities)
+    # vertices = universities
+    # edges = whether both universities visited at least one high school in common
+    
+    vcount(g_1mode_psi)
+    ecount(g_1mode_psi)
+    
+    # degree(graph) creates a named numeric vector of length = V, with each element = number of edges directly connected to the vector
+    degree(g_1mode_psi)
+    str(degree(g_1mode_psi))
+    
+    # historgram of degree    
+    hist(
+      degree(g_1mode_psi), 
+      col="lightblue", 
+      xlim=c(0,50),
+      xlab="Vertex Degree", 
+      ylab="Frequency", 
+      main=""
+    )
+
+  # one mode (vertices = high schools)
+    # vertices = high schools
+    # edges = whether two high schools were visited by at least one university in common
+      # number of potential edges associated with a single high school is total number of vertices (V) minus 1 = 1742-1 = 1741
+
+    vcount(g_1mode_hs)
+    ecount(g_1mode_hs)
+    
+    # degree(graph) creates a named numeric vector of length = V, with each element = number of edges directly connected to the vector
+    degree(g_1mode_hs)
+    length(degree(g_1mode_hs)) # length = 1742; degree is a vertex-level measure
+    max(degree(g_1mode_hs)) # max = 1636
+      # for this high school i, there were 1,636 high schools that received at least one visit from a university that also visited high school i
+    str(degree(g_1mode_hs))
+    
+    # historgram of degree    
+    hist(
+      degree(g_1mode_hs), 
+      col="lightblue", 
+      xlim=c(0,2000),
+      xlab="Vertex Degree", 
+      ylab="Frequency", 
+      main=""
+    )
+            
+  # 2- mode object
+    # vertices = high schools (mode 1) and universities (mode 2)
+      # total number of vertices = 1785
+    # edges = whether a particular high school i (mode 1) was visited by a particular university j (mode 2)
+
+    vcount(g_2mode)
+    ecount(g_2mode)
+    
+    # degree
+      length(degree(g_2mode)) # length = 1785
+
+      # mode 1 = high schools
+        length(degree(g_2mode)[V(g_2mode)$type == FALSE]) # 1742
+        degree(g_2mode)[V(g_2mode)$type == FALSE] # each element of degree represents the number of universities in our sample that visited the high school
+        max(degree(g_2mode)[V(g_2mode)$type == FALSE]) # max = 31; a private high school that was visited by 31 universities in our sample
+        
+      # mode 2 = universities
+        length(degree(g_2mode)[V(g_2mode)$type == TRUE]) # 43
+        degree(g_2mode)[V(g_2mode)$type == TRUE] # each element of degree represents the number of private high schools the university visited
+        max(degree(g_2mode)[V(g_2mode)$type == TRUE]) # max = 718; a university (alabama) visited 718 private high schools
+
+
+  # ego network of universities, using emory as example ego
+    # keep order of 0, 1, and 2; 
+      # order = 0 is ego (itself); 
+      # order = 1 = which private high schools (alters) the university (ego) visited; 
+      # order = 2 = of high schools the university visited, which universities visited that set of high schools
+    
+      class(egos_psi)
+      length(egos_psi)
+      names(egos_psi)
+      
+    # emory university
+        egos_psi[["139658"]]
+        class(egos_psi[["139658"]])
+      
+    # vertices = private high schools and universities
+      vcount(egos_psi[["139658"]])
+      V(egos_psi[["139658"]])
+      
+    # vertex attributes
+      vertex_attr_names(egos_psi[["139658"]])
+      V(egos_psi[["139658"]])$name
+      V(egos_psi[["139658"]])$control_ipeds
+      
+      # attributes of ego
+      V(egos_psi[["139658"]])$control_ipeds[V(egos_psi[["139658"]])$name == "139658"]
+      V(egos_psi[["139658"]])$state_code_ipeds[V(egos_psi[["139658"]])$name == "139658"]
+      
+    # edges = a visit from ego to a high school (alters, order =1), or a visit from a university that is not the ego to the alters of the ego (order =2)
+      ecount(egos_psi[["139658"]])
+      
+      str(E(egos_psi[["139658"]]))
+      str(E(egos_psi[["139658"]])$order)
+      
+      # edge attribute order identifies whether distance from ego
+      table(E(egos_psi[["139658"]])$order)
+
+      # print edges when order =1
+        # when order = 1, each edge represents a private high school visited by the ego
+        E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]
+        print(E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1],  full = TRUE) # print all edges
+
+      # print edges when order =2
+        # when order = 2, each edge represents 1+ visits from a university to a high school (alter) that was visited by the ego
+        print(E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2],  full = TRUE) # print all edges
+            
+    # degree
+      length(degree(egos_psi[["139658"]])) # length = 303
+      vcount(egos_psi[["139658"]]) # 303  
+      
+      degree(egos_psi[["139658"]]) # each element represents the number of edges associated with that vertex
+      
+      max(degree(egos_psi[["139658"]]))
+      
+    # vertex attribute "type", whether the vector is a private high school or a university
+      table(V(egos_psi[["139658"]])$type)
+      
+    # degree, type == private high school (FALSE)
+      
+      length(degree(egos_psi[["139658"]])[V(egos_psi[["139658"]])$type==FALSE]) # 260
+      
+      # note that degree includes visits of order = 1 and order = 2
+      
+      # degree includes presence of a visit from ego to the HS (order =1, which counts as degree of 1) and number of other universities that visited the HS
+      degree(egos_psi[["139658"]])[V(egos_psi[["139658"]])$type==FALSE] 
+      degree(egos_psi[["139658"]], v = V(egos_psi[["139658"]])$type==FALSE) # same same
+
+      # max. = 31; 
+      max(degree(egos_psi[["139658"]])[V(egos_psi[["139658"]])$type==FALSE]) # max = 31; a high school visited by the ego was visited by 31 total universities (including ego)
+      
+    # degree, type == TRUE (university)
+      
+      length(degree(egos_psi[["139658"]])[V(egos_psi[["139658"]])$type==T]) # 43
+      
+      degree(egos_psi[["139658"]])[V(egos_psi[["139658"]])$type==TRUE] 
+      degree(egos_psi[["139658"]], v = V(egos_psi[["139658"]])$type==TRUE) # same same
+      
       
 
+  # ego network of high schools, choose "Choate" as the ego ID = 00233261
+    # keep edges of order of 0, 1, and 2; 
+      # order = 0 is ego (itself, the private HS); 
+      # order = 1 = which universities (alters) visited the private high school (ego)
+      # order = 2 = of the universities that visited the private high school (ego), which private high schools did that set of universities visit
+    
+      length(egos_hs)
       
+    # Choate
+      class(egos_hs[["00233261"]])
+      egos_hs[["00233261"]]
 
+    # vertices = private high schools and universities
+      # if vertex is a university, this is a university that visited choate (i.e., alters of the ego choate)
+      # if a vertex is a HS (not including Choate), this is a high school that was visited by at least one of the universities that visited choate
+      vcount(egos_hs[["00233261"]])
+      
+          # edges = a visit from ego to a high school (alters, order =1), or a visit from a university that is not the ego to the alters of the ego (order =2)
+
+    # edges represent presence of a visit to a particular high school from a particular university
+      ecount(egos_hs[["00233261"]])
+
+      
+      # edge attribute order identifies whether distance from ego
+      table(E(egos_hs[["00233261"]])$order) # you didn't create order attribute
+
+
+    # degree
+      length(degree(egos_hs[["00233261"]])) # length = 1453
+      vcount(egos_hs[["00233261"]]) # 1453
+      
+      degree(egos_hs[["00233261"]]) # each element represents the number of edges associated with that vertex
+      
+      max(degree(egos_hs[["00233261"]]))
+      
+    # vertex attribute "type", whether the vector is a private high school or a university
+      table(V(egos_hs[["00233261"]])$type)
+      
+      
+    # degree, type == TRUE (university)
+      
+      length(degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==T]) # 27; means that 27 of the universities in our sample visited choate
+      
+      # for each university that visited choate, degree represents the number of private high schools they visited (including choate)
+      degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE] 
+      degree(egos_hs[["00233261"]], v = V(egos_hs[["00233261"]])$type==TRUE) # same same
+      
+      max(degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]) # max = 595; 
+      
+    #create sub-graph from ego network
+      str(V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]) 
+      V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]
+    #as.integer(temp)
+
+    #?induced_subgraph
+    induced_subgraph(
+      graph = egos_hs[["00233261"]],
+      vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]
+    )    
+
+    # problem is that this subgraph has no edges      
+      induced_subgraph(graph = egos_hs[["00233261"]], vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE])
+      
+      class(induced_subgraph(graph = egos_hs[["00233261"]], vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]))
+      ecount(induced_subgraph(graph = egos_hs[["00233261"]], vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]))
+      vcount(induced_subgraph(graph = egos_hs[["00233261"]], vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==TRUE]))
+      
+      induced_subgraph(graph = egos_hs[["00233261"]], vids = V(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==FALSE])
+
+
+    # plot ego network of high school
+      plot(
+        x = egos_hs[["00233261"]],
+        vertex.label = if_else(V(egos_hs[["00233261"]])$type, V(egos_hs[["00233261"]])$univ_abbrev_ipeds, ""),
+        vertex.color = if_else(V(egos_hs[["00233261"]])$type, "lightblue", "salmon"),
+        vertex.size = if_else(V(egos_hs[["00233261"]])$type, 5, 3)
+        
+      )
+    # try plotting subgraph
+      plot(
+        x = egos_hs[["00233261"]],
+        vertex.label = if_else(V(egos_hs[["00233261"]])$type, V(egos_hs[["00233261"]])$univ_abbrev_ipeds, ""),
+        vertex.color = if_else(V(egos_hs[["00233261"]])$type, "lightblue", "salmon"),
+        vertex.size = if_else(V(egos_hs[["00233261"]])$type, 5, 3)
+        
+      )
+      
+    
+    
+
+    
+
+    # degree, type == private high school (FALSE)
+      
+      length(degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==FALSE]) # 1426
+      
+      # note that degree includes visits of order = 1 and order = 2
+      
+      # degree includes presence of a visit from ego to the HS (order =1, which counts as degree of 1) and number of other universities that visited the HS
+      degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==FALSE]
+      degree(egos_hs[["00233261"]], v = V(egos_hs[["00233261"]])$type==FALSE) # same same
+
+      # max.
+      max(degree(egos_hs[["00233261"]])[V(egos_hs[["00233261"]])$type==FALSE]) # max = 27; a high school visited by the ego was visited by 31 total universities (including ego)
+      
+# vertex strength
+        
+  # definition of vertex strength:
+    # for weighted networks, vertex strength = sum of weights of edges incident to a given vertex
+    
+    
+  # one mode (vertices = universities)
+    # vertices = universities
+    # edges = whether both universities visited at least one high school in common
+    
+    vcount(g_1mode_psi)
+    ecount(g_1mode_psi)
+    
+    # strength
+    degree(g_1mode_psi)
+    strength(g_1mode_psi)
+    str(degree(g_1mode_psi))
+    
+    # historgram of degree    
+    hist(
+      strength(g_1mode_psi), 
+      col="lightblue", 
+      xlab="Vertex strength", 
+      ylab="Frequency", 
+      main=""
+    )
+
+
+  # 2- mode object
+    # vertices = high schools (mode 1) and universities (mode 2)
+      # total number of vertices = 1785
+    # edges = whether a particular high school i (mode 1) was visited by a particular university j (mode 2)
+
+    vcount(g_2mode)
+    ecount(g_2mode)
+    
+    # strength
+      length(degree(g_2mode)) # length = 1785
+
+      # mode 1 = high schools
+        length(degree(g_2mode)[V(g_2mode)$type == FALSE]) # 1742
+        length(strength(g_2mode)[V(g_2mode)$type == FALSE]) # 1742
+        
+        degree(g_2mode)[V(g_2mode)$type == FALSE]
+        strength(g_2mode)[V(g_2mode)$type == FALSE]
+        
+
+      # mode 2 = universities
+        degree(g_2mode)[V(g_2mode)$type == T]
+        strength(g_2mode)[V(g_2mode)$type == T]
+
+
+# PLOTTING DEGREE CENTRALITY
+        
+    # idea: central vertices are the ones w/ the most edges
+    
+    # when would we want to use this?
+      
+      # for g_2mode, would want to know which high schools are the most central
+      # for g_1mode_hs, would want to know which high schools are connected to other high schools by a visit from a common university
+      # for ego network where ego = university, would want to know degree centrality of high schools the university visited; that is, which other universities visited these high schools
+        
+        
+        degree(g_2mode)
+        
+        degree(g_2mode)[V(g_2mode)$type == F] # high schools
+        max(degree(g_2mode)[V(g_2mode)$type == F]) # 
+
+      # plot 2 mode, with vertex size determined by degree        
+      plot(
+        x = g_2mode, 
+        vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, ""),
+        vertex.shape = if_else(V(g_2mode)$type, "square", "circle"),
+        vertex.color = if_else(V(g_2mode)$type, "lightblue", "salmon"),
+        vertex.size = if_else(V(g_2mode)$type, 5, degree(g_2mode)/3),
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        
+      )
+
+  # for ego network where ego = university, would want to know degree centrality of high schools the university visited; that is, which other universities visited these high schools
+
+    # PLOT EGO NETWORK, INCLUDING ORDER 1 AND 2      
+      plot.igraph(
+          x = egos_psi[["139658"]], # emory
+          #vertex.label = "",
+          vertex.label = if_else(V(egos_psi[["139658"]])$type, V(egos_psi[["139658"]])$univ_abbrev_ipeds, ""),
+          vertex.shape = if_else(V(egos_psi[["139658"]])$type, "square", "circle"),
+          vertex.color = if_else(V(egos_psi[["139658"]])$type, "lightblue", "salmon"),
+          vertex.size = if_else(V(egos_psi[["139658"]])$type, 5, 3),
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )
+      
+      egos_psi[["139658"]] %>% vcount()
+      egos_psi[["139658"]] %>% ecount()
+
+      # plot ego network order = 1
+      plot.igraph(
+        x = subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]), # emory
+        vertex.label = NA,
+        vertex.shape = "circle",
+        vertex.color = "lightblue",
+        vertex.size = 5,        
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      )
+      
+      subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]) %>% degree()
+      
+      # plot subgraph, order = 2
+        ego_emory_order2 <- subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2])
+        
+        degree(ego_emory_order2)[V(ego_emory_order2)$type ==T]
+        degree(ego_emory_order2)[V(ego_emory_order2)$type ==F]
+
+        # without making vertex size based on degree centrality        
+        plot.igraph(
+          x = ego_emory_order2, # emory
+          vertex.label = if_else(V(ego_emory_order2)$type, V(ego_emory_order2)$univ_abbrev_ipeds, ""),
+          vertex.shape = if_else(V(ego_emory_order2)$type, "square", "circle"),
+          vertex.color = if_else(V(ego_emory_order2)$type, "lightblue", "salmon"),
+          vertex.size = if_else(V(ego_emory_order2)$type, 5,3),
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )
+
+        # making vertex size based on degree centrality        
+        plot.igraph(
+          x = ego_emory_order2, # emory
+          vertex.label = if_else(V(ego_emory_order2)$type, V(ego_emory_order2)$univ_abbrev_ipeds, ""),
+          vertex.shape = if_else(V(ego_emory_order2)$type, "square", "circle"),
+          vertex.color = if_else(V(ego_emory_order2)$type, "lightblue", "salmon"),
+          vertex.size = if_else(V(ego_emory_order2)$type, 5, degree(ego_emory_order2)/3),
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )        
+# vertex centrality
+  # Many questions that might be asked about a vertex in a network graph essentially seek to understand its ‘importance’ in the network
+    
+        
+
+  # closeness centrality
+    # Closeness centrality measures attempt to capture the notion that a vertex is ‘central’ if it is ‘close’ to many other vertices. 
+      # The standard approach, introduced by Sabidussi [21], is to let the centrality vary inversely with a measure of the total 
+      # distance of a vertex from all others,        
+    #?closeness
+        
+    # for which igraph objects would closeness centrality be important for?
+        
+        # basically, interested in closeness centrality of high schools (which high schools are close to other vertices in terms of length of path)
+    
+    #closeness(graph, vids = V(graph), weights = NULL, normalized = FALSE)
+      closeness(graph = g_1mode_psi, vids = V(g_1mode_psi), normalized = FALSE)
+    closeness(graph = g_1mode_psi, vids = V(g_1mode_psi), normalized = TRUE)
+    
+    vertex_attr_names(g_1mode_psi)
+    V(g_1mode_psi)$control_ipeds
+    V(g_1mode_psi)$control_ipeds == "Public"
+    
+    closeness(graph = g_1mode_psi, vids = V(g_1mode_psi)[V(g_1mode_psi)$control_ipeds == "Public"], normalized = FALSE)
+    closeness(graph = g_1mode_psi, vids = V(g_1mode_psi)[V(g_1mode_psi)$control_ipeds == "Private not-for-profit"], normalized = FALSE)
+    
+    # igraph object = g_1mode_psi
+      close_1mode_psi <- closeness(graph = g_1mode_psi, vids = V(g_1mode_psi), normalized = TRUE)
+      
+      close_1mode_psi
+      max(close_1mode_psi)
+      min(close_1mode_psi)
+        
+    # igraph object = g_1mode_hs
+      close_1mode_hs <- closeness(graph = g_1mode_hs, vids = V(g_1mode_hs), normalized = TRUE)
+      
+      close_1mode_hs
+      max(close_1mode_hs)
+      min(close_1mode_hs)
+      V(g_1mode_hs)[close_1mode_hs > .61] # vertex id = 01160835
+      
+    # igraph object = g_2mode
+      close_2mode <- closeness(graph = g_2mode, vids = V(g_2mode), normalized = TRUE)
+      
+      close_2mode
+      
+      # high schools
+      close_2mode[V(g_2mode)$type == FALSE]
+      max(close_2mode[V(g_2mode)$type == FALSE])
+      min(close_2mode[V(g_2mode)$type == FALSE])
+
+      # universities
+      close_2mode[V(g_2mode)$type == T]
+      max(close_2mode[V(g_2mode)$type == T])
+            
+  # betweenness centrality
+    # Betweenness centrality measures are aimed at summarizing the extent to which a vertex is located ‘between’ other pairs of vertices.
+    ?betweenness
+        
+    # not sure how important betweenness centrality or eigen_centrality are to our analyses
+      
+  # eigenvector centrality
+    # centrality measures that are based on notions of ‘status’ or ‘prestige’ or ‘rank.’ That is, they seek to capture the idea that 
+      # the more central the neighbors of a vertex are, themore central that vertex itself is.
+    ?eigen_centrality
+        
+# characterizing edges    
+    
+    # skipped
+      
+## ---------------------------
+## 4.3 Characterizing network cohesion
+## ---------------------------
+    
+  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  # START HERE ON 9/11/2020
+## ---------------------------
+## 4.4 graph partitioning (community detection)
+## ---------------------------
+    
+## ---------------------------
+## 4.5 assortativity and mixing
+## ---------------------------
+    
+
+    
+    
 # number of vertices and edges  
   V(two_mode_network) # number of vertices = 1785 = 43+1742 = number of universities + number of private hS that got at least one visit
     
