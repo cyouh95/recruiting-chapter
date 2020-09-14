@@ -192,7 +192,7 @@ hs_directory %>% group_by(st_leaid) %>%
 hs_directory$leaid
 nrow(hs_directory %>% filter(nchar(leaid) == 7)) #102,337 (all length 7), dictionary says that length of 7
 
-#Check that NCES agency is unique identifier
+#Check that NCES agency identification number is unique identifier
 hs_directory %>% group_by(leaid) %>% 
   summarise(n_per_group=n()) %>%
   ungroup %>%
@@ -286,22 +286,6 @@ for(i in names(hs_directory)) {
 #chartauth2: 102,212 missing
 #chartauthn2: 102,212 missing
 
-#Renaming variables
-hs_directory <- hs_directory %>% rename(year = "school_year",
-                                        state_code = "st",
-                                        state_fips_code = "fipst",
-                                        name = "sch_name",
-                                        address = "mstreet1", 
-                                        city = "mcity",
-                                        zip_code = "mzip", 
-                                        address_2 = "lstreet1") 
-
-
-
-
-
-
-names(hs_directory)                                  
 
 ##Loading & investigating data: CCD School Characteristics Data for 2017-2018
 hs_character<- read.csv('./data/ccd_school_characteristics_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character',
@@ -585,10 +569,9 @@ for (i in names(hs_membership)) {
 #Check variable labels
 hs_membership %>% var_label() # variable labels
 
-#recode race & ethnicity
+#create race,grade,gender & then pivot wider
 hs_membership %>% group_by(race_ethnicity) %>% count()
 
-#create race,grade,gender & then pivot wider
 hs_membership <-hs_membership %>% mutate(race_grade_gender = case_when(
   race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 9' & sex == 'Female' ~ 'am09f', 
   race_ethnicity == 'American Indian or Alaska Native' & grade == 'Grade 9' & sex == 'Male' ~ 'am09m', 
@@ -872,6 +855,34 @@ hs_membership$tr <- rowSums(hs_membership[,c('tralf','tralm')], na.rm = TRUE)
 
 hs_membership$ns <- rowSums(hs_membership[,c('ns09ns', 'ns10ns', 'ns11ns', 'ns12ns', 'ns13ns')], na.rm = TRUE)
 
+#Merge CCD datasets: hs_directory, hs_lunch, hs_character, hs_membership
+#Left Joins
+ccd_full <-left_join(hs_membership, hs_directory, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
+ccd_full <- left_join (ccd_full, hs_lunch, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
+ccd_full <- left_join (ccd_full, hs_character, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
 
-#to do: merge (merge all ccd), rename, anything else?
+#rename variables
+names(ccd_full)
+ccd_full <- ccd_full %>% rename( #the top four didn't work because names are duplicated with merge
+  #'name' = c('sch_name.x', 'sch_name.x.x', 'sch_name.y', 'sch_name.y.y'),
+  #'year'= c('school_year.x', 'school_year.x.x', 'school_year.y', 'school_year.y.y'),
+  #'state_code' = c('st.x', 'st.x.x', 'st.y', 'st.y.y'), 
+  #'state_fips_code' = c('fipst.x', 'fipst.x.x', 'fipst.y', 'fipst.y.y'),
+  'l_zip_code' = 'lzip', 
+  'm_zip_code' =  'mzip', 
+  'l_street_address' = 'lstreet1', 
+  'lstreet_address_2' = 'lstreet2', 
+  'm_street_address' = 'mstreet1', 
+  'm_street_address_2' = 'mstreet2', 
+  'l_city' = 'lcity', 
+  'm_city' = 'mcity', 
+  'school_type' = 'sch_type', 
+  'school_type_text' = 'sch_type_text', 
+  'g09offered' = 'g_9_offered', 
+  'g10offered'= 'g_10_offered', 
+  'g11offered' = 'g_11_offered', 
+  'g12offered' = 'g_12_offered')
+
+
+
 
