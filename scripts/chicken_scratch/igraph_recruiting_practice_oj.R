@@ -960,12 +960,477 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
 ## 4.3 Characterizing network cohesion
 ## ---------------------------
     
-  # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  # START HERE ON 9/11/2020
+  #What is network cohesion
+    # "network cohesion" defined as the extent to which subsets of vertices are cohesive—or ‘stuck together’— with respect to the relation defining edges in the network graph."
+    # own: what is meant by "with respect to the relation defining edges in the network graph"
+
+  # Examples: Do friends of a given actor in a social network tend to be friends of one another as well? [tie = whether two vertices are friends in a social network]
+
+# complete graph and complete bipartite graph
+      
+  # complete graph (1 mode)
+    #- https://en.wikipedia.org/wiki/Complete_graph
+    #- "In the mathematical field of graph theory, a complete graph is a simple undirected graph in which every pair of distinct vertices is connected by a unique edge"
+    #- own: imagine a graph $G$ that consists of vertices A, B, C, D; in a complete graph, each vertex is connected to all other vertices. so - assuming an undirected graph - we would have the following edges: A-B, A-C, A-D, B-C, B-D, C-D      
+      
+  # complete bipartite graph (also called a biclique): 
+    # A complete bipartite graph is a graph whose vertices can be partitioned into two subsets V1 and V2 such that no edge has both endpoints in the same subset, and every possible edge that could connect vertices in different subsets is part of the graph. 
+    # Example: 
+      # mode 1 consists of vertices A, B, C
+      # mode 2 consists of vertices 1, 2, 3, 4
+      # edges consist of:
+        # A-1, A-2, A-3, A-4
+        # B-1, B-2, B-3, B-4
+        # C-1, C-2, C-3, C-4
+      
+            
+      
+# Define subgraph
+  # - consider a graph $G$ consisting of a set of vertices $V$ and the set of edges/relations $E$ connecting vertices. 
+  # - Imagine we choose a subset of vertices $V'$ within larger set $V$
+  # - then the subgraph consists of all vertices $V'$ and all their relations $E'$ which are a subset of the full set of relations $E$            
+
+# Many ways to define what counts as network cohesion
+  # - local cohesion = triads
+  # - cohesion defined explicitly = clicks
+  # - cohesion defined implicitly = "clusters" or "communities"
+
+# Canonical example of a subgraph is a "clique"
+  # cliques are "cliques are complete subgraphs and hence are subsets of vertices that are fully cohesive, in the sense that every vertex within the subset is connected by one edge to every other vertex within the subset"            
+  # can use igraph::cliques() to identify cliques in a 1-mode network
+      
+  # we can only apply cliques() function to 1-mode networks. let's try g_1mode_hs where:
+    # vertices = high schools
+    # edges between two high schools: at least one university visited both high schools
+      
+    g_1mode_hs
+    # cliques(g_1mode_hs) # note that cliques of larger sizes include cliques of smaller sizes
+    
+  # maximal clique is a clique that is not a subset of a smaller clique
+  # max_cliques() # 
+    
+    #- a "maximal" clique is a clique that is not a subset of a larger clique
+    
+    #`igraph::max_cliques()`: "finds all maximal cliques in the input graph. A clique in maximal if it cannot be extended to a larger clique. The largest cliques are always maximal, but a maximal clique is not neccessarily the largest."
+    
+    #- syntax: `max_cliques(graph, min = NULL, max = NULL, subset = NULL, file = NULL)`
+    #- where:
+      #- `subset`. If not NULL, then it must be a vector of vertex ids, numeric or symbolic if the graph is named. The algorithm is run from these vertices only, so only a subset of all maximal cliques is returned
+      #- `file`. If not NULL, then it must be a file name, i.e. a character scalar. The output of the algorithm is written to this file. (If it exists, then it will be overwritten.)
+    
+      
+# packages/functions to identify bicliques in a bipartite network
+  install.packages("biclique")
+  library(biclique)
+  ?biclique
+  # from https://bmcresnotes.biomedcentral.com/articles/10.1186/s13104-020-04955-0
+    # Biclique consists of four R functions. The core function, bi.clique, invokes an efficient algorithm to enumerate maximal bicliques. Three utility functions, bi.format, bi.print, and bi.degree, provide formatting and output support.
+
+  ?bi.clique # the core function         
+      
+    # system.file("extdata", "example1.el", package = "biclique")
+
+  library(bipartite)
+  ?bipartite
+
+# DYADS AND TRIADS
+  
+  # note: both dyad_census and triad_census are meant for directed graphs
+  
+  # dyads
+    # dyads have two possible states in undirected graphs: null and present
+    # dyads have three possible states in directed graphs: null; asymmetric; mutual
+  # census of dyads: for each pair of vertices, identify the state
+  
+  #let's try g_1mode_hs where:
+    # vertices = high schools
+    # edges between two high schools: at least one university visited both high schools
+      
+    g_1mode_hs
+    # run on 1 mode psi data
+    dyad_census(g_1mode_psi)
+    
+    dyad_census(g_1mode_hs) # seems to be more for directed graphs
+    ?dyad_census
+  
+  # note: both dyad_census and triad_census are meant for directed graphs
+    # triad_census(g_1mode_psi)
+    
+# DENSITY AND RELATED NOTIONS OF RELATIVE FREQUENCY
+  
+  # "density"
+    # density is the frequency of realized edges (i.e., edges that exist) relative to potential edges
+  
+  #sub-graph H
+    #- graph $ G = (V,E)$; subgraph $H$ consists of a subset of vertices from $V$ denotes $V_H$ and all pairs the edges $E_H$ that connect pairs of vertices in $V_H$
+  
+  
+  #density of a subgraph $H$ (for an undirected graph)
+    # E- $den(H) = \frac{|E_H|}{|V_H|(|V_H|-1)/2}$
+    # E- __"The value of den(H) will lie between zero and one and provides a measure of how close H is to being a clique."__
+  
+  #?edge_density of entire network
+    edge_density(g_1mode_psi)
+    edge_density(g_1mode_hs)
+    
+  # the neighborhood function
+    # syntax: neighborhood(graph, order = 1, nodes = V(graph), mode = c("all", "out", "in"), mindist = 0)
+  
+  # create ego network for a single high school
+    V(graph = g_1mode_hs)
+    as.integer(V(graph = g_1mode_hs))
+    #as.integer(V(graph = g_2mode)[V(g_2mode)$type == TRUE])
+    
+  # identify the neighbors of a particular private high school
+    # you can do this using numeric node id number or the vertex name attribute attached to particular id number
+    
+    #using node id number
+    neighborhood(
+      graph = g_1mode_hs, 
+      order = 1, 
+      nodes = c(1),
+      mindist = 0
+    )
+    
+    # using vertex name attribute attached to particular id number
+      # choate == "00233261"
+      # HOLY SPIRIT CATHOLIC SCHOOL == "00000044"; in tuscaloosa AL
+    
+    # holy spirit catholic school in tuscaloosa AL
+    neighborhood(
+      graph = g_1mode_hs, 
+      order = 1, 
+      nodes = c("00000044"),
+      mindist = 0
+    )
+    
+    # holy spirit catholic school and Choate
+    neighborhood(
+      graph = g_1mode_hs, 
+      order = 1, 
+      nodes = c("00000044","00233261"),
+      mindist = 0
+    )
+    
+    # create ego network for holy spirit catholic school
+      
+      # identifying vertices that are immediate neighbors
+      neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00000044"), mindist = 0) # list of one element
+      neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00000044"), mindist = 0)[[1]] # named numeric vector
+      
+      # create ego network subgraph [one step]
+      induced_subgraph(
+        graph = g_1mode_hs,
+        vids = neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00000044"), mindist = 0)[[1]]    
+      )
+      
+      # assign object
+      holy_spirit <- induced_subgraph(
+        graph = g_1mode_hs,
+        vids = neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00000044"), mindist = 0)[[1]]    
+      )
+      class(holy_spirit)
+      holy_spirit
+        vcount(holy_spirit)*(vcount(holy_spirit)-1)/2
+        ecount(holy_spirit)
+        ecount(holy_spirit)/(vcount(holy_spirit)*(vcount(holy_spirit)-1)/2)
+    
+      choate <- induced_subgraph(
+        graph = g_1mode_hs,
+        vids = neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00233261"), mindist = 0)[[1]]    
+      )
+      choate
+      
+      # "00000226" = john carroll catholic high school in birmingham AL
+      john_carroll <- induced_subgraph(
+        graph = g_1mode_hs,
+        vids = neighborhood(graph = g_1mode_hs, order = 1, nodes = c("00000226"), mindist = 0)[[1]]    
+      )
+      john_carroll
+      
+        vcount(john_carroll)*(vcount(john_carroll)-1)/2
+        ecount(john_carroll)
+        ecount(john_carroll)/(vcount(john_carroll)*(vcount(john_carroll)-1)/2)
+        
+      edge_density(john_carroll)
+      
+      edge_density(g_1mode_hs)
+      edge_density(holy_spirit)
+      edge_density(choate)
+    
+# clustering coefficient/transitivity
+  #?transitivity
+    #Transitivity measures the probability that the adjacent vertices of a vertex are connected. This is sometimes also called the clustering coefficient.
+      
+  # calculate transitivity for entire network
+    transitivity(
+      graph = g_1mode_hs,
+      type = "global",
+      vids = NULL,
+      weights = NULL,
+      #isolates = "zero", # isolates = c("NaN", "zero")
+    )
+
+    # weighted transitivity; calculates transitivity for each vertex
+    edge_attr_names(g_1mode_hs)
+    transitivity(
+      graph = g_1mode_hs,
+      type = "weighted",
+      vids = NULL,
+      weights = NULL,
+      #isolates = "zero", # isolates = c("NaN", "zero")
+    )
+    
+  # calculate transitivity for specific local vertices
+  transitivity(
+    graph = g_1mode_hs,
+    type = "local",
+    vids = c("00000044","00233261"),
+    weights = NULL,
+    #isolates = "zero", # isolates = c("NaN", "zero")
+  )    
+
+  # calculates weighted transitivity for specific local vertices  
+  transitivity(
+    graph = g_1mode_hs,
+    type = "weighted",
+    vids = c("00000044","00233261"),
+    weights = NULL,
+    #isolates = "zero", # isolates = c("NaN", "zero")
+  )
+  
+# CONNECTIVITY, CUTS, AND FLOWS  
+  
+  # Recall that a graph G is said to be connected if every vertex is reachable from every other (i.e., if for any two vertices, there exists a walk between the two), and that a connected component of a graph is a maximally connected subgraph
+
+  # all are connected
+  is_connected(g_1mode_psi)
+  is_connected(g_1mode_hs)
+  is_connected(g_2mode)
+  
+  #?deompose
+    # decomposes graph object into separate graph objects for each component
+    # result is a "list of graph objects"; presumably one graph object per component
+    # if the graph is connected, then decompose(graph) will yield the original graph object cuz it can't be decomposed
+  decompose(g_1mode_psi)
+  str(decompose(g_1mode_psi))
+  
+  # a census of connected components and how many vertices in each
+  table(sapply(decompose(g_1mode_psi), vcount))
+  
+  table(sapply(decompose(g_1mode_hs), vcount))
+  
+  table(sapply(decompose(g_2mode), vcount))
+  
+  # biggest connected component is the "giant component"; since our igraph objects only have a single component (i.e., all vertices are connected)  
+    # then the giant component is the same thing as the graph
+  
+  # "small world property"
+    # a celebrated characteristic observed in the giant component of many real-world networks is the so-called smallworld property,which refers to the situation
+      # wherein (a) the shortest-path distance between pairs of vertices is generally quite small, but (b) the clustering is relatively high.
+  
+  # ?mean_distance
+    # mean_distance calculates the average path length in a graph, by calculating the shortest paths between all pairs of vertices (both ways for directed graphs)
+  mean_distance(g_1mode_psi)
+  mean_distance(g_1mode_hs)
+  mean_distance(g_2mode)
+  
+  #?diameter
+    #The diameter of a graph is the length of the longest geodesic.
+  diameter(g_1mode_psi) # 31 is max. which set of pairs is this?
+  diameter(g_1mode_hs) # 3 is max
+  diameter(g_2mode) # 10 is max
+  
+  
 ## ---------------------------
 ## 4.4 graph partitioning (community detection)
 ## ---------------------------
+ 
+# overview of what is partitioning and why useful     
+  # "Partitioning" —broadly speaking—refers to the segmentation of a set of elements into ‘natural’ subsets
+
+  #How partitioning is deemed useful in network analysis
+    #- "In the analysis of network graphs, partitioning is a useful tool for finding, in an unsupervised fashion, subsets of vertices that demonstrate a ‘cohesiveness’ with respect to the underlying relational patterns."
+  #what is meant by a "cohesive" subset of vertices (conceptually)?
+    #- "A ‘cohesive’ subset of vertices generally is taken to refer to a subset of vertices that [satisfy two broad conditions]:
+    # - (i) are well connected among themselves, 
+    # - (ii) and, at the same time, are relatively well separated from the remaining vertices."
+  
+#Two well-established classes of methods for "community detection"
+
+#1. methods based on adaptations of hierarchical clustering
+#1. methods based on spectral partitioning
+
+#what Zach says [from 8/14/2020 email] on whether to prefer hierarchical clustering vs. spectral partitioning approach:
+
+  #- "I forget precisely what spectral partitioning means.  
+  #I like hierarchical clustering when starting out because it’s intuitive and produces decent looking charts.  
+    # Modularity maximization, the most common one now, is a type of hierarchical clustering."  
+  
+#?cluster_fast_greedy  
+  
+kc_1mode_psi <- cluster_fast_greedy(g_1mode_psi)
+
+kc_1mode_psi
+str(kc_1mode_psi) # a list of two elmenents, one for each community
+
+length(kc_1mode_psi)
+sizes(kc_1mode_psi)
+
+membership(kc_1mode_psi)
+
+plot(
+  kc_1mode_psi,
+  g_1mode_psi,
+  vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds
+)
+
+  # in addition to the two communities the dend plot shows which vertex within a commmnity is particularly similar to one another
+   # hierarchical clustering methods actually produce, as the name indicates, an entire hierarchy of nested partitions of the graph, not just a single partition
+  
+  library(ape)
+  dendPlot(kc_1mode_psi, mode="phylo")
+  
+  #dendPlot(kc_1mode_psi, mode="phylo",#vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds)
+
+  # how to do "Modularity maximization" which Zach said was the most common type of hierarchical clustering
+    ?cluster_optimal
+    # syntax
+      #cluster_optimal(graph, weights = NULL)
+    #Arguments
+      # graph	
+        # The input graph. Edge directions are ignored for directed graphs.
+      # weights	
+        # Optional positive weight vector for optimizing weighted modularity. If the graph has a weight edge attribute, then this is used by default. Supply NA to ignore the weights of a weighted graph. Larger edge weights correspond to stronger connections.  
+
+  coptimal_1mode_psi <- cluster_optimal(graph = g_1mode_psi)
+
+  coptimal_1mode_psi
+  str(coptimal_1mode_psi) # a list of two elmenents, one for each community
+  
+  length(coptimal_1mode_psi)
+  sizes(coptimal_1mode_psi)
+  
+  membership(coptimal_1mode_psi)
+  membership(kc_1mode_psi)
+  
+  plot(
+    coptimal_1mode_psi,
+    g_1mode_psi,
+    vertex.label = V(g_1mode_psi)$univ_abbrev_ipeds
+  )
+  
+# cluster fast and greedy applied to 1-mode HS object
+  # motivating idea: which high schools are similar to one another with respect to high schools being visited by one or more universities in common
+
+  c_1mode_hs <- cluster_fast_greedy(g_1mode_hs)
+
+  length(c_1mode_hs) # 4 communities
+  sizes(c_1mode_hs) # of size (respectively): 62, 609, 33, 1038
+
+  c_1mode_hs
+  str(c_1mode_hs)
+  
+  membership(c_1mode_hs)
+
+plot(
+  c_1mode_hs,
+  g_1mode_hs,
+  vertex.label = NA,
+  vertex.size = 2
+)
+
+  # what would you do with this? plotting seems not helpful for so many vertices. 
+    # think you would merge back to original igraph object as a vertex attribute
+    # and then compare how characteristics of vertices across different communities
+
+# possible to apply fast and greedy to 2-mode object?
+
+c_2mode <- cluster_fast_greedy(g_2mode)
+
+  length(c_2mode) # 5
+  sizes(c_2mode) # of size (respectively): 35, 483, 463, 377, 77
+
+  c_2mode
+  str(c_2mode)
+  
+  membership(c_2mode)
+  
+  # it is possible to run the function but not sure if results are worthwhile
+  
+# fast and greedy applied to ego networks?
+
+  emory_order1 <- subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1])
+  
+  emory_order2 <- subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2])
+  
+  # plot emory order 1
+      plot.igraph(
+        #x = subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==1]), # emory
+        x = emory_order1,
+        vertex.label = NA,
+        vertex.shape = "circle",
+        vertex.color = "lightblue",
+        vertex.size = 5,        
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      )
+
+      emory_order1 %>% V()
+      emory_order1 %>% E()
+      
+  # plot emory order 2
+
+        plot.igraph(
+          #x = subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]), # emory
+          x = emory_order2,
+          vertex.label = NA,
+          vertex.shape = "circle",
+          vertex.color = "lightblue",
+          vertex.size = 5,        
+          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        )      
+            
+      emory_order2 %>% V()
+      emory_order2 %>% E()
+      
+    # try to create communities from emory order 2
+      c_emory_order2 <- cluster_fast_greedy(emory_order2)
+      
+      length(c_emory_order2) # 4
+      sizes(c_emory_order2) # 34, 100, 104, 62
     
+      c_emory_order2
+      str(c_emory_order2)
+      
+      membership(c_emory_order2)
+      
+
+      plot(
+        c_emory_order2,
+        emory_order2,
+        #vertex.shape <- if_else(V(emory_order2)$type, "square", "circle"),
+        vertex.size <- if_else(V(emory_order2)$type, 5, 2),
+        vertex.label = if_else(V(emory_order2)$type, V(emory_order2)$univ_abbrev_ipeds, ""),
+      )            
+
+      vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, "")
+  
+      V(g_1mode_psi)$control_ipeds
+      str(V(g_1mode_psi)$control_ipeds)
+      
+  # set aesthetics of vertex attributes in two-mode object
+    is_bipartite(g_2mode)
+    V(g_2mode)$type
+    
+    vertex_attr_names(g_2mode)
+    
+    #plot(x = g_2mode)
+    
+    # create vertex attributes that will be used as aesthetics in plots
+      V(g_2mode)$color <- if_else(V(g_2mode)$type, "lightblue", "salmon")
+      V(g_2mode)$shape <- if_else(V(g_2mode)$type, "square", "circle")
+      V(g_2mode)$size <- if_else(V(g_2mode)$type, 20, 2)
+  
 ## ---------------------------
 ## 4.5 assortativity and mixing
 ## ---------------------------

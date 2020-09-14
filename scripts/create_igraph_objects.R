@@ -238,7 +238,8 @@ privhs_events %>% count(event_type)
         select(ncessch,name,address,city,state_code,zip_code,pzip4,county_fips_code,county_name,address_2,pl_cit,pl_stabb,pl_zip,pl_zip4,region,state_fips_code,
                locale_code,latitude,longitude,logr2018,higr2018,pct_to_4yr,school_type,typology,relig,orient,diocese,level,total_students,size,total_09,total_10,
                total_11,total_12,total_enrolled,total_hispanic,total_white,total_black,total_asian,total_nativehawaii,total_amerindian,total_tworaces,
-               total_teachers,community_type,pct_amerindian,pct_asian,pct_nativehawaii,pct_hispanic,pct_white,pct_black,pct_tworaces,sttch_rt)
+               total_teachers,community_type,pct_amerindian,pct_asian,pct_nativehawaii,pct_hispanic,pct_white,pct_black,pct_tworaces,sttch_rt) %>%
+        arrange(ncessch)
       
     #add suffix _pss to all variables
         names(privatehs_somevars)
@@ -247,7 +248,9 @@ privhs_events %>% count(event_type)
           #paste(names(privatehs_somevars),"pss",sep="_") # same same
 
         names(privatehs_somevars) <- str_c(names(privatehs_somevars),"pss",sep="_")
-
+        privatehs_somevars %>% glimpse()
+        #privatehs_somevars %>% arrange() %>% glimpse()
+        
     # perform left join
         attributes(privatehs_somevars$ncessch_pss)
         attributes(v_attr_2mode$ppin)
@@ -424,7 +427,7 @@ privhs_events %>% count(event_type)
   max(E(g_2mode)$weight)
   
 # familiarize yourself w/ igraph::bipartite.projectio()
-   ?bipartite.projection
+   #?bipartite.projection
   # syntax
     # bipartite_projection(graph, types = NULL, multiplicity = TRUE, probe1 = NULL, which = c("both", "true", "false"), remove.type = TRUE)
   
@@ -662,7 +665,8 @@ privhs_events %>% count(event_type)
       nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], 
       mindist = 0 # default = 0 means include itself as a node
     )
-    
+    #V(graph = g_2mode)[V(g_2mode)$type == TRUE]
+    #as.integer(V(graph = g_2mode)[V(g_2mode)$type == TRUE])
     
     # assign name for each ego network
       # object has one element per ego network; assign name of element equal to the IPEDS ID #
