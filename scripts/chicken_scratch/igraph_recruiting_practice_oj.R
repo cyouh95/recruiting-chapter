@@ -121,7 +121,7 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
     # create vertex attributes that will be used as aesthetics in plots
       V(g_2mode)$color <- if_else(V(g_2mode)$type, "lightblue", "salmon")
       V(g_2mode)$shape <- if_else(V(g_2mode)$type, "square", "circle")
-      V(g_2mode)$size <- if_else(V(g_2mode)$type, 20, 2)
+      V(g_2mode)$size <- if_else(V(g_2mode)$type, 5, 2)
     
     # figuring out how to assign institution name as an aesthetic    
       V(g_2mode)$name
@@ -130,7 +130,8 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
     
     plot(
       x = g_2mode, 
-      vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, "")
+      vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, ""),
+      layout = layout_with_kk
     )
 
 # edge parameters
@@ -238,7 +239,24 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
         str(layout_in_circle(graph = g_1mode_hs)) # 1742 rows, two columns; first column gives x coordinates, second column gives y coordinates
         str(layout_in_circle(graph = g_2mode)) # 1785 rows, two columns
     
-      
+  # objects
+      # g_2
+      # g_1mode_psi
+      # g_1mode_hs
+
+    vertex_attr_names(g_1mode_hs)
+    plot.igraph(
+      x = g_1mode_hs, 
+      vertex.color = NA,
+      vertex.label = NA,
+      layout = layout_nicely,
+    )
+
+    plot(
+      x = g_2mode, 
+      vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, "")
+    )
+                    
   # experimenting with layout on 1-mode objects
     plot.igraph(
       x = g_1mode_psi, 
@@ -384,6 +402,9 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
       subgraph.edges(graph = egos_psi[["139658"]], eids = E(egos_psi[["139658"]])[E(egos_psi[["139658"]])$order==2]) %>% ecount()
       
       #plot
+      length(egos_psi)
+      class(egos_psi[[3]])
+      
       plot.igraph(
         x = egos_psi[["139658"]], # emory
         #vertex.label = "",
@@ -391,7 +412,8 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
         vertex.shape = if_else(V(egos_psi[["139658"]])$type, "square", "circle"),
         vertex.color = if_else(V(egos_psi[["139658"]])$type, "lightblue", "salmon"),
         vertex.size = if_else(V(egos_psi[["139658"]])$type, 5, 3),
-        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+        layout = layout_with_kk,
+        #layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
       )
       
       # plot subgraph, order =1
@@ -430,7 +452,8 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
           vertex.shape = if_else(V(ego_emory_order2)$type, "square", "circle"),
           vertex.color = if_else(V(ego_emory_order2)$type, "lightblue", "salmon"),
           vertex.size = if_else(V(ego_emory_order2)$type, 5,3),
-          layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+          layout = layout_with_kk,
+          #layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
         )
         
       # compare to plot that includes edges of order 1 and order 2
