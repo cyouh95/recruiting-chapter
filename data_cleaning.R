@@ -70,7 +70,7 @@ hs_direct_dict <- hs_direct_dict %>% mutate(names_lc = tolower(variable.name))
 #Loop to label data with dictionary
 for (i in names(hs_directory)) { #loop executed 65 times, first iteration of loop = school_year -> last variable igoffered
   description <- (hs_direct_dict %>% filter(names_lc == i))$description 
-  var_label(hs_directory[[i]]) <- description #label variables
+  var_label(hs_directory[[i]]) <- as.character(description) #label variables
 }
 
 #Check variable labels
@@ -314,7 +314,7 @@ hs_character_dict_subset <- hs_character_dict_subset %>% mutate(names_lc = tolow
 #Loop to label data with dictionary
 for (i in names(hs_character)) {
   description2 <- (hs_character_dict_subset %>% filter(names_lc == i))$description 
-  var_label(hs_character[[i]]) <- description2
+  var_label(hs_character[[i]]) <- as.character(description2)
 }
 
 #Check variable labels
@@ -331,8 +331,8 @@ hs_character %>% filter((school_year == "2017-2018")) %>% count() #99,899 observ
 
 #Check state code: digits & foreign key constraints
 hs_character$fipst
-nrow(hs_character %>% filter(nchar(fipst) == 2)) #81,244 (2 characters)
-nrow(hs_character %>% filter(nchar(fipst) == 1)) #18,655 (1 character)
+nrow(hs_character %>% filter(nchar(fipst) == 2)) #99,899 (2 characters)
+nrow(hs_character %>% filter(nchar(fipst) == 1)) #0 (1 character)
 
 #Check postal state code
 hs_character$st
@@ -341,7 +341,7 @@ nrow(hs_character %>% filter(nchar(st) == 2)) #99,899
 #Check union
 hs_character$union #a lot of NAs
 hs_character %>% filter(is.na(union)) %>% count() #97,438
-nrow(hs_character %>% filter(nchar(union) >= 3)) #1,598, length greater than or equal to 3, dictionary says variable is a length of 3
+nrow(hs_character %>% filter(nchar(union) >= 3)) #2,461, length greater than or equal to 3, dictionary says variable is a length of 3
 
 #Check state local education number
 hs_character$st_leaid
@@ -357,8 +357,8 @@ hs_character %>% group_by(st_leaid) %>%
 
 #Check that NCES agency identification number
 hs_character$leaid
-nrow(hs_character %>% filter(nchar(leaid) == 7)) #81,244, dictionary says that length of 7
-nrow(hs_character %>% filter(nchar(leaid) < 7)) #18,655 less than 7
+nrow(hs_character %>% filter(nchar(leaid) == 7)) #99,899, dictionary says that length of 7
+nrow(hs_character %>% filter(nchar(leaid) < 7)) #0 less than 7
 
 
 #Check that NCES agency is unique identifier
@@ -381,8 +381,8 @@ hs_character %>% group_by(st_schid) %>%
 
 #Check that school identifier (NCES) ID has 12 digits
 hs_character$ncessch
-nrow(hs_character %>% filter(nchar(ncessch) != 12)) #99,899, dictionary says ncessch is length of 12
-nrow(hs_character %>% filter(nchar(ncessch) == 11)) #91,253 most are 11 characters long
+nrow(hs_character %>% filter(nchar(ncessch) != 12)) #0, dictionary says ncessch is length of 12
+nrow(hs_character %>% filter(nchar(ncessch) == 11)) #0 most are 11 characters long
 
 #Check that school identifier (NCES) ID is unique identifier
 hs_character %>% group_by(ncessch) %>% 
@@ -392,8 +392,8 @@ hs_character %>% group_by(ncessch) %>%
 
 #Check that unique school ID 
 hs_character$schid
-nrow(hs_character %>% filter(nchar(schid) == 7)) #81,244, dictionary says schid is length of 7
-nrow(hs_character %>% filter(nchar(schid) == 6)) #18,655
+nrow(hs_character %>% filter(nchar(schid) == 7)) #99,899, dictionary says schid is length of 7
+nrow(hs_character %>% filter(nchar(schid) == 6)) #0
 
 #Check that unique school ID is unique identifier
 hs_character %>% group_by(schid) %>% 
@@ -438,7 +438,7 @@ hs_lunch_dict_subset <- hs_lunch_dict_subset %>% mutate(names_lc = tolower(varia
 #Loop to label data with dictionary
 for (i in names(hs_lunch)) { 
   description3 <- (hs_lunch_dict_subset %>% filter(names_lc == i))$description 
-  var_label(hs_lunch[[i]]) <- description3 
+  var_label(hs_lunch[[i]]) <- as.character(description3)
 }
 
 #Check variable labels
@@ -563,7 +563,7 @@ hs_membership_dict_subset <- hs_membership_dict_subset %>% mutate(names_lc = tol
 #Loop to label data with dictionary
 for (i in names(hs_membership)) {
   description5 <- (hs_membership_dict_subset %>% filter(names_lc == i))$description 
-  var_label(hs_membership[[i]]) <- description5
+  var_label(hs_membership[[i]]) <- as.character(description5)
 } 
 
 #Check variable labels
@@ -855,9 +855,11 @@ hs_membership$tr <- rowSums(hs_membership[,c('tralf','tralm')], na.rm = TRUE)
 
 hs_membership$ns <- rowSums(hs_membership[,c('ns09ns', 'ns10ns', 'ns11ns', 'ns12ns', 'ns13ns')], na.rm = TRUE)
 
+hs_membership$x <- NULL
+
 #Merge CCD datasets: hs_directory, hs_lunch, hs_character, hs_membership
 #Left Joins
-ccd_full <-left_join(hs_membership, hs_directory, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
+ccd_full <-left_join(hs_directory, hs_membership, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
 ccd_full <- left_join (ccd_full, hs_lunch, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
 ccd_full <- left_join (ccd_full, hs_character, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
 
