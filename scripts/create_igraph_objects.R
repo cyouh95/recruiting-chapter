@@ -743,6 +743,11 @@ privhs_events %>% count(event_type)
       #length(privhs_vec)
       names(egos_hs) <- privhs_vec %>% str_sort()
       
+    # assign order as edge attribute
+      for (i in 1:length(egos_hs)) {
+        E(egos_hs[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_hs[[i]]), which = "vnames"), pattern =names(egos_hs)[[i]]),1,2)
+      }
+      
   # create one ego network per psi
     #?make_ego_graph
     egos_psi <- make_ego_graph(
@@ -799,7 +804,11 @@ privhs_events %>% count(event_type)
         # egos_hs_privu
         egos_hs_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(graph = g_2mode_privu)[V(g_2mode_privu)$type == FALSE], mindist = 0)
         names(egos_hs_privu) <- unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id) %>% str_sort()
-      
+        
+        for (i in 1:length(egos_hs_privu)) {
+          E(egos_hs_privu[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_hs_privu[[i]]), which = "vnames"), pattern =names(egos_hs_privu)[[i]]),1,2)
+        }
+        
         # egos_psi_privu
         egos_psi_privu <- make_ego_graph(
           graph = g_2mode_privu, 
@@ -821,6 +830,10 @@ privhs_events %>% count(event_type)
         egos_hs_pubu <- make_ego_graph(graph = g_2mode_pubu, order = 2, nodes = V(graph = g_2mode_pubu)[V(g_2mode_pubu)$type == FALSE], mindist = 0)
         names(egos_hs_pubu) <- unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id) %>% str_sort()
         
+        for (i in 1:length(egos_hs_pubu)) {
+          E(egos_hs_pubu[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_hs_pubu[[i]]), which = "vnames"), pattern =names(egos_hs_pubu)[[i]]),1,2)
+        }
+        
         # egos_psi_pubu
         egos_psi_pubu <- make_ego_graph(
           graph = g_2mode_pubu, 
@@ -829,7 +842,7 @@ privhs_events %>% count(event_type)
           mindist = 0 # default = 0 means include itself as a node
         )
         
-        names(egos_psi_pubu) <- unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)  %>% str_sort()
+        names(egos_psi_pubu) <- unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds) %>% str_sort()
         
         for (i in 1:length(egos_psi_pubu)) {
           writeLines(str_c("i=",i,"; univ id=",names(egos_psi_pubu)[[i]]))
