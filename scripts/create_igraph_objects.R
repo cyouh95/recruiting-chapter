@@ -20,7 +20,7 @@ library(igraph)
 library(tidyverse)
 library(Hmisc)
 library(labelled)
-library(haven) 
+library(haven)
 
 ## ---------------------------
 ## Read in csv data; load R data
@@ -374,6 +374,41 @@ privhs_events %>% count(event_type)
   
   rm(two_mode_network)
   
+  # Create 2-mode objects that only contain vertices and edge associated with visits from private colleges/universities to private high schools
+    g_2mode_privu <- induced_subgraph(
+      graph = g_2mode,
+      vids = V(g_2mode)[(V(g_2mode)$name %in% (unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id))) | (V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Private not-for-profit")]
+    )
+  
+  # Create 2-mode objects that only contain vertices and edge associated with visits from public universities to private high schools
+    g_2mode_pubu <- induced_subgraph(
+      graph = g_2mode,
+      vids = V(g_2mode)[(V(g_2mode)$name %in% (unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id))) | (V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Private not-for-profit")]
+    )
+
+  # code from crystal to identify vertices associated with private high schools that received at least one visit from a private college/university
+    
+    # identify the vertices associated with private colleges/universities
+      #V(g_2mode)[V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Private not-for-profit"]
+      
+    # identify verticies of private high schools that received at least one visit from a private college/university; this creates a character vector
+      #unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id)
+
+    # same as above but returns an object that is a vertex sequence (underlying value is numeric and associated with a name attribute containing ID)
+      # V(g_2mode)[(V(g_2mode)$name %in% (unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id))) | (V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Private not-for-profit")]
+    
+    g_2mode_privu
+    g_2mode_pubu
+    
+    # checks that object created correctly
+      vertex_attr_names(graph = g_2mode_privu)
+      V(g_2mode_privu)$type %>% str()
+      edge_attr_names(graph = g_2mode_privu)
+      E(g_2mode_privu)$weight %>% str()
+      is_weighted(g_2mode_privu)
+      is_bipartite(g_2mode_privu)
+       
+
 ## ---------------------------
 ## Create igraph objects for one-mode analysis, but this time with vertex attributes consisting of HS and university characteristics
 ## ---------------------------
@@ -491,6 +526,7 @@ privhs_events %>% count(event_type)
       str(vertex_attr_names(g_1mode_hs)) # character vector of length = 86
       
       ipeds_vattr <- str_subset(string = vertex_attr_names(g_1mode_hs), pattern = "_ipeds")
+      ipeds_vattr
 
     # create loop that iterates once for each vertix attribute with suffix "_ipeds"; for each iteration, the loop deletes vertex attribute (with assignment)
       for (i in ipeds_vattr){
@@ -501,7 +537,7 @@ privhs_events %>% count(event_type)
       vertex_attr_names(g_1mode_hs)
       str(vertex_attr_names(g_1mode_hs)) # now fewer vertex attributes
       
-      rm(ipeds_vattr)
+      #rm(ipeds_vattr)
       rm(i)
       
   # what does each vertex/node represent
@@ -581,7 +617,7 @@ privhs_events %>% count(event_type)
       }
       vertex_attr_names(g_1mode_psi)
       str(vertex_attr_names(g_1mode_psi)) # now fewer vertex attributes
-      rm(pss_vattr)
+      #rm(pss_vattr)
       rm(i)
   
   # what does each vertex/node represent
@@ -609,6 +645,56 @@ privhs_events %>% count(event_type)
       max(E(g_1mode_psi)$weight) # = 329
       
 
+  # create one mode objects from g_2mode_privu and g_2mode_pubu
+    
+    # one mode objects from g_2mode_privu
+      projection_privu  <- bipartite_projection(graph = g_2mode_privu, types = NULL, multiplicity = TRUE, which = c("both"), probe1 = NULL, remove.type = TRUE)
+      
+      g_1mode_psi_privu <- projection_privu[["proj2"]]
+      g_1mode_hs_privu <- projection_privu[["proj1"]]
+      
+      
+      class(g_1mode_psi_privu)
+      class(g_1mode_hs_privu)
+    
+    # one mode objects from g_2mode_pubu
+      projection_pubu  <- bipartite_projection(graph = g_2mode_pubu, types = NULL, multiplicity = TRUE, which = c("both"), probe1 = NULL, remove.type = TRUE)
+      
+      g_1mode_psi_pubu <- projection_pubu[["proj2"]]
+      g_1mode_hs_pubu <- projection_pubu[["proj1"]]
+
+      class(g_1mode_psi_pubu)
+      class(g_1mode_hs_pubu)
+          
+    
+    # remove vertex attributes we don't need from 1-mode objects
+      pss_vattr
+      ipeds_vattr
+    
+      # remove vertex attributes associated with private high schools from 1-mode objects where vertices are always universities 
+      for (i in pss_vattr){
+
+        g_1mode_psi_privu <- delete_vertex_attr(graph = g_1mode_psi_privu, name = i)
+        g_1mode_psi_pubu <- delete_vertex_attr(graph = g_1mode_psi_pubu, name = i)
+      }
+      vertex_attr_names(g_1mode_psi_privu)
+      vertex_attr_names(g_1mode_psi_pubu)
+      
+      # remove vertex attributes associated with universities from 1-mode objects where vertices are always private high schools
+      for (i in ipeds_vattr){
+
+        g_1mode_hs_privu <- delete_vertex_attr(graph = g_1mode_hs_privu, name = i)
+        g_1mode_hs_pubu <- delete_vertex_attr(graph = g_1mode_hs_pubu, name = i)
+      }
+      vertex_attr_names(g_1mode_hs_privu)
+      vertex_attr_names(g_1mode_hs_pubu)
+      
+      # remove work objects
+      rm(i)
+      rm(pss_vattr,ipeds_vattr)
+      rm(projection,projection_privu,projection_pubu)
+      rm(privhs_per_privunivs)
+    
 ## ---------------------------
 ## Create ego network igraph objects 
 ## ---------------------------
@@ -665,6 +751,7 @@ privhs_events %>% count(event_type)
       nodes = V(graph = g_2mode)[V(g_2mode)$type == TRUE], 
       mindist = 0 # default = 0 means include itself as a node
     )
+    #str(egos_psi)
     #V(graph = g_2mode)[V(g_2mode)$type == TRUE]
     #as.integer(V(graph = g_2mode)[V(g_2mode)$type == TRUE])
     
@@ -692,7 +779,7 @@ privhs_events %>% count(event_type)
       length(egos_psi)
       names(egos_psi)
       length(names(egos_psi))
-
+      
       for (i in 1:length(egos_psi)) {
       
         writeLines(str_c("i=",i,"; univ id=",names(egos_psi)[[i]]))
@@ -706,6 +793,13 @@ privhs_events %>% count(event_type)
           print(table(E(egos_psi[[i]])$order))
       }
       rm(i)
-      
 
+    # new ego objects to create:
+      # from g_2mode_privu create:
+        # egos_hs_privu
+        # egos_psi_privu
+      
+      # from g_2mode_pubu create:
+          # egos_hs_pubu
+          # egos_psi_pubu
       

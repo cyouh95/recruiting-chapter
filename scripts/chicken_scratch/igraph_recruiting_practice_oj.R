@@ -40,7 +40,7 @@ scripts_dir <- file.path(".", "scripts")
 source(file = file.path(scripts_dir,"create_igraph_objects.R"))
 
 ###########################
-########################### 
+###########################
 
 ## ---------------------------
 ## Practice network visualization
