@@ -383,7 +383,7 @@ privhs_events %>% count(event_type)
   # Create 2-mode objects that only contain vertices and edge associated with visits from public universities to private high schools
     g_2mode_pubu <- induced_subgraph(
       graph = g_2mode,
-      vids = V(g_2mode)[(V(g_2mode)$name %in% (unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id))) | (V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Private not-for-profit")]
+      vids = V(g_2mode)[(V(g_2mode)$name %in% (unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id))) | (V(g_2mode)$type==TRUE & V(g_2mode)$control_ipeds == "Public")]
     )
 
   # code from crystal to identify vertices associated with private high schools that received at least one visit from a private college/university
@@ -797,9 +797,43 @@ privhs_events %>% count(event_type)
     # new ego objects to create:
       # from g_2mode_privu create:
         # egos_hs_privu
+        egos_hs_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(graph = g_2mode_privu)[V(g_2mode_privu)$type == FALSE], mindist = 0)
+        names(egos_hs_privu) <- unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id)
+      
         # egos_psi_privu
+        egos_psi_privu <- make_ego_graph(
+          graph = g_2mode_privu, 
+          order = 2, # The neighborhood of a given order o of a vertex v includes all vertices which are closer to v than the order. Ie. order 0 is always v itself, order 1 is v plus its immediate neighbors, order 2 is order 1 plus the immediate neighbors of the vertices in order 1, etc.
+          nodes = V(graph = g_2mode_privu)[V(g_2mode_privu)$type == TRUE], 
+          mindist = 0 # default = 0 means include itself as a node
+        )
+        
+        names(egos_psi_privu) <- unique((univ_data %>% filter(control_ipeds == 'Private not-for-profit'))$univ_id_ipeds)
+        
+        for (i in 1:length(egos_psi_privu)) {
+          writeLines(str_c("i=",i,"; univ id=",names(egos_psi_privu)[[i]]))
+          E(egos_psi_privu[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_psi_privu[[i]]), which = "vnames"), pattern =names(egos_psi_privu)[[i]]),1,2)
+          print(table(E(egos_psi_privu[[i]])$order))
+        }
       
       # from g_2mode_pubu create:
-          # egos_hs_pubu
-          # egos_psi_pubu
+        # egos_hs_pubu
+        egos_hs_pubu <- make_ego_graph(graph = g_2mode_pubu, order = 2, nodes = V(graph = g_2mode_pubu)[V(g_2mode_pubu)$type == FALSE], mindist = 0)
+        names(egos_hs_pubu) <- unique((events %>% filter(univ_id %in% (unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)), event_type == 'priv_hs'))$school_id)
+        
+        # egos_psi_pubu
+        egos_psi_pubu <- make_ego_graph(
+          graph = g_2mode_pubu, 
+          order = 2, # The neighborhood of a given order o of a vertex v includes all vertices which are closer to v than the order. Ie. order 0 is always v itself, order 1 is v plus its immediate neighbors, order 2 is order 1 plus the immediate neighbors of the vertices in order 1, etc.
+          nodes = V(graph = g_2mode_pubu)[V(g_2mode_pubu)$type == TRUE], 
+          mindist = 0 # default = 0 means include itself as a node
+        )
+        
+        names(egos_psi_pubu) <- unique((univ_data %>% filter(control_ipeds == 'Public'))$univ_id_ipeds)
+        
+        for (i in 1:length(egos_psi_pubu)) {
+          writeLines(str_c("i=",i,"; univ id=",names(egos_psi_pubu)[[i]]))
+          E(egos_psi_pubu[[i]])$order <- if_else(str_detect(string = attr(x = E(egos_psi_pubu[[i]]), which = "vnames"), pattern =names(egos_psi_pubu)[[i]]),1,2)
+          print(table(E(egos_psi_pubu[[i]])$order))
+        }
       
