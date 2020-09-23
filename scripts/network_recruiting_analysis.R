@@ -168,6 +168,94 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
     
     # maybe create separate small multiples to highlight different vertex attributes
     
+## ---------------------------
+## Table showing which high schools are most central and selected vertex attributes associated with these high schools
+## ---------------------------
+
+# which object to use? try g_2mode_privu
+    
+    g_2mode_privu
+    is_bipartite(g_2mode_privu)
+    
+# create vertex attributes of degree centrality
+      
+  V(g_2mode_privu)$degree <- degree(g_2mode_privu)
+  V(g_2mode_privu)$strength <- strength(g_2mode_privu)
+  V(g_2mode_privu)$closeness <- closeness(graph = g_2mode_privu, normalized = T)
+    
+# create dataframe w/ desired vertex attributes and centrality measures and print
+  
+  temp <- data.frame(
+    id = V(g_2mode_privu)$name,
+    name_pss = V(g_2mode_privu)$name_pss,
+    city = V(g_2mode_privu)$city_pss,
+    state = V(g_2mode_privu)$state_code_pss,
+    type = V(g_2mode_privu)$type,
+    degree = V(g_2mode_privu)$degree,
+    strength = V(g_2mode_privu)$strength,
+    closeness = V(g_2mode_privu)$closeness,
+    name_ipeds = V(g_2mode_privu)$univ_name_ipeds
+  )
+
+# print table, sorted by degree centrality  
+  # which high schools visited by at least one private college/university were visited by the most private college/university
+  temp %>% filter(type == F) %>% arrange(-degree) %>% select(id, name_pss, city, state, degree, strength)
+
+  temp %>% filter(type == F) %>% arrange(-degree) %>% select(id, name_pss, city, state, degree, strength) %>% View()
+
+  
+  
+## ---------------------------
+## Table showing which high schools are most central and selected vertex attributes associated with these high schools
+## ---------------------------
+
+  g_2mode_privu
+  
+    plot(
+      x = g_2mode_privu, 
+      vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$univ_abbrev_ipeds, ""),
+      vertex.color = if_else(V(g_2mode_privu)$type, "lightblue", "salmon"),
+      vertex.shape = if_else(V(g_2mode_privu)$type, "square", "circle"),
+      vertex.size = if_else(V(g_2mode_privu)$type, 5, 2),
+      edge.lty = 0,
+      layout = layout_with_kk,
+      margin = -.6
+    ) 
+    
+    # plotting 1 mode
+    g_1mode_psi_privu
+    plot(
+      x = g_1mode_psi_privu, 
+      vertex.label = V(g_1mode_psi_privu)$univ_abbrev_ipeds,
+      #vertex.color = "lightblue",
+      #vertex.shape = "square",
+      #vertex.size = 5,
+      #edge.lty = 0,
+      layout = layout_with_kk,
+      #margin = -.6
+    )     
+    # create vertex attributes that will be used as aesthetics in plots
+      V(g_2mode)$color <- if_else(V(g_2mode)$type, "lightblue", "salmon")
+      V(g_2mode)$shape <- if_else(V(g_2mode)$type, "square", "circle")
+      V(g_2mode)$size <- if_else(V(g_2mode)$type, 5, 2)
+    
+    # figuring out how to assign institution name as an aesthetic    
+      V(g_2mode)$name
+      V(g_2mode)$univ_abbrev_ipeds
+      if_else(V(g_2mode)$type, V(g_2mode)$univ_abbrev_ipeds, "")
+    
+# print table, sorted by closeness centrality
+  
+  # Closeness centrality measures attempt to capture the notion that a vertex is ‘central’ if it is ‘close’ to many other vertices. 
+    # The standard approach, introduced by Sabidussi [21], is to let the centrality vary inversely with a measure of the total distance 
+    # of a vertex from all others,
+
+  # closeness centrality, high schools
+    # concern: I'm not sure what closeness centrality is getting at in our 2-mode network
+      # e.g., kent denver is high school w/ highest closeness centrality, meaning that the total distance (in terms of degrees of separation) between Kent Denver and all other nodes is shorter than that of any other high school node
+  
+    temp %>% filter(type == F) %>% arrange(-closeness) %>% select(id, name_pss, city, state, closeness, degree, strength)
+  
   # [probably becomes one modest sized table of simple descriptive stats] next identify which high schools are most central in the notre dame ego network [MAYBE BASE OF g_2mode_priv rather than ego network of notre dame]
     
     # of the high schools that notre dame visited; which schools were also visited by lots of other private universities in our sample

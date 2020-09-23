@@ -693,7 +693,7 @@ privhs_events %>% count(event_type)
       rm(i)
       rm(pss_vattr,ipeds_vattr)
       rm(projection,projection_privu,projection_pubu)
-      rm(privhs_per_privunivs)
+      #rm(privhs_per_privunivs)
     
 ## ---------------------------
 ## Create ego network igraph objects 
