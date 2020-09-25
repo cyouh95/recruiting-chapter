@@ -1369,6 +1369,54 @@ plot(
 
 # possible to apply fast and greedy to 2-mode object?
 
+c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+
+  length(c_2mode_privu) # 5
+  sizes(c_2mode_privu) # of size (respectively): 35, 483, 463, 377, 77
+  
+  c_2mode_privu %>% filter(V(g_1mode_psi)$)
+    sizes()
+
+  c_2mode_privu %>% membership() %>% str()
+
+  membership(c_2mode_privu)
+
+  # identify the community value associated with private universities
+    attributes(membership(c_2mode_privu))
+    
+    attr(x = membership(c_2mode_privu), which = "names")
+    
+    nchar(attr(x = membership(c_2mode_privu), which = "names"))
+    nchar(attr(x = membership(c_2mode_privu), which = "names"))==6
+    
+    membership(c_2mode_privu)[nchar(attr(x = membership(c_2mode_privu), which = "names"))==6]
+    
+    table(membership(c_2mode_privu)[nchar(attr(x = membership(c_2mode_privu), which = "names"))==6])
+
+
+  length(V(c_2mode_privu))
+  V(g_2mode_privu)$membership <- membership(c_2mode_privu)
+  
+  V(g_2mode_privu)$membership
+  
+  V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T]
+  
+  str(V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T])
+  str(V(g_2mode_privu)$membership[V(g_2mode_privu)$type == T])
+  
+# show community membership associated with each private college/university  
+data.frame(
+  name_ipeds = V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T],
+  membership = V(g_2mode_privu)$membership[V(g_2mode_privu)$type == T]
+  ) %>% arrange(membership)
+
+
+
+
+#####
+#####
+#####
+
 c_2mode <- cluster_fast_greedy(g_2mode)
 
   length(c_2mode) # 5

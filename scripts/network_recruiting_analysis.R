@@ -222,6 +222,16 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
       margin = -.6
     ) 
     
+    plot(
+      x = g_2mode_privu, 
+      vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$univ_abbrev_ipeds, ""),
+      vertex.color = if_else(V(g_2mode_privu)$type, "lightblue", "salmon"),
+      vertex.shape = if_else(V(g_2mode_privu)$type, "square", "circle"),
+      vertex.size = if_else(V(g_2mode_privu)$type, 5, 2),
+      edge.lty = 1,
+      layout = layout_with_kk,
+      margin = -.6
+    )     
     # plotting 1 mode
     g_1mode_psi_privu
     plot(
@@ -368,4 +378,48 @@ source(file = file.path(scripts_dir,"create_igraph_objects.R"))
             # create communities using graph partitioning
             
             
-          # START HERE 9/17/2020
+# COMMUNITY ANALYSES
+            
+c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+
+  length(c_2mode_privu) # 5
+  sizes(c_2mode_privu) # of size (respectively): 35, 483, 463, 377, 77
+  
+  c_2mode_privu %>% filter(V(g_1mode_psi)$)
+    sizes()
+
+  c_2mode_privu %>% membership() %>% str()
+
+  membership(c_2mode_privu)
+
+  # identify the community value associated with private universities
+    attributes(membership(c_2mode_privu))
+    
+    attr(x = membership(c_2mode_privu), which = "names")
+    
+    nchar(attr(x = membership(c_2mode_privu), which = "names"))
+    nchar(attr(x = membership(c_2mode_privu), which = "names"))==6
+    
+    membership(c_2mode_privu)[nchar(attr(x = membership(c_2mode_privu), which = "names"))==6]
+    
+    table(membership(c_2mode_privu)[nchar(attr(x = membership(c_2mode_privu), which = "names"))==6])
+
+
+  length(V(c_2mode_privu))
+  V(g_2mode_privu)$membership <- membership(c_2mode_privu)
+  
+  V(g_2mode_privu)$membership
+  
+  V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T]
+  
+  str(V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T])
+  str(V(g_2mode_privu)$membership[V(g_2mode_privu)$type == T])
+  
+# show community membership associated with each private college/university  
+data.frame(
+  name_ipeds = V(g_2mode_privu)$univ_name_ipeds[V(g_2mode_privu)$type == T],
+  membership = V(g_2mode_privu)$membership[V(g_2mode_privu)$type == T]
+  ) %>% arrange(membership)
+
+
+            
