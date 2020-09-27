@@ -693,11 +693,11 @@ privatehs <- privatehs %>% rename(total_09 = "p270",
                                   zip_code = "pzip",
                                   county_fips_code = "pcnty",
                                   county_name = "pcntnm",
-                                  address_2 = "pl_add",
+                                  address_secondary = "pl_add",
                                   pct_to_4yr = "p360",
-                                  total_males = "males",
+                                  total_male = "males",
                                   school_type = "p415",
-                                  ncessch = "ppin")
+                                  ncessch = "ppin") 
 names(privatehs) 
 
 class(privatehs)
