@@ -901,15 +901,17 @@ for (i in names(ccd_full)) {
 #rename variables
 names(ccd_full)
 
+ccd_full$name <- NULL #drop name  from geocode data since its duplicated with sch_name
+
 ccd_full <- ccd_full %>% rename( 
- # 'name' = 'sch_name', need to fix because duplicated
+  'name' = 'sch_name', 
   'year'= 'school_year', 
   'state_code' = 'st',
   'state_fips_code' = 'fipst',
   'l_zip_code' = 'lzip', 
   'm_zip_code' =  'mzip', 
   'l_street_address' = 'lstreet1', 
-  'lstreet_address_2' = 'lstreet2', 
+  'l_street_address_2' = 'lstreet2', 
   'm_street_address' = 'mstreet1', 
   'm_street_address_2' = 'mstreet2', 
   'l_city' = 'lcity', 
