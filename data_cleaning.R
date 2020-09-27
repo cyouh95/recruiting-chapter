@@ -164,7 +164,7 @@ nrow(hs_directory %>% filter(nchar(fipst) == 2)) #102,337 (all length 2)
 
 #Check state code: digits & foreign key constraints
 hs_directory$st
-nrow(hs_directory %>% filter(nchar(st) == 2)) #all 2 observations
+nrow(hs_directory %>% filter(nchar(st) == 2)) #all observations are length of 2 characters
 
 #Check identifier of the reporting state agency
 hs_directory$state_agency_no
@@ -381,19 +381,17 @@ hs_character %>% group_by(st_schid) %>%
 
 #Check that school identifier (NCES) ID has 12 digits
 hs_character$ncessch
-nrow(hs_character %>% filter(nchar(ncessch) != 12)) #0, dictionary says ncessch is length of 12
-nrow(hs_character %>% filter(nchar(ncessch) == 11)) #0 most are 11 characters long
+nrow(hs_character %>% filter(nchar(ncessch) == 12)) #99,899 all 11 characters long
 
 #Check that school identifier (NCES) ID is unique identifier
 hs_character %>% group_by(ncessch) %>% 
   summarise(n_per_group=n()) %>%
   ungroup %>%
-  count(n_per_group) #ncessch is not a unique identifier
+  count(n_per_group) #ncessch is a unique identifier
 
 #Check that unique school ID 
 hs_character$schid
 nrow(hs_character %>% filter(nchar(schid) == 7)) #99,899, dictionary says schid is length of 7
-nrow(hs_character %>% filter(nchar(schid) == 6)) #0
 
 #Check that unique school ID is unique identifier
 hs_character %>% group_by(schid) %>% 
@@ -533,6 +531,20 @@ for(i in names(hs_lunch)) {
 #union: 482,440 missing
 #student count: 199,399 missing
 
+#reshape lunch dataframe
+hs_lunch<- reshape(data = hs_lunch, idvar = 'ncessch', v.names = 'student_count', timevar = 'lunch_program', direction = 'wide') 
+
+#rename lunch variables
+hs_lunch <- hs_lunch %>% rename(
+  'free_lunch' = 'student_count.Free lunch qualified',
+  'reduced_lunch' = 'student_count.Reduced-price lunch qualified',
+  'missing_lunch' = 'student_count.Missing',
+  'na_lunch' = 'student_count.Not Applicable',
+  'no_category_codes_lunch' = 'student_count.No Category Codes')
+  
+#create free_reduced_lunch variable
+hs_lunch$free_reduced_lunch <- rowSums(hs_lunch[,c('free_lunch','reduced_lunch')], na.rm = TRUE)
+
 ##Loading & investigating data: CCD School Membership Data for 2017-2018
 hs_membership <- read.csv('./data/ccd_school_membership_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'GRADE' = 'character', 'RACE_ETHNICITY' = 'character', 'SEX' = 'character', 'TOTAL_INDICATOR' = 'character', 'DMS_FLAG' = 'character'))
 
@@ -569,7 +581,7 @@ for (i in names(hs_membership)) {
 #Check variable labels
 hs_membership %>% var_label() # variable labels
 
-#create race,grade,gender & then pivot wider
+#create race,grade,gender 
 hs_membership %>% group_by(race_ethnicity) %>% count()
 
 hs_membership <-hs_membership %>% mutate(race_grade_gender = case_when(
@@ -699,7 +711,8 @@ hs_membership <-hs_membership %>% mutate(race_grade_gender = case_when(
 
 hs_membership %>% group_by(race_grade_gender) %>% count()
 
-hs_membership<- reshape(data = hs_membership, idvar = 'ncessch', v.names = 'student_count', timevar = 'race_grade_gender', direction = 'wide') 
+#Reshape membership dataframe
+hs_membership<- reshape(data = hs_membership, idvar = 'ncessch', v.names = 'student_count', timevar = 'race_grade_gender', direction = 'wide')
 
 #rename race_grade_gender variables
 hs_membership <- hs_membership %>% rename(
@@ -808,23 +821,14 @@ hs_membership <- hs_membership %>% rename(
   'tr13f' = 'student_count.tr13f',
   'tr13m' = 'student_count.tr13m',
   #'tr13ns' = 'student_count.tr13ns',
-  #'ns09f' = 'student_count.ns09f',
-  #'ns09m' = 'student_count.ns09m',
-  'ns09ns' = 'student_count.ns09ns',
-  #'ns10f' = 'student_count.ns10f',
-  #'ns10m' = 'student_count.ns10m',
-  'ns10ns' = 'student_count.ns10ns',
-  #'ns11f' = 'student_count.ns11f',
-  #'ns11m' = 'student_count.ns11m',
-  'ns11ns' = 'student_count.ns11ns',
-  #'ns12f' = 'student_count.ns12f',
-  #'ns12m' = 'student_count.ns12m',
-  'ns12ns' = 'student_count.ns12ns',
-  #'ns13f' = 'student_count.ns13f',
-  #'ns13m' = 'student_count.ns13m',
-  'ns13ns' = 'student_count.ns13ns')
+  'ns09' = 'student_count.ns09ns',
+  'ns10' = 'student_count.ns10ns',
+  'ns11' = 'student_count.ns11ns',
+  'ns12' = 'student_count.ns12ns',
+  'ns13' = 'student_count.ns13ns')
+  
 
-#Sum race & gender
+#Sum race & gender & sum grade
 hs_membership$amalf <- rowSums(hs_membership[,c('am09f','am10f','am11f','am12f','am13f')], na.rm = TRUE)
 hs_membership$amalm <- rowSums(hs_membership[,c('am09m','am10m','am11m','am12m','am13m')], na.rm = TRUE)
 hs_membership$am <- rowSums(hs_membership[,c('amalf','amalm')], na.rm = TRUE)
@@ -853,23 +857,55 @@ hs_membership$tralf <- rowSums(hs_membership[,c('tr09f','tr10f','tr11f','tr12f',
 hs_membership$tralm <- rowSums(hs_membership[,c('tr09m','tr10m','tr11m','tr12m','tr13m')], na.rm = TRUE)
 hs_membership$tr <- rowSums(hs_membership[,c('tralf','tralm')], na.rm = TRUE)
 
-hs_membership$ns <- rowSums(hs_membership[,c('ns09ns', 'ns10ns', 'ns11ns', 'ns12ns', 'ns13ns')], na.rm = TRUE)
+hs_membership$ns <- rowSums(hs_membership[,c('ns09', 'ns10', 'ns11', 'ns12', 'ns13')], na.rm = TRUE)
+
+hs_membership$g09 <- rowSums(hs_membership[,c('am09f', 'am09m', 'as09f', 'as09m', 'bl09f', 'bl09m', 'wh09f', 'wh09m', 'hp09f', 'hp09m', 'hi09f', 'hi09m', 'tr09f', 'tr09m', 'ns09')], na.rm = TRUE)
+hs_membership$g10 <- rowSums(hs_membership[,c('am10f', 'am10m', 'as10f', 'as10m', 'bl10f', 'bl10m', 'wh10f', 'wh10m', 'hp10f', 'hp10m', 'hi10f', 'hi10m', 'tr10f', 'tr10m', 'ns10')], na.rm = TRUE)
+hs_membership$g11 <- rowSums(hs_membership[,c('am11f', 'am11m', 'as11f', 'as11m', 'bl11f', 'bl11m', 'wh11f', 'wh11m', 'hp11f', 'hp11m', 'hi11f', 'hi11m', 'tr11f', 'tr11m', 'ns11')], na.rm = TRUE)
+hs_membership$g12 <- rowSums(hs_membership[,c('am12f', 'am12m', 'as12f', 'as12m', 'bl12f', 'bl12m', 'wh12f', 'wh12m', 'hp12f', 'hp12m', 'hi12f', 'hi12m', 'tr12f', 'tr12m', 'ns12')], na.rm = TRUE)
+hs_membership$g13 <- rowSums(hs_membership[,c('am13f', 'am13m', 'as13f', 'as13m', 'bl13f', 'bl13m', 'wh13f', 'wh13m', 'hp13f', 'hp13m', 'hi13f', 'hi13m', 'tr13f', 'tr13m', 'ns13')], na.rm = TRUE)
 
 hs_membership$x <- NULL
 
-#Merge CCD datasets: hs_directory, hs_lunch, hs_character, hs_membership
+
+##Loading & investigating data: Public Schools Geocode Data for 2017-2018
+hs_geocode_public <- read.csv('./data/edge_geocode_publicsch_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('NCESSCH' = 'character', 'NAME' = 'character', 'OPSTFIPS' = 'character', 'STREET' = 'character', 'CITY' = 'character', 'STATE' = 'character', 'ZIP' = 'character', 'STFIP' = 'character', 'CNTY' = 'character', 'NMCNTY' = 'character', 'LOCALE' = 'character', 'LAT' = 'character', 'LON' = 'character', 'CBSA' = 'character', 'NMCBSA' = 'character', 'CBSATYPE' = 'character', 'CSA' = 'character', 'NMCSA' = 'character', 'NECTA' = 'character', 
+                                                                                                                      'NMNECTA' = 'character', 'CD' = 'character', 'SLDL' = 'character', 'SLDU' = 'character', 'SCHOOLYEAR' = 'character'))
+
+#Investigate the data & data frame
+str(hs_geocode_public) # structure of the data frame
+
+nrow(hs_geocode_public) #num of rows (obs): 102,337 observations
+ncol(hs_geocode_public) #num of columns: 24 variables
+
+names(hs_geocode_public) # variable names 
+names(hs_geocode_public) <- tolower(names(hs_geocode_public)) #convert to lowercase
+glimpse(hs_geocode_public)
+head(hs_geocode_public) 
+
+hs_geocode_public %>% arrange(schoolyear, name, ncessch, lat, lon) %>% head()
+
+#Merge CCD datasets: hs_directory, hs_lunch, hs_character, hs_membership, hs_geocode_public
 #Left Joins
-ccd_full <-left_join(hs_directory, hs_membership, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
-ccd_full <- left_join (ccd_full, hs_lunch, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
-ccd_full <- left_join (ccd_full, hs_character, by = "ncessch") #error message: Column `ncessch` has different attributes on LHS and RHS of join
+ccd_full <-left_join(hs_directory, hs_membership, by = "ncessch", suffix = c('','_copy')) 
+ccd_full <- left_join (ccd_full, hs_lunch, by = "ncessch", suffix = c('','_copy')) 
+ccd_full <- left_join (ccd_full, hs_character, by = "ncessch", suffix = c('','_copy')) 
+ccd_full <- left_join (ccd_full, hs_geocode_public, by = "ncessch", suffix = c('','_copy')) 
+
+#loop to delete copy
+for (i in names(ccd_full)) {
+  if (str_detect(i, '_copy')) {
+    ccd_full[[i]] <- NULL}
+} 
 
 #rename variables
 names(ccd_full)
-ccd_full <- ccd_full %>% rename( #the top four didn't work because names are duplicated with merge
-  #'name' = c('sch_name.x', 'sch_name.x.x', 'sch_name.y', 'sch_name.y.y'),
-  #'year'= c('school_year.x', 'school_year.x.x', 'school_year.y', 'school_year.y.y'),
-  #'state_code' = c('st.x', 'st.x.x', 'st.y', 'st.y.y'), 
-  #'state_fips_code' = c('fipst.x', 'fipst.x.x', 'fipst.y', 'fipst.y.y'),
+
+ccd_full <- ccd_full %>% rename( 
+ # 'name' = 'sch_name', need to fix because duplicated
+  'year'= 'school_year', 
+  'state_code' = 'st',
+  'state_fips_code' = 'fipst',
   'l_zip_code' = 'lzip', 
   'm_zip_code' =  'mzip', 
   'l_street_address' = 'lstreet1', 
@@ -878,12 +914,20 @@ ccd_full <- ccd_full %>% rename( #the top four didn't work because names are dup
   'm_street_address_2' = 'mstreet2', 
   'l_city' = 'lcity', 
   'm_city' = 'mcity', 
+  'latitude' = 'lat',
+  'longitude' = 'lon',
+  'cbsa_code' = 'cbsa',
+  'locale_code' = 'locale',
+  'county_code' = 'cnty',
+  'county_name' = 'nmcnty',
   'school_type' = 'sch_type', 
   'school_type_text' = 'sch_type_text', 
+  'titlei_text' = 'titlei_status_text',
   'g09offered' = 'g_9_offered', 
   'g10offered'= 'g_10_offered', 
   'g11offered' = 'g_11_offered', 
   'g12offered' = 'g_12_offered')
+
 
 
 
