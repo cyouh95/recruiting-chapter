@@ -37,6 +37,14 @@ scripts_dir <- file.path(".", "scripts")
 #file.path(scripts_dir,"create_igraph_objects.R")
 source(file = file.path(scripts_dir,"create_igraph_objects.R"))
 
+# save one of the igraph objects for use as an example in rclass1
+#g_2mode_privu
+
+save(g_2mode_privu, file = "data/g_2mode_privu.rda")
+
+#g_2mode_privu
+#rm(g_2mode_privu)
+#load("data/g_2mode_privu.rda")
 
 ## ---------------------------
 ## Visits by private colleges and universities to private high schools
