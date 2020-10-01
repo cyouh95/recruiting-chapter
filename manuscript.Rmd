@@ -1,15 +1,75 @@
 ---
 title: "Recruiting Chapter"
 author: "Ozan Jaquette"
-bibliography: ./other/spencer-bib.bib
+bibliography: ./other/burd_recruiting_chapter.bib
 output: pdf_document
 csl: ./other/apa.csl
 urlcolor: blue
 ---
 
+```{r setup, include=FALSE}
+library(knitr)
+
+
+```
+
+
+
 # Introduction
 
-@RN5659 found that this is true. Here's an example of parenthetical citation [@RN4552]. More info in this [documentation](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+When we contrast research about enrollment management to descriptions of enrollment management practice, from investigative journalists or from consulting firms [cite], it becomes apparent that the research community is decades behind practice and has ignored a great number of enrollment management practices that affect access to higher education. Thus, the enrollment management remains an opaque industry to researchers and, in turn, to policymakers and the public. Developing thoughtful state and federal policies about enrollment management depends on researchers doing the slow, methodical work of developing an empirical literature that documents enrollment management practices and evaluates their effect on opportunities for students. 
+
+The "enrollment funnel," a conceptual heuristic used by the enrollment management industry and shown in figure X, is helpful for framing the development of this empirical literature. The enrollment funnel describes the stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, enrolled) in order to inform targeted recruiting interventions. The majority of research on enrollment management focuses on the final stages of the enrollment funnel, specifically which applicants are admitted and the use of financial aid "leveraging" to convert admits to enrollees.<!-- [@RN3536; @RN3544; @RN3523; @RN4131; @RN2241; @RN3564; @RN1948] -->By contrast, the enrollment management industry expends substantial resources on earlier stages of the funnel [@RN4664]. “Prospects” are “all the potential students you would want to attract to your institution” [@RN4322]. “Inquiries” are prospects that contact the institution, including those who respond to a solicitation and those who reach out on their own. 
+
+Table X shows the percentage of undergraduate recruitment budget allocated to different marketing and recruiting activities. ^[table drawn directly from @RN4664 figure 9; based on a convenience sample of 45 four-year non-profit institutions and 21 four-year public institutions]. Institutions identify undergradaute prospects largely by purchasing "student lists" from College Board, ACT, and other vendors.  Table X indicates that private and public institutions spent 14% and 12%, respectively, of their undergraduate recruitment budget on student list purchases. Institutions utilize digital advertising, traditional advertising, and social media to solicit inquiries and to create positive "buzz" amongst potential stealth applicants [@RN4411][CITE OTHER]. <!-- Table X indicates that...  [summarize expenditure on stuff related to soliciting inquiries once you figure out answers to below questions] -->  Once identified, prospects/inquiries are targeted with face-to-face and remote recruiting interventions designed to solit applications and deepen engagement. Remote recruiting interventions include postcards, brochures, email, and text messages. <!-- Table X indicates that these "prospective student communications" account for 13% of the recruiting budget at private institutions and 17% of the budget at public institutions.  -->Face-to-face recruiting interventions include on-campus visits (12% and 11% of budget, respectively, at private and public institutions) and off-campus recruiting events, often referred to as "travel" (17% and 16% of budget, respectively, at private and public institutions).
+<!-- QUESTIONS ABOUT THE RNL 2020 COST OF RECRUITING AN UNDERGRADUATE STUDENT REPORT, FIGURE 9
+
+What does "recruitment publications" include?
+what does "prospective student communications" include?
+what does "event" include? can I assume this is on-campus events only cuz "travel" is a separate category?
+what does "web services and digital advertising" include? Does this include social media?
+-->
+Having identified prominent marketing and recruiting activities (e.g., student list purchases, digital advertising, off-campus recruiting visits), why have so few researchers studied higher education marketing and recruitng? One challenge is that empirical research depends on data but obtaining concrete data about marketing and recruiting behaviors is difficult, especially for conventional data collection methods like surveys and interviews. Thus, empirical research requires different approaches to data collection, including public records requests and "data science" methodologies, such as web-scraping and streaming social media data.
+
+This chapter analyzes off-campus recruiting visits made in 2017 by a sample of public research universities and a sample of selective private colleges and universities.  We collected visit data by "scraping" URLs (e.g., "Coming to a neighborhood near you") from admissions websites. Pages were scraped once per week for the entire 2017 calendar year. In addition, for the sample of public research universities, we also issued public records requests.
+
+To date, our analyses have focused on recruiting visits by public research universities. As described below, the majority of public universities in our sample made far more out-of-state visits than in-state visits. These out-of-state visits focused on wealthy, predominantly white communities, with a disproportionate number of visits to private high schools. This chapter analyzes visits to private high schools. Using social network methods, we analyze visits by private colleges and universities to private high schools, visits by public research universities to private high schools, and then compare similarities and differences between public and private postsecondary institutions [as a means of saying something about "privatization"?]
+
+# What Do We Know About Off-campus Recruiting?
+
+
+PARAGARPH SAYING HARD TO GET DATA ON RECRUITING BEHAVIOR
+
+Empirical research depends on data but obtaining data about marketing and recruiting behaviors is difficult, at least through conventional data collection methods such as surveys and interviews.
+
+PARAGRAPH SAYING WHAT WE DID TO OBTAIN DATA ON OFF-CAMPUS RECRUITNG
+
+@RN5659 found that this is true. Here's an example of parenthetical citation [@RN4552]. 
+
+
+![The enrollment funnel](assets/images/enrollment_funnel.png)
+
+```{r, echo=FALSE}
+pct_budget <- data.frame(
+  activity = c("Travel","Student search (purchased lists)","Prospective student communications","Events","Recruitment publications","Web services and digital advertising","Traditional advertising","International recruitment","Transfer recruitment","Other"),
+  private = c(17,14,13,12,11,11,6,5,4,8),
+  public = c(16,12,17,11,15,13,6,3,4,3)
+)
+
+#pct_budget
+#str(pct_budget)
+#attributes(pct_budget)
+kable(
+  x = pct_budget, 
+  col.names = c("Activity", "Private", "Public"),
+  caption = "Percentage of budget allocated to marketing/recruiting activities by private non-profit 4yr and public 4yr institutions"
+)
+# 
+```
+
+
+
+More info in this [documentation](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
 
 # References
 
