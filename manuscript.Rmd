@@ -1,0 +1,15 @@
+---
+title: "Recruiting Chapter"
+author: "Ozan Jaquette"
+bibliography: ./other/spencer-bib.bib
+output: pdf_document
+csl: ./other/apa.csl
+urlcolor: blue
+---
+
+# Introduction
+
+@RN5659 found that this is true. Here's an example of parenthetical citation [@RN4552]. More info in this [documentation](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+
+# References
+
