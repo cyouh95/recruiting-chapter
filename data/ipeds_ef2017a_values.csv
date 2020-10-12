@@ -1,0 +1,52 @@
+varnumber,varname,codevalue,valuelabel,frequency,percent
+20166,EFALEVEL,1,All students total,"6,676",5.23
+20166,EFALEVEL,2,"All students, Undergraduate total","6,373",4.99
+20166,EFALEVEL,3,"All students, Undergraduate, Degree/certificate-seeking total","6,371",4.99
+20166,EFALEVEL,4,"All students, Undergraduate, Degree/certificate-seeking, First-time","6,108",4.78
+20166,EFALEVEL,5,"All students, Undergraduate, Other degree/certificate-seeking","6,366",4.98
+20166,EFALEVEL,19,"All students, Undergraduate, Other degree/certifcate-seeking, Transfer-ins","3,766",2.95
+20166,EFALEVEL,20,"All students, Undergraduate, Other degree/certifcate-seeking, Continuing","6,359",4.98
+20166,EFALEVEL,11,"All students, Undergraduate, Non-degree/certificate-seeking","2,949",2.31
+20166,EFALEVEL,12,"All students, Graduate","2,126",1.66
+20166,EFALEVEL,21,Full-time students total,"6,636",5.19
+20166,EFALEVEL,22,"Full-time students, Undergraduate total","6,327",4.95
+20166,EFALEVEL,23,"Full-time students, Undergraduate, Degree/certificate-seeking total","6,325",4.95
+20166,EFALEVEL,24,"Full-time students, Undergraduate, Degree/certificate-seeking, First-time","6,009",4.7
+20166,EFALEVEL,25,"Full-time students, Undergraduate, Degree/certificate-seeking, Other degree/certificate-seeking","6,315",4.94
+20166,EFALEVEL,39,"Full-time students, Undergraduate, Other degree/certifcate-seeking, Transfer-ins","3,726",2.92
+20166,EFALEVEL,40,"Full-time students, Undergraduate, Other degree/certifcate-seeking, Continuing","6,308",4.94
+20166,EFALEVEL,31,"Full-time students, Undergraduate, Non-degree/certificate-seeking","2,363",1.85
+20166,EFALEVEL,32,"Full-time students, Graduate","2,064",1.62
+20166,EFALEVEL,41,Part-time students total,"4,878",3.82
+20166,EFALEVEL,42,"Part-time students, Undergraduate total","4,596",3.6
+20166,EFALEVEL,43,"Part-time students, Undergraduate, Degree/certificate-seeking total","4,564",3.57
+20166,EFALEVEL,44,"Part-time students, Undergraduate, Degree/certificate-seeking, First-time","3,668",2.87
+20166,EFALEVEL,45,"Part-time students, Undergraduate, Degree/certificate-seeking, Other degree/certificate-seeking","4,558",3.57
+20166,EFALEVEL,59,"Part-time students, Undergraduate, Other degree/certifcate-seeking, Transfer-ins","3,014",2.36
+20166,EFALEVEL,60,"Part-time students, Undergraduate, Other degree/certifcate-seeking, Continuing","4,550",3.56
+20166,EFALEVEL,51,"Part-time students, Undergraduate, Non-degree/certificate-seeking","2,829",2.21
+20166,EFALEVEL,52,"Part-time students, Graduate","1,933",1.51
+21985,LINE,1,"Full-time, first-time, first-year, degree-seeking undergraduates","6,009",4.7
+21985,LINE,2,"Full-time undergraduate, other degree/certifcate-seeking, transfer-ins","3,726",2.92
+21985,LINE,3,"Full-time  undergraduate, other degree/certifcate-seeking, continuing","6,308",4.94
+21985,LINE,6,"Full-time degree-seeking undergraduates, total","6,325",4.95
+21985,LINE,7,Full-time nondegree-seeking undergraduates,"2,363",1.85
+21985,LINE,8,Total  full-time undergraduates,"6,327",4.95
+21985,LINE,11,Full-time graduates,"2,064",1.62
+21985,LINE,14,Total full-time students,"6,636",5.19
+21985,LINE,15,"Part-time, first-time, first-year, degree-seeking undergraduates","3,668",2.87
+21985,LINE,16,"Part-time undergraduate, other degree/certifcate-seeking, transfer-ins","3,014",2.36
+21985,LINE,17,"Part-time undergraduate, other degree/certifcate-seeking, continuing","4,550",3.56
+21985,LINE,20,"Part-time degree-seeking undergraduates, total","4,564",3.57
+21985,LINE,21,Part-time nondegree-seeking undergraduates,"2,829",2.21
+21985,LINE,22,Total part-time undergraduates,"4,596",3.6
+21985,LINE,25,Part-time graduates,"1,933",1.51
+21985,LINE,28,Total part-time,"4,878",3.82
+21985,LINE,29,Total enrollment,"6,676",5.23
+21985,LINE,99,Generated record not on original survey,"51,291",40.15
+21990,SECTION,1,Full-time,"46,073",36.06
+21990,SECTION,2,Part-time,"34,590",27.07
+21990,SECTION,3,All students,"47,094",36.86
+21991,LSTUDY,1,Undergraduate,"103,444",80.97
+21991,LSTUDY,3,Graduate,"6,123",4.79
+21991,LSTUDY,4,All students,"18,190",14.24

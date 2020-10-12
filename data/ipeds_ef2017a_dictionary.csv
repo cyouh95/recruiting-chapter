@@ -1,0 +1,36 @@
+varnumber,varname,DataType,Fieldwidth,format,imputationvar,varTitle
+1,UNITID,N,6,Cont,,Unique identification number of the institution
+20166,EFALEVEL,N,2,Disc,,Level of student
+21985,LINE,N,2,Disc,,Level of student (original line number on survey form)
+21990,SECTION,N,1,Disc,,Attendance status of student
+21991,LSTUDY,N,1,Disc,,Level of student
+20286,EFTOTLT,N,6,Cont,XEFTOTLT,Grand total
+20241,EFTOTLM,N,6,Cont,XEFTOTLM,Grand total men
+20246,EFTOTLW,N,6,Cont,XEFTOTLW,Grand total women
+24432,EFAIANT,N,6,Cont,XEFAIANT,American Indian or Alaska Native total
+24434,EFAIANM,N,6,Cont,XEFAIANM,American Indian or Alaska Native men
+24436,EFAIANW,N,6,Cont,XEFAIANW,American Indian or Alaska Native women
+24438,EFASIAT,N,6,Cont,XEFASIAT,Asian total
+24440,EFASIAM,N,6,Cont,XEFASIAM,Asian men
+24442,EFASIAW,N,6,Cont,XEFASIAW,Asian women
+24444,EFBKAAT,N,6,Cont,XEFBKAAT,Black or African American total
+24446,EFBKAAM,N,6,Cont,XEFBKAAM,Black or African American men
+24448,EFBKAAW,N,6,Cont,XEFBKAAW,Black or African American women
+24450,EFHISPT,N,6,Cont,XEFHISPT,Hispanic total
+24452,EFHISPM,N,6,Cont,XEFHISPM,Hispanic men
+24454,EFHISPW,N,6,Cont,XEFHISPW,Hispanic women
+24456,EFNHPIT,N,6,Cont,XEFNHPIT,Native Hawaiian or Other Pacific Islander total
+24458,EFNHPIM,N,6,Cont,XEFNHPIM,Native Hawaiian or Other Pacific Islander men
+24460,EFNHPIW,N,6,Cont,XEFNHPIW,Native Hawaiian or Other Pacific Islander women
+24462,EFWHITT,N,6,Cont,XEFWHITT,White total
+24464,EFWHITM,N,6,Cont,XEFWHITM,White men
+24466,EFWHITW,N,6,Cont,XEFWHITW,White women
+24468,EF2MORT,N,6,Cont,XEF2MORT,Two or more races total
+24470,EF2MORM,N,6,Cont,XEF2MORM,Two or more races men
+24472,EF2MORW,N,6,Cont,XEF2MORW,Two or more races women
+20281,EFUNKNT,N,6,Cont,XEFUNKNT,Race/ethnicity unknown total
+20231,EFUNKNM,N,6,Cont,XEFUNKNM,Race/ethnicity unknown men
+20236,EFUNKNW,N,6,Cont,XEFUNKNW,Race/ethnicity unknown women
+20251,EFNRALT,N,6,Cont,XEFNRALT,Nonresident alien total
+20171,EFNRALM,N,6,Cont,XEFNRALM,Nonresident alien men
+20176,EFNRALW,N,6,Cont,XEFNRALW,Nonresident alien women

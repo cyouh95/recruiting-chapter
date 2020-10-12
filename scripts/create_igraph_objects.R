@@ -11,7 +11,8 @@ library(labelled)
 events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 
 # University data from IPEDS
-univ_data <- read.csv('./data/univ_data.csv', header = TRUE, na.strings='', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+univ_data <- readRDS('./data/ipeds_1718.RDS')
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings='', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
 
 # Private HS data from PSS
 privhs_data <- readRDS('./data/pss_1718.RDS')
@@ -28,7 +29,7 @@ niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings=''
 privhs_events <- events_data %>% filter(event_type == 'priv_hs') %>% select(univ_id, event_type, school_id, event_location_name, event_city, event_state)
 
 # Select variables of interest from private HS data
-privhs_df <- privhs_data %>% select('ncessch', 'name', 'region', 'religion', 'pct_white')
+privhs_df <- privhs_data %>% select('ncessch', 'name', 'city', 'state_code', 'region', 'religion', 'pct_white')
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
@@ -36,29 +37,27 @@ niche_df <- niche_data %>% select('ncessch', 'overall_niche_grade')
 privhs_df <- privhs_df %>% left_join(niche_df)
 
 # Select variables of interest from univ data
-univ_df <- univ_data %>% mutate(region = case_when(
-  state_code %in% c('CT', 'ME', 'MA', 'NH', 'RI', 'VT', 'NJ', 'NY', 'PA') ~ 1,  # Northeast
-  state_code %in% c('IN', 'IL', 'MI', 'OH', 'WI', 'IA', 'KS', 'MN', 'MO', 'NE', 'ND', 'SD') ~ 2,  # Midwest
-  state_code %in% c('AZ', 'CO', 'ID', 'NM', 'MT', 'UT', 'NV', 'WY', 'AK', 'CA', 'HI', 'OR', 'WA') ~ 4,  # West
-  TRUE ~ 3  # South
-))
-univ_df <- univ_df %>% select('univ_id', 'univ_abbrev', 'region', 'state_code', 'pct_freshman_white', 'fips_state_code')
+get_abbrev <- function(x, y) {
+  univ_abbrev <- univ_info[univ_info$univ_id == x, 'univ_abbrev']$univ_abbrev
+  ifelse(length(univ_abbrev) == 0, y, univ_abbrev)
+}
+v_get_abbrev <- Vectorize(get_abbrev)
+univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name),
+                                ranking = region)  # placeholder
+univ_df <- univ_df %>% select('univ_id', 'univ_abbrev', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking')
 
-# TODO: Add religion from IPEDS data
 # TODO: Add ranking from U.S. News & World Report data
-# TODO: Adjust race variables to include only common denominator
-# TODO: Include city/state in attributes_df
 # TODO: Check missing Niche data
 
-var_names <- c('school_id', 'school_name', 'region', 'religion', 'pct_white', 'ranking')
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
 
 # Vectors of private HS and univs
 univ_vec <- unique(privhs_events$univ_id) %>% str_sort(numeric = TRUE)
-privu_vec <- unique((univ_data %>% filter(search_sector == 'PRIVATE'))$univ_id)
-pubu_vec <- unique((univ_data %>% filter(search_sector == 'PUBLIC'))$univ_id)
+privu_vec <- unique((univ_info %>% filter(search_sector == 'PRIVATE'))$univ_id)
+pubu_vec <- unique((univ_info %>% filter(search_sector == 'PUBLIC'))$univ_id)
 
 privhs_vec <- unique(privhs_events$school_id) %>% str_sort(numeric = TRUE)
 privhs_visited_by_privu_vec <- unique((privhs_events %>% filter(univ_id %in% privu_vec))$school_id)

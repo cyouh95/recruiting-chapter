@@ -1,0 +1,114 @@
+varnumber,varname,DataType,Fieldwidth,format,imputationvar,varTitle
+1,UNITID,N,6,Cont,,Unique identification number of the institution
+10361,PEO1ISTR,N,2,Disc,,Occupational
+10366,PEO2ISTR,N,2,Disc,,Academic
+10371,PEO3ISTR,N,2,Disc,,Continuing professional
+10376,PEO4ISTR,N,2,Disc,,Recreational or avocational
+10381,PEO5ISTR,N,2,Disc,,Adult basic remedial or high school equivalent
+10386,PEO6ISTR,N,2,Disc,,Secondary (high school)
+10391,CNTLAFFI,N,2,Disc,,Institutional control or affiliation
+10396,PUBPRIME,N,2,Disc,,Primary public control
+10401,PUBSECON,N,2,Disc,,Secondary public control
+10406,RELAFFIL,N,3,Disc,,Religious affiliation
+10411,LEVEL1,N,2,Disc,,Less than one year certificate
+10416,LEVEL2,N,2,Disc,,One but less than two years certificate
+10421,LEVEL3,N,2,Disc,,Associate's degree
+10426,LEVEL4,N,2,Disc,,Two but less than 4 years certificate
+10431,LEVEL5,N,2,Disc,,Bachelor's degree
+10436,LEVEL6,N,2,Disc,,Postbaccalaureate certificate
+10441,LEVEL7,N,2,Disc,,Master's degree
+10446,LEVEL8,N,2,Disc,,Post-master's certificate
+10466,LEVEL12,N,2,Disc,,Other degree
+10452,LEVEL17,N,2,Disc,,Doctor's degree - research/scholarship
+10453,LEVEL18,N,2,Disc,,Doctor's degree - professional practice
+10454,LEVEL19,N,2,Disc,,Doctor's degree - other
+10901,CALSYS,N,2,Disc,,Calendar system
+10926,FT_UG,N,2,Disc,,Full-time undergraduate students are enrolled
+10931,FT_FTUG,N,2,Disc,,Full time first-time degree/certificate-seeking undergraduate students enrolled
+15301,FTGDNIDP,N,2,Disc,,Full-time graduate (not including doctor's professional practice) students are enrolled
+10946,PT_UG,N,2,Disc,,Part-time undergraduate students are enrolled
+10951,PT_FTUG,N,2,Disc,,Part time first-time degree/certificate-seeking undergraduate students enrolled
+15306,PTGDNIDP,N,2,Disc,,Part-time graduate (not including doctor's professional practice) students are enrolled
+15311,DOCPP,N,2,Disc,,Doctor's professional practice students are enrolled
+15316,DOCPPSP,N,2,Disc,,Doctor's professional practice students are enrolled in programs formerly designated as first-professional
+10516,OPENADMP,N,2,Disc,,Open admission policy
+16141,VET1,N,2,Disc,,"Yellow Ribbon Program (officially known as Post-9/11 GI Bill, Yellow Ribbon Program)"
+16142,VET2,N,2,Disc,,Credit for military training
+16143,VET3,N,2,Disc,,"Dedicated point of contact for support services for veterans, military servicemembers, and their families"
+16144,VET4,N,2,Disc,,Recognized student veteran organization
+16145,VET5,N,2,Disc,,Member of Servicemembers Opportunity Colleges
+16149,VET9,N,2,Disc,,"Services  and programs are not available to veterans, military servicemembers, or their families?"
+10681,CREDITS1,N,2,Disc,,Dual credit
+10686,CREDITS2,N,2,Disc,,Credit for life experiences
+10691,CREDITS3,N,2,Disc,,Advanced placement (AP) credits
+10696,CREDITS4,N,2,Disc,,"Institution does not accept dual, credit for life, or AP credits"
+10721,SLO5,N,2,Disc,,ROTC
+10726,SLO51,N,2,Disc,,ROTC - Army
+10731,SLO52,N,2,Disc,,ROTC - Navy
+10736,SLO53,N,2,Disc,,ROTC - Air Force
+10741,SLO6,N,2,Disc,,Study abroad
+10746,SLO7,N,2,Disc,,Weekend/evening  college
+10751,SLO8,N,2,Disc,,Teacher certification (below the postsecondary level)
+10756,SLO81,N,2,Disc,,Teacher certification: Students can complete their preparation in certain areas of specialization
+10761,SLO82,N,2,Disc,,Teacher certification: Students must complete their preparation at another institution for certain areas of specialization
+10766,SLO83,N,2,Disc,,Teacher certification: Approved by the state for initial certifcation or licensure of teachers.
+10771,SLO9,N,2,Disc,,None of the above special learning opportunities are offered
+10776,YRSCOLL,N,2,Disc,,Years of college-level work required
+10781,STUSRV1,N,2,Disc,,Remedial services
+10786,STUSRV2,N,2,Disc,,Academic/career counseling service
+10791,STUSRV3,N,2,Disc,,Employment services for students
+10796,STUSRV4,N,2,Disc,,Placement services for completers
+10801,STUSRV8,N,2,Disc,,On-campus day care for students' children
+10806,STUSRV9,N,2,Disc,,None of the above selected services are offered
+16151,LIBRES1,N,2,Disc,,Library resources/services: Physical facilities
+16153,LIBRES2,N,2,Disc,,Library resources/services: Organized collection of printed materials
+16155,LIBRES3,N,2,Disc,,Library resources/services: Access to digital/electronic resources
+16157,LIBRES4,N,2,Disc,,Library resources/services: Staff trained to provide and interpret library materials
+16159,LIBRES5,N,2,Disc,,Library resources/services: Established library hours
+16161,LIBRES6,N,2,Disc,,Library resources/services: Access to library collections that are shared with other institutions
+16163,LIBRES9,N,2,Disc,,Library resources/services not provided
+15241,TUITPL,N,2,Disc,,Any alternative tuition plans offered by institution
+15244,TUITPL1,N,2,Disc,,Tuition guaranteed plan
+15247,TUITPL2,N,2,Disc,,Prepaid tuition plan
+15250,TUITPL3,N,2,Disc,,Tuition payment plan
+15253,TUITPL4,N,2,Disc,,Other alternative tuition plan
+15421,DSTNUGC,N,2,Disc,,Undergraduate level distance education courses offered
+15426,DSTNUGP,N,2,Disc,,Undergraduate level distance education programs offered
+15431,DSTNUGN,N,2,Disc,,Undergraduate level distance education not offered
+15436,DSTNGC,N,2,Disc,,Graduate level distance education courses offered
+15441,DSTNGP,N,2,Disc,,Graduate level distance education programs offered
+15446,DSTNGN,N,2,Disc,,Graduate level distance education not offered
+15400,DISTCRS,N,2,Disc,,Distance education courses offered
+15451,DISTPGS,N,2,Disc,,Distance education programs offered
+15406,DSTNCED1,N,2,Disc,,Undergraduate level programs or courses are offered via distance education
+15411,DSTNCED2,N,2,Disc,,Graduate level programs or courses are offered via distance education
+15416,DSTNCED3,N,2,Disc,,Does not offer distance education opportunities
+15401,DISTNCED,N,2,Disc,,All programs offered completely via distance education
+24566,DISAB,N,2,Disc,,Percent indicator of undergraduates formally registered as students with disabilities
+24571,DISABPCT,N,3,Cont,XDISABPC,"Percent of undergraduates, who are formally registered as students with disabilities, when percentage is more than 3 percent"
+15066,ALLONCAM,N,2,Disc,,"Full-time, first-time degree/certificate-seeking students required to live on campus"
+10961,TUITVARY,N,2,Disc,,"Tuition charge varies for in-district, in-state, out-of-state students"
+10966,ROOM,N,2,Disc,,Institution provide on-campus housing
+10971,ROOMCAP,N,5,Cont,XROOMCAP,Total dormitory capacity
+10976,BOARD,N,2,Disc,,Institution provides board or meal plan
+10981,MEALSWK,N,2,Cont,XMEALSWK,Number of meals per week in board charge
+10986,ROOMAMT,N,5,Cont,XROOMAMT,Typical room charge for academic year
+10991,BOARDAMT,N,5,Cont,XBORDAMT,Typical board charge for academic year
+10996,RMBRDAMT,N,5,Cont,XRMBDAMT,Combined charge for room and board
+10911,APPLFEEU,N,3,Cont,XAPPFEEU,Undergraduate application fee
+10916,APPLFEEG,N,3,Cont,XAPPFEEG,Graduate application fee
+10816,ATHASSOC,N,2,Disc,,Member of National Athletic Association
+10821,ASSOC1,N,2,Disc,,Member of National Collegiate Athletic Association (NCAA)
+10826,ASSOC2,N,2,Disc,,Member of National Association of Intercollegiate Athletics (NAIA)
+10831,ASSOC3,N,2,Disc,,Member of National Junior College Athletic  Association (NJCAA)
+10836,ASSOC4,N,2,Disc,,Member of National Small College Athletic Association (NSCAA)
+10841,ASSOC5,N,2,Disc,,Member of National Christian College Athletic Association (NCCAA)
+10846,ASSOC6,N,2,Disc,,Member of other national athletic association not listed above
+10851,SPORT1,N,2,Disc,,NCAA/NAIA member for football
+10856,CONFNO1,N,3,Disc,,NCAA/NAIA conference number football
+10861,SPORT2,N,2,Disc,,NCAA/NAIA member for basketball
+10866,CONFNO2,N,3,Disc,,NCAA/NAIA conference number basketball
+10871,SPORT3,N,2,Disc,,NCAA/NAIA member for baseball
+10876,CONFNO3,N,3,Disc,,NCAA/NAIA conference number baseball
+10881,SPORT4,N,2,Disc,,NCAA/NAIA member for cross country/track
+10886,CONFNO4,N,3,Disc,,NCAA/NAIA conference number cross country/track

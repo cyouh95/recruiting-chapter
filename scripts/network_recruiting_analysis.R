@@ -92,8 +92,8 @@ V(g_2mode_privu)$closeness <- closeness(graph = g_2mode_privu, normalized = T)
 t_2mode_privu <- data.frame(
   school_id = V(g_2mode_privu)$name,
   school_name = V(g_2mode_privu)$school_name,
-  # city = V(g_2mode_privu)$city,
-  # state = V(g_2mode_privu)$state_code,
+  city = V(g_2mode_privu)$city,
+  state = V(g_2mode_privu)$state_code,
   pct_white = V(g_2mode_privu)$pct_white,
   type = V(g_2mode_privu)$type,
   degree = V(g_2mode_privu)$degree,
