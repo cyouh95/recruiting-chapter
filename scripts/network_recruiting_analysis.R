@@ -1,7 +1,7 @@
 library(igraph)
 library(tidyverse)
 
-
+options(max.print=9999)
 ## -------------
 ## LOAD OBJECTS
 ## -------------
@@ -37,14 +37,79 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 ## PLOT EGO IGRAPH OBJECTS
 ## ------------------------
 
-# Notre Dame ego network
-univ_id <- '152080'
+# choosing potential universities to for ego network
+
+vertex_attr_names(g_1mode_psi_privu)
+V(g_1mode_psi_privu)$school_name
+
+#events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
+
+# ego network
+#univ_id <- '152080' # Notre Dame ego network
+#univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
+#univ_id <- "228246" # Southern methodist university
+univ_id <- "216597" # Villanova
+
 characteristic <- 'region'
 
 ego_network <- egos_psi_privu[[univ_id]]
 vertex_attr_names(ego_network)
 
 univ_characteristic <- (univ_df %>% filter(school_id == univ_id))[[characteristic]]
+univ_characteristic
+str(univ_characteristic)
+
+
+# plot ego network subgraph, order =1 only
+
+  # subgraph for order = 1 only
+  subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
+  
+  ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
+  ego_network_order1
+  
+  vertex_attr_names(ego_network_order1)
+  
+  V(ego_network_order1)$type
+  V(ego_network_order1)$school_name
+  
+  # plot ego network
+  
+    plot.igraph(
+      x = ego_network_order1,
+      #vertex.label = "",
+      vertex.label = NA,
+      vertex.shape = "circle",
+      vertex.color = "salmon",
+      vertex.size = 3,
+      layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle,
+      # main = "my plot name folks"
+    )
+      
+    V(ego_network_order1)$type
+    
+
+
+      plot.igraph(
+        x = ego_network_order1,
+        #vertex.label = "",
+        vertex.label = if_else(V(ego_network_order1)$type, V(ego_network_order1)$school_name, ""),
+        vertex.shape = if_else(V(ego_network_order1)$type, "square","circle"),
+        #vertex.color = if_else(V(nd_order1)$name =="152080", "lightblue", "salmon"),
+        #vertex.color = if_else(vertex_attr(ego_network, characteristic) == univ_characteristic, 'lightblue', 'lightgrey'),
+        vertex.size = if_else(V(ego_network_order1)$type, 10, 2),
+        edge.color = 'lightgrey',
+        edge.lty = if_else(E(ego_network_order1)$order == 1, 0, 1),
+        #edge.lty = if_else(E(nd_order1)$weight ==1, 3, 1),
+        #edge.width = if_else(E(nd_order1)$weight ==1, .5, as.numeric(E(nd_order1)$weight)),
+        layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle, layout_nicely
+        # main = "my plot name folks"
+      )
+
+# plot: order 1 (high school) and order 2 (universities that visited those high schools)
 
 plot(
   x = ego_network,
