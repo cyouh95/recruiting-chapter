@@ -152,9 +152,9 @@ save(g_2mode_privu, file = "data/g_2mode_privu.rda")
         vertex.label = if_else(V(nd_order1)$name =="152080", V(nd_order1)$univ_abbrev_ipeds, ""),
         vertex.shape = "circle",
         vertex.color = if_else(V(nd_order1)$name =="152080", "lightblue", "salmon"),
-        vertex.size = if_else(V(nd_order1)$name =="152080", 6, 3),
-        edge.lty = if_else(E(nd_order1)$weight ==1, 3, 1),
-        edge.width = if_else(E(nd_order1)$weight ==1, .5, as.numeric(E(nd_order1)$weight)),
+        #vertex.size = if_else(V(nd_order1)$name =="152080", 6, 3),
+        #edge.lty = if_else(E(nd_order1)$weight ==1, 3, 1),
+        #edge.width = if_else(E(nd_order1)$weight ==1, .5, as.numeric(E(nd_order1)$weight)),
         layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle, layout_nicely
         # main = "my plot name folks"
       )
