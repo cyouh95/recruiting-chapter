@@ -33,7 +33,7 @@ privhs_df <- privhs_data %>% select('ncessch', 'name', 'city', 'state_code', 're
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
-niche_df <- niche_data %>% select('ncessch', 'overall_niche_grade')
+niche_df <- niche_data %>% select('ncessch', 'overall_niche_grade','rank_within_category')
 privhs_df <- privhs_df %>% left_join(niche_df)
 
 # Select variables of interest from univ data
@@ -43,13 +43,13 @@ get_abbrev <- function(x, y) {
 }
 v_get_abbrev <- Vectorize(get_abbrev)
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name),
-                                ranking = region)  # placeholder
-univ_df <- univ_df %>% select('univ_id', 'univ_abbrev', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking')
+                                ranking = region, ranking_numeric = region)  # placeholder
+univ_df <- univ_df %>% select('univ_id', 'univ_abbrev', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking','ranking_numeric')
 
 # TODO: Add ranking from U.S. News & World Report data
 # TODO: Check missing Niche data
 
-var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking')
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking','ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
