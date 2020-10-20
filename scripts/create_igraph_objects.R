@@ -181,7 +181,7 @@ egos_psi <- make_ego_graph(graph = g_2mode,
 names(egos_psi) <- univ_vec %>% str_sort()
 
 for (i in 1:length(egos_psi)) {
-  E(egos_psi[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi[[i]]), 'vnames'), pattern = names(egos_psi)[[i]]), 1, 2)
+  E(egos_psi[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi)[[i]])), 1, 2)
 }
 
 # Create ego networks for each private HS from g_2mode_privu
@@ -199,7 +199,7 @@ egos_psi_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(g_2
 names(egos_psi_privu) <- privu_vec %>% str_sort()
 
 for (i in 1:length(egos_psi_privu)) {
-  E(egos_psi_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_privu[[i]]), 'vnames'), pattern = names(egos_psi_privu)[[i]]), 1, 2)
+  E(egos_psi_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_privu[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi_privu)[[i]])), 1, 2)
 }
 
 # Create ego networks for each private HS from g_2mode_pubu
@@ -217,5 +217,5 @@ egos_psi_pubu <- make_ego_graph(graph = g_2mode_pubu, order = 2, nodes = V(g_2mo
 names(egos_psi_pubu) <- pubu_vec %>% str_sort()
 
 for (i in 1:length(egos_psi_pubu)) {
-  E(egos_psi_pubu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_pubu[[i]]), 'vnames'), pattern = names(egos_psi_pubu)[[i]]), 1, 2)
+  E(egos_psi_pubu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_pubu[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi_pubu)[[i]])), 1, 2)
 }
