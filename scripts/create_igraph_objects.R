@@ -46,7 +46,8 @@ niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
   overall_niche_grade == 2.66 ~ 'B-',
   overall_niche_grade == 2.33 ~ 'C+',
   overall_niche_grade == 2 ~ 'C',
-  overall_niche_grade == 1.66 ~ 'C-'
+  overall_niche_grade == 1.66 ~ 'C-',
+  TRUE ~ 'Unranked'
 )) %>% select(ncessch, overall_niche_letter_grade, rank_within_category)
 privhs_df <- privhs_df %>% left_join(niche_df)
 
@@ -63,8 +64,7 @@ univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) 
 usnews_df <- usnews_data %>% select(univ_id, score_text, rank)
 univ_df <- univ_df %>% left_join(usnews_df)
 
-# TODO: Check missing Niche data
-
+# Create attributes dataframe
 var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking', 'ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
@@ -82,6 +82,9 @@ privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu
 # Preview vertex attributes that will be merged
 View(attributes_df %>% filter(school_id %in% univ_vec))
 View(attributes_df %>% filter(school_id %in% privhs_vec))
+
+# TODO: Check unmerged Niche data (61 unmerged, 1 truly missing data)
+attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
 
 
 ## -------------------
