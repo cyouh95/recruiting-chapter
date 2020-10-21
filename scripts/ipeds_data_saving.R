@@ -99,13 +99,14 @@ ef <- ef %>% mutate(
   pct_freshman_tworaces = ef2mort / eftotlt * 100,
   pct_freshman_unknownrace = efunknt / eftotlt * 100,
   pct_freshman_non_res_alien = efnralt / eftotlt * 100,
-  pct_white = efwhitt / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_black = efbkaat / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_hispanic = efhispt / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_asian = efasiat / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_amerindian = efaiant / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_nativehawaii = efnhpit / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100,
-  pct_tworaces = ef2mort / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort) * 100
+  pct_white = efwhitt / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_black = efbkaat / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_hispanic = efhispt / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_asian = efasiat / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_amerindian = efaiant / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_nativehawaii = efnhpit / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_tworaces = ef2mort / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100,
+  pct_non_res_alien = efnralt / (efwhitt + efbkaat + efhispt + efasiat + efaiant + efnhpit + ef2mort + efnralt) * 100
 )
 
 
