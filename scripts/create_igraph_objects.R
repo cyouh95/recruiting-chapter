@@ -8,20 +8,20 @@ library(labelled)
 ## ----------
 
 # Recruiting events data from 43 univs (17 public research, 13 private national, 13 private liberal arts)
-events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings='', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
-univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings='', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
 
 # Private HS data from PSS
 privhs_data <- readRDS('./data/pss_1718.RDS')
 
 # Rankings data from Niche
-niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings='', stringsAsFactors = FALSE) %>% as_tibble()
+niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
 
 # Rankings data from US News & World Report
-usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings='', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character')) %>% as_tibble()
+usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character')) %>% as_tibble()
 
 
 ## ----------
@@ -33,7 +33,7 @@ privhs_events <- events_data %>% filter(event_type == 'priv_hs') %>%
   select(univ_id, event_type, school_id, event_location_name, event_city, event_state)
 
 # Select variables of interest from private HS data
-privhs_df <- privhs_data %>% select(ncessch, name, city, state_code, region, religion, pct_white)
+privhs_df <- privhs_data %>% select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
@@ -58,14 +58,14 @@ get_abbrev <- function(x, y) {
 }
 v_get_abbrev <- Vectorize(get_abbrev)
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white)
+  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
 
 # Add ranking from US News & World Report data
 usnews_df <- usnews_data %>% select(univ_id, score_text, rank)
 univ_df <- univ_df %>% left_join(usnews_df)
 
 # Create attributes dataframe
-var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'ranking', 'ranking_numeric')
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'ranking', 'ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
