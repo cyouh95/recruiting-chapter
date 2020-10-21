@@ -37,7 +37,17 @@ privhs_df <- privhs_data %>% select(ncessch, name, city, state_code, region, rel
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
-niche_df <- niche_data %>% select(ncessch, overall_niche_grade, rank_within_category)
+niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
+  overall_niche_grade == 4.33 ~ 'A+',
+  overall_niche_grade == 4 ~ 'A',
+  overall_niche_grade == 3.66 ~ 'A-',
+  overall_niche_grade == 3.33 ~ 'B+',
+  overall_niche_grade == 3 ~ 'B',
+  overall_niche_grade == 2.66 ~ 'B-',
+  overall_niche_grade == 2.33 ~ 'C+',
+  overall_niche_grade == 2 ~ 'C',
+  overall_niche_grade == 1.66 ~ 'C-'
+)) %>% select(ncessch, overall_niche_letter_grade, rank_within_category)
 privhs_df <- privhs_df %>% left_join(niche_df)
 
 # Select variables of interest from univ data
@@ -50,7 +60,7 @@ univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) 
   select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white)
 
 # Add ranking from US News & World Report data
-usnews_df <- usnews_data %>% select(univ_id, score, rank)
+usnews_df <- usnews_data %>% select(univ_id, score_text, rank)
 univ_df <- univ_df %>% left_join(usnews_df)
 
 # TODO: Check missing Niche data
@@ -71,7 +81,7 @@ privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu
 
 # Preview vertex attributes that will be merged
 View(attributes_df %>% filter(school_id %in% univ_vec))
-View(attributes_df %>% filter(school_id %in% privhs_vec))  # 1412/1464 of 1742
+View(attributes_df %>% filter(school_id %in% privhs_vec))
 
 
 ## -------------------
