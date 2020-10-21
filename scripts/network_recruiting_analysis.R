@@ -40,7 +40,9 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 # choosing potential universities to for ego network
 
 vertex_attr_names(g_1mode_psi_privu)
+vertex_attr_names(g_1mode_hs)
 V(g_1mode_psi_privu)$school_name
+V(g_1mode_hs)$ranking
 
 #events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
 
@@ -49,8 +51,8 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 # Create ego network and ego network order =1
 
   # which university to be the ego network
-    #univ_id <- '152080' # Notre Dame ego network
-    univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
+    univ_id <- '152080' # Notre Dame ego network
+    #univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
     #univ_id <- "228246" # Southern methodist university
     #univ_id <- "216597" # Villanova
 
@@ -80,9 +82,14 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
     
     table(V(ego_network_order1)$region, useNA = "always") # 1 = Northeast   2= Midwest     3 = South      4 = West 
     table(V(ego_network_order1)$religion, useNA = "always")
+    
     table(V(ego_network_order1)$ranking, useNA = "always")
+    table(V(ego_network_order1)$ranking_numeric, useNA = "always")
+    
     
     summary(V(ego_network_order1)$pct_white)
+    
+    
 
   # compare all high schools that got a visit to schools that got a visit from ego
     
@@ -95,197 +102,66 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
     proportions(table(V(g_1mode_hs)$ranking, useNA = "always")) # turn this into 4 categoriexs
     proportions(table(V(ego_network_order1)$ranking, useNA = "always"))
     
+    
     summary(V(g_1mode_hs)$pct_white)
     summary(V(ego_network_order1)$pct_white)
 
     
-### create a function to plot the ego network, order = 1 with
-
-ego_plot <- function(attribute, values, colors, legend) {
-
-  characteristic <- attribute
-
-  #vertex_color_text <- recode(vertex_attr(ego_network_order1, characteristic), `1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green')
-  
-  print(attribute)
- 
-   
-  print(values)
-
-  print(colors)
-
-  # below, want to create the text to supply code for vertex.color
-  vertex_color_text <- ""
-  for(i in c(1,2,3,4)) {
-  
-    vertex_color_text <- str_c(vertex_color_text,"vertex_attr(ego_network_order1, characteristic) ==", values[i]," ~ ", "'", colors[i], "'", ",", sep = "", collapse = NULL)
-    
-  }
-  vertex_color_text <- str_c("case_when(",vertex_color_text,")", sep = "", collapse = NULL)
-  print(vertex_color_text)
-}
-
-ego_plot(attribute = "region", values = c(1,2,3,4), colors = c('blue','purple', 'red','green'), legend = c("Northeast","Midwest","South","West"))
-
-values <- c(1,2,3,4)
-colors <- c('blue','purple', 'red','green')
-legend <- c("Northeast","Midwest","South","West")
-
-
-vertex_color_text <- ""
-for(i in c(1,2,3,4)) {
-
-  vertex_color_text <- str_c(vertex_color_text,"vertex_attr(ego_network_order1, characteristic) ==", values[i]," ~ ", "'", colors[i], "'", ",", sep = "", collapse = NULL)
-  
-}
-vertex_color_text <- str_c("case_when(",vertex_color_text,")", sep = "", collapse = NULL)
-print(vertex_color_text)
-
-case_when(vertex_attr(ego_network_order1, characteristic) ==1 ~ 'blue',vertex_attr(ego_network_order1, characteristic) ==2 ~ 'purple',vertex_attr(ego_network_order1, characteristic) ==3 ~ 'red',vertex_attr(ego_network_order1, characteristic) ==4 ~ 'green',)
-
-case_when(vertex_attr(ego_network_order1, characteristic) ==1 ~ 'blue',vertex_attr(ego_network_order1, characteristic) ==2 ~ 'purple',vertex_attr(ego_network_order1, characteristic) ==3 ~ 'red',vertex_attr(ego_network_order1, characteristic) ==4 ~ 'green',)
-
-recode(vertex_attr(ego_network_order1, characteristic), `1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green')
-
-case_when(
-  vertex_attr(ego_network_order1, characteristic) == 1 ~ "blue",
-  vertex_attr(ego_network_order1, characteristic) == 2 ~ "purple",
-  vertex_attr(ego_network_order1, characteristic) == 3 ~ "red",
-  vertex_attr(ego_network_order1, characteristic) == 4 ~ "green",
-)
-
-str_c("vertex_attr(ego_network_order1, characteristic) ==", values[1]," ~ ", colors[1], ",", sep = "", collapse = NULL)
-
-V(ego_network_order1)$characteristic == 1
-vertex_attr(ego_network_order1, characteristic) == 1
-
-  plot.igraph(
-    x = ego_network_order1,
-    vertex.label = if_else(V(ego_network_order1)$type, V(ego_network_order1)$school_name, ""),
-    vertex.shape = if_else(V(ego_network_order1)$type, "circle","circle"),
-    #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), `1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green'),
-    vertex.color = vertex_color_text,
-    #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), vertex_color_text),
-    vertex.size = if_else(V(ego_network_order1)$type, 16, 4),
-    edge.color = if_else(E(ego_network_order1)$weight ==1, "lightgrey", "black"),
-    edge.lty = if_else(E(ego_network_order1)$weight ==1, 5, 1),
-    edge.width = if_else(E(ego_network_order1)$weight ==1, .5, as.numeric(E(ego_network_order1)$weight)^2),
-    layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle, layout_nicely
-    main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
-    margin = -0.2 # -0.2
-  )  
-  
-  legend( # based on vertex color; should change this to vertex shape
-    x = 1,
-    y = -.5,
-    #"bottomright", # placement of legend
-    legend = c("Northeast","Midwest","South","West"), # legend text
-    fill = c("blue","purple","red","green"), # legend color fill
-    bty = "n" # box drawn around legend; "o" [default] = solid line box; "n" = no box
-  )
-
-}
-
-ego_plot(v_attr = "region")
-
-
-### plot ego network, order = 1, characteristic = religious affiliation
-characteristic <- 'religion'
-
-proportions(table(V(ego_network_order1)$religion, useNA = "always"))
-
-vertex_color_text <- recode(vertex_attr(ego_network_order1, characteristic), 'catholic' = 'blue', 'conservative_christian' = 'purple', 'nonsectarian' = 'red', 'other_religion' = 'green'),
-plot.igraph(
-  x = ego_network_order1,
-  vertex.label = if_else(V(ego_network_order1)$type, V(ego_network_order1)$school_name, ""),
-  vertex.shape = if_else(V(ego_network_order1)$type, "circle","circle"),
-  #vertex.color = if_else(vertex_attr(ego_network_order1, characteristic) == univ_characteristic, 'lightblue', 'lightgrey'),  
-  #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), 'catholic' = 'blue', 'conservative_christian' = 'purple', 'nonsectarian' = 'red', 'other_religion' = 'green'),
-  vertex.color = vertex_col
-  #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), vertex_color_text),
-  vertex.size = if_else(V(ego_network_order1)$type, 16, 4),
-  edge.color = if_else(E(ego_network_order1)$weight ==1, "lightgrey", "black"),
-  edge.lty = if_else(E(ego_network_order1)$weight ==1, 5, 1),
-  edge.width = if_else(E(ego_network_order1)$weight ==1, .5, as.numeric(E(ego_network_order1)$weight)^2),
-  layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle, layout_nicely
-  main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
-  margin = -0.2 # -0.2
-)
-legend( # based on vertex color; should change this to vertex shape
-  x = 1,
-  y = -.5,
-  #"bottomright", # placement of legend
-  legend = c("Catholic","Conservative Christian","Nonsetarian","Other religion"), # legend text
-  fill = c("blue","purple","red","green"), # legend color fill
-  bty = "n" # box drawn around legend; "o" [default] = solid line box; "n" = no box
-)
-
-
-### plot ego network, order = 1, characteristic = region
-
-    
-    
-characteristic <- 'region'
-univ_characteristic <- (univ_df %>% filter(school_id == univ_id))[[characteristic]]
-univ_characteristic
-str(univ_characteristic)
-
-vertex_color_text <- "`1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green'"
-vertex_color_text
-writeLines(vertex_color_text)
-
-vertex_color_text <- recode(vertex_attr(ego_network_order1, characteristic), `1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green')
-vertex_color_text
-recode(vertex_attr(ego_network_order1, characteristic), vertex_color_text)
-
-plot.igraph(
-  x = ego_network_order1,
-  vertex.label = if_else(V(ego_network_order1)$type, V(ego_network_order1)$school_name, ""),
-  vertex.shape = if_else(V(ego_network_order1)$type, "circle","circle"),
-  #vertex.color = if_else(vertex_attr(ego_network_order1, characteristic) == univ_characteristic, 'lightblue', 'lightgrey'),  
-  #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), `1` = 'blue', `2` = 'purple', `3` = 'red', `4` = 'green'),
-  vertex.color = vertex_color_text,
-  #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), vertex_color_text),
-  vertex.size = if_else(V(ego_network_order1)$type, 16, 4),
-  edge.color = if_else(E(ego_network_order1)$weight ==1, "lightgrey", "black"),
-  edge.lty = if_else(E(ego_network_order1)$weight ==1, 5, 1),
-  edge.width = if_else(E(ego_network_order1)$weight ==1, .5, as.numeric(E(ego_network_order1)$weight)^2),
-  layout = layout_nicely, # layout_with_kk, # layout = layout_in_circle, layout_nicely
-  main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
-  margin = -0.2 # -0.2
-)
-
-legend( # based on vertex color; should change this to vertex shape
-  x = 1,
-  y = -.5,
-  #"bottomright", # placement of legend
-  legend = c("Northeast","Midwest","South","West"), # legend text
-  fill = c("blue","purple","red","green"), # legend color fill
-  bty = "n" # box drawn around legend; "o" [default] = solid line box; "n" = no box
-)
-
-# messing around with vertex color based on vertex attribute
-  #legend("right", legend = c("Northeast","Midwest","South","West"), fill = c("blue","purple","red","green"))
-  #vertex.color = if_else(vertex_attr(ego_network_order1, characteristic) == univ_characteristic, 'lightblue', 'lightgrey'),
-  
-  #if_else(vertex_attr(ego_network_order1, characteristic) == univ_characteristic, 'lightblue', 'lightgrey')
-  #vertex_attr(ego_network_order1, characteristic)
-  #vertex_attr(ego_network_order1, characteristic) == univ_characteristic
-  #vertex.color = recode(vertex_attr(ego_network_order1, characteristic), `1` = "blue", `2` = "purple", `3` = "red", `4` = "green")
-
-# NOTE TO CRYSTAL:
-  # currently using vertex color to display vertex attribute (region, 4 categories)
-  # can you replace this w/ using vertex shape; so we would need four shapes
-    # let's go with: triangle, circle, square, and .... maybe diamond? 
-
-# plot: order 1 (high school) and order 2 (universities that visited those high schools)
-
 
 ## --------------------
-## EGO IGRAPH FUNCTION
+## EGO IGRAPH FUNCTION (order = 1)
 ## --------------------
 
-plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green')) {
+### create variables for academic reputation and for racial composition that will be use in ego graph plot
+    
+  vertex_attr_names(ego_network_order1)
+  
+  # racial composition
+
+    # pct white
+    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_white_cat")
+    vertex_attr(graph = ego_network_order1, name = "pct_white_cat") <- case_when(
+      vertex_attr(ego_network_order1, "pct_white") <50 ~ "c1_lt50",
+      vertex_attr(ego_network_order1, "pct_white") >=50 & vertex_attr(ego_network_order1, "pct_white") <75 ~ "c2_50to75",
+      vertex_attr(ego_network_order1, "pct_white") >=75 & vertex_attr(ego_network_order1, "pct_white") <85 ~ "c3_75to85",
+      vertex_attr(ego_network_order1, "pct_white") >=85 ~ "c4_85+"
+    )
+    
+    table(V(ego_network_order1)$pct_white_cat, useNA = "always")
+  
+  #pct black/latinx/native
+  
+    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_blacklatinxnative")
+    vertex_attr(graph = ego_network_order1, name = "pct_blacklatinxnative") <- vertex_attr(graph = ego_network_order1, name = "pct_black") + vertex_attr(graph = ego_network_order1, name = "pct_hispanic") + 
+      vertex_attr(graph = ego_network_order1, name = "pct_amerindian") + vertex_attr(graph = ego_network_order1, name = "pct_nativehawaii")
+  
+    summary(V(ego_network_order1)$pct_blacklatinxnative)
+    
+    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_blacklatinxnative_cat")
+  
+    vertex_attr(graph = ego_network_order1, name = "pct_blacklatinxnative_cat") <- case_when(
+      vertex_attr(ego_network_order1, "pct_blacklatinxnative") <10 ~ "c1_lt10",
+      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=10 & vertex_attr(ego_network_order1, "pct_blacklatinxnative") <25 ~ "c2_10to25",
+      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=25 & vertex_attr(ego_network_order1, "pct_blacklatinxnative") <50 ~ "c3_25to50",
+      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=50 ~ "c4_50+"
+    )
+    
+    table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always")
+    proportions(table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always"))
+    
+  # academic reputation/ranking
+    # note that rank_cat1 is NA for the ego
+    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "rank_cat1")
+    vertex_attr(graph = ego_network_order1, name = "rank_cat1") <- case_when(
+      vertex_attr(ego_network_order1, "ranking_numeric") <=100 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c1_top100",
+      vertex_attr(ego_network_order1, "ranking_numeric") >100 & vertex_attr(ego_network_order1, "ranking_numeric") <=200 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c2_top200",
+      vertex_attr(ego_network_order1, "ranking_numeric") >200 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c3_A+",
+      vertex_attr(ego_network_order1, "ranking") != "A+" & is.na(vertex_attr(ego_network_order1, "ranking"))==0  ~ "c4_ltA+"
+    )  
+
+# function to plot ego graph order = 1
+
+plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title) {
   
   color_palette <- colors
   names(color_palette) <- values
@@ -299,64 +175,38 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
     edge.lty = if_else(E(network)$weight == 1, 5, 1),
     edge.width = if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2),
     layout = layout_nicely,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
-    main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
+    #main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
+    main = str_to_title(title),
     margin = -0.2
   )  
   
   legend(
     x = 1,
-    y = -0.5,
+    y = -0.1,
     legend = keys,
     fill = colors,
     bty = 'n'  # box drawn around legend: 'o' [default] = solid line box; 'n' = no box
   )
 }
 
+table(V(ego_network_order1)$pct_white_cat, useNA = "always")
+table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always")
+table(V(ego_network_order1)$rank_cat1, useNA = "always")
 
-# Tulane ego network
-univ_id <- '160755'
-
-ego_network <- egos_psi_privu[[univ_id]]
-vertex_attr_names(ego_network)
-
-# Subgraph for order=1 only
-ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order == 1])
-
+# potentially call function here that creates desired race and ranking variables
 par(mfrow=c(2, 2))
-plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
-plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
-plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
-plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
+plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region")
+plot_ego_graph(ego_network_order1, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation")
+plot_ego_graph(ego_network_order1, characteristic = 'rank_cat1', values = c('c1_top100','c2_top200','c3_A+','c4_ltA+'), keys = c('Rank top 100', 'Rank 100-200', 'A+', 'A or below'), title = "Academic reputation")
+plot_ego_graph(ego_network_order1, characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), title = "percent black, latinx, or Native")
+#plot_ego_graph(ego_network_order1, characteristic = 'pct_white_cat', values = c('c1_lt50','c2_50to75','c3_75to85','c4_85+'), keys = c('LT 50% white', '50-75% white', '75-85% white', 'GT 85% white'), title = "percent white")
 
 par(mfrow=c(1, 1))  # resets to single plot
+
 plot_ego_graph(ego_network_order1, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'))
 
+# MESSING AROUND WITH THE RANKING TABLE
 
-## ------------------------
-## PLOT EGO IGRAPH OBJECTS
-## ------------------------
-
-# Notre Dame ego network
-univ_id <- '152080'
-characteristic <- 'region'
-
-ego_network <- egos_psi_privu[[univ_id]]
-vertex_attr_names(ego_network)
-
-univ_characteristic <- (univ_df %>% filter(school_id == univ_id))[[characteristic]]
-
-plot(
-  x = ego_network,
-  vertex.label = if_else(V(ego_network)$type, V(ego_network)$school_name, ''),
-  vertex.shape = if_else(V(ego_network)$type, 'square', 'circle'),
-  vertex.color = if_else(vertex_attr(ego_network, characteristic) == univ_characteristic, 'lightblue', 'lightgrey'),
-  vertex.size = if_else(V(ego_network)$type, 6, 2),
-  edge.color = 'lightgrey',
-  edge.lty = if_else(E(ego_network)$order == 1, 0, 1),
-  main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
-  layout = layout_with_kk,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
-  margin = -0.3
-)
 
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
@@ -364,6 +214,8 @@ plot(
 
 # Private univs and the private HS they visited
 vertex_attr_names(g_2mode_privu)
+
+par(mfrow=c(1, 1))  # resets to single plot
 
 plot(
   x = g_2mode_privu, 
