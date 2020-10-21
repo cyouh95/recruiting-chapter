@@ -33,9 +33,9 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
     # egos_psi_pubu (17 ego graphs)
 
 
-## ------------------------
-## PLOT EGO IGRAPH OBJECTS
-## ------------------------
+## ------------------
+## DRAFTING ANALYSIS
+## ------------------
 
 # choosing potential universities to for ego network
 
@@ -278,13 +278,72 @@ legend( # based on vertex color; should change this to vertex shape
   # can you replace this w/ using vertex shape; so we would need four shapes
     # let's go with: triangle, circle, square, and .... maybe diamond? 
 
-
-
-
-
 # plot: order 1 (high school) and order 2 (universities that visited those high schools)
 
 
+## --------------------
+## EGO IGRAPH FUNCTION
+## --------------------
+
+plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green')) {
+  
+  color_palette <- colors
+  names(color_palette) <- values
+  
+  plot.igraph(
+    x = network,
+    vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
+    vertex.color = recode(vertex_attr(network, characteristic), !!!color_palette),
+    vertex.size = if_else(V(network)$type, 16, 4),
+    edge.color = if_else(E(network)$weight == 1, 'lightgrey', 'black'),
+    edge.lty = if_else(E(network)$weight == 1, 5, 1),
+    edge.width = if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2),
+    layout = layout_nicely,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
+    main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
+    margin = -0.2
+  )  
+  
+  legend(
+    x = 1,
+    y = -0.5,
+    legend = keys,
+    fill = colors,
+    bty = 'n'  # box drawn around legend: 'o' [default] = solid line box; 'n' = no box
+  )
+}
+
+
+# Tulane ego network
+univ_id <- '160755'
+
+ego_network <- egos_psi_privu[[univ_id]]
+vertex_attr_names(ego_network)
+
+# Subgraph for order=1 only
+ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order == 1])
+
+par(mfrow=c(2, 2))
+plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
+plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
+plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
+plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'))
+
+par(mfrow=c(1, 1))  # resets to single plot
+plot_ego_graph(ego_network_order1, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'))
+
+
+## ------------------------
+## PLOT EGO IGRAPH OBJECTS
+## ------------------------
+
+# Notre Dame ego network
+univ_id <- '152080'
+characteristic <- 'region'
+
+ego_network <- egos_psi_privu[[univ_id]]
+vertex_attr_names(ego_network)
+
+univ_characteristic <- (univ_df %>% filter(school_id == univ_id))[[characteristic]]
 
 plot(
   x = ego_network,
@@ -298,7 +357,6 @@ plot(
   layout = layout_with_kk,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
   margin = -0.3
 )
-
 
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
@@ -342,7 +400,7 @@ t_2mode_privu <- data.frame(
   closeness = V(g_2mode_privu)$closeness
 )
 
-View(t_2mode_privu %>% filter(type == F) %>% arrange(-closeness) %>% select(school_id, school_name, pct_white, closeness, degree, strength))
+View(t_2mode_privu %>% filter(type == F) %>% arrange(-closeness) %>% select(school_id, school_name, city, state, pct_white, closeness, degree, strength))
 
 
 ## -----------------------------------
