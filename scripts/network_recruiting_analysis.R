@@ -51,19 +51,86 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 # Create ego network and ego network order =1
 
   # which university to be the ego network
-    univ_id <- '152080' # Notre Dame ego network
-    #univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
+    #univ_id <- '152080' # Notre Dame ego network
+    univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
     #univ_id <- "228246" # Southern methodist university
     #univ_id <- "216597" # Villanova
 
     
   # ego network
   ego_network <- egos_psi_privu[[univ_id]]
+
+### create variables for academic reputation and for racial composition that will be use in ego graph plot
+    
+  vertex_attr_names(ego_network)
   
-  # subgraph for order = 1 only
+  # racial composition
+
+    # pct white
+    ego_network <- delete_vertex_attr(ego_network, "pct_white_cat")
+    vertex_attr(graph = ego_network, name = "pct_white_cat") <- case_when(
+      vertex_attr(ego_network, "pct_white") <50 ~ "c1_lt50",
+      vertex_attr(ego_network, "pct_white") >=50 & vertex_attr(ego_network, "pct_white") <75 ~ "c2_50to75",
+      vertex_attr(ego_network, "pct_white") >=75 & vertex_attr(ego_network, "pct_white") <85 ~ "c3_75to85",
+      vertex_attr(ego_network, "pct_white") >=85 ~ "c4_85+"
+    )
+    
+    table(V(ego_network)$pct_white_cat, useNA = "always")
+
+  #pct black/latinx/native
+  
+    ego_network <- delete_vertex_attr(ego_network, "pct_blacklatinxnative")
+    vertex_attr(graph = ego_network, name = "pct_blacklatinxnative") <- vertex_attr(graph = ego_network, name = "pct_black") + vertex_attr(graph = ego_network, name = "pct_hispanic") + 
+      vertex_attr(graph = ego_network, name = "pct_amerindian") + vertex_attr(graph = ego_network, name = "pct_nativehawaii")
+  
+    summary(V(ego_network)$pct_blacklatinxnative)
+    
+    ego_network <- delete_vertex_attr(ego_network, "pct_blacklatinxnative_cat")
+  
+    vertex_attr(graph = ego_network, name = "pct_blacklatinxnative_cat") <- case_when(
+      vertex_attr(ego_network, "pct_blacklatinxnative") <10 ~ "c1_lt10",
+      vertex_attr(ego_network, "pct_blacklatinxnative") >=10 & vertex_attr(ego_network, "pct_blacklatinxnative") <25 ~ "c2_10to25",
+      vertex_attr(ego_network, "pct_blacklatinxnative") >=25 & vertex_attr(ego_network, "pct_blacklatinxnative") <50 ~ "c3_25to50",
+      vertex_attr(ego_network, "pct_blacklatinxnative") >=50 ~ "c4_50+"
+    )
+    
+    table(V(ego_network)$pct_blacklatinxnative_cat, useNA = "always")
+    proportions(table(V(ego_network)$pct_blacklatinxnative_cat, useNA = "always"))
+
+  # academic reputation/ranking
+    # note that rank_cat1 is NA for the ego
+    ego_network <- delete_vertex_attr(ego_network, "rank_cat1")
+    vertex_attr(graph = ego_network, name = "rank_cat1") <- case_when(
+      vertex_attr(ego_network, "ranking_numeric") <=100 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c1_top100",
+      vertex_attr(ego_network, "ranking_numeric") >100 & vertex_attr(ego_network, "ranking_numeric") <=200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c2_top200",
+      vertex_attr(ego_network, "ranking_numeric") >200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c3_A+",
+      vertex_attr(ego_network, "ranking") != "A+" & is.na(vertex_attr(ego_network, "ranking"))==0  & vertex_attr(ego_network, "type")==FALSE ~ "c4_ltA+",
+      V(ego_network)$type==TRUE ~ NA_character_
+    )  
+    
+    table(V(ego_network)$rank_cat1, useNA = "always")
+    table(V(ego_network)$rank_cat1[V(ego_network)$type==TRUE], useNA = "always")
+    table(V(ego_network)$rank_cat1[V(ego_network)$type==FALSE], useNA = "always")
+    
+
+    ego_network <- delete_vertex_attr(ego_network, "rank_cat2")
+    vertex_attr(graph = ego_network, name = "rank_cat2") <- case_when(
+      vertex_attr(ego_network, "ranking_numeric") <=200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c1_top200",
+      vertex_attr(ego_network, "ranking_numeric") >200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c2_A+",
+      vertex_attr(ego_network, "ranking") == "A"  ~ "c3_A",
+      (!(vertex_attr(ego_network, "ranking") %in% c("A+","A",NA)) & V(ego_network)$type==FALSE)  ~ "c4_ltA"
+    )
+    
+    table(V(ego_network)$rank_cat2, useNA = "always")
+    table(V(ego_network)$rank_cat2[V(ego_network)$type==TRUE], useNA = "always")
+    table(V(ego_network)$rank_cat2[V(ego_network)$type==FALSE], useNA = "always")
+    
+  # create subgraph for order = 1 only
   
     ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
     ego_network_order1
+    
+    table(V(ego_network_order1)$rank_cat2, useNA = "always")
 
 # investigate vertex characteristics
   
@@ -112,54 +179,8 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 ## EGO IGRAPH FUNCTION (order = 1)
 ## --------------------
 
-### create variables for academic reputation and for racial composition that will be use in ego graph plot
-    
-  vertex_attr_names(ego_network_order1)
-  
-  # racial composition
-
-    # pct white
-    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_white_cat")
-    vertex_attr(graph = ego_network_order1, name = "pct_white_cat") <- case_when(
-      vertex_attr(ego_network_order1, "pct_white") <50 ~ "c1_lt50",
-      vertex_attr(ego_network_order1, "pct_white") >=50 & vertex_attr(ego_network_order1, "pct_white") <75 ~ "c2_50to75",
-      vertex_attr(ego_network_order1, "pct_white") >=75 & vertex_attr(ego_network_order1, "pct_white") <85 ~ "c3_75to85",
-      vertex_attr(ego_network_order1, "pct_white") >=85 ~ "c4_85+"
-    )
-    
-    table(V(ego_network_order1)$pct_white_cat, useNA = "always")
-  
-  #pct black/latinx/native
-  
-    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_blacklatinxnative")
-    vertex_attr(graph = ego_network_order1, name = "pct_blacklatinxnative") <- vertex_attr(graph = ego_network_order1, name = "pct_black") + vertex_attr(graph = ego_network_order1, name = "pct_hispanic") + 
-      vertex_attr(graph = ego_network_order1, name = "pct_amerindian") + vertex_attr(graph = ego_network_order1, name = "pct_nativehawaii")
-  
-    summary(V(ego_network_order1)$pct_blacklatinxnative)
-    
-    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "pct_blacklatinxnative_cat")
-  
-    vertex_attr(graph = ego_network_order1, name = "pct_blacklatinxnative_cat") <- case_when(
-      vertex_attr(ego_network_order1, "pct_blacklatinxnative") <10 ~ "c1_lt10",
-      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=10 & vertex_attr(ego_network_order1, "pct_blacklatinxnative") <25 ~ "c2_10to25",
-      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=25 & vertex_attr(ego_network_order1, "pct_blacklatinxnative") <50 ~ "c3_25to50",
-      vertex_attr(ego_network_order1, "pct_blacklatinxnative") >=50 ~ "c4_50+"
-    )
-    
-    table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always")
-    proportions(table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always"))
-    
-  # academic reputation/ranking
-    # note that rank_cat1 is NA for the ego
-    ego_network_order1 <- delete_vertex_attr(ego_network_order1, "rank_cat1")
-    vertex_attr(graph = ego_network_order1, name = "rank_cat1") <- case_when(
-      vertex_attr(ego_network_order1, "ranking_numeric") <=100 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c1_top100",
-      vertex_attr(ego_network_order1, "ranking_numeric") >100 & vertex_attr(ego_network_order1, "ranking_numeric") <=200 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c2_top200",
-      vertex_attr(ego_network_order1, "ranking_numeric") >200 & vertex_attr(ego_network_order1, "ranking") == "A+"  ~ "c3_A+",
-      vertex_attr(ego_network_order1, "ranking") != "A+" & is.na(vertex_attr(ego_network_order1, "ranking"))==0  ~ "c4_ltA+"
-    )  
-
 # function to plot ego graph order = 1
+    
 
 plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
   
@@ -198,29 +219,28 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
   )
 }
 
-table(V(ego_network_order1)$pct_white_cat, useNA = "always")
-table(V(ego_network_order1)$pct_blacklatinxnative_cat, useNA = "always")
-table(V(ego_network_order1)$rank_cat1, useNA = "always")
 
-# potentially call function here that creates desired race and ranking variables
+# ORDER = 1
 par(mfrow=c(2, 2))
-plot_ego_graph(ego_network_order1, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region")
-plot_ego_graph(ego_network_order1, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation")
-plot_ego_graph(ego_network_order1, characteristic = 'rank_cat1', values = c('c1_top100','c2_top200','c3_A+','c4_ltA+'), keys = c('Rank top 100', 'Rank 100-200', 'A+', 'A or below'), title = "Academic reputation")
-plot_ego_graph(ego_network_order1, characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), title = "percent black, latinx, or Native")
-#plot_ego_graph(ego_network_order1, characteristic = 'pct_white_cat', values = c('c1_lt50','c2_50to75','c3_75to85','c4_85+'), keys = c('LT 50% white', '50-75% white', '75-85% white', 'GT 85% white'), title = "percent white")
-
-par(mfrow=c(1, 1))  # resets to single plot
-
-# Order 1 & 2
-plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region")
-# Order 1
 plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
-# Order 2
-plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
+plot_ego_graph(ego_network, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation", graph_order = 1)
+#plot_ego_graph(ego_network, characteristic = 'rank_cat1', values = c('c1_top100','c2_top200','c3_A+','c4_ltA+'), keys = c('Rank top 100', 'Rank 100-200', 'A+', 'A or below'), title = "Academic reputation", graph_order = 1)
+plot_ego_graph(ego_network, characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), title = "Academic reputation", graph_order = 1)
+plot_ego_graph(ego_network, characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), title = "percent black, latinx, or Native", graph_order = 1)
+#plot_ego_graph(ego_network, characteristic = 'pct_white_cat', values = c('c1_lt50','c2_50to75','c3_75to85','c4_85+'), keys = c('LT 50% white', '50-75% white', '75-85% white', 'GT 85% white'), title = "percent white", graph_order = 1)
+
+# ORDER = BOTH
+par(mfrow=c(2, 2))
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 'both')
+plot_ego_graph(ego_network, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation", graph_order = 'both')
+#plot_ego_graph(ego_network, characteristic = 'rank_cat1', values = c('c1_top100','c2_top200','c3_A+','c4_ltA+'), keys = c('Rank top 100', 'Rank 100-200', 'A+', 'A or below'), title = "Academic reputation", graph_order = 'both')
+plot_ego_graph(ego_network, characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), title = "Academic reputation", graph_order = 'both')
+plot_ego_graph(ego_network, characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), title = "percent black, latinx, or Native", graph_order = 'both')
+#plot_ego_graph(ego_network, characteristic = 'pct_white_cat', values = c('c1_lt50','c2_50to75','c3_75to85','c4_85+'), keys = c('LT 50% white', '50-75% white', '75-85% white', 'GT 85% white'), title = "percent white", graph_order = 'both')
+
+#par(mfrow=c(1, 1))  # resets to single plot
 
 # MESSING AROUND WITH THE RANKING TABLE
-
 
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
@@ -231,14 +251,28 @@ vertex_attr_names(g_2mode_privu)
 
 par(mfrow=c(1, 1))  # resets to single plot
 
+# which layout to choose? ask Russ?
+  # on layout_with_kk as an example of an "energy displacement" method, from Kolaczyk & Csardi 2020, pg 32-33
+    # motivated by the fact that it is possible to associate the collection of forces in spring systems with an overall system energy, another common approach to generating layouts is that of energy-placement methods. An energy, as a function of vertex positions, ostensibly is defined using expressions motivated by those found in physics. A vertex placement is chosen which minimizes the total system energy. A physical system with minimum energy is typically in its most relaxed state, and hence the assertion here is that a graph drawn according to similar principles should be visually appealing. 
+    # says that methods based on multidimensional scaling (MDS) are of the "energy displacement" type
+    # layout_with_kk is a commonly used variant of multidimensional scaling approach
+  # on layout_with_fr as an example of "spring-embedder methods", from Kolaczyk & Csardi 2020, pg 32
+    #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
+    #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
+
+graph_layout <- layout_with_kk
+#graph_layout <- layout_with_fr
+
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
   vertex.color = if_else(V(g_2mode_privu)$type, 'lightblue', 'salmon'),
-  vertex.shape = if_else(V(g_2mode_privu)$type, 'square', 'circle'),
-  vertex.size = if_else(V(g_2mode_privu)$type, 5, 2),
-  edge.lty = 0,
-  layout = layout_with_kk,
+  vertex.shape = if_else(V(g_2mode_privu)$type, 'circle', 'circle'),
+  vertex.size = if_else(V(g_2mode_privu)$type, 8, 2),
+  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
+  edge.lty = .5,
+  edge.color = 'lightgrey',
+  layout = graph_layout,
   margin = -0.4
 )
 
