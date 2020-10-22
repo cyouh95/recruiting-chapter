@@ -161,7 +161,16 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 
 # function to plot ego graph order = 1
 
-plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title) {
+plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
+  
+  if (graph_order != 'both') {  # order 1 only OR order 2 only
+    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order])
+    edge_width <- if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2)
+    graph_layout <- layout_nicely
+  } else {  # order 1 & 2
+    edge_width <- if_else(E(network)$order == 1, 0.5, 0)
+    graph_layout <- layout_with_kk
+  }
   
   color_palette <- colors
   names(color_palette) <- values
@@ -173,8 +182,8 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
     vertex.size = if_else(V(network)$type, 16, 4),
     edge.color = if_else(E(network)$weight == 1, 'lightgrey', 'black'),
     edge.lty = if_else(E(network)$weight == 1, 5, 1),
-    edge.width = if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2),
-    layout = layout_nicely,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
+    edge.width = edge_width,
+    layout = graph_layout,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
     #main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
     main = str_to_title(title),
     margin = -0.2
@@ -203,7 +212,12 @@ plot_ego_graph(ego_network_order1, characteristic = 'pct_blacklatinxnative_cat',
 
 par(mfrow=c(1, 1))  # resets to single plot
 
-plot_ego_graph(ego_network_order1, characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'))
+# Order 1 & 2
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region")
+# Order 1
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
+# Order 2
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
 
 # MESSING AROUND WITH THE RANKING TABLE
 
