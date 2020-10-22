@@ -59,6 +59,7 @@ get_abbrev <- function(x, y) {
 v_get_abbrev <- Vectorize(get_abbrev)
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
   select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
+univ_df$religion[which(univ_df$religion == 'roman_catholic')] = 'catholic'
 
 # Add ranking from US News & World Report data
 usnews_df <- usnews_data %>% select(univ_id, score_text, rank)
@@ -82,6 +83,9 @@ privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu
 # Preview vertex attributes that will be merged
 View(attributes_df %>% filter(school_id %in% univ_vec))
 View(attributes_df %>% filter(school_id %in% privhs_vec))
+
+attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion) %>% table(useNA = 'ifany')
+attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion) %>% table(useNA = 'ifany')
 
 # TODO: Check unmerged Niche data (61 unmerged, 1 truly missing data)
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
