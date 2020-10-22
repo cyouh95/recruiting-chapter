@@ -60,77 +60,17 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
   # ego network
   ego_network <- egos_psi_privu[[univ_id]]
 
-### create variables for academic reputation and for racial composition that will be use in ego graph plot
-    
-  vertex_attr_names(ego_network)
-  
-  # racial composition
-
-    # pct white
-    ego_network <- delete_vertex_attr(ego_network, "pct_white_cat")
-    vertex_attr(graph = ego_network, name = "pct_white_cat") <- case_when(
-      vertex_attr(ego_network, "pct_white") <50 ~ "c1_lt50",
-      vertex_attr(ego_network, "pct_white") >=50 & vertex_attr(ego_network, "pct_white") <75 ~ "c2_50to75",
-      vertex_attr(ego_network, "pct_white") >=75 & vertex_attr(ego_network, "pct_white") <85 ~ "c3_75to85",
-      vertex_attr(ego_network, "pct_white") >=85 ~ "c4_85+"
-    )
-    
-    table(V(ego_network)$pct_white_cat, useNA = "always")
-
-  #pct black/latinx/native
-  
-    ego_network <- delete_vertex_attr(ego_network, "pct_blacklatinxnative")
-    vertex_attr(graph = ego_network, name = "pct_blacklatinxnative") <- vertex_attr(graph = ego_network, name = "pct_black") + vertex_attr(graph = ego_network, name = "pct_hispanic") + 
-      vertex_attr(graph = ego_network, name = "pct_amerindian") + vertex_attr(graph = ego_network, name = "pct_nativehawaii")
-  
-    summary(V(ego_network)$pct_blacklatinxnative)
-    
-    ego_network <- delete_vertex_attr(ego_network, "pct_blacklatinxnative_cat")
-  
-    vertex_attr(graph = ego_network, name = "pct_blacklatinxnative_cat") <- case_when(
-      vertex_attr(ego_network, "pct_blacklatinxnative") <10 ~ "c1_lt10",
-      vertex_attr(ego_network, "pct_blacklatinxnative") >=10 & vertex_attr(ego_network, "pct_blacklatinxnative") <25 ~ "c2_10to25",
-      vertex_attr(ego_network, "pct_blacklatinxnative") >=25 & vertex_attr(ego_network, "pct_blacklatinxnative") <50 ~ "c3_25to50",
-      vertex_attr(ego_network, "pct_blacklatinxnative") >=50 ~ "c4_50+"
-    )
-    
-    table(V(ego_network)$pct_blacklatinxnative_cat, useNA = "always")
-    proportions(table(V(ego_network)$pct_blacklatinxnative_cat, useNA = "always"))
-
-  # academic reputation/ranking
-    # note that rank_cat1 is NA for the ego
-    ego_network <- delete_vertex_attr(ego_network, "rank_cat1")
-    vertex_attr(graph = ego_network, name = "rank_cat1") <- case_when(
-      vertex_attr(ego_network, "ranking_numeric") <=100 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c1_top100",
-      vertex_attr(ego_network, "ranking_numeric") >100 & vertex_attr(ego_network, "ranking_numeric") <=200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c2_top200",
-      vertex_attr(ego_network, "ranking_numeric") >200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c3_A+",
-      vertex_attr(ego_network, "ranking") != "A+" & is.na(vertex_attr(ego_network, "ranking"))==0  & vertex_attr(ego_network, "type")==FALSE ~ "c4_ltA+",
-      V(ego_network)$type==TRUE ~ NA_character_
-    )  
-    
-    table(V(ego_network)$rank_cat1, useNA = "always")
-    table(V(ego_network)$rank_cat1[V(ego_network)$type==TRUE], useNA = "always")
-    table(V(ego_network)$rank_cat1[V(ego_network)$type==FALSE], useNA = "always")
-    
-
-    ego_network <- delete_vertex_attr(ego_network, "rank_cat2")
-    vertex_attr(graph = ego_network, name = "rank_cat2") <- case_when(
-      vertex_attr(ego_network, "ranking_numeric") <=200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c1_top200",
-      vertex_attr(ego_network, "ranking_numeric") >200 & vertex_attr(ego_network, "ranking") == "A+"  ~ "c2_A+",
-      vertex_attr(ego_network, "ranking") == "A"  ~ "c3_A",
-      (!(vertex_attr(ego_network, "ranking") %in% c("A+","A",NA)) & V(ego_network)$type==FALSE)  ~ "c4_ltA"
-    )
-    
-    table(V(ego_network)$rank_cat2, useNA = "always")
-    table(V(ego_network)$rank_cat2[V(ego_network)$type==TRUE], useNA = "always")
-    table(V(ego_network)$rank_cat2[V(ego_network)$type==FALSE], useNA = "always")
-    
-  # create subgraph for order = 1 only
+# create subgraph for order = 1 only [not really necessary]
   
     ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
     ego_network_order1
     
     table(V(ego_network_order1)$rank_cat2, useNA = "always")
+  
+### create variables for academic reputation and for racial composition that will be use in ego graph plot
+
+  # CUT THIS CODE HERE AND PUT IT IN create_igraph_objects.R INSTEAD    
+  
 
 # investigate vertex characteristics
   
@@ -154,10 +94,6 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
     table(V(ego_network_order1)$ranking_numeric, useNA = "always")
     
     
-    summary(V(ego_network_order1)$pct_white)
-    
-    
-
   # compare all high schools that got a visit to schools that got a visit from ego
     
     proportions(table(V(g_1mode_hs)$region, useNA = "always")) # 1 = Northeast   2= Midwest     3 = South      4 = West 
@@ -169,20 +105,24 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
     proportions(table(V(g_1mode_hs)$ranking, useNA = "always")) # turn this into 4 categoriexs
     proportions(table(V(ego_network_order1)$ranking, useNA = "always"))
     
-    
-    summary(V(g_1mode_hs)$pct_white)
-    summary(V(ego_network_order1)$pct_white)
-
-    
 
 ## --------------------
-## EGO IGRAPH FUNCTION (order = 1)
+## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
 # function to plot ego graph order = 1
     
 
 plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
+
+  if (is.na(characteristic)==TRUE) { # don't include vertex characteristics in graph
+    print("hey now!")
+    vertex_color <- if_else(V(g_2mode_privu)$type, 'lightblue', 'salmon')
+  } else {  # include vertex characteristics in graph
+    vertex_color <- recode(vertex_attr(network, characteristic), !!!color_palette) # CRYSTAL - GOT ERROR HERE: Error: Can't splice an object of type `closure` because it is not a vector
+    print(vertex_color) 
+  }
+
   
   if (graph_order != 'both') {  # order 1 only OR order 2 only
     network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order])
@@ -199,7 +139,8 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
   plot.igraph(
     x = network,
     vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
-    vertex.color = recode(vertex_attr(network, characteristic), !!!color_palette),
+    vertex.color = vertex_color,
+    #vertex.color = recode(vertex_attr(network, characteristic), !!!color_palette),
     vertex.size = if_else(V(network)$type, 16, 4),
     edge.color = if_else(E(network)$weight == 1, 'lightgrey', 'black'),
     edge.lty = if_else(E(network)$weight == 1, 5, 1),
@@ -219,6 +160,28 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
   )
 }
 
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
+
+plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "geographic region", graph_order = 1)
+
+#par(mfrow=c(1, 1))  # resets to single plot
+plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
+  
+  print(network)
+  print(characteristic)
+  print(values)
+    print(is.na(values))
+  #is.na(values)
+  #print(keys)
+  print(colors)
+  print(title)
+  print(graph_order)
+  
+  if (is.na(characteristic)==TRUE) {
+    print("hey now!")
+  }
+}
+plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "geographic region", graph_order = 1)
 
 # ORDER = 1
 par(mfrow=c(2, 2))

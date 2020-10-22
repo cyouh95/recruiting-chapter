@@ -132,6 +132,76 @@ g_2mode <- graph_from_data_frame(d = e_2mode,
                                  directed = FALSE,
                                  vertices = v_2mode)
 
+### [PASTED FROM NETWORK_RECRUITING_ANALYSIS.R BY OJ ON 10/22/2020] create variables for academic reputation and for racial composition that will be use in ego graph plot
+    
+  vertex_attr_names(g_2mode)
+  
+  # racial composition
+
+    # pct white
+    g_2mode <- delete_vertex_attr(g_2mode, "pct_white_cat")
+    vertex_attr(graph = g_2mode, name = "pct_white_cat") <- case_when(
+      vertex_attr(g_2mode, "pct_white") <50 ~ "c1_lt50",
+      vertex_attr(g_2mode, "pct_white") >=50 & vertex_attr(g_2mode, "pct_white") <75 ~ "c2_50to75",
+      vertex_attr(g_2mode, "pct_white") >=75 & vertex_attr(g_2mode, "pct_white") <85 ~ "c3_75to85",
+      vertex_attr(g_2mode, "pct_white") >=85 ~ "c4_85+"
+    )
+    
+    table(V(g_2mode)$pct_white_cat, useNA = "always")
+    table(V(g_2mode)$pct_white_cat[V(g_2mode)$type==FALSE], useNA = "always") # high schools
+    table(V(g_2mode)$pct_white_cat[V(g_2mode)$type==TRUE], useNA = "always") # colleges/universities
+    
+  #pct black/latinx/native
+  
+    g_2mode <- delete_vertex_attr(g_2mode, "pct_blacklatinxnative")
+    vertex_attr(graph = g_2mode, name = "pct_blacklatinxnative") <- vertex_attr(graph = g_2mode, name = "pct_black") + vertex_attr(graph = g_2mode, name = "pct_hispanic") + 
+      vertex_attr(graph = g_2mode, name = "pct_amerindian") + vertex_attr(graph = g_2mode, name = "pct_nativehawaii")
+  
+    summary(V(g_2mode)$pct_blacklatinxnative)
+    
+    g_2mode <- delete_vertex_attr(g_2mode, "pct_blacklatinxnative_cat")
+  
+    vertex_attr(graph = g_2mode, name = "pct_blacklatinxnative_cat") <- case_when(
+      vertex_attr(g_2mode, "pct_blacklatinxnative") <10 ~ "c1_lt10",
+      vertex_attr(g_2mode, "pct_blacklatinxnative") >=10 & vertex_attr(g_2mode, "pct_blacklatinxnative") <25 ~ "c2_10to25",
+      vertex_attr(g_2mode, "pct_blacklatinxnative") >=25 & vertex_attr(g_2mode, "pct_blacklatinxnative") <50 ~ "c3_25to50",
+      vertex_attr(g_2mode, "pct_blacklatinxnative") >=50 ~ "c4_50+"
+    )
+    
+    table(V(g_2mode)$pct_blacklatinxnative_cat, useNA = "always")
+    proportions(table(V(g_2mode)$pct_blacklatinxnative_cat, useNA = "always"))
+
+    table(V(g_2mode)$pct_blacklatinxnative_cat[V(g_2mode)$type==FALSE], useNA = "always")
+    table(V(g_2mode)$pct_blacklatinxnative_cat[V(g_2mode)$type==TRUE], useNA = "always")
+    
+  # academic reputation/ranking
+    # note that rank_cat1 is NA for the ego
+    g_2mode <- delete_vertex_attr(g_2mode, "rank_cat1")
+    vertex_attr(graph = g_2mode, name = "rank_cat1") <- case_when(
+      vertex_attr(g_2mode, "ranking_numeric") <=100 & vertex_attr(g_2mode, "ranking") == "A+"  ~ "c1_top100",
+      vertex_attr(g_2mode, "ranking_numeric") >100 & vertex_attr(g_2mode, "ranking_numeric") <=200 & vertex_attr(g_2mode, "ranking") == "A+"  ~ "c2_top200",
+      vertex_attr(g_2mode, "ranking_numeric") >200 & vertex_attr(g_2mode, "ranking") == "A+"  ~ "c3_A+",
+      vertex_attr(g_2mode, "ranking") != "A+" & is.na(vertex_attr(g_2mode, "ranking"))==0  & vertex_attr(g_2mode, "type")==FALSE ~ "c4_ltA+",
+      V(g_2mode)$type==TRUE ~ NA_character_ # is this line redundant?
+    )  
+    
+    table(V(g_2mode)$rank_cat1, useNA = "always")
+    table(V(g_2mode)$rank_cat1[V(g_2mode)$type==TRUE], useNA = "always")
+    table(V(g_2mode)$rank_cat1[V(g_2mode)$type==FALSE], useNA = "always") # CRYSTAL - AFTER YOU FINISH CHECKING NICHE DATA, INVESTIGATE THE NUMBER OF NAs HERE 
+    
+
+    g_2mode <- delete_vertex_attr(g_2mode, "rank_cat2")
+    vertex_attr(graph = g_2mode, name = "rank_cat2") <- case_when(
+      vertex_attr(g_2mode, "ranking_numeric") <=200 & vertex_attr(g_2mode, "ranking") == "A+"  ~ "c1_top200",
+      vertex_attr(g_2mode, "ranking_numeric") >200 & vertex_attr(g_2mode, "ranking") == "A+"  ~ "c2_A+",
+      vertex_attr(g_2mode, "ranking") == "A"  ~ "c3_A",
+      (!(vertex_attr(g_2mode, "ranking") %in% c("A+","A",NA)) & V(g_2mode)$type==FALSE)  ~ "c4_ltA"
+    )
+    
+    table(V(g_2mode)$rank_cat2, useNA = "always")
+    table(V(g_2mode)$rank_cat2[V(g_2mode)$type==TRUE], useNA = "always")
+    table(V(g_2mode)$rank_cat2[V(g_2mode)$type==FALSE], useNA = "always")
+    
 # Create 2-mode subgraph for private univs and their private HS visits only
 g_2mode_privu <- induced_subgraph(
   graph = g_2mode,
