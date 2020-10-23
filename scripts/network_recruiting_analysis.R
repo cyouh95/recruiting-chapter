@@ -110,78 +110,122 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 ## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
-# function to plot ego graph order = 1
+  # Vertex color [CUT CODE HERE]    
+  if (is.na(characteristic)==TRUE) { # do not use characteristic to determine vertex color/shape
     
+    if (graph_order == 1) { # order == 1; only show ego and high schools {
+      vertex_color <- if_else(V(network)$type, 'lightblue', 'salmon')
+    } else {  # order == 'both' or 2: show ego, high schools, colleges that visited those high schools
+      vertex_color <- case_when(
+        vertex_attr(network, "type") == FALSE ~ 'salmon',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 'lightblue',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 'purple',
+      )
+    }
+  } else {  # use characteristic to determine vertex color/shape
+    color_palette <- colors
+    names(color_palette) <- values
+    
+    vertex_color <- recode(vertex_attr(network, characteristic), !!!color_palette) # use characteristic to determine vertex color/shape
+  }
+    
+# function to plot ego graph
 
 plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
 
-  if (is.na(characteristic)==TRUE) { # don't include vertex characteristics in graph
-    print("hey now!")
-    vertex_color <- if_else(V(g_2mode_privu)$type, 'lightblue', 'salmon')
-  } else {  # include vertex characteristics in graph
-    vertex_color <- recode(vertex_attr(network, characteristic), !!!color_palette) # CRYSTAL - GOT ERROR HERE: Error: Can't splice an object of type `closure` because it is not a vector
-    print(vertex_color) 
+  # network object
+  if (graph_order != 'both') {  # order == 1 or 2
+    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
   }
 
-  
-  if (graph_order != 'both') {  # order 1 only OR order 2 only
-    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order])
-    edge_width <- if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2)
-    graph_layout <- layout_nicely
-  } else {  # order 1 & 2
+  # Vertex color  
+    if (is.na(characteristic)==TRUE & graph_order %in% c(1,2)  ) { # no characteristics; order = 1 or 2
+      vertex_color <- if_else(V(network)$type, 'lightblue', 'salmon') # do not use characteristic to determine vertex color/shape
+      # note: if order = 2, ego is not included as a vertex
+    } else if (is.na(characteristic)==TRUE & graph_order %in% c('both')) {  # no characteristics; order == both
+      vertex_color <- case_when(
+        vertex_attr(network, "type") == FALSE ~ 'salmon',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 'lightblue',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 'purple',
+      )
+    } else {  # yes characteristics
+      color_palette <- colors
+      names(color_palette) <- values
+      
+      vertex_color <- recode(vertex_attr(network, characteristic), !!!color_palette) # use characteristic to determine vertex color/shape
+    }
+
+  # vertex size; edge width, color, line type
+  if (graph_order %in% c('both',2)) {  # graph order is 'both' 1 and 2; or graph order == 2
+    vertex_size <- case_when(
+      vertex_attr(network, "type") == FALSE ~ 2,
+      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 12,
+      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 18,
+    )
+    
     edge_width <- if_else(E(network)$order == 1, 0.5, 0)
-    graph_layout <- layout_with_kk
+    edge_color <- 'lightgrey'
+    edge_lty <- 5
+
+  } else {  # graph order == 1
+    vertex_size <- if_else(V(network)$type, 18, 4)
+    
+    edge_width <- if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2)
+    edge_color <- if_else(E(network)$weight == 1, 'lightgrey', 'black')
+    edge_lty <- if_else(E(network)$weight == 1, 5, 1)
+
   }
   
-  color_palette <- colors
-  names(color_palette) <- values
-  
+  # graph layout
+    # giving graph layout it's own set of if/else conditions because we will play w/ layout a lot]
+    # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
+  if (graph_order == 1) { 
+    graph_layout <- layout_nicely
+  } else if (graph_order == 2) {  
+    graph_layout <- layout_nicely
+  } else {  # order == both
+    graph_layout <- layout_with_kk
+  }
+
+
   plot.igraph(
     x = network,
+    # vertex attributes
+    vertex.shape = 'circle',
     vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
     vertex.color = vertex_color,
-    #vertex.color = recode(vertex_attr(network, characteristic), !!!color_palette),
-    vertex.size = if_else(V(network)$type, 16, 4),
-    edge.color = if_else(E(network)$weight == 1, 'lightgrey', 'black'),
-    edge.lty = if_else(E(network)$weight == 1, 5, 1),
+    vertex.size = vertex_size,
+    # edge attributes
+    edge.color = edge_color,
+    edge.lty = edge_lty,
     edge.width = edge_width,
-    layout = graph_layout,  # layout_with_kk, layout_with_fr, layout_in_circle, layout_nicely
-    #main = paste('Ego network for', (univ_df %>% filter(school_id == univ_id))$school_name),
+    layout = graph_layout,  
     main = str_to_title(title),
     margin = -0.2
   )  
+
+  if (is.na(characteristic)==FALSE) {  # if characteristic ! FALSE then create legend    
+    legend(
+      x = .8,
+      y = 0.0,
+      legend = keys,
+      fill = colors,
+      bty = 'n'  # box drawn around legend: 'o' [default] = solid line box; 'n' = no box
+    )
+  }
   
-  legend(
-    x = 1,
-    y = -0.1,
-    legend = keys,
-    fill = colors,
-    bty = 'n'  # box drawn around legend: 'o' [default] = solid line box; 'n' = no box
-  )
 }
+
+par(mfrow=c(1, 1))  # resets to single plot
+
+plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 1)
+plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 2)
+plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = "both")
 
 plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
+plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 'both')
 
-plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "geographic region", graph_order = 1)
-
-#par(mfrow=c(1, 1))  # resets to single plot
-plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
-  
-  print(network)
-  print(characteristic)
-  print(values)
-    print(is.na(values))
-  #is.na(values)
-  #print(keys)
-  print(colors)
-  print(title)
-  print(graph_order)
-  
-  if (is.na(characteristic)==TRUE) {
-    print("hey now!")
-  }
-}
-plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "geographic region", graph_order = 1)
 
 # ORDER = 1
 par(mfrow=c(2, 2))
