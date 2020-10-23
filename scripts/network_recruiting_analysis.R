@@ -284,6 +284,39 @@ plot(
 )
 
 
+## ------------------------------
+## TABLE FROM EGO IGRAPH OBJECTS
+## ------------------------------
+
+ego_table <- data.frame(univ_id = character(0), characteristics = character(0),
+                        private_hs_region = character(0), private_hs_religion = character(0),
+                        private_hs_race = character(0), private_hs_ranking = character(0),
+                        stringsAsFactors=FALSE)
+
+for (i in seq_along(privu_vec)) {
+  ego_network <- egos_psi_privu[[privu_vec[[i]]]]
+  ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
+  
+  ego_df <- as.data.frame(vertex_attr(ego_network_order1))
+  
+  univ_characteristics <- ego_df %>% filter(type == TRUE)
+  
+  privhs_characteristics <- ego_df %>% filter(type == FALSE)
+  num_privhs <- nrow(privhs_characteristics)
+  
+  pct_privhs_region <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == univ_characteristics$region)) / num_privhs * 100)
+  pct_privhs_religion <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == univ_characteristics$religion)) / num_privhs * 100)
+  pct_privhs_race <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_white_cat == univ_characteristics$pct_white_cat)) / num_privhs * 100)
+  pct_privhs_ranking <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c1_top100')) / num_privhs * 100)
+  
+  ego_table[i, ] <- c(as.character(univ_characteristics$school_name),
+                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_white_cat, univ_characteristics$ranking, sep = '|'),
+                      pct_privhs_region, pct_privhs_religion, pct_privhs_race, pct_privhs_ranking)
+}
+
+View(ego_table)
+
+
 ## ---------------------------------
 ## TABLE FROM 2-MODE IGRAPH OBJECTS
 ## ---------------------------------
@@ -300,14 +333,41 @@ t_2mode_privu <- data.frame(
   school_name = V(g_2mode_privu)$school_name,
   city = V(g_2mode_privu)$city,
   state = V(g_2mode_privu)$state_code,
+  region = V(g_2mode_privu)$region,
+  religion = V(g_2mode_privu)$religion,
   pct_white = V(g_2mode_privu)$pct_white,
+  race = V(g_2mode_privu)$pct_white_cat,
+  ranking = V(g_2mode_privu)$rank_cat1,
   type = V(g_2mode_privu)$type,
   degree = V(g_2mode_privu)$degree,
   strength = V(g_2mode_privu)$strength,
   closeness = V(g_2mode_privu)$closeness
 )
 
-View(t_2mode_privu %>% filter(type == F) %>% arrange(-closeness) %>% select(school_id, school_name, city, state, pct_white, closeness, degree, strength))
+# temporarily get rid of unmerged rows
+full_2mode_table <- t_2mode_privu %>% filter(type == F, !is.na(school_name)) %>% arrange(-closeness) %>%
+  mutate(degree_band = case_when(degree >= 15 ~ '15+',
+                                 degree >= 10 ~ '10-14',
+                                 degree >= 5 ~ '5-9',
+                                 TRUE ~ as.character(degree))) %>%
+  select(school_id, school_name, city, state, region, religion, race, ranking, closeness, degree, degree_band, strength)
+
+View(full_2mode_table)
+
+characteristic <- 'race'
+
+agg_2mode_table <- full_2mode_table %>% select_('degree_band', characteristic) %>%
+  group_by_('degree_band', characteristic) %>%
+  summarize(cnt = n()) %>%
+  mutate(pct = sprintf('%.1f%%', cnt / sum(cnt) * 100)) %>%
+  select_('degree_band', characteristic, 'pct') %>%
+  spread_(characteristic, 'pct') %>%
+  rename_at(vars(-degree_band), ~ paste0(characteristic, '_', .))
+
+band_order <- c('15+', '10-14', '5-9', '5', '4', '3', '2', '1')
+agg_2mode_table <- agg_2mode_table[order(match(agg_2mode_table$degree_band, band_order)), ]
+
+View(agg_2mode_table)
 
 
 ## -----------------------------------
