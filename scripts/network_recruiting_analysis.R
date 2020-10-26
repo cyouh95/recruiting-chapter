@@ -360,6 +360,7 @@ full_2mode_table %>% str()
 vertex_attr_names(g_2mode_privu)
 
 c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+class(c_2mode_privu)
 length(c_2mode_privu)
 sizes(c_2mode_privu)
 
