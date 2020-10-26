@@ -101,24 +101,24 @@ Figure X augments the Notre Dame ego network by including the private colleges/u
 
 This section presents network analyses of visits by colleges and universities to private high schools. Analyses are motivated by two, related research questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what extent do off-campus recruiting visits by colleges and universities to private high schools exhibit homophily versus heterophily with respect to the vertex characteristics of geographic region, religious affiliation, academic reputation, and racial composition?
 
-We present results in three steps: First, visits by private colleges and universities; second, visits by public research universities; and, third, comparisons of visits by public research universities to visits by private colleges and universities.
+Figure \@ref(fig:two-mode-plot) shows a plot of the two-mode network, with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
 
-## Visits by Private Colleges and Universities
-
-<!--
-As shown in Figure \@ref(fig:plot_g_2mode_privu), the la la la
- fig.cap="2-mode plot of visits by private colleges and universities", 
--->
-
-As shown in Figure \@ref(fig:two-mode-plot).
-
-```{r two-mode-plot, fig.align = 'center', out.width = "100%", fig.cap = "caption of 2 mode graph"}
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
 knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 ```
 
-plot_g_2mode.pdf
+We present results in three steps: First, visits by private colleges and universities; second, visits by public research universities; and, third, comparisons of visits by public research universities to visits by private colleges and universities.
 
 
+## Visits by Private Colleges and Universities
+
+Figure \@ref(fig:two-mode-plot-privu) shows a plot of the two-mode network of private colleges and universities
+
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+```
+
+INSERT COMMUNITY DETECTION
 
 
 ## Visits by Public Research Universities
