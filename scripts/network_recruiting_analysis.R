@@ -319,8 +319,10 @@ t_2mode_privu <- data.frame(
   state = V(g_2mode_privu)$state_code,
   region = V(g_2mode_privu)$region,
   religion = V(g_2mode_privu)$religion,
-  pct_white = V(g_2mode_privu)$pct_white,
-  race = V(g_2mode_privu)$pct_white_cat,
+  pct_blacklatinxnative = V(g_2mode_privu)$pct_blacklatinxnative,
+  race = V(g_2mode_privu)$pct_blacklatinxnative_cat,
+  ranking_score = V(g_2mode_privu)$ranking,
+  ranking_numeric = V(g_2mode_privu)$ranking_numeric,
   ranking = V(g_2mode_privu)$rank_cat1,
   type = V(g_2mode_privu)$type,
   degree = V(g_2mode_privu)$degree,
@@ -329,18 +331,24 @@ t_2mode_privu <- data.frame(
 )
 
 # temporarily get rid of unmerged rows
-full_2mode_table <- t_2mode_privu %>% filter(type == F, !is.na(school_name)) %>% arrange(-closeness) %>%
+t_2mode_privu <- t_2mode_privu %>% filter(type == F, !is.na(school_name)) %>%
   mutate(degree_band = case_when(degree >= 15 ~ '15+',
                                  degree >= 10 ~ '10-14',
                                  degree >= 5 ~ '5-9',
-                                 TRUE ~ as.character(degree))) %>%
-  select(school_id, school_name, city, state, region, religion, race, ranking, closeness, degree, degree_band, strength)
+                                 TRUE ~ as.character(degree)))
+
+full_2mode_table <- t_2mode_privu %>% arrange(-degree) %>%
+  select(school_id, school_name, city, state, region, religion, pct_blacklatinxnative, ranking_score, ranking_numeric, degree, closeness, strength)
 
 View(full_2mode_table)
 
+saveRDS(full_2mode_table, file = './assets/tables/table_2mode.RDS')
+# readr::write_file(knitr::kable(head(full_2mode_table), 'latex'), 'assets/tables/table_2mode.tex')
+
+# Aggregated table
 characteristic <- 'race'
 
-agg_2mode_table <- full_2mode_table %>% select_('degree_band', characteristic) %>%
+agg_2mode_table <- t_2mode_privu %>% select_('degree_band', characteristic) %>%
   group_by_('degree_band', characteristic) %>%
   summarize(cnt = n()) %>%
   mutate(pct = sprintf('%.1f%%', cnt / sum(cnt) * 100)) %>%
