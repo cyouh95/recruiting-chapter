@@ -275,7 +275,19 @@ plot(
 
 dev.off() # close the file
 
-pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
+
+
+c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+m_2mode_privu <- membership(c_2mode_privu)
+
+colors_2mode_privu <- revalue(as.character(m_2mode_privu), c(
+  '1' = 'red',
+  '2' = 'blue',
+  '3' = 'green',
+  '4' = 'yellow'
+))
+
+pdf("assets/figures/plot_g_2mode_privu_community.pdf") # open file
 
 #graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
@@ -283,7 +295,9 @@ graph_layout <- layout_with_fr
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
-  vertex.color = if_else(V(g_2mode_privu)$type, 'green', 'salmon'),
+  # vertex.color = if_else(V(g_2mode_privu)$type, 'green', 'salmon'),
+  vertex.color = colors_2mode_privu,
+  vertex.frame.color = if_else(V(g_2mode_privu)$type, 'black', 'lightgray'),
   vertex.shape = if_else(V(g_2mode_privu)$type, 'circle', 'circle'),
   vertex.size = if_else(V(g_2mode_privu)$type, 3, 1),
   edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
