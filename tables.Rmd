@@ -18,6 +18,14 @@ df <- readRDS('./assets/tables/table_2mode.RDS')
 knitr::kable(head(df, n = 20)) %>% kable_styling(latex_options = 'scale_down')
 ```
 
+# Aggregated visited private HS (2-mode network)
+
+```{r}
+df <- readRDS('./assets/tables/table_2mode_agg.RDS')
+
+knitr::kable(df) %>% kable_styling(latex_options = 'scale_down')
+```
+
 # Ego network table
 
 ```{r}

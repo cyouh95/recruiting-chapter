@@ -321,22 +321,22 @@ for (i in seq_along(privu_vec)) {
   pct_privhs_region_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 1)) / num_privhs * 100)
   pct_privhs_religion_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'catholic')) / num_privhs * 100)
   pct_privhs_race_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c1_lt10')) / num_privhs * 100)
-  pct_privhs_ranking_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c1_top100')) / num_privhs * 100)
+  pct_privhs_ranking_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c1_top200')) / num_privhs * 100)
   
   pct_privhs_region_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 2)) / num_privhs * 100)
   pct_privhs_religion_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'conservative_christian')) / num_privhs * 100)
   pct_privhs_race_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c2_10to25')) / num_privhs * 100)
-  pct_privhs_ranking_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c2_top200')) / num_privhs * 100)
+  pct_privhs_ranking_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c2_A+')) / num_privhs * 100)
   
   pct_privhs_region_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 3)) / num_privhs * 100)
   pct_privhs_religion_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'nonsectarian')) / num_privhs * 100)
   pct_privhs_race_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c3_25to50')) / num_privhs * 100)
-  pct_privhs_ranking_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c3_A+')) / num_privhs * 100)
+  pct_privhs_ranking_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c3_A')) / num_privhs * 100)
   
   pct_privhs_region_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 4)) / num_privhs * 100)
   pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
   pct_privhs_race_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c4_50+')) / num_privhs * 100)
-  pct_privhs_ranking_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c4_ltA+')) / num_privhs * 100)
+  pct_privhs_ranking_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c4_ltA')) / num_privhs * 100)
   
   ego_table[i, ] <- c(as.character(univ_characteristics$school_name),
                       str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_blacklatinxnative_cat, univ_characteristics$ranking, sep = '|'),
@@ -350,7 +350,7 @@ names(ego_table) <- c('University', 'Characteristics',
                       'Northeast', 'Midwest', 'South', 'West',
                       'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
                       '<10%', '10-25%', '25-50%', '50%+',
-                      'Top 100', 'Top 200', 'A+', '<A+')
+                      'Top 200', 'A+', 'A', '<A')
 View(ego_table)
 
 saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
@@ -378,7 +378,7 @@ t_2mode_privu <- data.frame(
   race = V(g_2mode_privu)$pct_blacklatinxnative_cat,
   ranking_score = V(g_2mode_privu)$ranking,
   ranking_numeric = V(g_2mode_privu)$ranking_numeric,
-  ranking = V(g_2mode_privu)$rank_cat1,
+  ranking = V(g_2mode_privu)$rank_cat2,
   type = V(g_2mode_privu)$type,
   degree = V(g_2mode_privu)$degree,
   strength = V(g_2mode_privu)$strength,
@@ -401,22 +401,39 @@ saveRDS(full_2mode_table, file = './assets/tables/table_2mode.RDS')
 # readr::write_file(knitr::kable(head(full_2mode_table), 'latex'), 'assets/tables/table_2mode.tex')
 
 # Aggregated table
-characteristic <- 'race'
+agg_2mode_table <- t_2mode_privu %>%
+  group_by(degree_band) %>%
+  summarise(Count = n())
 
-agg_2mode_table <- t_2mode_privu %>% select_('degree_band', characteristic) %>%
-  group_by_('degree_band', characteristic) %>%
-  summarize(cnt = n()) %>%
-  mutate(pct = sprintf('%.1f%%', cnt / sum(cnt) * 100)) %>%
-  select_('degree_band', characteristic, 'pct') %>%
-  spread_(characteristic, 'pct') %>%
-  rename_at(vars(-degree_band), ~ paste0(characteristic, '_', .))
+create_agg_table <- function(network, characteristic) {
+  network %>% select_('degree_band', characteristic) %>%
+    group_by_('degree_band', characteristic) %>%
+    summarize(cnt = n()) %>%
+    mutate(pct = sprintf('%.1f%%', cnt / sum(cnt) * 100)) %>%
+    select_('degree_band', characteristic, 'pct') %>%
+    spread_(characteristic, 'pct') %>%
+    rename_at(vars(-degree_band), ~ paste0(characteristic, '_', .))
+}
+
+agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'region'))
+agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'religion'))
+agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'race'))
+agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'ranking'))
 
 band_order <- c('15+', '10-14', '5-9', '5', '4', '3', '2', '1')
 agg_2mode_table <- agg_2mode_table[order(match(agg_2mode_table$degree_band, band_order)), ]
 
+names(agg_2mode_table) <- c('Degree', 'Count',
+                            'Northeast', 'Midwest', 'South', 'West',
+                            'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                            '<10%', '10-25%', '25-50%', '50%+',
+                            'Top 200', 'A+', 'A', '<A', 'rank_NA')
+
 View(agg_2mode_table)
 
-full_2mode_table %>% str()
+saveRDS(agg_2mode_table, file = './assets/tables/table_2mode_agg.RDS')
+
+
 ## -----------------------------------
 ## CLUSTER FROM 2-MODE IGRAPH OBJECTS
 ## -----------------------------------
