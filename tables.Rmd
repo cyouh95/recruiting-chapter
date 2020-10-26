@@ -1,18 +1,35 @@
 ---
 title: "Tables"
-output: pdf_document
+output: bookdown::pdf_document2
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+
+library(kableExtra)
+library(tidyverse)
 ```
 
-## Top visited private HS (2-mode network)
+# Top visited private HS (2-mode network)
 
-```{r cars}
-library(kableExtra)
-
+```{r}
 df <- readRDS('./assets/tables/table_2mode.RDS')
 
 knitr::kable(head(df, n = 20)) %>% kable_styling(latex_options = 'scale_down')
+```
+
+# Ego network table
+
+```{r}
+df <- readRDS('./assets/tables/table_ego.RDS')
+
+knitr::kable(df %>% select(-Characteristics)) %>% kable_styling(latex_options = 'scale_down')
+```
+
+# Ego network graph
+
+See Figure \@ref(fig:ego-plot).
+
+```{r ego-plot, fig.align = 'center', out.width = '50%', fig.cap = 'Ego network'}
+knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
 ```
