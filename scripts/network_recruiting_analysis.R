@@ -270,7 +270,7 @@ plot(
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.6
+  margin = -0.7
 )
 
 dev.off() # close the file
@@ -283,14 +283,14 @@ graph_layout <- layout_with_fr
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
-  vertex.color = if_else(V(g_2mode_privu)$type, 'lightblue', 'salmon'),
+  vertex.color = if_else(V(g_2mode_privu)$type, 'green', 'salmon'),
   vertex.shape = if_else(V(g_2mode_privu)$type, 'circle', 'circle'),
   vertex.size = if_else(V(g_2mode_privu)$type, 3, 1),
   edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.7
+  margin = -0.8
 )
 
 dev.off() # close the file
@@ -450,6 +450,7 @@ membership(c_2mode_privu)
 
 length(V(g_2mode_privu)$type)
 membership(c_2mode_privu)[V(g_2mode_privu)$type==T]
+table(membership(c_2mode_privu)[V(g_2mode_privu)$type==T])
 
 plot(c_2mode_privu,
      g_2mode_privu,
