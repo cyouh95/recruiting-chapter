@@ -1,0 +1,18 @@
+---
+title: "Tables"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Top visited private HS (2-mode network)
+
+```{r cars}
+library(kableExtra)
+
+df <- readRDS('./assets/tables/table_2mode.RDS')
+
+knitr::kable(head(df, n = 20)) %>% kable_styling(latex_options = 'scale_down')
+```
