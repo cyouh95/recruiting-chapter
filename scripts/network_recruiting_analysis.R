@@ -249,11 +249,12 @@ par(mfrow=c(1, 1))  # resets to single plot
     #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
     #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
 
-#graph_layout <- layout_with_kk
-graph_layout <- layout_with_fr
 
 
 pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
+#graph_layout <- layout_with_kk
+graph_layout <- layout_with_fr
+
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
