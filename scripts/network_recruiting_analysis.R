@@ -249,9 +249,34 @@ par(mfrow=c(1, 1))  # resets to single plot
     #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
     #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
 
+vertex_attr_names(g_2mode)
 
+#graph_layout <- layout_with_kk
+graph_layout <- layout_with_fr
+
+pdf("assets/figures/plot_g_2mode.pdf") # open file
+
+plot(
+  x = g_2mode, 
+  vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$school_name, ''),
+  vertex.color = case_when(
+      vertex_attr(g_2mode, "type") == FALSE ~ 'salmon',
+      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% privu_vec ~ 'green',
+      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% pubu_vec  ~ 'violet',
+    ),
+  vertex.shape = if_else(V(g_2mode)$type, 'circle', 'circle'),
+  vertex.size = if_else(V(g_2mode)$type, 3, 1),
+  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
+  edge.lty = .5,
+  edge.color = 'lightgrey',
+  layout = graph_layout,
+  margin = -0.6
+)
+
+dev.off() # close the file
 
 pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
+
 #graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
@@ -265,10 +290,11 @@ plot(
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.8
+  margin = -0.7
 )
 
 dev.off() # close the file
+
 
 ## ------------------------------
 ## TABLE FROM EGO IGRAPH OBJECTS

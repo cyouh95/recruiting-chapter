@@ -110,11 +110,15 @@ As shown in Figure \@ref(fig:plot_g_2mode_privu), the la la la
  fig.cap="2-mode plot of visits by private colleges and universities", 
 -->
 
+As shown in Figure \@ref(fig:two-mode-plot).
 
-```{r plot_g_2mode_privu, echo=FALSE, out.width = '100%'}
-knitr::include_graphics("assets/figures/plot_g_2mode_privu.pdf")
+```{r two-mode-plot, fig.align = 'center', out.width = "100%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 ```
-As shown in Figure \@ref(fig:plot_g_2mode_privu), the la la la
+
+plot_g_2mode.pdf
+
+
 
 
 ## Visits by Public Research Universities
