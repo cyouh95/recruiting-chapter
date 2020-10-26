@@ -252,8 +252,8 @@ par(mfrow=c(1, 1))  # resets to single plot
 #graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
-# open file
-pdf("")
+
+pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
@@ -267,6 +267,7 @@ plot(
   margin = -0.8
 )
 
+dev.off() # close the file
 
 ## ------------------------------
 ## TABLE FROM EGO IGRAPH OBJECTS
