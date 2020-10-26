@@ -252,6 +252,8 @@ par(mfrow=c(1, 1))  # resets to single plot
 #graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
+# open file
+pdf("")
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
@@ -360,6 +362,7 @@ full_2mode_table %>% str()
 vertex_attr_names(g_2mode_privu)
 
 c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+class(c_2mode_privu)
 length(c_2mode_privu)
 sizes(c_2mode_privu)
 
