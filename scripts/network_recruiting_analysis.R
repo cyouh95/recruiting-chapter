@@ -110,25 +110,6 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 ## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
-  # Vertex color [CUT CODE HERE]    
-  if (is.na(characteristic)==TRUE) { # do not use characteristic to determine vertex color/shape
-    
-    if (graph_order == 1) { # order == 1; only show ego and high schools {
-      vertex_color <- if_else(V(network)$type, 'lightblue', 'salmon')
-    } else {  # order == 'both' or 2: show ego, high schools, colleges that visited those high schools
-      vertex_color <- case_when(
-        vertex_attr(network, "type") == FALSE ~ 'salmon',
-        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 'lightblue',
-        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 'purple',
-      )
-    }
-  } else {  # use characteristic to determine vertex color/shape
-    color_palette <- colors
-    names(color_palette) <- values
-    
-    vertex_color <- recode(vertex_attr(network, characteristic), !!!color_palette) # use characteristic to determine vertex color/shape
-  }
-    
 # function to plot ego graph
 
 plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
@@ -201,7 +182,7 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
     edge.width = edge_width,
     layout = graph_layout,  
     main = str_to_title(title),
-    margin = -0.2
+    margin = 0.0 # -0.2
   )  
 
   if (is.na(characteristic)==FALSE) {  # if characteristic ! FALSE then create legend    
@@ -215,7 +196,8 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
   }
   
 }
-
+# dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
+    
 par(mfrow=c(1, 1))  # resets to single plot
 
 plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 1)
@@ -267,20 +249,20 @@ par(mfrow=c(1, 1))  # resets to single plot
     #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
     #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
 
-graph_layout <- layout_with_kk
-#graph_layout <- layout_with_fr
+#graph_layout <- layout_with_kk
+graph_layout <- layout_with_fr
 
 plot(
   x = g_2mode_privu, 
   vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
   vertex.color = if_else(V(g_2mode_privu)$type, 'lightblue', 'salmon'),
   vertex.shape = if_else(V(g_2mode_privu)$type, 'circle', 'circle'),
-  vertex.size = if_else(V(g_2mode_privu)$type, 8, 2),
+  vertex.size = if_else(V(g_2mode_privu)$type, 3, 1),
   edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.4
+  margin = -0.8
 )
 
 
@@ -369,7 +351,7 @@ agg_2mode_table <- agg_2mode_table[order(match(agg_2mode_table$degree_band, band
 
 View(agg_2mode_table)
 
-
+full_2mode_table %>% str()
 ## -----------------------------------
 ## CLUSTER FROM 2-MODE IGRAPH OBJECTS
 ## -----------------------------------
@@ -380,7 +362,11 @@ vertex_attr_names(g_2mode_privu)
 c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
 length(c_2mode_privu)
 sizes(c_2mode_privu)
+
 membership(c_2mode_privu)
+
+length(V(g_2mode_privu)$type)
+membership(c_2mode_privu)[V(g_2mode_privu)$type==T]
 
 plot(c_2mode_privu,
      g_2mode_privu,
