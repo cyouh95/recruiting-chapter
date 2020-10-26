@@ -274,9 +274,11 @@ dev.off() # close the file
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
 
-ego_table <- data.frame(univ_id = character(0), characteristics = character(0),
-                        private_hs_region = character(0), private_hs_religion = character(0),
-                        private_hs_race = character(0), private_hs_ranking = character(0),
+ego_table <- data.frame(univ_name = character(0), characteristics = character(0),
+                        private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
+                        private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
+                        private_hs_race_1 = character(0), private_hs_race_2 = character(0), private_hs_race_3 = character(0), private_hs_race_4 = character(0),
+                        private_hs_ranking_1 = character(0), private_hs_ranking_2 = character(0), private_hs_ranking_3 = character(0), private_hs_ranking_4 = character(0),
                         stringsAsFactors=FALSE)
 
 for (i in seq_along(privu_vec)) {
@@ -290,17 +292,42 @@ for (i in seq_along(privu_vec)) {
   privhs_characteristics <- ego_df %>% filter(type == FALSE)
   num_privhs <- nrow(privhs_characteristics)
   
-  pct_privhs_region <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == univ_characteristics$region)) / num_privhs * 100)
-  pct_privhs_religion <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == univ_characteristics$religion)) / num_privhs * 100)
-  pct_privhs_race <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_white_cat == univ_characteristics$pct_white_cat)) / num_privhs * 100)
-  pct_privhs_ranking <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c1_top100')) / num_privhs * 100)
+  pct_privhs_region_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 1)) / num_privhs * 100)
+  pct_privhs_religion_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'catholic')) / num_privhs * 100)
+  pct_privhs_race_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c1_lt10')) / num_privhs * 100)
+  pct_privhs_ranking_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c1_top100')) / num_privhs * 100)
+  
+  pct_privhs_region_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 2)) / num_privhs * 100)
+  pct_privhs_religion_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'conservative_christian')) / num_privhs * 100)
+  pct_privhs_race_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c2_10to25')) / num_privhs * 100)
+  pct_privhs_ranking_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c2_top200')) / num_privhs * 100)
+  
+  pct_privhs_region_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 3)) / num_privhs * 100)
+  pct_privhs_religion_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'nonsectarian')) / num_privhs * 100)
+  pct_privhs_race_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c3_25to50')) / num_privhs * 100)
+  pct_privhs_ranking_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c3_A+')) / num_privhs * 100)
+  
+  pct_privhs_region_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 4)) / num_privhs * 100)
+  pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
+  pct_privhs_race_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c4_50+')) / num_privhs * 100)
+  pct_privhs_ranking_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat1 == 'c4_ltA+')) / num_privhs * 100)
   
   ego_table[i, ] <- c(as.character(univ_characteristics$school_name),
-                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_white_cat, univ_characteristics$ranking, sep = '|'),
-                      pct_privhs_region, pct_privhs_religion, pct_privhs_race, pct_privhs_ranking)
+                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_blacklatinxnative_cat, univ_characteristics$ranking, sep = '|'),
+                      pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
+                      pct_privhs_religion_1, pct_privhs_religion_2, pct_privhs_religion_3, pct_privhs_religion_4,
+                      pct_privhs_race_1, pct_privhs_race_2, pct_privhs_race_3, pct_privhs_race_4,
+                      pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
 }
 
+names(ego_table) <- c('University', 'Characteristics',
+                      'Northeast', 'Midwest', 'South', 'West',
+                      'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                      '<10%', '10-25%', '25-50%', '50%+',
+                      'Top 100', 'Top 200', 'A+', '<A+')
 View(ego_table)
+
+saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
 
 
 ## ---------------------------------
