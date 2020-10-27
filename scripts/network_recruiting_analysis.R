@@ -287,9 +287,9 @@ colors_2mode_privu <- revalue(as.character(m_2mode_privu), c(
   '4' = 'yellow'
 ))
 
-pdf("assets/figures/plot_g_2mode_privu_community.pdf") # open file
+pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
 
-#graph_layout <- layout_with_kk
+# graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
 plot(
@@ -314,7 +314,7 @@ dev.off() # close the file
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
 
-ego_table <- data.frame(univ_name = character(0), characteristics = character(0),
+ego_table <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
                         private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
                         private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
                         private_hs_race_1 = character(0), private_hs_race_2 = character(0), private_hs_race_3 = character(0), private_hs_race_4 = character(0),
@@ -352,7 +352,7 @@ for (i in seq_along(privu_vec)) {
   pct_privhs_race_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c4_50+')) / num_privhs * 100)
   pct_privhs_ranking_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c4_ltA')) / num_privhs * 100)
   
-  ego_table[i, ] <- c(as.character(univ_characteristics$school_name),
+  ego_table[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), as.character(univ_characteristics$ranking_numeric),
                       str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_blacklatinxnative_cat, univ_characteristics$ranking, sep = '|'),
                       pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
                       pct_privhs_religion_1, pct_privhs_religion_2, pct_privhs_religion_3, pct_privhs_religion_4,
@@ -360,7 +360,10 @@ for (i in seq_along(privu_vec)) {
                       pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
 }
 
-names(ego_table) <- c('University', 'Characteristics',
+univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
+ego_table <- ego_table[order(match(ego_table$univ_id, univ_order)), ]
+
+names(ego_table) <- c('ID', 'University', 'Ranking', 'Characteristics',
                       'Northeast', 'Midwest', 'South', 'West',
                       'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
                       '<10%', '10-25%', '25-50%', '50%+',

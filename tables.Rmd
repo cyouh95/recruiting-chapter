@@ -31,7 +31,7 @@ knitr::kable(df) %>% kable_styling(latex_options = 'scale_down')
 ```{r}
 df <- readRDS('./assets/tables/table_ego.RDS')
 
-knitr::kable(df %>% select(-Characteristics)) %>% kable_styling(latex_options = 'scale_down')
+knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styling(latex_options = 'scale_down')
 ```
 
 # Ego network graph
