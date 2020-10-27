@@ -314,6 +314,75 @@ dev.off() # close the file
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
 
+create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
+  ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
+                          private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
+                          private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
+                          private_hs_race_1 = character(0), private_hs_race_2 = character(0), private_hs_race_3 = character(0), private_hs_race_4 = character(0),
+                          private_hs_ranking_1 = character(0), private_hs_ranking_2 = character(0), private_hs_ranking_3 = character(0), private_hs_ranking_4 = character(0),
+                          stringsAsFactors=FALSE)
+  
+  for (i in seq_along(privu_vec)) {
+    ego_network <- egos_psi_privu[[privu_vec[[i]]]]
+    ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
+    
+    ego_df <- as.data.frame(vertex_attr(ego_network_order1))
+    
+    univ_characteristics <- ego_df %>% filter(type == TRUE)
+    
+    privhs_characteristics <- ego_df %>% filter(type == FALSE)
+    num_privhs <- nrow(privhs_characteristics)
+    
+    # Region
+    pct_privhs_region_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 1)) / num_privhs * 100)
+    pct_privhs_region_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 2)) / num_privhs * 100)
+    pct_privhs_region_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 3)) / num_privhs * 100)
+    pct_privhs_region_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 4)) / num_privhs * 100)
+
+    # Religion
+    pct_privhs_religion_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'catholic')) / num_privhs * 100)
+    pct_privhs_religion_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'conservative_christian')) / num_privhs * 100)
+    pct_privhs_religion_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'nonsectarian')) / num_privhs * 100)
+    pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
+
+    # Race
+    race_vals <- levels(privhs_characteristics[[race_var]])
+    for (j in seq_along(race_vals)) {
+      assign(paste0('pct_privhs_race_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(race_var) == race_vals[[j]])) / num_privhs * 100))
+    }
+    
+    # Ranking
+    ranking_vals <- levels(privhs_characteristics[[ranking_var]])
+    for (j in seq_along(ranking_vals)) {
+      assign(paste0('pct_privhs_ranking_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(ranking_var) == ranking_vals[[j]])) / num_privhs * 100))
+    }
+    
+    ego_tbl[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), as.character(univ_characteristics$ranking_numeric),
+                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
+                      pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
+                      pct_privhs_religion_1, pct_privhs_religion_2, pct_privhs_religion_3, pct_privhs_religion_4,
+                      pct_privhs_race_1, pct_privhs_race_2, pct_privhs_race_3, pct_privhs_race_4,
+                      pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
+    
+  }
+  
+  univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
+  ego_tbl <- ego_tbl[order(match(ego_tbl$univ_id, univ_order)), ]
+  
+  names(ego_tbl) <- c('ID', 'University', 'Ranking', 'Characteristics',
+                        'Northeast', 'Midwest', 'South', 'West',
+                        'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                        race_vals, ranking_vals)
+  ego_tbl
+}
+
+ego_table2 <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
+ego_table3 <- create_ego_table(race_var = 'pct_white_cat', ranking_var = 'rank_cat1')
+
+
+## ORIGINAL/MANUAL WAY BELOW ------------------------------
+
+
 ego_table <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
                         private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
                         private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
