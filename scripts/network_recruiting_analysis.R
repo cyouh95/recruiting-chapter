@@ -280,12 +280,16 @@ dev.off() # close the file
 c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
 m_2mode_privu <- membership(c_2mode_privu)
 
+
+
+library(plyr)
 colors_2mode_privu <- revalue(as.character(m_2mode_privu), c(
   '1' = 'red',
-  '2' = 'blue',
+  '2' = 'lightblue',
   '3' = 'green',
   '4' = 'yellow'
 ))
+detach(package:plyr, unload = TRUE)
 
 pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
 
@@ -315,6 +319,7 @@ dev.off() # close the file
 ## ------------------------------
 
 create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
+  
   ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
                           private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
                           private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
@@ -346,17 +351,17 @@ create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var
     pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
 
     # Race
-    race_vals <- levels(privhs_characteristics[[race_var]])
+    race_vals <- levels(as.factor(privhs_characteristics[[race_var]]))
     for (j in seq_along(race_vals)) {
       assign(paste0('pct_privhs_race_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(race_var) == race_vals[[j]])) / num_privhs * 100))
     }
-    
+
     # Ranking
-    ranking_vals <- levels(privhs_characteristics[[ranking_var]])
+    ranking_vals <- levels(as.factor(privhs_characteristics[[ranking_var]]))
     for (j in seq_along(ranking_vals)) {
       assign(paste0('pct_privhs_ranking_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(ranking_var) == ranking_vals[[j]])) / num_privhs * 100))
     }
-    
+   
     ego_tbl[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), as.character(univ_characteristics$ranking_numeric),
                       str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
                       pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
@@ -365,19 +370,93 @@ create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var
                       pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
     
   }
+  print(race_vals)
+  print(ranking_vals) 
+  # merge in value of community cluster
+    member <- membership(cluster_fast_greedy(g_2mode_privu))
+    
+    df_member <- tibble(
+      univ_id = names(member),
+      cluster = as.numeric(member)
+    )
+    #df_member
   
-  univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
-  ego_tbl <- ego_tbl[order(match(ego_tbl$univ_id, univ_order)), ]
+    ego_tbl <- ego_tbl %>% left_join(df_member, by = "univ_id") 
   
-  names(ego_tbl) <- c('ID', 'University', 'Ranking', 'Characteristics',
+  # merge in indicator of whether national university or national liberal arts college
+    ego_tbl <- usnews_data %>% 
+      mutate(rank_type = recode(source,
+        "national-liberal-arts-colleges" = "liberal arts",
+        "national-universities" = "university"
+        )) %>% 
+      select(rank_type,univ_id) %>% 
+      right_join(ego_tbl, by = "univ_id") %>% 
+      relocate(univ_id,univ_name,cluster,rank_type,univ_ranking,characteristics) %>%
+      arrange(cluster,rank_type,as.numeric(univ_ranking))
+
+    # original code from crystal, commented out 
+      #univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
+      #ego_tbl <- ego_tbl[order(match(ego_tbl$univ_id, univ_order)), ]
+
+  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'USNWR type', 'Rank', 'Characteristics',
                         'Northeast', 'Midwest', 'South', 'West',
                         'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
-                        race_vals, ranking_vals)
+                        race_vals, ranking_vals)        
+
+  
   ego_tbl
 }
 
-ego_table2 <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
-ego_table3 <- create_ego_table(race_var = 'pct_white_cat', ranking_var = 'rank_cat1')
+ego_table <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
+
+saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
+
+ego_table2
+
+names(ego_table2)
+length(names(ego_table2))
+
+
+
+  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'USNWR type', 'USNWR Rank', 'Characteristics',
+                        'Northeast', 'Midwest', 'South', 'West',
+                        'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                        race_vals, ranking_vals)        
+
+
+ego_table2 %>% glimpse()
+df_member %>% class()
+
+
+
+m_2mode_privu  
+    
+  print(names(ego_tbl))
+  
+    
+
+  ego_tbl
+}
+
+ego_table <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
+
+
+
+ego_table2 %>% glimpse()
+#ego_table3 <- create_ego_table(race_var = 'pct_white_cat', ranking_var = 'rank_cat1')
+
+c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+m_2mode_privu <- membership(c_2mode_privu)
+m_2mode_privu %>% str()
+
+as.data.frame(m_2mode_privu)
+class(m_2mode_privu)
+class(c_2mode_privu)
+
+
+
+
+str(n)
 
 
 ## ORIGINAL/MANUAL WAY BELOW ------------------------------
@@ -441,6 +520,24 @@ View(ego_table)
 
 saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
 
+
+ego_table %>% glimpse()
+
+c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
+m_2mode_privu <- membership(c_2mode_privu)
+m_2mode_privu %>% str()
+
+as.data.frame(m_2mode_privu)
+class(m_2mode_privu)
+class(c_2mode_privu)
+
+
+n <- names(m_2mode_privu)
+c <- as.numeric(m_2mode_privu)
+c
+tibble(n,c)
+
+str(n)
 
 ## ---------------------------------
 ## TABLE FROM 2-MODE IGRAPH OBJECTS

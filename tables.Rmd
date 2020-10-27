@@ -18,6 +18,14 @@ df <- readRDS('./assets/tables/table_2mode.RDS')
 knitr::kable(head(df, n = 20)) %>% kable_styling(latex_options = 'scale_down')
 ```
 
+Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities
+
+```{r, hs-print-privu, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode.RDS')
+
+knitr::kable(head(df, n = 20, caption = 'ego table 3')) %>% kable_styling(latex_options = 'scale_down')
+```
+
 # Aggregated visited private HS (2-mode network)
 
 ```{r}
@@ -30,7 +38,6 @@ knitr::kable(df) %>% kable_styling(latex_options = 'scale_down')
 
 ```{r}
 df <- readRDS('./assets/tables/table_ego.RDS')
-
 knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styling(latex_options = 'scale_down')
 ```
 

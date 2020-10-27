@@ -2,16 +2,19 @@
 title: "Recruiting Chapter"
 author: "Ozan Jaquette"
 bibliography: ./other/burd_recruiting_chapter.bib
-output: 
-  bookdown::pdf_document2
+output: bookdown::pdf_document2
 csl: ./other/apa.csl
 urlcolor: blue
+header-includes:
+      - \usepackage{pdflscape}
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
 library(bookdown)
 
+library(kableExtra)
+library(tidyverse)
 ```
 
 # Introduction
@@ -103,9 +106,6 @@ This section presents network analyses of visits by colleges and universities to
 
 Figure \@ref(fig:two-mode-plot) shows a plot of the two-mode network, with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
 
-```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
-```
 
 We present results in three steps: First, visits by private colleges and universities; second, visits by public research universities; and, third, comparisons of visits by public research universities to visits by private colleges and universities.
 
@@ -114,11 +114,15 @@ We present results in three steps: First, visits by private colleges and univers
 
 Figure \@ref(fig:two-mode-plot-privu) shows a plot of the two-mode network of private colleges and universities
 
-```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
-```
 
-INSERT COMMUNITY DETECTION
+
+Table \@ref(tab:ego-table-privu) shows characteristics of private high schools visited by each private college and university
+
+
+Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities
+
+Table \@ref(tab:hs-table-privu-agg) shows characteristics of private high schools by number of private colleges and universities that visited
+
 
 
 ## Visits by Public Research Universities
@@ -127,10 +131,12 @@ CRYSTAL ADDS TABLES/FIGURES
 
 ## Comparison of Public Versus Private Colleges and Universities
 
-CRYSTAL ADDS TABLES/FIGURES
 
+# References
 
-![The enrollment funnel](assets/images/enrollment_funnel.png)
+<div id="refs"></div>
+
+<!-- TABLES -->
 
 ```{r, echo=FALSE}
 pct_budget <- data.frame(
@@ -150,11 +156,49 @@ kable(
 #  <div id="refs"></div>
 ```
 
+```{r, ego-table-privu, echo = FALSE}
+df <- readRDS('./assets/tables/table_ego.RDS')
+knitr::kable(
+  df %>% select(-ID, -Characteristics), row.names = F, 
+  caption = 'ego table caption') %>% landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r, hs-print-privu, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode.RDS') %>% head(n=20)
+
+knitr::kable(
+  df %>% select(-school_id,-closeness), caption = 'ego table 3') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
 
 
-More info in this [documentation](https://rmarkdown.rstudio.com/authoring_bibliographies_and_citations.html).
+```{r, hs-table-privu-agg, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_agg.RDS')
 
-# References
+knitr::kable(df, caption = 'ego table caption') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
 
 
 
+<!-- FIGURES -->
+
+![The enrollment funnel](assets/images/enrollment_funnel.png)
+
+\newpage
+
+\begin{landscape}
+
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "125%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
+#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
+```
+
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "125%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+```
+
+\end{landscape}
