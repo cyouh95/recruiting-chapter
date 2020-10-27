@@ -7,6 +7,7 @@ csl: ./other/apa.csl
 urlcolor: blue
 header-includes:
       - \usepackage{pdflscape}
+      - \usepackage{geometry}
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +22,7 @@ library(tidyverse)
 
 <!-- The "enrollment funnel," shown in Figure X, describes stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, and enrolled students). -->
 
-Figure X shows the "enrollment funnel," a conceptual heurisitc used by the enrollment management industry, which describe the stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, and enrolled students). For example, “prospects” are “all the potential students you would want to attract to your institution” [@RN4322]. “Inquiries” are prospects that contact the institution, including those who respond to a solicitation and those who reach out on their own. The enrollment management industry uses the enrollment funnel to inform interventions that target specific stages of the funnel. 
+Figure \@ref(fig:em-funnel) shows the "enrollment funnel," a conceptual heurisitc used by the enrollment management industry, which describe the stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, and enrolled students). For example, “prospects” are “all the potential students you would want to attract to your institution” [@RN4322]. “Inquiries” are prospects that contact the institution, including those who respond to a solicitation and those who reach out on their own. The enrollment management industry uses the enrollment funnel to inform interventions that target specific stages of the funnel. 
 
 Table X, reproduced from @RN4664, shows the the percentage of undergraduate recruitment budget allocated to different marketing and recruiting activities. ^[table drawn directly from @RN4664 figure 9; based on a convenience sample of 45 four-year non-profit institutions and 21 four-year public institutions]. Institutions identify undergradaute prospects largely by purchasing "student lists" from College Board, ACT, and other vendors. Institutions utilize advertising (traditional and digital) and social media to solicit inquiries and to create positive "buzz" amongst prospects [@RN4411][CITE OTHER].  Given the the rise in “stealth applicants” who do not inquire before applying (Dupaul & Harris, 2012), advertising and social media enables universities to tell their story to prospects who do not wish to be contacted. Once prospects and inquiries are identified, they are targeted with face-to-face and remote recruiting interventions designed to solit applications and deepen engagement. Face-to-face recruiting interventions include on-campus visits by prospects and off-campus recruiting visits by admissions representatives to high schools, community colleges, college fairs, etc. Remote recruiting interventions include postcards, brochures, email, text messages, and targeted social media.
 <!-- QUESTIONS ABOUT THE RNL 2020 COST OF RECRUITING AN UNDERGRADUATE STUDENT REPORT, FIGURE 9
@@ -159,7 +160,7 @@ kable(
 ```{r, ego-table-privu, echo = FALSE}
 df <- readRDS('./assets/tables/table_ego.RDS')
 knitr::kable(
-  df %>% select(-ID, -Characteristics), row.names = F, 
+  df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
   caption = 'ego table caption') %>% landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
@@ -186,19 +187,29 @@ knitr::kable(df, caption = 'ego table caption') %>%
 
 <!-- FIGURES -->
 
-![The enrollment funnel](assets/images/enrollment_funnel.png)
+
+```{r em-funnel, echo = FALSE, fig.cap = "The enrollment funnel"}
+knitr::include_graphics('assets/images/enrollment_funnel.png')
+#![The enrollment funnel](assets/images/enrollment_funnel.png)
+```
+
 
 \newpage
 
+\newgeometry{margin=0cm}
+
 \begin{landscape}
 
-```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "125%", fig.cap = "caption of 2 mode graph"}
+
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
 knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
-```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "125%", fig.cap = "caption of 2 mode graph"}
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "caption of 2 mode graph"}
 knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
 ```
 
 \end{landscape}
+
+\restoregeometry

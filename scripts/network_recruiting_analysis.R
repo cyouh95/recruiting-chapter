@@ -46,7 +46,7 @@ V(g_1mode_hs)$ranking
 
 #events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
 
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count()
 
 # Create ego network and ego network order =1
 
@@ -111,9 +111,18 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 ## --------------------
 
 # function to plot ego graph
+    univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
+    #univ_id <- "228246" # Southern methodist university
+    #univ_id <- "216597" # Villanova
 
-plot_ego_graph <- function(network, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = '', graph_order = 'both') {
+    
+  # ego network
+  ego_network <- egos_psi_privu[[univ_id]]
+    
+plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both') {
 
+  network <- egos_psi_privu[[univ_id]]
+  
   # network object
   if (graph_order != 'both') {  # order == 1 or 2
     network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
@@ -199,14 +208,75 @@ plot_ego_graph <- function(network, characteristic, values, keys, colors = c('bl
 # dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
     
 par(mfrow=c(1, 1))  # resets to single plot
+plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 1)
 
-plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 1)
-plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 2)
-plot_ego_graph(ego_network, characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = "both")
+plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, title, graph_order = 1)
+plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = 2)
+plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, title = "", graph_order = "both")
 
-plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
-plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
-plot_ego_graph(ego_network, characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 'both')
+plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
+plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
+plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 'both')
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View()
+
+events_data %>% glimpse()
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count()
+
+# focusing on variation within a cluster [cluster 1]
+  # swarthmore "216287"
+  # colorado college "126678"
+  # oberlin "204501"
+  # connecticut college ""128902
+pdf("assets/figures/region_cluster1.pdf") # open file
+
+par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+
+par(mfrow=c(2, 2))
+plot_ego_graph(univ_id = "216287", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
+plot_ego_graph(univ_id = "126678", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
+plot_ego_graph(univ_id = "204501", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
+plot_ego_graph(univ_id = "128902", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
+
+dev.off() # close the file
+
+pdf("assets/figures/race_cluster1.pdf") # open file
+
+par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+
+par(mfrow=c(2, 2))
+plot_ego_graph(univ_id = "216287", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+plot_ego_graph(univ_id = "126678", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+plot_ego_graph(univ_id = "204501", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+plot_ego_graph(univ_id = "128902", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+
+dev.off() # close the file
+
+
+pdf("assets/figures/rank_cluster1.pdf") # open file
+
+par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+par(mfrow=c(2, 2))
+plot_ego_graph(univ_id = "216287", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "126678", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "204501", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "128902", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), title = "Academic reputation", graph_order = 1)
+
+dev.off() # close the file
+
+
+# ORDER = 1
+
+par(mfrow=c(2, 2))
+plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
+plot_ego_graph(univ_id = "160755", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation", graph_order = 1)
+#plot_ego_graph(univ_id = "160755", characteristic = 'rank_cat1', values = c('c1_top100','c2_top200','c3_A+','c4_ltA+'), keys = c('Rank top 100', 'Rank 100-200', 'A+', 'A or below'), title = "Academic reputation", graph_order = 1)
+plot_ego_graph(univ_id = "160755", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), title = "Academic reputation", graph_order = 1)
+plot_ego_graph(univ_id = "160755", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), title = "percent black, latinx, or Native", graph_order = 1)
+#plot_ego_graph(univ_id = "160755", characteristic = 'pct_white_cat', values = c('c1_lt50','c2_50to75','c3_75to85','c4_85+'), keys = c('LT 50% white', '50-75% white', '75-85% white', 'GT 85% white'), title = "percent white", graph_order = 1)
 
 
 # ORDER = 1
@@ -256,6 +326,8 @@ graph_layout <- layout_with_fr
 
 pdf("assets/figures/plot_g_2mode.pdf") # open file
 
+# par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
 plot(
   x = g_2mode, 
   vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$school_name, ''),
@@ -293,6 +365,9 @@ detach(package:plyr, unload = TRUE)
 
 pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
 
+# par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+
 # graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
@@ -308,7 +383,7 @@ plot(
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.8
+  margin = -0.7
 )
 
 dev.off() # close the file
@@ -386,8 +461,8 @@ create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var
   # merge in indicator of whether national university or national liberal arts college
     ego_tbl <- usnews_data %>% 
       mutate(rank_type = recode(source,
-        "national-liberal-arts-colleges" = "liberal arts",
-        "national-universities" = "university"
+        "national-liberal-arts-colleges" = "lib arts",
+        "national-universities" = "univ"
         )) %>% 
       select(rank_type,univ_id) %>% 
       right_join(ego_tbl, by = "univ_id") %>% 
@@ -398,9 +473,9 @@ create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var
       #univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
       #ego_tbl <- ego_tbl[order(match(ego_tbl$univ_id, univ_order)), ]
 
-  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'USNWR type', 'Rank', 'Characteristics',
+  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'Characteristics',
                         'Northeast', 'Midwest', 'South', 'West',
-                        'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                        'Catholic', 'Conserv', 'Nonsect', 'Other',
                         race_vals, ranking_vals)        
 
   
@@ -411,52 +486,6 @@ ego_table <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `r
 
 saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
 
-ego_table2
-
-names(ego_table2)
-length(names(ego_table2))
-
-
-
-  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'USNWR type', 'USNWR Rank', 'Characteristics',
-                        'Northeast', 'Midwest', 'South', 'West',
-                        'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
-                        race_vals, ranking_vals)        
-
-
-ego_table2 %>% glimpse()
-df_member %>% class()
-
-
-
-m_2mode_privu  
-    
-  print(names(ego_tbl))
-  
-    
-
-  ego_tbl
-}
-
-ego_table <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
-
-
-
-ego_table2 %>% glimpse()
-#ego_table3 <- create_ego_table(race_var = 'pct_white_cat', ranking_var = 'rank_cat1')
-
-c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
-m_2mode_privu <- membership(c_2mode_privu)
-m_2mode_privu %>% str()
-
-as.data.frame(m_2mode_privu)
-class(m_2mode_privu)
-class(c_2mode_privu)
-
-
-
-
-str(n)
 
 
 ## ORIGINAL/MANUAL WAY BELOW ------------------------------
