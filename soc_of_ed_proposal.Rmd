@@ -1,0 +1,147 @@
+---
+title: "Sociology of Education Association Proposal"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+bibliography: ./other/burd_recruiting_chapter.bib
+csl: ./other/apa.csl
+urlcolor: blue
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{geometry}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(kableExtra)
+```
+
+<!-- https://www.dropbox.com/s/3dseuoel3fwc64n/2021%20SEA%20Call%20for%20Papers.pdf -->
+
+\pagenumbering{gobble}
+
+<!--
+Title page:
+- Name
+- Position
+- Institutional affiliation
+- Address
+- Office telephone
+- Email address
+-->
+
+\vspace{1in}
+\begin{center}
+Ozan Jaquette
+
+Associate Professor
+
+University of California, Los Angeles
+
+Moore Hall 3038
+
+310-206-3030
+
+ozanj@ucla.edu
+\end{center}
+
+\newpage
+
+<!--
+2-page proposal:
+- Brief discussion of topic
+- Pertinent research literature and theory
+- Research methods
+- Findings
+- Study significance
+-->
+
+<!-- Topic: Off-campus recruiting visits and its significance -->
+
+Our research analyzes off-campus recruiting visits by college and university admissions staff. Market research conceives of off-campus visits as a means of identifying prospects, deepening engagement with prospects already being targeted through mail/email, and maintaining relationships with guidance counselors at "feeder schools" [@RN4323; @RN4402; @RN4664]. With respect to expenditure, @RN4664 found that private (non-profit) 4-yr institutions spent an average of 17% of their undergraduate marketing/recruiting budget on "travel" to high schools and college fairs, a higher percentage of budget allocation than any other marketing/recruiting activity. Public institutions spent an average of 16% of their budget on travel, second only to "prospective student communications" at 17%. 
+
+<!-- Literature: Importance of visits to students and guidance counselor relationship -->
+
+A sociological case-study literature develops helpful insights about the mechanisms and functions of off-campus recruiting visits. @RN4324 analyzes visits from the perspective of students at two racially and socioeconomically diverse public high schools. @RN4324 found that high school visits -- including college fairs, instant decision events, and small-group representative visits -- influenced where students applied and where they enrolled. This finding was strongest for first-generation students and underrepresented students of color, who often reported that "school counselors had low expectations for them and were too quick to suggest that they attend community college." This trust vacuum created an opportunity for colleges because these students were drawn to colleges that connected with them and "made them feel wanted." @RN4324 describes a high-achieving, first-generation, African American student who was admitted by a highly selective liberal arts college but chose to attend a less selective college that "seemed to want him more." By contrast, affluent students with college-educated parents were less taken by such overtures and more concerned with college prestige.  
+
+Scholarship also highlight the relational function of visits. @RN3519 provides an ethnography of the admissions office at a selective private liberal arts college. During the autumn "travel season," admissions officers visited selected high schools across the country "to spread word of the institution and maintain relationships with guidance counselors" (pp. 53-54) because "the College's reputation and the quality of its applicant pool are dependent upon its connections with high schools nationwide" [@RN3519, p. 54]. The College tended to visit the same schools year after year because recruiting depends on long-term relationships with high schools. The high schools they visited tend to be affluent schools -- in particular, private schools -- that enroll high-achieving students who can afford tuition and had the resources and motivation to host a successful visit. Recruiting visits may affect outcomes such as inquiries, applications, and matriculation through their affect on high school guidance counselors. The logic is that a guidance counselor who views a college favorably will steer students to the college.
+
+@RN4407 also argues that the desire by colleges for trustworthy information about applicant intentions creates an opportunity for high school counselors to advocate on behalf of their students. This opportunity depends on guidance counselors having personal relationships with university admissions offices and on having small enough caseloads to advocate for each student individually. There needs to be a relationship where the college can trust statements made by the high school counselor and vice versa. This relationship is the product of repeated interactions over many years.
+
+In sum, off-campus recruiting visits are necessary for the maintenance of strong relationships that enable colleges and high schools to negotiate and send trustworthy information to one another. Without face-to-face visits, it is less likely that a college admissions counselor will "take the call" of a guidance counselor. Simultaneously, a recruiting visit between a college and a high school can be conceived as an indicator. First, the fact that the college took time and effort to make the visit suggests that the college wants to enroll students from the high school. Second, the fact that the high school hosted the visit suggests that the high school likely views the college as a desirable destination for some of its students. Third, the presence of the recruiting visit indicates that the high school and the college have a relationship and suggests the probability of additional interactions (e.g., phone calls).
+
+<!-- Research methods -->
+
+Our project collected data about off-campus recruiting visits made in 2017 by a convenience sample of colleges and universities. Our analysis sample is based on three different lists of post-secondary institutions: all public research-extensive universities as defined by the 2000 Carnegie Classification (N=102); all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58); and all private colleges in the top 50 of U.S. News and World Report Liberal Arts Colleges rankings (N=47). For each of these institutions, we investigated their admissions website for pages that provided the details of upcoming off-campus recruiting visits. For institutions that posted such pages, we scraped the pages once per week throughout the 2017 calendar year. Many colleges and university only posted certain kinds of events (e.g., hotel receptions and national college fairs) but not others (e.g., day-time visits to high schools). These institutions are excluded from the analyses. Of the remaining public universities, we also issued public records requests asking for recruiting events data as a means of quality assurance. Our final analysis sample consists of 17 public research universities, 13 private research universities, and 13 private liberal arts colleges. 
+
+We utilize network methods to analyze the recruiting visits data for two, related reasons. First, social network analysis privileges the relationship between actors. The discussion of Stevens and Khan suggests that for private school students, "it is not just the quality of the students that gets them into college but the quality of the relationship between elite high schools and colleges" [@RN4407, p. 175]. Second, a visit from a college/university admissions counselor to a high school can be conceived as a "network tie" connecting two actors in a social network.
+
+We will focus on network analyses of visits by colleges and universities to private high schools. Analyses are motivated by two, related research questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what extent do off-campus recruiting visits by colleges and universities to private high schools exhibit homophily versus heterophily with respect to the vertex characteristics of geographic region, religious affiliation, academic reputation, and racial composition?
+
+<!-- Findings -->
+
+Figure \@ref(fig:two-mode-plot) shows a two-mode network plot consisting of visits by public and private colleges and universities to private high schools.
+
+Figure \@ref(fig:two-mode-plot-privu) shows a two-mode network plot consisting of visits by private colleges and universities to private high schools.
+
+Table \@ref(tab:ego-table-privu) shows characteristics of private high schools visited by each private college and university.
+
+Table \@ref(tab:hs-print-privu) shows characteristics of the top 20 most visited private high schools by private colleges and universities.
+
+Table \@ref(tab:hs-table-privu-agg) shows characteristics of private high schools by number of private colleges and universities that visited.
+
+<!-- Study significance -->
+
+\newpage
+
+# References
+
+<div id="refs"></div>
+
+\newpage
+
+```{r, ego-table-privu, echo = FALSE}
+df <- readRDS('./assets/tables/table_ego.RDS')
+knitr::kable(
+  df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
+  caption = 'Characteristics of private high schools visited by each private college and university') %>% landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r, hs-print-privu, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode.RDS') %>% head(n=20)
+
+knitr::kable(
+  df %>% select(-school_id,-closeness), caption = 'Characteristics of the top 20 most visited private high schools by private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r, hs-table-privu-agg, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_agg.RDS')
+
+knitr::kable(df, caption = 'Characteristics of private high schools by number of private colleges and universities that visited') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+\newpage
+
+\newgeometry{margin=0cm}
+
+\begin{landscape}
+
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network plot consisting of visits by public and private colleges and universities to private high schools"}
+knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
+#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
+```
+
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "2-mode network plot consisting of visits by private colleges and universities to private high schools"}
+knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+```
+
+\end{landscape}
