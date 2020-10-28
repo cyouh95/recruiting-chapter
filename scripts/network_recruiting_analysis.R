@@ -267,6 +267,8 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
  dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
 
 
+
+
 par(mfrow=c(1, 1))  # resets to single plot
 plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 1)
 
@@ -305,17 +307,16 @@ plot_ego_graph(univ_id = "115409", characteristic = 'rank_cat2', values = c('c1_
 # 115409
 dev.off() # close the file
 
-pdf("assets/figures/race_cluster1.pdf") # open file
-
 #For catholic, show order equals both. one big graph of one univ and maybe characteristic equals religious
 
   # villanova ego network, religion overlayed
-  pdf("assets/figures/villanova_religion.pdf") # open file
+  pdf("assets/figures/villanova_religion.pdf", paper = "a4r") # open file
   
     par(mar=c(5, 4, 4, 2) + 0.1) # default margins
     #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
-    plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both')
+    plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
+    
   dev.off() # close the file  
 
 
@@ -339,6 +340,10 @@ dev.off() # close the file
   # 147767 Northwestern
   # 139658 Emory
   # 160755 Tulane
+  # 223232 baylor
+
+# baylor
+plot_ego_graph(univ_id = "223232", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
     
 # Maybe for TEXAS cluster show small multiples of race 
 

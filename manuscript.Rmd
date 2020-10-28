@@ -105,7 +105,7 @@ Figure X augments the Notre Dame ego network by including the private colleges/u
 
 This section presents network analyses of visits by colleges and universities to private high schools. Analyses are motivated by two, related research questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what extent do off-campus recruiting visits by colleges and universities to private high schools exhibit homophily versus heterophily with respect to the vertex characteristics of geographic region, religious affiliation, academic reputation, and racial composition?
 
-Figure \@ref(fig:two-mode-plot) shows a plot of the two-mode network, with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
+Figure \@ref(fig:two-mode-plot) plots the two-mode network of visits to private high schools by all colleges and universities in our sample, with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
 
 
 We present results in three steps: First, visits by private colleges and universities; second, visits by public research universities; and, third, comparisons of visits by public research universities to visits by private colleges and universities.
@@ -113,28 +113,37 @@ We present results in three steps: First, visits by private colleges and univers
 
 ## Visits by Private Colleges and Universities
 
-Figure \@ref(fig:two-mode-plot-privu) shows a plot of the two-mode network of private colleges and universities
+Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We used XYZ community detection approach [add footnote w/ details?] to allocate private colleges and universities [? and private high schools] to clusters. Four clusters emerge. The largest cluster consists largely of nonsectarian liberal arts colleges (e.g., Williams, Swarthmore, Colorado College). Cluster 2 consists of Emory University, Tulane, Northwestern, and Sewanee. These universities all have relatively strong ties to Southern private high schools. Cluster 3 consists of three catholic universities -- Notre Dame, Villanova, Boston College -- and Case Western Reserve and Stevens Institute of Technology.  Although not a Catholic University, Stevens Institute of Technology has strong ties to Catholic private schools (representing X% of visits). Finally, cluster 4 consists of three religiously affiliated Texas universities -- Southern Methodist, Baylor, Texas Christian University -- and the University of Denver. 
+
+Figure \@ref(fig:two-mode-plot-privu) plots the two-mode network of visits by private colleges and universities to private high schools, with vertex color determined by community cluster.  The placement of college and high school vertices on an X-Y axis/coordinates is determined such that vertices with many direct and indirect ties are closer together. Although the process of placing vertices was separate from the process of determining community cluster, vertices within the same cluster tend to be closer to one another than those of different clusters. For example, the nonsectarian liberal arts colleges in Cluster 1 tend to be be close to one another and also relatively close to the highest concentration of private high schools in cluster 1, suggesting that these colleges visit substantially overlapping sets of private high schools. For Cluster 2, by contrast, Northwestern and Emory are relatively far from Tulane and Sewanee.
+
+Addressing our two motivating research questions -- which schools receive visits from which colleges/universities and the extent to which visits are more likely to occur between organizations that share certain characteristics -- requires analyses that are more granular than Figure \@ref(fig:two-mode-plot-privu).
+
+Table \@ref(tab:ego-table-privu) shows the characteristics of private high schools visited by each private college and university. This table was created from the ego networks of each private college and university. As such, we visualize selected ego networks to illustrate several patterns that emerge from Table \@ref(tab:ego-table-privu). Ego networks consist of an ego (a single college/university), the set of high schools the ego visted (one degree of separation from the ego), and the set of colleges/universities that also visited high schools visited by the ego (two degrees of separation from the ego).  Figure \@ref(fig:villanova-religion) shows the ego network of Villanova University, with vertex color determined by religious affiliation.  About 50% of Villanova's visits were to Catholic schools, a percentage [?percent?] much higher than most colleges and universities shown in Table \@ref(tab:ego-table-privu), and second only to Notre Dame University. In Figure \@ref(fig:villanova-religion), Notre Dame is closer to Villanova than any other college/university in the Villanova ego network, suggesting that Villanova and Notre Dame visit substantially overlapping sets of schools. Boston College, another Catholic university, is situated a bit further away from Villanova in the clump of colleges that includes Case Western, Tulane, Sewanee, Southern Methodist, and TCU, all of which visit a relatively high share of Catholic high schools, despite not being Catholic universities. By contrast, Villanova is far from nonsectarian liberal arts colleges (e.g., Swarthmore, Smith, Colorado College) which visit fewer Catholic high schools.
 
 
-Figure \@ref(fig:villanova-religion) shows the ego network of Villanova University, with religious affiliation
+Figure \@ref(fig:emory-region) shows the ego network of Emory University, with vertex color determined by geographic region. Located in Atlanta, about 47% of Emory's visits were to schools in the South. Figure \@ref(fig:emory-region) indicates that Emory's network structure is similar to several other southern universities -- including Tulane, TCU, SMU, and Sewanee, but is dissimilar from Baylor University which made about 56% of visits in the South, but with a focus on schools with a Christian religious affiliation. Figure \@ref(fig:emory-region) also suggests that the set of schools visited by Emory overlaps substantially with several institutions located in the Northeast (e.g., Villanova, Boston College, Middlebury) and the Midwest (e.g., Case Western Reserve, Northwestern, Notre Dame).
 
-Figure \@ref(fig:emory-region) shows the ego network of Emory University, with geographic region
+Figure \@ref(fig:rank-cluster1) shows the academic reputation of private high schools visited by [selected] private colleges and universities. Compared to other institutions, the cluster of nonsectarian liberal arts colleges visits a higher share of high schools ranked in the top 200 of Niche and a lower share of schools with a grade of "A" or lower. By contrast, Catholic universities (in cluster 3) and Christian affiliated Texas universities (cluster 4) tend to visit a higher share of high schools graded as "A" or lower by Niche.
 
-Figure \@ref(fig:rank-cluster1) shows the academic reputation of private high schools visited by selected colleges universities in cluster 1
+Figure \@ref(fig:race-cluster4) shows the racial composition of visited private high schools by college [REVISE PARAGRAPH ONCE WE FIX MISSING VALUES FOR RACE]. The big take-away is that the most colleges predominantly visit high schools where fewer than 25% of students identify as Black, Latinx, or Native. This finding is largely true across clusters. Private high schools tend to have a higher share of White students than public high schools. Moreover, the private high schools that were visited by private colleges and universities in our sample had a lower share of Black/Latinx/Native students, on average, than the population of private high schools. Our findings suggest that the low number of Black/Latinx/Native students at private colleges and universities may be driven by thse institutions explicitly recruiting from private high schools that enroll few Black/Latinx/Native students.
 
-Figure \@ref(fig:race-cluster4) shows the racial composition of visited private high schools, selected colleges
+[NEED TRANSITION TO FOCUS NOW ON HIGH SCHOOLS]
+Which private high schools receive the most visits? Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities. The last two columns of Table \@ref(tab:hs-print-privu) are "degree" and "strength," which are related measures of vertex "centrality." Measures of centrality attempt to identify the most important or influential actors in a social network. "Degree" is defined as the number of edges direclty connected to a vertex. In Table \@ref(tab:hs-print-privu), the degree of a high school is the number of private colleges and universities in our sample that visited. The concept "strength" is generally defined as a weighted measure of degree. In our study, colleges often made more than one visit to the same high school in 2017. Thus, Table \@ref(tab:hs-print-privu) defines strength as the total number of visits from private colleges and universities in our sample.
+
+The Kent Denver School, the top ranked school in \@ref(tab:hs-print-privu),was visited by 23 of the 26 private colleges and universities in our sample. Choate Rosemary Hall was visited by 21 colleges and universities, but these 21 institutions made 34 total visits. Most schools in Table \@ref(tab:hs-print-privu) are mostly nonsectarian. Although all received a Niche grade of "A+", they are not uniformly in the upper-echelon of schools ranked in the top 50 or top 100 nationwide. With the exception of St. Ignatius Prep in Chicago and the Maret School in Washington DC, students who identify as Black, Latinx, or Native comprise less than 20% of all students.
+
+Table \@ref(tab:hs-table-privu-agg) shows the characteristics of private high schools by degree band (e.g., visits from 15+, 10-14, etc). Schools that received visits from 4 or fewer private colleges and universities enrolled a greater share of Black/Latinx/Native students. These schools were also disproportionately Catholic schools and were more likely to recieve a grade of "A" or lower from Niche.
+
+Whereas Tables \@ref(tab:hs-print-privu) and \@ref(tab:hs-table-privu-agg) examine centrality, they do not assess the extent to which high schools cluster into groups, with some high schools visited by nearly all colleges and universities and other groups of high schools only receiving visits from a particular subset of colleges and universities. [THIS IS WHERE THE DIRECT VS. INDIRECT CONNECTION ANALYSIS RECOMMENDED BY RUSS WOULD GO. WE MIGHT ADD THIS TO BURD CHAPTER OR DO AFTER BURD CHAPTER SUBMITTED]
 
 
-Table \@ref(tab:ego-table-privu) shows characteristics of private high schools visited by each private college and university
-
-
-Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities
-
-Table \@ref(tab:hs-table-privu-agg) shows characteristics of private high schools by number of private colleges and universities that visited
 
 ## Visits by Public Research Universities
 
-CRYSTAL ADDS TABLES/FIGURES
+ADD TABLES/FIGURES OF VISITS BY PUBLIC RESEARCH UNIVERSITIES. 
+
+
 
 ## Comparison of Public Versus Private Colleges and Universities
 
@@ -171,10 +180,12 @@ knitr::kable(
   kable_styling(latex_options = 'scale_down')
 ```
 
-```{r}
+```{r, include = FALSE, eval = FALSE}
 df <- readRDS('./assets/tables/table_ego.RDS')
+#df %>% select(ID,University,Cluster,Type,Rank,c1_lt10,c2_10to25,c3_25to50,`c4_50+`) %>%mutate(lt25 = as.numeric(c1_lt10) + as.numeric(c2_10to25))
+
 knitr::kable(
-  df %>% select(ID,University,Cluster,Type,Rank,Characteristics,c1_lt10,c2_10to25,c3_25to50,`c4_50+`), row.names = F, # select(-ID, -Characteristics)
+  df %>% select(ID,University,Cluster,Rank,c1_lt10,c2_10to25,c3_25to50,`c4_50+`), row.names = F, # select(-ID, -Characteristics) Characteristics ,Type
   caption = 'la la') %>% landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
@@ -225,7 +236,7 @@ knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
 ```
 
 
-```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Ego network of Villanova University, with religious affiliation"}
+```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, with religious affiliation"}
 knitr::include_graphics('assets/figures/villanova_religion.pdf')
 ```
 
