@@ -116,6 +116,14 @@ We present results in three steps: First, visits by private colleges and univers
 Figure \@ref(fig:two-mode-plot-privu) shows a plot of the two-mode network of private colleges and universities
 
 
+Figure \@ref(fig:villanova-religion) shows the ego network of Villanova University, with religious affiliation
+
+Figure \@ref(fig:emory-region) shows the ego network of Emory University, with geographic region
+
+Figure \@ref(fig:rank-cluster1) shows the academic reputation of private high schools visited by selected colleges universities in cluster 1
+
+Figure \@ref(fig:race-cluster4) shows the racial composition of visited private high schools, selected colleges
+
 
 Table \@ref(tab:ego-table-privu) shows characteristics of private high schools visited by each private college and university
 
@@ -123,8 +131,6 @@ Table \@ref(tab:ego-table-privu) shows characteristics of private high schools v
 Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities
 
 Table \@ref(tab:hs-table-privu-agg) shows characteristics of private high schools by number of private colleges and universities that visited
-
-
 
 ## Visits by Public Research Universities
 
@@ -162,6 +168,14 @@ df <- readRDS('./assets/tables/table_ego.RDS')
 knitr::kable(
   df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
   caption = 'ego table caption') %>% landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r}
+df <- readRDS('./assets/tables/table_ego.RDS')
+knitr::kable(
+  df %>% select(ID,University,Cluster,Type,Rank,Characteristics,c1_lt10,c2_10to25,c3_25to50,`c4_50+`), row.names = F, # select(-ID, -Characteristics)
+  caption = 'la la') %>% landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
@@ -209,6 +223,25 @@ knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 ```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "caption of 2 mode graph"}
 knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
 ```
+
+
+```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Ego network of Villanova University, with religious affiliation"}
+knitr::include_graphics('assets/figures/villanova_religion.pdf')
+```
+
+```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Ego network of Emory University, with geographic region"}
+knitr::include_graphics('assets/figures/emory_region.pdf')
+```
+
+
+```{r rank-cluster1, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Academic rating of private high schools visited by selected colleges from cluster 1"}
+knitr::include_graphics('assets/figures/rank_cluster1.pdf')
+```
+
+```{r race-cluster4, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Racial composition of visited private high schools, selected colleges"}
+knitr::include_graphics('assets/figures/race_cluster4.pdf')
+```
+
 
 \end{landscape}
 

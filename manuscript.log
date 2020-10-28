@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.27)  27 OCT 2020 15:15
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.27)  28 OCT 2020 00:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -365,56 +365,74 @@ Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
 \Gm@layoutvoffset=\dimen159
 \Gm@dimlist=\toks24
 )
+(c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/fancyvrb/fancyvrb.
+sty
+Package: fancyvrb 2020/05/03 v3.6 verbatim text (tvz,hv)
+\FV@CodeLineNo=\count274
+\FV@InFile=\read2
+\FV@TabBox=\box49
+\c@FancyVerbLine=\count275
+\FV@StepNumber=\count276
+\FV@OutFile=\write3
+) (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/framed/framed.st
+y
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip53
+\fb@frw=\dimen160
+\fb@frh=\dimen161
+\FrameRule=\dimen162
+\FrameSep=\dimen163
+)
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/longtable.st
 y
 Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
-\LTleft=\skip53
-\LTright=\skip54
-\LTpre=\skip55
-\LTpost=\skip56
-\LTchunksize=\count274
-\LTcapwidth=\dimen160
-\LT@head=\box49
-\LT@firsthead=\box50
-\LT@foot=\box51
-\LT@lastfoot=\box52
-\LT@cols=\count275
-\LT@rows=\count276
-\c@LT@tables=\count277
-\c@LT@chunks=\count278
+\LTleft=\skip54
+\LTright=\skip55
+\LTpre=\skip56
+\LTpost=\skip57
+\LTchunksize=\count277
+\LTcapwidth=\dimen164
+\LT@head=\box50
+\LT@firsthead=\box51
+\LT@foot=\box52
+\LT@lastfoot=\box53
+\LT@cols=\count278
+\LT@rows=\count279
+\c@LT@tables=\count280
+\c@LT@chunks=\count281
 \LT@p@ftn=\toks25
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/booktabs/booktabs.
 sty
 Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
-\heavyrulewidth=\dimen161
-\lightrulewidth=\dimen162
-\cmidrulewidth=\dimen163
-\belowrulesep=\dimen164
-\belowbottomsep=\dimen165
-\aboverulesep=\dimen166
-\abovetopsep=\dimen167
-\cmidrulesep=\dimen168
-\cmidrulekern=\dimen169
-\defaultaddspace=\dimen170
-\@cmidla=\count279
-\@cmidlb=\count280
-\@aboverulesep=\dimen171
-\@belowrulesep=\dimen172
-\@thisruleclass=\count281
-\@lastruleclass=\count282
-\@thisrulewidth=\dimen173
+\heavyrulewidth=\dimen165
+\lightrulewidth=\dimen166
+\cmidrulewidth=\dimen167
+\belowrulesep=\dimen168
+\belowbottomsep=\dimen169
+\aboverulesep=\dimen170
+\abovetopsep=\dimen171
+\cmidrulesep=\dimen172
+\cmidrulekern=\dimen173
+\defaultaddspace=\dimen174
+\@cmidla=\count282
+\@cmidlb=\count283
+\@aboverulesep=\dimen175
+\@belowrulesep=\dimen176
+\@thisruleclass=\count284
+\@lastruleclass=\count285
+\@thisrulewidth=\dimen177
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/etoolbox/etoolbox.
 sty
 Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count283
+\etb@tempcnta=\count286
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/mdwtools/footnote.
 sty
 Package: footnote 1997/01/28 1.13 Save footnotes around boxes
-\fn@notes=\box53
-\fn@width=\dimen174
+\fn@notes=\box54
+\fn@width=\dimen178
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.
 sty
@@ -432,8 +450,8 @@ File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 105.
 )
-\Gin@req@height=\dimen175
-\Gin@req@width=\dimen176
+\Gin@req@height=\dimen179
+\Gin@req@width=\dimen180
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/grffile/grffile.st
 y
@@ -453,81 +471,81 @@ Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
 Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 ) (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tools/array.sty
 Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
-\col@sep=\dimen177
-\ar@mcellbox=\box54
-\extrarowheight=\dimen178
+\col@sep=\dimen181
+\ar@mcellbox=\box55
+\extrarowheight=\dimen182
 \NC@list=\toks26
-\extratabsurround=\skip57
-\backup@length=\skip58
-\ar@cellbox=\box55
+\extratabsurround=\skip58
+\backup@length=\skip59
+\ar@cellbox=\box56
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/multirow/multirow.
 sty
 Package: multirow 2019/05/31 v2.5 Span multiple rows of a table
-\multirow@colwidth=\skip59
-\multirow@cntb=\count284
-\multirow@dima=\skip60
-\bigstrutjot=\dimen179
+\multirow@colwidth=\skip60
+\multirow@cntb=\count287
+\multirow@dima=\skip61
+\bigstrutjot=\dimen183
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/wrapfig/wrapfig.st
 y
-\wrapoverhang=\dimen180
-\WF@size=\dimen181
-\c@WF@wrappedlines=\count285
-\WF@box=\box56
+\wrapoverhang=\dimen184
+\WF@size=\dimen185
+\c@WF@wrappedlines=\count288
+\WF@box=\box57
 \WF@everypar=\toks27
 Package: wrapfig 2003/01/31  v 3.6
 ) (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count286
+\c@float@type=\count289
 \float@exts=\toks28
-\float@box=\box57
+\float@box=\box58
 \@float@everytoks=\toks29
-\@floatcapt=\box58
+\@floatcapt=\box59
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/colortbl/colortbl.
 sty
 Package: colortbl 2020/01/04 v1.0e Color table columns (DPC)
 \everycr=\toks30
-\minrowclearance=\skip61
+\minrowclearance=\skip62
 ) (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/tabu/tabu.sty
 Package: tabu 2019/01/11 v2.9 - flexible LaTeX tabulars (FC+tabu-fixed)
 
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/varwidth/varwidth.
 sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box59
-\sift@deathcycles=\count287
-\@vwid@loff=\dimen182
-\@vwid@roff=\dimen183
+\@vwid@box=\box60
+\sift@deathcycles=\count290
+\@vwid@loff=\dimen186
+\@vwid@roff=\dimen187
 )
-\c@taburow=\count288
-\tabu@nbcols=\count289
-\tabu@cnt=\count290
-\tabu@Xcol=\count291
-\tabu@alloc=\count292
-\tabu@nested=\count293
-\tabu@target=\dimen184
-\tabu@spreadtarget=\dimen185
-\tabu@naturalX=\dimen186
-\tabucolX=\dimen187
-\tabu@Xsum=\dimen188
-\extrarowdepth=\dimen189
-\abovetabulinesep=\dimen190
-\belowtabulinesep=\dimen191
-\tabustrutrule=\dimen192
+\c@taburow=\count291
+\tabu@nbcols=\count292
+\tabu@cnt=\count293
+\tabu@Xcol=\count294
+\tabu@alloc=\count295
+\tabu@nested=\count296
+\tabu@target=\dimen188
+\tabu@spreadtarget=\dimen189
+\tabu@naturalX=\dimen190
+\tabucolX=\dimen191
+\tabu@Xsum=\dimen192
+\extrarowdepth=\dimen193
+\abovetabulinesep=\dimen194
+\belowtabulinesep=\dimen195
+\tabustrutrule=\dimen196
 \tabu@thebody=\toks31
 \tabu@footnotes=\toks32
-\tabu@box=\box60
-\tabu@arstrutbox=\box61
-\tabu@hleads=\box62
-\tabu@vleads=\box63
-\tabu@cellskip=\skip62
+\tabu@box=\box61
+\tabu@arstrutbox=\box62
+\tabu@hleads=\box63
+\tabu@vleads=\box64
+\tabu@cellskip=\skip63
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttable/thr
 eeparttable.sty
 Package: threeparttable 2003/06/13  v 3.0
-\@tempboxb=\box64
+\@tempboxb=\box65
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/threeparttablex/th
 reeparttablex.sty
@@ -541,52 +559,52 @@ Package: environ 2014/05/04 v0.3 A new way to define environments
 ces.sty
 Package: trimspaces 2009/09/17 v1.1 Trim spaces around a token list
 ))
-\TPTL@width=\skip63
+\TPTL@width=\skip64
 ) (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/generic/ulem/ulem.sty
-\UL@box=\box65
-\UL@hyphenbox=\box66
-\UL@skip=\skip64
+\UL@box=\box66
+\UL@hyphenbox=\box67
+\UL@skip=\skip65
 \UL@hook=\toks33
-\UL@height=\dimen193
-\UL@pe=\count294
-\UL@pixel=\dimen194
-\ULC@box=\box67
+\UL@height=\dimen197
+\UL@pe=\count297
+\UL@pixel=\dimen198
+\ULC@box=\box68
 Package: ulem 2019/11/18
-\ULdepth=\dimen195
+\ULdepth=\dimen199
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/makecell/makecell.
 sty
 Package: makecell 2009/08/03 V0.1e Managing of Tab Column Heads and Cells
-\rotheadsize=\dimen196
-\c@nlinenum=\count295
+\rotheadsize=\dimen256
+\c@nlinenum=\count298
 \TeXr@lab=\toks34
 )
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/l3backend/l3backen
 d-pdftex.def
 File: l3backend-pdftex.def 2020-09-24 L3 backend support: PDF output (pdfTeX)
-\l__kernel_color_stack_int=\count296
-\l__pdf_internal_box=\box68
+\l__kernel_color_stack_int=\count299
+\l__pdf_internal_box=\box69
 ) (./manuscript.aux)
 \openout1 = `manuscript.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 96.
-LaTeX Font Info:    ... okay on input line 96.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 136.
+LaTeX Font Info:    ... okay on input line 136.
 
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epsto
 pdf-base.sty
@@ -599,7 +617,7 @@ df-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 96.
+Package hyperref Info: Link coloring ON on input line 136.
 
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/hyperref/nameref.s
 ty
@@ -613,14 +631,14 @@ Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 ettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
-\c@section@level=\count297
+\c@section@level=\count300
 )
-LaTeX Info: Redefining \ref on input line 96.
-LaTeX Info: Redefining \pageref on input line 96.
-LaTeX Info: Redefining \nameref on input line 96.
+LaTeX Info: Redefining \ref on input line 136.
+LaTeX Info: Redefining \pageref on input line 136.
+LaTeX Info: Redefining \nameref on input line 136.
 (./manuscript.out) (./manuscript.out)
-\@outlinefile=\write3
-\openout3 = `manuscript.out'.
+\@outlinefile=\write4
+\openout4 = `manuscript.out'.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -656,39 +674,39 @@ LaTeX Info: Redefining \nameref on input line 96.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 9
-8.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
+38.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 9
-8.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+38.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-98.
+138.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-98.
+138.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 98.
+(Font)              <12> on input line 138.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 98.
+(Font)              <8> on input line 138.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 98.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 98.
-
+(Font)              <6> on input line 138.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 138
+.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 98.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 138
+.
 (c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) (./manuscript.toc
@@ -699,8 +717,8 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <5> on input line 5.
 )
-\tf@toc=\write4
-\openout4 = `manuscript.toc'.
+\tf@toc=\write5
+\openout5 = `manuscript.toc'.
 
 [1
 
@@ -709,42 +727,58 @@ x.map}] [2] [3] [4] [5] [6] [7] [8] [9pdfTeX warning (ext4): destination with t
 he same identifier (name{table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.278 \begin{landscape}
+l.326 \begin{landscape}
                        \begin{table}] [10pdfTeX warning (ext4): destination wit
 h the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.341 \end{landscape}
-                     ] [11pdfTeX warning (ext4): destination with the same iden
-tifier (name{table.3}) has been already used, duplicate ignored
+l.389 \end{landscape}
+                     ]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 3
+92.
+(c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+LaTeX Font Info:    Font shape `T1/lmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/lmtt/b/n' tried instead on input line 393.
+[11
+
+
+] [12pdfTeX warning (ext4): destination with the same identifier (name{table.3}
+) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.394 \end{landscape}
-                     ] [12pdfTeX warning (ext4): destination with the same iden
+l.464 \end{landscape}
+                     ] [13pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.421 \end{landscape}
+l.517 \end{landscape}
+                     ] [14pdfTeX warning (ext4): destination with the same iden
+tifier (name{table.5}) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.544 \end{landscape}
                      ]
-<assets/images/enrollment_funnel.png, id=159, 496.85625pt x 651.18282pt>
+<assets/images/enrollment_funnel.png, id=180, 496.85625pt x 651.18282pt>
 File: assets/images/enrollment_funnel.png Graphic file (type png)
 <use assets/images/enrollment_funnel.png>
 Package pdftex.def Info: assets/images/enrollment_funnel.png  used on input lin
-e 424.
+e 547.
 (pdftex.def)             Requested size: 496.32433pt x 650.48569pt.
 
-Overfull \hbox (26.5693pt too wide) in paragraph at lines 424--424
+Overfull \hbox (26.5693pt too wide) in paragraph at lines 547--547
 [][]
  []
 
 
-LaTeX Warning: Float too large for page by 36.0001pt on input line 425.
+LaTeX Warning: Float too large for page by 36.0001pt on input line 548.
 
-[13pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+[15pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.429 \newgeometry{margin=0cm}
+l.552 \newgeometry{margin=0cm}
                                <./assets/images/enrollment_funnel.png>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
@@ -778,47 +812,94 @@ l.429 \newgeometry{margin=0cm}
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/plot_g_2mode.pdf, id=167, 505.89pt x 505.89pt>
+<assets/figures/plot_g_2mode.pdf, id=187, 505.89pt x 505.89pt>
 File: assets/figures/plot_g_2mode.pdf Graphic file (type pdf)
 <use assets/figures/plot_g_2mode.pdf>
-Package pdftex.def Info: assets/figures/plot_g_2mode.pdf  used on input line 43
-6.
+Package pdftex.def Info: assets/figures/plot_g_2mode.pdf  used on input line 55
+9.
 (pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
-<assets/figures/plot_g_2mode_privu.pdf, id=168, 505.89pt x 505.89pt>
+<assets/figures/plot_g_2mode_privu.pdf, id=188, 505.89pt x 505.89pt>
 File: assets/figures/plot_g_2mode_privu.pdf Graphic file (type pdf)
 <use assets/figures/plot_g_2mode_privu.pdf>
 Package pdftex.def Info: assets/figures/plot_g_2mode_privu.pdf  used on input l
-ine 445.
+ine 568.
 (pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
-[14pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
+<assets/figures/villanova_religion.pdf, id=189, 505.89pt x 505.89pt>
+File: assets/figures/villanova_religion.pdf Graphic file (type pdf)
+<use assets/figures/villanova_religion.pdf>
+Package pdftex.def Info: assets/figures/villanova_religion.pdf  used on input l
+ine 578.
+(pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
+<assets/figures/emory_region.pdf, id=190, 505.89pt x 505.89pt>
+File: assets/figures/emory_region.pdf Graphic file (type pdf)
+<use assets/figures/emory_region.pdf>
+Package pdftex.def Info: assets/figures/emory_region.pdf  used on input line 58
+7.
+(pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
+<assets/figures/rank_cluster1.pdf, id=191, 505.89pt x 505.89pt>
+File: assets/figures/rank_cluster1.pdf Graphic file (type pdf)
+<use assets/figures/rank_cluster1.pdf>
+Package pdftex.def Info: assets/figures/rank_cluster1.pdf  used on input line 5
+97.
+(pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
+<assets/figures/race_cluster4.pdf, id=192, 505.89pt x 505.89pt>
+File: assets/figures/race_cluster4.pdf Graphic file (type pdf)
+<use assets/figures/race_cluster4.pdf>
+Package pdftex.def Info: assets/figures/race_cluster4.pdf  used on input line 6
+06.
+(pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
+[16pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.452 \end{landscape}
-                      <./assets/figures/plot_g_2mode.pdf>] [15pdfTeX warning (e
+l.614 \end{landscape}
+                      <./assets/figures/plot_g_2mode.pdf>] [17pdfTeX warning (e
 xt4): destination with the same identifier (name{figure.3}) has been already us
 ed, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.452 \end{landscape}
-                      <./assets/figures/plot_g_2mode_privu.pdf>] (./manuscript.
-aux)
+l.614 \end{landscape}
+                      <./assets/figures/plot_g_2mode_privu.pdf>] [18pdfTeX warn
+ing (ext4): destination with the same identifier (name{figure.4}) has been alre
+ady used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.614 \end{landscape}
+                      <./assets/figures/villanova_religion.pdf>] [19pdfTeX warn
+ing (ext4): destination with the same identifier (name{figure.5}) has been alre
+ady used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.614 \end{landscape}
+                      <./assets/figures/emory_region.pdf>] [20pdfTeX warning (e
+xt4): destination with the same identifier (name{figure.6}) has been already us
+ed, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.614 \end{landscape}
+                      <./assets/figures/rank_cluster1.pdf>] [21pdfTeX warning (
+ext4): destination with the same identifier (name{figure.7}) has been already u
+sed, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  
+l.614 \end{landscape}
+                      <./assets/figures/race_cluster4.pdf>] (./manuscript.aux)
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
 (rerunfilecheck)             Checksum: D9B85064B697BC2BF62E2B776503C849;1876.
  ) 
 Here is how much of TeX's memory you used:
- 12409 strings out of 481866
- 179594 string characters out of 5929592
- 532899 words of memory out of 5000000
- 28416 multiletter control sequences out of 15000+600000
- 593714 words of font info for 72 fonts, out of 8000000 for 9000
+ 12955 strings out of 481866
+ 188515 string characters out of 5929592
+ 543337 words of memory out of 5000000
+ 28933 multiletter control sequences out of 15000+600000
+ 594670 words of font info for 75 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 66i,10n,72p,2112b,365s stack positions out of 5000i,500n,10000p,200000b,80000s
-{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-math
-it.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm
--mathsy.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/
-lm/lm-rm.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips
-/lm/lm-ec.enc}<c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
+ 66i,10n,72p,2112b,373s stack positions out of 5000i,500n,10000p,200000b,80000s
+{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.e
+nc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mat
+hit.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/l
+m-mathsy.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips
+/lm/lm-rm.enc}<c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
 blic/lm/lmbx10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/typ
 e1/public/lm/lmbx12.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/font
 s/type1/public/lm/lmmi10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist
@@ -830,11 +911,15 @@ nyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/ozanj/AppData/Roaming
 /TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/ozanj/AppData/Roam
 ing/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/ozanj/AppData/R
 oaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/ozanj/AppD
-ata/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on manuscript.pdf (15 pages, 786119 bytes).
+ata/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><c:/Users/ozanj
+/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtk10.pfb><c:/Users/
+ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb><c:/U
+sers/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtti10.pfb
+>
+Output written on manuscript.pdf (21 pages, 1181989 bytes).
 PDF statistics:
- 247 PDF objects out of 1000 (max. 8388607)
- 209 compressed objects within 3 object streams
- 55 named destinations out of 1000 (max. 500000)
- 80 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 324 PDF objects out of 1000 (max. 8388607)
+ 269 compressed objects within 3 object streams
+ 66 named destinations out of 1000 (max. 500000)
+ 100 words of extra memory for PDF output out of 10000 (max. 10000000)
 

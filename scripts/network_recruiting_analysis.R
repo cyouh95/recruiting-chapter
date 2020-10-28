@@ -111,18 +111,76 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
 ## --------------------
 
 # function to plot ego graph
-    univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
+    #univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
     #univ_id <- "228246" # Southern methodist university
-    #univ_id <- "216597" # Villanova
+    univ_id <- "216597" # Villanova
 
     
   # ego network
   ego_network <- egos_psi_privu[[univ_id]]
-    
-plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both') {
+
+  
+  vertex_attr_names(ego_network)
+  
+  table(V(ego_network)$religion,  useNA = "always")
+  
+  V(ego_network)$name[V(ego_network)$type == TRUE]
+  
+proportions(table(V(ego_network_order1)$ranking, useNA = "always"))  
+
+V(ego_network)$religion[V(ego_network)$type == TRUE]
+V(ego_network)$religion[V(ego_network)$type == FALSE]
+
+univ_id <- "216597" # Villanova
+# ego network
+ego_network <- egos_psi_privu[[univ_id]]
+
+
+vertex_attr(ego_network, "religion")
+
+vertex_attr(ego_network, "religion") <- case_when(
+        vertex_attr(network, "type") == FALSE ~ 'salmon',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 'lightblue',
+        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 'purple',
+      )
+
+      
+# The U.S. Department of Education classifies conservative Christian schools
+# as those that have membership in at least one of four associations (Kena et al., 2016): 
+  # Accelerated Christian Education
+  # American Association of Christian Schools
+  # Association of Christian Schools International
+  # Oral Roberts University Education Fellowship
+
+# Texas Christian University
+  # https://en.wikipedia.org/wiki/Texas_Christian_University
+  # https://en.wikipedia.org/wiki/Christian_Church_(Disciples_of_Christ)
+
+# Southern Methodist university
+  # https://en.wikipedia.org/wiki/Southern_Methodist_University
+  # https://en.wikipedia.org/wiki/United_Methodist_Church
+
+# Baylor, baptist
+  # https://en.wikipedia.org/wiki/Baylor_University
+  # https://en.wikipedia.org/wiki/Baptist_General_Convention_of_Texas
+
+
+
+plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
 
   network <- egos_psi_privu[[univ_id]]
-  
+
+  # recode religion for specific private universities
+  vertex_attr(network, "religion") <- case_when(
+    vertex_attr(network, "name") %in% c("173902","221519","139658","228246","223232","228875")==0 ~ vertex_attr(network, "religion"),
+    vertex_attr(network, "name")=="173902" ~ "other_religion", # Macalester presbyterian_church_(usa)
+    vertex_attr(network, "name")=="221519" ~ "other_religion", # Sewanee protestant_episcopa
+    vertex_attr(network, "name")=="139658" ~ "other_religion", # Emory united_methodist
+    vertex_attr(network, "name")=="228246" ~ "other_religion", # SMU united_methodist
+    vertex_attr(network, "name")=="223232" ~ "conservative_christian", # Baylor baptist
+    vertex_attr(network, "name")=="228875" ~ "other_religion" # TCU christian_church_(disciples_of_christ)
+  )
+    
   # network object
   if (graph_order != 'both') {  # order == 1 or 2
     network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
@@ -148,7 +206,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
   # vertex size; edge width, color, line type
   if (graph_order %in% c('both',2)) {  # graph order is 'both' 1 and 2; or graph order == 2
     vertex_size <- case_when(
-      vertex_attr(network, "type") == FALSE ~ 2,
+      vertex_attr(network, "type") == FALSE ~ 3,
       vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 12,
       vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 18,
     )
@@ -175,6 +233,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
     graph_layout <- layout_nicely
   } else {  # order == both
     graph_layout <- layout_with_kk
+    #graph_layout <- layout_with_fr
   }
 
 
@@ -191,7 +250,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
     edge.width = edge_width,
     layout = graph_layout,  
     main = str_to_title(title),
-    margin = 0.0 # -0.2
+    margin = margin # -0.2
   )  
 
   if (is.na(characteristic)==FALSE) {  # if characteristic ! FALSE then create legend    
@@ -205,8 +264,9 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
   }
   
 }
-# dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
-    
+ dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
+
+
 par(mfrow=c(1, 1))  # resets to single plot
 plot_ego_graph(univ_id = "160755", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 1)
 
@@ -228,6 +288,78 @@ events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% grou
   # colorado college "126678"
   # oberlin "204501"
   # connecticut college ""128902
+
+#For cluster 1, show small multiples of ranking. Maybe one outlier. Show ego graph order 1. Replace later with bar graph  
+
+pdf("assets/figures/rank_cluster1.pdf") # open file
+
+par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+
+par(mfrow=c(2, 2))
+
+plot_ego_graph(univ_id = "216287", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "126678", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "204501", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+plot_ego_graph(univ_id = "115409", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
+# 115409
+dev.off() # close the file
+
+pdf("assets/figures/race_cluster1.pdf") # open file
+
+#For catholic, show order equals both. one big graph of one univ and maybe characteristic equals religious
+
+  # villanova ego network, religion overlayed
+  pdf("assets/figures/villanova_religion.pdf") # open file
+  
+    par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+    #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+    plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both')
+  dev.off() # close the file  
+
+
+# show order = both of one interesting university, with an overlay
+# EMORY
+par(mfrow=c(1, 1))  # resets to single plot 
+pdf("assets/figures/emory_region.pdf") # open file
+  
+  par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+  #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+  # show order = 2 of one interesting university, with an overlay
+  plot_ego_graph(univ_id = "139658", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "", graph_order = 'both', margin = -0.3) 
+    #plot_ego_graph(univ_id = "139658", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 'both', margin = -0.4)    
+    
+dev.off() # close the file  
+  # williams 168342  
+  # middlebury 230959
+  # 221519 Sewanee 
+  # 120254 Occidental 
+  # 147767 Northwestern
+  # 139658 Emory
+  # 160755 Tulane
+    
+# Maybe for TEXAS cluster show small multiples of race 
+
+pdf("assets/figures/race_cluster4.pdf") # open file
+
+  par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+  #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+  par(mfrow=c(2, 2))
+
+  # southern schools from cluster 4
+  plot_ego_graph(univ_id = "228246", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+  plot_ego_graph(univ_id = "223232", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+  plot_ego_graph(univ_id = "228875", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
+  plot_ego_graph(univ_id = "127060", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)  
+      
+dev.off() # close the file
+  
+#plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation", graph_order = 1)
+#plot_ego_graph(univ_id = "216597", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 'both')
+  
 pdf("assets/figures/region_cluster1.pdf") # open file
 
 par(mar=c(5, 4, 4, 2) + 0.1) # default margins
