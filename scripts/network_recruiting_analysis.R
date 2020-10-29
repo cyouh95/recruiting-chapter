@@ -530,180 +530,77 @@ dev.off() # close the file
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
 
-create_ego_table <- function(race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
+create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
   
-  ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
-                          private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
-                          private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
-                          private_hs_race_1 = character(0), private_hs_race_2 = character(0), private_hs_race_3 = character(0), private_hs_race_4 = character(0),
-                          private_hs_ranking_1 = character(0), private_hs_ranking_2 = character(0), private_hs_ranking_3 = character(0), private_hs_ranking_4 = character(0),
-                          stringsAsFactors=FALSE)
+  ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), cluster = character(0), univ_type = character(0), univ_ranking = character(0), characteristics = character(0),
+                        region_1 = character(0), region_2 = character(0), region_3 = character(0), region_4 = character(0),
+                        religion_1 = character(0), religion_2 = character(0), religion_3 = character(0), religion_4 = character(0),
+                        race_1 = character(0), race_2 = character(0), race_3 = character(0), race_4 = character(0),
+                        ranking_1 = character(0), ranking_2 = character(0), ranking_3 = character(0), ranking_4 = character(0),
+                        stringsAsFactors=FALSE)
   
-  for (i in seq_along(privu_vec)) {
-    ego_network <- egos_psi_privu[[privu_vec[[i]]]]
+  member <- membership(cluster_fast_greedy(twomode_network))
+  
+  for (i in seq_along(univs)) {
+    ego_network <- ego_networks[[univs[[i]]]]
     ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
     
     ego_df <- as.data.frame(vertex_attr(ego_network_order1))
     
     univ_characteristics <- ego_df %>% filter(type == TRUE)
     
-    privhs_characteristics <- ego_df %>% filter(type == FALSE)
-    num_privhs <- nrow(privhs_characteristics)
+    hs_characteristics <- ego_df %>% filter(type == FALSE)
+    num_hs <- nrow(hs_characteristics)
     
     # Region
-    pct_privhs_region_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 1)) / num_privhs * 100)
-    pct_privhs_region_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 2)) / num_privhs * 100)
-    pct_privhs_region_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 3)) / num_privhs * 100)
-    pct_privhs_region_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 4)) / num_privhs * 100)
-
+    pct_hs_region_1 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(region == 1)) / num_hs * 100)
+    pct_hs_region_2 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(region == 2)) / num_hs * 100)
+    pct_hs_region_3 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(region == 3)) / num_hs * 100)
+    pct_hs_region_4 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(region == 4)) / num_hs * 100)
+    
     # Religion
-    pct_privhs_religion_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'catholic')) / num_privhs * 100)
-    pct_privhs_religion_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'conservative_christian')) / num_privhs * 100)
-    pct_privhs_religion_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'nonsectarian')) / num_privhs * 100)
-    pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
-
+    pct_hs_religion_1 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'catholic')) / num_hs * 100)
+    pct_hs_religion_2 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'conservative_christian')) / num_hs * 100)
+    pct_hs_religion_3 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'nonsectarian')) / num_hs * 100)
+    pct_hs_religion_4 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'other_religion')) / num_hs * 100)
+    
     # Race
-    race_vals <- levels(as.factor(privhs_characteristics[[race_var]]))
+    race_vals <- levels(as.factor(hs_characteristics[[race_var]]))
     for (j in seq_along(race_vals)) {
-      assign(paste0('pct_privhs_race_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(race_var) == race_vals[[j]])) / num_privhs * 100))
+      assign(paste0('pct_hs_race_', j), sprintf('%.1f%%', nrow(hs_characteristics %>% filter(get(race_var) == race_vals[[j]])) / num_hs * 100))
     }
-
+    
     # Ranking
-    ranking_vals <- levels(as.factor(privhs_characteristics[[ranking_var]]))
+    ranking_vals <- levels(as.factor(hs_characteristics[[ranking_var]]))
     for (j in seq_along(ranking_vals)) {
-      assign(paste0('pct_privhs_ranking_', j), sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(get(ranking_var) == ranking_vals[[j]])) / num_privhs * 100))
+      assign(paste0('pct_hs_ranking_', j), sprintf('%.1f%%', nrow(hs_characteristics %>% filter(get(ranking_var) == ranking_vals[[j]])) / num_hs * 100))
     }
-   
-    ego_tbl[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), as.character(univ_characteristics$ranking_numeric),
+    
+    ego_tbl[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), member[names(member) == as.character(univ_characteristics$name)],
+                      as.character(univ_characteristics$school_type), as.character(univ_characteristics$ranking_numeric),
                       str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
-                      pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
-                      pct_privhs_religion_1, pct_privhs_religion_2, pct_privhs_religion_3, pct_privhs_religion_4,
-                      pct_privhs_race_1, pct_privhs_race_2, pct_privhs_race_3, pct_privhs_race_4,
-                      pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
-    
+                      pct_hs_region_1, pct_hs_region_2, pct_hs_region_3, pct_hs_region_4,
+                      pct_hs_religion_1, pct_hs_religion_2, pct_hs_religion_3, pct_hs_religion_4,
+                      pct_hs_race_1, pct_hs_race_2, pct_hs_race_3, pct_hs_race_4,
+                      pct_hs_ranking_1, pct_hs_ranking_2, pct_hs_ranking_3, pct_hs_ranking_4)
   }
-  print(race_vals)
-  print(ranking_vals) 
-  # merge in value of community cluster
-    member <- membership(cluster_fast_greedy(g_2mode_privu))
-    
-    df_member <- tibble(
-      univ_id = names(member),
-      cluster = as.numeric(member)
-    )
-    #df_member
   
-    ego_tbl <- ego_tbl %>% left_join(df_member, by = "univ_id") 
+  ego_tbl <- ego_tbl %>% arrange(as.numeric(cluster), univ_type, as.numeric(univ_ranking))
   
-  # merge in indicator of whether national university or national liberal arts college
-    ego_tbl <- usnews_data %>% 
-      mutate(rank_type = recode(source,
-        "national-liberal-arts-colleges" = "lib arts",
-        "national-universities" = "univ"
-        )) %>% 
-      select(rank_type,univ_id) %>% 
-      right_join(ego_tbl, by = "univ_id") %>% 
-      relocate(univ_id,univ_name,cluster,rank_type,univ_ranking,characteristics) %>%
-      arrange(cluster,rank_type,as.numeric(univ_ranking))
-
-    # original code from crystal, commented out 
-      #univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
-      #ego_tbl <- ego_tbl[order(match(ego_tbl$univ_id, univ_order)), ]
-
   names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'Characteristics',
-                        'Northeast', 'Midwest', 'South', 'West',
-                        'Catholic', 'Conserv', 'Nonsect', 'Other',
-                        race_vals, ranking_vals)        
-
+                      'Northeast', 'Midwest', 'South', 'West',
+                      'Catholic', 'Conserv', 'Nonsect', 'Other',
+                      race_vals, ranking_vals)
   
   ego_tbl
 }
 
-ego_table <- create_ego_table()  # default is `pct_blacklatinxnative_cat` and `rank_cat2`
+ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec)
+saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
-saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
+ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec)
+saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
-
-
-## ORIGINAL/MANUAL WAY BELOW ------------------------------
-
-
-ego_table <- data.frame(univ_id = character(0), univ_name = character(0), univ_ranking = character(0), characteristics = character(0),
-                        private_hs_region_1 = character(0), private_hs_region_2 = character(0), private_hs_region_3 = character(0), private_hs_region_4 = character(0),
-                        private_hs_religion_1 = character(0), private_hs_religion_2 = character(0), private_hs_religion_3 = character(0), private_hs_religion_4 = character(0),
-                        private_hs_race_1 = character(0), private_hs_race_2 = character(0), private_hs_race_3 = character(0), private_hs_race_4 = character(0),
-                        private_hs_ranking_1 = character(0), private_hs_ranking_2 = character(0), private_hs_ranking_3 = character(0), private_hs_ranking_4 = character(0),
-                        stringsAsFactors=FALSE)
-
-for (i in seq_along(privu_vec)) {
-  ego_network <- egos_psi_privu[[privu_vec[[i]]]]
-  ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
-  
-  ego_df <- as.data.frame(vertex_attr(ego_network_order1))
-  
-  univ_characteristics <- ego_df %>% filter(type == TRUE)
-  
-  privhs_characteristics <- ego_df %>% filter(type == FALSE)
-  num_privhs <- nrow(privhs_characteristics)
-  
-  pct_privhs_region_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 1)) / num_privhs * 100)
-  pct_privhs_religion_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'catholic')) / num_privhs * 100)
-  pct_privhs_race_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c1_lt10')) / num_privhs * 100)
-  pct_privhs_ranking_1 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c1_top200')) / num_privhs * 100)
-  
-  pct_privhs_region_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 2)) / num_privhs * 100)
-  pct_privhs_religion_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'conservative_christian')) / num_privhs * 100)
-  pct_privhs_race_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c2_10to25')) / num_privhs * 100)
-  pct_privhs_ranking_2 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c2_A+')) / num_privhs * 100)
-  
-  pct_privhs_region_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 3)) / num_privhs * 100)
-  pct_privhs_religion_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'nonsectarian')) / num_privhs * 100)
-  pct_privhs_race_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c3_25to50')) / num_privhs * 100)
-  pct_privhs_ranking_3 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c3_A')) / num_privhs * 100)
-  
-  pct_privhs_region_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(region == 4)) / num_privhs * 100)
-  pct_privhs_religion_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(religion == 'other_religion')) / num_privhs * 100)
-  pct_privhs_race_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(pct_blacklatinxnative_cat == 'c4_50+')) / num_privhs * 100)
-  pct_privhs_ranking_4 <- sprintf('%.1f%%', nrow(privhs_characteristics %>% filter(rank_cat2 == 'c4_ltA')) / num_privhs * 100)
-  
-  ego_table[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), as.character(univ_characteristics$ranking_numeric),
-                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics$pct_blacklatinxnative_cat, univ_characteristics$ranking, sep = '|'),
-                      pct_privhs_region_1, pct_privhs_region_2, pct_privhs_region_3, pct_privhs_region_4,
-                      pct_privhs_religion_1, pct_privhs_religion_2, pct_privhs_religion_3, pct_privhs_religion_4,
-                      pct_privhs_race_1, pct_privhs_race_2, pct_privhs_race_3, pct_privhs_race_4,
-                      pct_privhs_ranking_1, pct_privhs_ranking_2, pct_privhs_ranking_3, pct_privhs_ranking_4)
-}
-
-univ_order <- (usnews_data %>% filter(univ_id %in% univ_vec) %>% arrange(source, rank))$univ_id
-ego_table <- ego_table[order(match(ego_table$univ_id, univ_order)), ]
-
-names(ego_table) <- c('ID', 'University', 'Ranking', 'Characteristics',
-                      'Northeast', 'Midwest', 'South', 'West',
-                      'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
-                      '<10%', '10-25%', '25-50%', '50%+',
-                      'Top 200', 'A+', 'A', '<A')
-View(ego_table)
-
-saveRDS(ego_table, file = './assets/tables/table_ego.RDS')
-
-
-ego_table %>% glimpse()
-
-c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
-m_2mode_privu <- membership(c_2mode_privu)
-m_2mode_privu %>% str()
-
-as.data.frame(m_2mode_privu)
-class(m_2mode_privu)
-class(c_2mode_privu)
-
-
-n <- names(m_2mode_privu)
-c <- as.numeric(m_2mode_privu)
-c
-tibble(n,c)
-
-str(n)
 
 ## ---------------------------------
 ## TABLE FROM 2-MODE IGRAPH OBJECTS
