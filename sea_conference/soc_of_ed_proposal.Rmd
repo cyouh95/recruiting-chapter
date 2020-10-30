@@ -4,8 +4,8 @@ output:
   bookdown::pdf_document2:
     toc: false
     number_sections: false
-bibliography: ./other/burd_recruiting_chapter.bib
-csl: ./other/apa.csl
+bibliography: ./../other/burd_recruiting_chapter.bib
+csl: ./../other/apa.csl
 urlcolor: blue
 header-includes:
   - \usepackage{pdflscape}
@@ -46,6 +46,8 @@ Moore Hall 3038
 310-206-3030
 
 ozanj@ucla.edu
+
+!!!!!!!!!!!CRYSTAL ADD YOUR CONTACT INFO HERE!!!!!!!!!!!
 \end{center}
 
 \newpage
@@ -60,6 +62,34 @@ ozanj@ucla.edu
 -->
 
 <!-- Topic: Off-campus recruiting visits and its significance -->
+
+# Overview
+
+
+This paper analyzes off-campus recruiting visits to U.S. private high schools made by a sample of public research universities and sample of selective private colleges and universities in 2017.
+
+We utilize social network methods and emphasize comparisons within and between public and private postsecondary institutions. Analyses are informed by two broad, related questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what do extent colleges and universities visit private high schools that share similar characteristics with the college (e.g., geographic region, religious affiliation, academic reputation, and racial composition)? 
+
+
+
+This chapter analyzes off-campus recruiting visits by a sample of public research universities and a sample of selective private colleges and universities in 2017. We collected visit data by "scraping" URLs (e.g., "Coming to a neighborhood near you") once per week from college/university admissions websites and -- for the sample of public research universities -- by issuring public records requests.
+
+
+this chapter analyzes off-campus visits to private high schools by public research universities and by selective private colleges and universities. 
+
+The motivation for comparing the behavior of public and private coleges/universities is based on the idea that (out-of-state) visits to private high schools are antithetical to the stated mission of public research universities. By contrast, recruiting visits to private high schools are consistent with the mission of private colleges and universities. From this perspective, out-of-state visits to private schools by public research universities is one example of "privatization." A weakness of the privatization literature is that few empirical studies compare the public and private institutions with respect to particular behaviors associated with privatization [@RN4543]. Therefore, by comparing the (mostly out-of-state) visits to private high schools by public research universities to those of private colleges and universities, we hope to develop new insights about the privatization of public higher education. 
+
+We utilize network methods to analyze the recruiting visits data for two, related reasons. First, social network analysis privileges the relationship between actors. The discussion of Stevens and Khan suggests that for private school students, "it is not just the quality of the students that gets them into college but the quality of the relationship between elite high schools and colleges" [@RN4407, p. 175]. Second, a visit from a college/university admissions counselor to a high school can be conceived as a "network tie" connecting two actors in a social network.
+
+We will focus on network analyses of visits by colleges and universities to private high schools. Analyses are motivated by two, related research questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what extent do off-campus recruiting visits by colleges and universities to private high schools exhibit homophily versus heterophily with respect to the vertex characteristics of geographic region, religious affiliation, academic reputation, and racial composition?
+
+# Literature review and theory
+
+# Data and methods
+
+# Findings
+
+# Significance
 
 Our research analyzes off-campus recruiting visits by college and university admissions staff. Market research conceives of off-campus visits as a means of identifying prospects, deepening engagement with prospects already being targeted through mail/email, and maintaining relationships with guidance counselors at "feeder schools" [@RN4323; @RN4402; @RN4664]. With respect to expenditure, @RN4664 found that private (non-profit) 4-yr institutions spent an average of 17% of their undergraduate marketing/recruiting budget on "travel" to high schools and college fairs, a higher percentage of budget allocation than any other marketing/recruiting activity. Public institutions spent an average of 16% of their budget on travel, second only to "prospective student communications" at 17%. 
 
@@ -104,7 +134,7 @@ Table \@ref(tab:hs-table-privu-agg) shows characteristics of private high school
 \newpage
 
 ```{r, ego-table-privu, echo = FALSE}
-df <- readRDS('./assets/tables/table_ego.RDS')
+df <- readRDS('./../assets/tables/table_ego.RDS')
 knitr::kable(
   df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
   caption = 'Characteristics of private high schools visited by each private college and university') %>% landscape(margin = NULL) %>%
@@ -112,7 +142,7 @@ knitr::kable(
 ```
 
 ```{r, hs-print-privu, echo = FALSE}
-df <- readRDS('./assets/tables/table_2mode.RDS') %>% head(n=20)
+df <- readRDS('./../assets/tables/table_2mode.RDS') %>% head(n=20)
 
 knitr::kable(
   df %>% select(-school_id,-closeness), caption = 'Characteristics of the top 20 most visited private high schools by private colleges and universities') %>% 
@@ -122,7 +152,7 @@ knitr::kable(
 
 
 ```{r, hs-table-privu-agg, echo = FALSE}
-df <- readRDS('./assets/tables/table_2mode_agg.RDS')
+df <- readRDS('./../assets/tables/table_2mode_agg.RDS')
 
 knitr::kable(df, caption = 'Characteristics of private high schools by number of private colleges and universities that visited') %>% 
   landscape(margin = NULL) %>%
@@ -136,12 +166,12 @@ knitr::kable(df, caption = 'Characteristics of private high schools by number of
 \begin{landscape}
 
 ```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network plot consisting of visits by public and private colleges and universities to private high schools"}
-knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
+knitr::include_graphics('./../assets/figures/plot_g_2mode.pdf')
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
 ```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "2-mode network plot consisting of visits by private colleges and universities to private high schools"}
-knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+knitr::include_graphics('./../assets/figures/plot_g_2mode_privu.pdf')
 ```
 
 \end{landscape}
