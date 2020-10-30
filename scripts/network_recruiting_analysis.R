@@ -606,51 +606,6 @@ saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 ## TABLE FROM 2-MODE IGRAPH OBJECTS
 ## ---------------------------------
 
-# Create table of characteristics
-vertex_attr_names(g_2mode_privu)
-
-V(g_2mode_privu)$degree <- degree(g_2mode_privu)
-V(g_2mode_privu)$strength <- strength(g_2mode_privu)
-V(g_2mode_privu)$closeness <- closeness(graph = g_2mode_privu, normalized = T)
-
-t_2mode_privu <- data.frame(
-  school_id = V(g_2mode_privu)$name,
-  school_name = V(g_2mode_privu)$school_name,
-  city = V(g_2mode_privu)$city,
-  state = V(g_2mode_privu)$state_code,
-  region = V(g_2mode_privu)$region,
-  religion = V(g_2mode_privu)$religion,
-  pct_blacklatinxnative = V(g_2mode_privu)$pct_blacklatinxnative,
-  race = V(g_2mode_privu)$pct_blacklatinxnative_cat,
-  ranking_score = V(g_2mode_privu)$ranking,
-  ranking_numeric = V(g_2mode_privu)$ranking_numeric,
-  ranking = V(g_2mode_privu)$rank_cat2,
-  type = V(g_2mode_privu)$type,
-  degree = V(g_2mode_privu)$degree,
-  strength = V(g_2mode_privu)$strength,
-  closeness = V(g_2mode_privu)$closeness
-)
-
-# temporarily get rid of unmerged rows
-t_2mode_privu <- t_2mode_privu %>% filter(type == F, !is.na(school_name)) %>%
-  mutate(degree_band = case_when(degree >= 15 ~ '15+',
-                                 degree >= 10 ~ '10-14',
-                                 degree >= 5 ~ '5-9',
-                                 TRUE ~ as.character(degree)))
-
-full_2mode_table <- t_2mode_privu %>% arrange(-degree) %>%
-  select(school_id, school_name, city, state, region, religion, pct_blacklatinxnative, ranking_score, ranking_numeric, degree, closeness, strength)
-
-View(full_2mode_table)
-
-saveRDS(full_2mode_table, file = './assets/tables/table_2mode.RDS')
-# readr::write_file(knitr::kable(head(full_2mode_table), 'latex'), 'assets/tables/table_2mode.tex')
-
-# Aggregated table
-agg_2mode_table <- t_2mode_privu %>%
-  group_by(degree_band) %>%
-  summarise(Count = n())
-
 create_agg_table <- function(network, characteristic) {
   network %>% select_('degree_band', characteristic) %>%
     group_by_('degree_band', characteristic) %>%
@@ -661,23 +616,63 @@ create_agg_table <- function(network, characteristic) {
     rename_at(vars(-degree_band), ~ paste0(characteristic, '_', .))
 }
 
-agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'region'))
-agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'religion'))
-agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'race'))
-agg_2mode_table <- left_join(agg_2mode_table, create_agg_table(t_2mode_privu, 'ranking'))
+create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnative', ranking_var = 'rank_cat2') {
+  
+  twomode_df <- igraph::as_data_frame(twomode_network, 'vertices')
+  
+  twomode_df$degree <- degree(twomode_network)
+  twomode_df$strength <- strength(twomode_network)
+  twomode_df$closeness <- closeness(twomode_network, normalized = T)
+  
+  # Filter for private HS (temporarily get rid of unmerged rows)
+  twomode_df <- twomode_df %>% filter(type == F, !is.na(school_name))
+  
+  # Different degree_band for private and public university visits
+  if (setequal(twomode_df$name, privu_vec)) {
+    twomode_df <- twomode_df %>%
+      mutate(degree_band = case_when(degree >= 15 ~ '15+',
+                                     degree >= 10 ~ '10-14',
+                                     degree >= 5 ~ '5-9',
+                                     TRUE ~ as.character(degree)))
+  } else {
+    twomode_df <- twomode_df %>%
+      mutate(degree_band = case_when(degree > 5 ~ '6+',
+                                     TRUE ~ as.character(degree)))
+  }
+  
+  # Full table
+  full_twomode_table <- twomode_df %>% arrange(-degree) %>%
+    select_('name', 'school_name', 'city', 'state_code', 'region', 'religion', race_var, 'ranking', 'ranking_numeric', 'degree', 'closeness', 'strength')
+  
+  # Aggregated table
+  agg_twomode_table <- twomode_df %>%
+    group_by(degree_band) %>%
+    summarise(Count = n())
 
-band_order <- c('15+', '10-14', '5-9', '5', '4', '3', '2', '1')
-agg_2mode_table <- agg_2mode_table[order(match(agg_2mode_table$degree_band, band_order)), ]
+  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, 'region'))
+  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, 'religion'))
+  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, paste0(race_var, '_cat')))
+  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, ranking_var))
+  
+  band_order <- c('15+', '10-14', '5-9', '6+', '5', '4', '3', '2', '1')
+  agg_twomode_table <- agg_twomode_table[order(match(agg_twomode_table$degree_band, band_order)), ]
+  
+  names(agg_twomode_table) <- c('Degree', 'Count',
+                                'Northeast', 'Midwest', 'South', 'West',
+                                'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                                levels(as.factor(twomode_df[[paste0(race_var, '_cat')]])),
+                                levels(as.factor(twomode_df$rank_cat2)), 'rank_NA')
+  
+  list(full_table = full_twomode_table, agg_table = agg_twomode_table)
+}
 
-names(agg_2mode_table) <- c('Degree', 'Count',
-                            'Northeast', 'Midwest', 'South', 'West',
-                            'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
-                            '<10%', '10-25%', '25-50%', '50%+',
-                            'Top 200', 'A+', 'A', '<A', 'rank_NA')
+twomode_privu <- create_2mode_table(g_2mode_privu)
+saveRDS(twomode_privu$full_table, file = './assets/tables/table_2mode_privu.RDS')
+saveRDS(twomode_privu$agg_table, file = './assets/tables/table_2mode_agg_privu.RDS')
 
-View(agg_2mode_table)
-
-saveRDS(agg_2mode_table, file = './assets/tables/table_2mode_agg.RDS')
+twomode_pubu <- create_2mode_table(g_2mode_pubu)
+saveRDS(twomode_pubu$full_table, file = './assets/tables/table_2mode_pubu.RDS')
+saveRDS(twomode_pubu$agg_table, file = './assets/tables/table_2mode_agg_pubu.RDS')
 
 
 ## -----------------------------------
