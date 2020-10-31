@@ -526,6 +526,52 @@ plot(
 dev.off() # close the file
 
 
+## ---------------------------
+## PLOT 2-MODE IGRAPH OBJECTS
+## ---------------------------
+
+par(mfrow=c(1, 1))
+
+save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
+  
+  cluster_2mode <- cluster_fast_greedy(network)
+  membership_2mode <- membership(cluster_2mode)
+  
+  library(plyr)
+  colors_2mode_privu <- revalue(as.character(membership_2mode), c(
+    '1' = 'red',
+    '2' = 'lightblue',
+    '3' = 'green',
+    '4' = 'yellow'
+  ))
+  detach(package:plyr, unload = TRUE)
+  
+  pdf(paste0('assets/figures/', plot_name))
+  
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+  plot(
+    x = network, 
+    vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
+    vertex.color = colors_2mode_privu,
+    vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
+    vertex.shape = 'circle',
+    vertex.size = if_else(V(network)$type, 3, 1),
+    edge.lty = 3,
+    edge.lty = 0.5,
+    edge.color = 'lightgrey',
+    layout = layout_with_fr,
+    margin = plot_margin
+  )
+  
+  dev.off()
+}
+
+save_2mode_plot(g_2mode, 'plot_2mode.pdf', plot_margin = -0.6)
+save_2mode_plot(g_2mode_privu, 'plot_2mode_privu.pdf', plot_margin = -0.7)
+save_2mode_plot(g_2mode_pubu, 'plot_2mode_pubu.pdf')
+
+
 ## ------------------------------
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
