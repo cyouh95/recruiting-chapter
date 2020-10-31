@@ -712,6 +712,10 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
   list(full_table = full_twomode_table, agg_table = agg_twomode_table)
 }
 
+twomode_both <- create_2mode_table(g_2mode)
+saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
+saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
+
 twomode_privu <- create_2mode_table(g_2mode_privu)
 saveRDS(twomode_privu$full_table, file = './assets/tables/table_2mode_privu.RDS')
 saveRDS(twomode_privu$agg_table, file = './assets/tables/table_2mode_agg_privu.RDS')
