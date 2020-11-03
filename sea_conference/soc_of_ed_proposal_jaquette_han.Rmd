@@ -1,0 +1,153 @@
+---
+title: "Sociology of Education Association Proposal"
+output:
+  bookdown::pdf_document2:
+    toc: false
+    number_sections: false
+bibliography: ./../other/burd_recruiting_chapter.bib
+csl: ./../other/apa.csl
+urlcolor: blue
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{geometry}
+  - \usepackage{titlesec}
+  - \titlespacing*{\section}{0pt}{8pt plus 4pt minus 2pt}{4pt plus 4pt minus 2pt}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(kableExtra)
+```
+
+<!-- https://www.dropbox.com/s/3dseuoel3fwc64n/2021%20SEA%20Call%20for%20Papers.pdf -->
+
+\pagenumbering{gobble}
+
+<!--
+Title page:
+- Name
+- Position
+- Institutional affiliation
+- Address
+- Office telephone
+- Email address
+-->
+
+\vspace{1in}
+\begin{center}
+Ozan Jaquette
+
+Associate Professor
+
+Department of Education
+
+University of California, Los Angeles
+
+Moore Hall 3038
+
+310-206-3030
+
+ozanj@ucla.edu
+
+\vspace{1cm}
+
+Crystal Han
+
+Data Scientist
+
+Department of Education
+
+University of California, Los Angeles
+
+669-255-7617
+
+cyouh95@ucla.edu
+\end{center}
+
+\newpage
+
+<!--
+2-page proposal:
+- Brief discussion of topic
+- Pertinent research literature and theory
+- Research methods
+- Findings
+- Study significance
+-->
+
+# Overview
+
+This study uses social network methods to analyze off-campus recruiting visits to U.S. private high schools made by a sample of public research universities and selective private colleges and universities.  Analyses are informed by three broad research questions. First, which types of private high schools receive visits from which types of colleges and universities? Related, to what extent do colleges and universities visit private high schools that share similar characteristics with the college, in particular, geographic region, religious affiliation, academic reputation, and racial composition? Third, how does the off-campus recruiting network of public research universities compare to that of selective private colleges and universities?
+
+Our focus on private high schools is motivated by previous research on recruiting visits by public research universities, which found that a majority of universities made a disproportionate number of out-of-state visits to private schools [@RN1234]. The motivation for comparing the behavior of public and private colleges/universities is based on the idea that out-of-state visits to private high schools are antithetical to the stated mission of public research universities. By contrast, recruiting visits to private high schools are consistent with the mission of private colleges and universities. We suggest that out-of-state visits to private schools by public research universities is an example of "privatization." A weakness of the privatization literature is that few empirical studies compare public and private institutions with respect to particular behaviors associated with privatization [@RN4543]. Therefore, by comparing the (mostly out-of-state) visits to private high schools by public research universities to those of private colleges and universities, we hope to develop new insights about the privatization of public higher education. 
+
+We utilize network methods to analyze the recruiting visits data for two, related reasons. First, social network analysis privileges the relationship between actors. The discussion of @RN3519 and @RN4407 suggests that for private school students, "it is not just the quality of the students that gets them into college but the quality of the relationship between elite high schools and colleges" [@RN4407, p. 175]. Second, a visit from a college/university admissions counselor to a high school can be conceived as a "network tie" connecting two actors in a social network, making it suitable for social network analyses.
+
+# Literature Review
+
+Market research conceives of off-campus visits as a means of identifying prospects, deepening engagement with prospects already being targeted through mail/email, and maintaining relationships with guidance counselors at "feeder schools" [@RN4323; @RN4402; @RN4664]. 
+
+@RN3519 provides an ethnography of the admissions office at a selective private liberal arts college. The College tended to visit the same schools year after year because recruiting depends on long-term relationships with high schools. The high schools they visited tend to be affluent schools -- in particular, private schools -- that enroll high-achieving students who can afford tuition and had the resources and motivation to host a successful visit. Recruiting visits may affect outcomes such as inquiries, applications, and matriculation through their affect on high school guidance counselors. The logic is that a guidance counselor who views a college favorably will steer students to the college.
+
+@RN4321 analyzed recruiting from the perspective of an elite private boarding school in order to understand "how such schools continue to get comparatively under-qualified students into top colleges and universities." Private high school counselors face pressure to send _all_ students to the best college possible. Selective colleges want high achieving students who can pay tuition and donate and they also want low acceptance and high yield rates to move up the rankings. These colleges value reliable information about which college students actually wish to attend.
+
+@RN4407 also argues that the desire by colleges for trustworthy information about applicant intentions creates an opportunity for high school counselors to advocate on behalf of their students. This opportunity depends on guidance counselors having personal relationships with university admissions offices and on having small enough caseloads to advocate for each student individually. There needs to be a relationship where the college can trust statements made by the high school counselor and vice versa. This relationship is the product of repeated interactions over many years. Off-campus recruiting visits are necessary for the maintenance of strong relationships that enable colleges and high schools to negotiate and send trustworthy information to one another. Without face-to-face visits, it is less likely that a college admissions counselor will "take the call" of a guidance counselor. We argue that off-campus recruiting visits are an indicator of a substantive relationsnhip between a college/university and a private high school. Despite the importance of these relationships to college access, we know littel about which colleges/universities visit which beyond several small qualitative case studies [@RN4538; @RN4520; @RN4324; @RN3519]
+
+# Data and methods
+
+__Data__. Our project collected data about off-campus recruiting visits made in 2017 by a convenience sample of colleges and universities. We collected visit data by "scraping" URLs (e.g., "Coming to a neighborhood near you" pages that post recruiting events) once per week from college/university admissions websites and -- for the sample of public research universities -- by issuing public records requests. Our analysis sample is based on three different lists of post-secondary institutions: all public research-extensive universities as defined by the 2000 Carnegie Classification (N=102); all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58); and all private colleges in the top 50 of U.S. News and World Report Liberal Arts Colleges rankings (N=47). We narrowed the sample down to universities that we were able to collect complete recruiting events data on. Our final analysis sample consists of 17 public research universities, 13 private research universities, and 13 private liberal arts colleges. We merged the recruiting events data to the following secondary data sources: 2017-18 NCES Private School Universe Survey (PSS); 2017 Integrated Postsecondary Education Data System (IPEDS); 2020 Best Private High Schools ranking by Niche; and 2020 Best Colleges ranking by U.S. News & World Report.
+
+__Methods__. A social network consists of a set of actors -- referred to as "vertices" -- and the connections -- referred to as "edges" between these actors. Whereas "one-mode" networks consist of vertices of the same "type" (e.g., in a publication network each vertex is an author), "two-mode" networks consist of vertices associated with one type of actor/entity having connections to vertices of another type. The social network analyzed in this study is a two-mode network, where vertices consist of colleges/universities (mode 1) and high schools (mode 2), and an edge is defined as a visit from a college/university to a private high school (e.g., high school $i$ shares an edge with college $j$ if high school $i$ received at least one visit from college $j$).
+
+# Findings
+
+With the page limitation of this proposal, we do not discuss results; however, we have included some preliminary examples of the type of analyses we are working on. Figure \@ref(fig:two-mode-plot-privu) shows a two-mode network plot consisting of visits by private colleges and universities to private high schools. Table \@ref(tab:ego-table-privu) shows characteristics of private high schools visited by each private institution. Figure \@ref(fig:two-mode-plot-both) shows a two-mode network plot consisting of visits by public and private colleges and universities to private high schools. Table \@ref(tab:top-hs-both) shows characteristics of the top 20 most visited private high schools by these institutions.
+
+# Significance
+
+The vast majority of research on enrollment management behaviors focuses on the final stages of the enrollment funnel, specifically which applicants are admitted and the use of financial aid "leveraging" to convert admits to enrollees [e.g., @RN3536; @RN3544; @RN3523; @RN4131; @RN2241; @RN3564; @RN1948]. By contrast, the enrollment management industry expends substantial resources on marketing/recruiting activities that target earlier stages of the enrollment funnel [@RN4664]. With the notable exception of a small sociological case-study literature, the research community has ignored a great number of enrollment management practices that plausibly affect access to higher education. As a consequence, enrollment management remains an opaque industry to policymakers and the public. We argue that developing thoughtful policies about enrollment management depends on researchers collectively developing empirical literature that document enrollment management practices and evaluate the effects of these practices on opportunities for students. 
+
+\newpage
+
+# References
+
+<div id="refs"></div>
+
+\newpage
+
+```{r, ego-table-privu, echo = FALSE}
+df <- readRDS('./../assets/tables/table_ego_privu.RDS')
+
+knitr::kable(
+  df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
+  caption = 'Characteristics of private high schools visited by each private college and university') %>% landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r, top-hs-both, echo = FALSE}
+df <- readRDS('./../assets/tables/table_2mode_both.RDS') %>% head(n=20)
+
+knitr::kable(
+  df %>% select(-name,-closeness), caption = 'Characteristics of the top 20 most visited private high schools by public and private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+\newpage
+
+\newgeometry{margin=0cm}
+
+\begin{landscape}
+
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network plot consisting of visits by private colleges and universities to private high schools"}
+knitr::include_graphics('./../assets/figures/plot_g_2mode_privu.pdf')
+```
+
+```{r two-mode-plot-both, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network plot consisting of visits by public and private colleges and universities to private high schools"}
+knitr::include_graphics('./../assets/figures/plot_2mode.pdf')
+#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
+```
+
+\end{landscape}
