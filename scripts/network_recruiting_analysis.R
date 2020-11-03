@@ -458,6 +458,9 @@ par(mfrow=c(1, 1))  # resets to single plot
 
 vertex_attr_names(g_2mode)
 
+vcount(g_2mode)
+V(g_2mode)$state_code
+
 #graph_layout <- layout_with_kk
 graph_layout <- layout_with_fr
 
@@ -546,7 +549,7 @@ save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
   ))
   detach(package:plyr, unload = TRUE)
   
-  pdf(paste0('assets/figures/', plot_name))
+  pdf(paste0('assets/figures/', plot_name), paper = "a4r")
   
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
@@ -567,6 +570,7 @@ save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
   dev.off()
 }
 
+
 save_2mode_plot(g_2mode, 'plot_2mode.pdf', plot_margin = -0.6)
 save_2mode_plot(g_2mode_privu, 'plot_2mode_privu.pdf', plot_margin = -0.7)
 save_2mode_plot(g_2mode_pubu, 'plot_2mode_pubu.pdf')
@@ -575,6 +579,7 @@ save_2mode_plot(g_2mode_pubu, 'plot_2mode_pubu.pdf')
 ## ------------------------------
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
+
 
 create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
   
@@ -633,7 +638,20 @@ create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'p
   
   ego_tbl <- ego_tbl %>% arrange(as.numeric(cluster), univ_type, as.numeric(univ_ranking))
   
-  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'Characteristics',
+  # merge in number of visits to private high schools (total, inst, outst)
+    ego_tbl <- events_data %>% filter(event_type == "priv_hs") %>% group_by(univ_id) %>% 
+      summarize(phs_visits_tot = n()) %>% right_join(y = ego_tbl)
+      
+    ego_tbl <- events_data %>% filter(event_type == "priv_hs", univ_state == event_state) %>% group_by(univ_id) %>% 
+      summarize(phs_visits_in = n()) %>% right_join(y = ego_tbl)
+    
+    ego_tbl <- events_data %>% filter(event_type == "priv_hs", univ_state != event_state) %>% group_by(univ_id) %>% 
+      summarize(phs_visits_out = n()) %>% right_join(y = ego_tbl)  
+    
+  # change order of variables
+    ego_tbl <- ego_tbl %>% relocate(univ_id, univ_name, cluster, univ_type, univ_ranking, phs_visits_tot, phs_visits_in, phs_visits_out, characteristics)
+    
+  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'total', 'in_state', 'out_state','Characteristics',
                       'Northeast', 'Midwest', 'South', 'West',
                       'Catholic', 'Conserv', 'Nonsect', 'Other',
                       race_vals, ranking_vals)
@@ -647,6 +665,15 @@ saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec)
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
+
+# count number of total, in-state, and out-of-state visits to private high schools
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View() # all
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs", univ_state == event_state) %>% group_by(school_name) %>% count() %>% View() # in-state
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs", univ_state != event_state) %>% group_by(school_name) %>% count() %>% View() # out-state
+
+events_data %>% glimpse()
 
 ## ---------------------------------
 ## TABLE FROM 2-MODE IGRAPH OBJECTS

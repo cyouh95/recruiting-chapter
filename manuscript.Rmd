@@ -172,16 +172,18 @@ kable(
 #  <div id="refs"></div>
 ```
 
+<!-- private col/univ -->
+
 ```{r, ego-table-privu, echo = FALSE}
-df <- readRDS('./assets/tables/table_ego.RDS')
+df <- readRDS('./assets/tables/table_ego_privu.RDS')
 knitr::kable(
-  df %>% select(-Characteristics), row.names = F, # select(-ID, -Characteristics)
-  caption = 'ego table caption') %>% landscape(margin = NULL) %>%
+  df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
+  caption = 'ego table private colleges and universities') %>% landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 ```{r, include = FALSE, eval = FALSE}
-df <- readRDS('./assets/tables/table_ego.RDS')
+df <- readRDS('./assets/tables/table_ego_privu.RDS')
 #df %>% select(ID,University,Cluster,Type,Rank,c1_lt10,c2_10to25,c3_25to50,`c4_50+`) %>%mutate(lt25 = as.numeric(c1_lt10) + as.numeric(c2_10to25))
 
 knitr::kable(
@@ -191,23 +193,70 @@ knitr::kable(
 ```
 
 ```{r, hs-print-privu, echo = FALSE}
-df <- readRDS('./assets/tables/table_2mode.RDS') %>% head(n=20)
+df <- readRDS('./assets/tables/table_2mode_privu.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-school_id,-closeness), caption = 'ego table 3') %>% 
+  df %>% select(-name,-closeness), caption = 'most central private high schools, private colleges and universities') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 
 ```{r, hs-table-privu-agg, echo = FALSE}
-df <- readRDS('./assets/tables/table_2mode_agg.RDS')
+df <- readRDS('./assets/tables/table_2mode_agg_privu.RDS')
 
-knitr::kable(df, caption = 'ego table caption') %>% 
+knitr::kable(df, caption = 'characteristics of high schools by degree band, private colleges and universities') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
+<!-- public research universities -->
+
+```{r, ego-table-pubu, echo = FALSE}
+df <- readRDS('./assets/tables/table_ego_pubu.RDS')
+knitr::kable(
+  df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
+  caption = 'ego table caption public universities') %>% landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r, hs-print-pubu, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
+
+knitr::kable(
+  df %>% select(-name,-closeness), caption = 'most central private high schools, private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r, hs-table-pubu-agg, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_agg_pubu.RDS')
+
+knitr::kable(df, caption = 'characteristics of high schools by degree band, private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+<!-- public and private col/univ -->
+
+```{r, hs-print-both, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_both.RDS') %>% head(n=20)
+
+knitr::kable(
+  df %>% select(-name,-closeness), caption = 'most central private high schools, public and private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r, hs-table-both-agg, echo = FALSE}
+df <- readRDS('./assets/tables/table_2mode_agg_both.RDS')
+
+knitr::kable(df, caption = 'characteristics of high schools by degree band, public and private colleges and universities') %>% 
+  landscape(margin = NULL) %>%
+  kable_styling(latex_options = 'scale_down')
+```
 
 
 <!-- FIGURES -->
@@ -226,13 +275,16 @@ knitr::include_graphics('assets/images/enrollment_funnel.png')
 \begin{landscape}
 
 
+
 ```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
 knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
-```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+
+
+```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_2mode_privu.pdf')
 ```
 
 
@@ -240,17 +292,30 @@ knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
 knitr::include_graphics('assets/figures/villanova_religion.pdf')
 ```
 
-```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Ego network of Emory University, with geographic region"}
+```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Emory University, with geographic region"}
 knitr::include_graphics('assets/figures/emory_region.pdf')
 ```
 
 
-```{r rank-cluster1, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Academic rating of private high schools visited by selected colleges from cluster 1"}
+```{r rank-cluster1, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Academic rating of private high schools visited by selected colleges from cluster 1"}
 knitr::include_graphics('assets/figures/rank_cluster1.pdf')
 ```
 
-```{r race-cluster4, fig.align = 'center', echo = FALSE, out.width = "75%", fig.cap = "Racial composition of visited private high schools, selected colleges"}
+```{r race-cluster4, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Racial composition of visited private high schools, selected colleges"}
 knitr::include_graphics('assets/figures/race_cluster4.pdf')
+```
+
+
+
+```{r two-mode-plot-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_2mode_pubu.pdf')
+```
+
+
+
+```{r two-mode-plot-community, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
+knitr::include_graphics('assets/figures/plot_2mode.pdf')
+#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
 
