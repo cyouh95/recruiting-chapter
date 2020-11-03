@@ -169,6 +169,17 @@ df <- igraph::as_data_frame(g_2mode, 'both')
 # Edge list
 e_2mode <- df$edges %>% rename(ncessch = 'from', univ_id = 'to') %>% as_tibble()
 
+v_get_loc <- Vectorize(function(x, y) ifelse(privhs_events[privhs_events$school_id == x, ]$event_state[1] == univ_info[univ_info$univ_id == y, ]$state_code, 'instate', 'outofstate'))
+v_get_states <- Vectorize(function(x, y) paste0(privhs_events[privhs_events$school_id == x, ]$event_state[1], '|', univ_info[univ_info$univ_id == y, ]$state_code))
+e_2mode <- e_2mode %>% mutate(
+  visiting_univ = case_when(
+    univ_id %in% privu_vec ~ 'private',
+    univ_id %in% pubu_vec ~ 'public'
+  ),
+  visit_loc = v_get_loc(ncessch, univ_id),
+  state_codes = v_get_states(ncessch, univ_id)
+)
+
 # Vertex list (`name` must come first)
 v_2mode <- tibble(name = df$vertices$name, type = df$vertices$type)
 v_2mode <- left_join(v_2mode, attributes_df, c('name' = 'school_id'))
