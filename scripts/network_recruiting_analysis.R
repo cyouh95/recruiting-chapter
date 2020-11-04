@@ -1,7 +1,7 @@
 library(igraph)
 library(tidyverse)
 
-options(max.print=9999)
+options(max.print=99)
 ## -------------
 ## LOAD OBJECTS
 ## -------------
@@ -38,8 +38,17 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 ## ------------------
 
 # choosing potential universities to for ego network
+vertex_attr_names(g_2mode)
+edge_attr_names(g_2mode)
+
+table(E(g_2mode)$visiting_univ, useNA = "always")
+table(E(g_2mode)$visit_loc, useNA = "always")
+
+table(V(ego_network_order1)$region, useNA = "always") # 1 = Northeast   2= Midwest     3 = South      4 = West 
 
 vertex_attr_names(g_1mode_psi_privu)
+edge_attr_names(g_1mode_psi_privu)
+
 vertex_attr_names(g_1mode_hs)
 V(g_1mode_psi_privu)$school_name
 V(g_1mode_hs)$ranking
@@ -488,6 +497,11 @@ plot(
 dev.off() # close the file
 
 
+# plot 
+
+
+
+
 
 c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
 m_2mode_privu <- membership(c_2mode_privu)
@@ -535,12 +549,32 @@ dev.off() # close the file
 
 par(mfrow=c(1, 1))
 
-save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
+save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', plot_margin = -0.5, plot_name = "plot") {
+
+  # all visits for private; out-of-state only for publics; 
+  if (pubu_visits == 'outst' & privu_visits != 'outst') {
+    
+    network <- subgraph.edges(graph = network, eids = E(network)[(E(network)$visiting_univ == "public" & E(network)$visit_loc == "outofstate") | E(network)$visiting_univ == "private"]) 
+  }
   
+  # out-of-state visits only for both public and private colleges/universities
+  if (pubu_visits == 'outst' & privu_visits == 'outst') {
+    
+    network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
+  }
+  
+  # print summary of network to check that network object has the right number of vertices and edges
+    summary(network)
+    #print(network)
+  
+  #network_name <- deparse(substitute(network)) # why doesn't this work?
+  #print(network_name)
+
+  # cluster analysis to create
   cluster_2mode <- cluster_fast_greedy(network)
   membership_2mode <- membership(cluster_2mode)
   
-  library(plyr)
+  library(plyr, quietly = TRUE, warn.conflicts = F)
   colors_2mode_privu <- revalue(as.character(membership_2mode), c(
     '1' = 'red',
     '2' = 'lightblue',
@@ -549,7 +583,7 @@ save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
   ))
   detach(package:plyr, unload = TRUE)
   
-  pdf(paste0('assets/figures/', plot_name), paper = "a4r")
+  pdf(str_c('assets/figures/', plot_name), paper = "a4r")
   
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
@@ -570,10 +604,95 @@ save_2mode_plot <- function(network, plot_name, plot_margin = -0.5) {
   dev.off()
 }
 
+# plots for igraph object g_2mode [public and private colleges/universities]
+save_2mode_plot(g_2mode, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
 
-save_2mode_plot(g_2mode, 'plot_2mode.pdf', plot_margin = -0.6)
-save_2mode_plot(g_2mode_privu, 'plot_2mode_privu.pdf', plot_margin = -0.7)
-save_2mode_plot(g_2mode_pubu, 'plot_2mode_pubu.pdf')
+
+# plots for igraph object g_2mode [private colleges/universities]
+save_2mode_plot(g_2mode_privu, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+
+
+# plots for igraph object g_2mode [public research universities]
+save_2mode_plot(g_2mode_pubu, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
+
+# figuring out how to create subgraphs that eliminate in-state visits
+  # all visits; 1785 vertices, 11034 edges
+  g_2mode
+  
+  # out-of-state only; 1552 vertices, 9714 edges
+  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"])
+  
+  # all visits for private; out-of-state only for publics; 1611 vertices, 10405 edges
+  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"]) 
+
+
+
+(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"
+
+
+table(E(g_2mode)$visiting_univ, useNA = "always")
+
+
+# public universities, out-of-state visits only
+g_2mode_pubu_outst <- subgraph.edges(graph = g_2mode_pubu, eids = E(g_2mode_pubu)[E(g_2mode_pubu)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
+g_2mode_pubu_outst
+save_2mode_plot(g_2mode_pubu_outst, 'plot_2mode_pubu.pdf')
+
+
+g_2mode
+
+# all universities, out-of-state visits only
+g_2mode_outst <- subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"]) # 1552 vertices, 9714 edges
+g_2mode_outst
+save_2mode_plot(g_2mode_outst, 'lala.pdf', plot_margin = -0.8)
+
+
+table(E(g_2mode)$visiting_univ, useNA = "always")
+table(E(g_2mode)$visit_loc, useNA = "always")
+
+
+edge_attr_names(g_2mode_pubu)
+table(E(g_2mode_pubu)$visiting_univ, useNA = "always")
+table(E(g_2mode_pubu)$visit_loc, useNA = "always")
+
+
+
+network <- g_2mode_pubu
+network # 1481 vertices, 3724 edges
+subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
+
+
+  # network object
+  if (graph_order != 'both') {  # order == 1 or 2
+    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
+  }
+
+## ------------------------------
+## PLAYING WITH COMMUNITY DETECTION
+## ------------------------------
+
+g_2mode
+
+as_adjacency_matrix(
+  graph = g_2mode,
+  type = "both", # c("both", "upper", "lower"),
+  attr = NULL,
+  edges = FALSE,
+  names = TRUE,
+  sparse = FALSE
+) %>% str()
+
+# function igraph::as_incidence_matrix "This function can return a sparse or dense incidence matrix of a bipartite network. The incidence matrix is an n times m matrix, n and m are the number of vertices of the two kinds."
+as_incidence_matrix(
+  graph = g_2mode,
+  types = NULL,
+  attr = NULL,
+  names = TRUE,
+  sparse = FALSE
+) %>% str()
 
 
 ## ------------------------------
