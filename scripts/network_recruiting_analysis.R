@@ -676,15 +676,6 @@ subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outof
 
 g_2mode
 
-as_adjacency_matrix(
-  graph = g_2mode,
-  type = "both", # c("both", "upper", "lower"),
-  attr = NULL,
-  edges = FALSE,
-  names = TRUE,
-  sparse = FALSE
-) %>% str()
-
 # function igraph::as_incidence_matrix "This function can return a sparse or dense incidence matrix of a bipartite network. The incidence matrix is an n times m matrix, n and m are the number of vertices of the two kinds."
 as_incidence_matrix(
   graph = g_2mode,
@@ -693,6 +684,79 @@ as_incidence_matrix(
   names = TRUE,
   sparse = FALSE
 ) %>% str()
+
+# creates data frame where each observation is a college/university and each variable is a high school ID
+as_incidence_matrix(
+  graph = g_2mode,
+  types = NULL,
+  attr = NULL,
+  names = TRUE,
+  sparse = FALSE
+) %>% t() %>% as.data.frame(
+  row.names = NULL, 
+  optional = FALSE,
+  make.names = TRUE,
+  stringsAsFactors = FALSE
+) %>% str()
+
+# creates data frame where each observation is a high school and each variable is a university ID
+df_temp %>% glimpse()
+df_temp <- as_incidence_matrix(
+  graph = g_2mode,
+  types = NULL,
+  attr = NULL,
+  names = TRUE,
+  sparse = FALSE
+) %>% as.data.frame(
+  row.names = NULL, 
+  optional = FALSE,
+  make.names = TRUE,
+  stringsAsFactors = FALSE
+) 
+
+df_temp %>% select(`100751`,`106397`)
+
+
+# 
+#bipartite.projection(g_2mode)[["proj1"]] # one mode object, mode = high schools
+#bipartite.projection(g_2mode)[["proj2"]] # one mode object, mode = universities
+
+
+#  
+df_temp2 <- as_adjacency_matrix(
+  graph = bipartite.projection(g_2mode)[["proj2"]],  # creates one-mode object w/ mode = universities
+  sparse = FALSE, 
+  attr = 'weight'
+) %>% as.data.frame(
+  row.names = NULL, 
+  optional = FALSE,
+  make.names = TRUE,
+  stringsAsFactors = FALSE
+) 
+
+df_temp2 %>% select(`100751`,`106397`)
+%>% str()
+
+names(df_temp)
+
+# starting w/ the one-mode igraph objects previously created
+
+df_temp3 <- as_adjacency_matrix(
+  graph = g_1mode_psi,  
+  sparse = FALSE, 
+  attr = 'weight'
+) %>% as.data.frame(
+  row.names = NULL, 
+  optional = FALSE,
+  make.names = TRUE,
+  stringsAsFactors = FALSE
+) 
+
+df_temp2 %>% select(`100751`,`106397`)
+df_temp3 %>% select(`100751`,`106397`)
+
+
+# we want to know which universities are visiting the same high schools;
 
 
 ## ------------------------------
