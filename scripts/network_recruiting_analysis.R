@@ -686,7 +686,7 @@ as_incidence_matrix(
 ) %>% str()
 
 # creates data frame where each observation is a college/university and each variable is a high school ID
-as_incidence_matrix(
+df_temp_univ <- as_incidence_matrix(
   graph = g_2mode,
   types = NULL,
   attr = NULL,
@@ -697,7 +697,23 @@ as_incidence_matrix(
   optional = FALSE,
   make.names = TRUE,
   stringsAsFactors = FALSE
-) %>% str()
+)
+
+df_temp_univ %>% dim() # 43 obs, 1742 variables
+
+# try performing principal component analysis on object
+pca_univ <- prcomp(
+  x = df_temp_univ, 
+  retx = TRUE, # a logical value indicating whether the rotated variables should be returned. default TRUE
+  center = TRUE, # a logical value indicating whether the variables should be shifted to be zero centered. default TRUE. Alternately, a vector of length equal the number of columns of x can be supplied. The value is passed to scale.
+  scale. = TRUE, # a logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place. The default is FALSE for consistency with S, but in general scaling is advisable
+  tol = NULL, # a value indicating the magnitude below which components should be omitted. (Components are omitted if their standard deviations are less than or equal to tol times the standard deviation of the first component.) With the default null setting, no components are omitted (unless rank. is specified less than min(dim(x)).)
+  rank. = NULL # default = NULL # optionally, a number specifying the maximal rank, i.e., maximal number of principal components to be used. Can be set as alternative or in addition to tol, useful notably when the desired rank is considerably smaller than the dimensions of the matrix.
+) 
+
+summary(pca_univ)
+
+
 
 # creates data frame where each observation is a high school and each variable is a university ID
 df_temp %>% glimpse()
