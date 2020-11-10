@@ -33,127 +33,11 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
     # egos_psi_pubu (17 ego graphs)
 
 
-## ------------------
-## DRAFTING ANALYSIS
-## ------------------
-
-# choosing potential universities to for ego network
-vertex_attr_names(g_2mode)
-edge_attr_names(g_2mode)
-
-table(E(g_2mode)$visiting_univ, useNA = "always")
-table(E(g_2mode)$visit_loc, useNA = "always")
-
-table(V(ego_network_order1)$region, useNA = "always") # 1 = Northeast   2= Midwest     3 = South      4 = West 
-
-vertex_attr_names(g_1mode_psi_privu)
-edge_attr_names(g_1mode_psi_privu)
-
-vertex_attr_names(g_1mode_hs)
-V(g_1mode_psi_privu)$school_name
-V(g_1mode_hs)$ranking
-
-#events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count() %>% View()
-
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count()
-
-# Create ego network and ego network order =1
-
-  # which university to be the ego network
-    #univ_id <- '152080' # Notre Dame ego network
-    univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
-    #univ_id <- "228246" # Southern methodist university
-    #univ_id <- "216597" # Villanova
-
-    
-  # ego network
-  ego_network <- egos_psi_privu[[univ_id]]
-
-# create subgraph for order = 1 only [not really necessary]
-  
-    ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
-    ego_network_order1
-    
-    table(V(ego_network_order1)$rank_cat2, useNA = "always")
-  
-### create variables for academic reputation and for racial composition that will be use in ego graph plot
-
-  # CUT THIS CODE HERE AND PUT IT IN create_igraph_objects.R INSTEAD    
-  
-
-# investigate vertex characteristics
-  
-    vertex_attr_names(ego_network_order1)
-    
-  # investigate characteristics of all high schools that received a visit 
-    #(from any public or private in college/university in our sample)
-
-    table(V(g_1mode_hs)$region, useNA = "always") # 1 = Northeast   2= Midwest     3 = South      4 = West 
-    table(V(g_1mode_hs)$religion, useNA = "always")
-    table(V(g_1mode_hs)$ranking, useNA = "always")
-
-    summary(V(g_1mode_hs)$pct_white)
-  
-  # investigate characteristics of ego college/university
-    
-    table(V(ego_network_order1)$region, useNA = "always") # 1 = Northeast   2= Midwest     3 = South      4 = West 
-    table(V(ego_network_order1)$religion, useNA = "always")
-    
-    table(V(ego_network_order1)$ranking, useNA = "always")
-    table(V(ego_network_order1)$ranking_numeric, useNA = "always")
-    
-    
-  # compare all high schools that got a visit to schools that got a visit from ego
-    
-    proportions(table(V(g_1mode_hs)$region, useNA = "always")) # 1 = Northeast   2= Midwest     3 = South      4 = West 
-    proportions(table(V(ego_network_order1)$region, useNA = "always")) # 
-    
-    proportions(table(V(g_1mode_hs)$religion, useNA = "always")) # has 4 categories
-    proportions(table(V(ego_network_order1)$religion, useNA = "always"))
-    
-    proportions(table(V(g_1mode_hs)$ranking, useNA = "always")) # turn this into 4 categoriexs
-    proportions(table(V(ego_network_order1)$ranking, useNA = "always"))
-    
-
 ## --------------------
-## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
+## INVESTIGATING RELIGIOUS AFFILIATION OF UNIVERSITIES; put this somewhere else
 ## --------------------
 
-# function to plot ego graph
-    #univ_id <- "160755" # Tulane # why does Tulane ego network order = 1 contain several universities from our sample?
-    #univ_id <- "228246" # Southern methodist university
-    univ_id <- "216597" # Villanova
 
-    
-  # ego network
-  ego_network <- egos_psi_privu[[univ_id]]
-
-  
-  vertex_attr_names(ego_network)
-  
-  table(V(ego_network)$religion,  useNA = "always")
-  
-  V(ego_network)$name[V(ego_network)$type == TRUE]
-  
-proportions(table(V(ego_network_order1)$ranking, useNA = "always"))  
-
-V(ego_network)$religion[V(ego_network)$type == TRUE]
-V(ego_network)$religion[V(ego_network)$type == FALSE]
-
-univ_id <- "216597" # Villanova
-# ego network
-ego_network <- egos_psi_privu[[univ_id]]
-
-
-vertex_attr(ego_network, "religion")
-
-vertex_attr(ego_network, "religion") <- case_when(
-        vertex_attr(network, "type") == FALSE ~ 'salmon',
-        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 'lightblue',
-        vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 'purple',
-      )
-
-      
 # The U.S. Department of Education classifies conservative Christian schools
 # as those that have membership in at least one of four associations (Kena et al., 2016): 
   # Accelerated Christian Education
@@ -174,6 +58,9 @@ vertex_attr(ego_network, "religion") <- case_when(
   # https://en.wikipedia.org/wiki/Baptist_General_Convention_of_Texas
 
 
+## --------------------
+## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
+## --------------------
 
 plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
 
@@ -447,6 +334,283 @@ plot_ego_graph(ego_network, characteristic = 'pct_blacklatinxnative_cat', values
 
 # MESSING AROUND WITH THE RANKING TABLE
 
+
+
+## ------------------------------
+## WRITE COMMUNITY DETECTION FUNCTION
+## ------------------------------
+
+# STEPS IN HIERARCHICAL CLUSTER ANALYSIS
+  #create adjacency matrix of 1-mode university object
+  # create "distance matrix" using stats::dist() function
+  # conduct hierarchical clustering using stats::hclust
+  # cut the dendrogram to create the desired number of clusters using stats::cutree
+  # merge the cluster assignments to the igraph object as a vertex attribute
+
+
+  # cluster analysis to create
+  cluster_2mode <- cluster_fast_greedy(network)
+  membership_2mode <- membership(cluster_2mode)
+
+    # cluster analysis to create
+  cluster_2mode <- cluster_fast_greedy(network)
+  membership_2mode <- membership(cluster_2mode)
+
+  # cluster analysis to create
+  cluster_2mode <- cluster_fast_greedy(g_1mode_psi_pubu)
+  membership_2mode <- membership(cluster_2mode)
+  membership_2mode
+  
+
+    
+
+
+bipartite.projection(g_2mode_privu)[["proj2"]] %>% cluster_fast_greedy() %>% membership()
+
+bipartite.projection(g_2mode)[["proj1"]] %>% cluster_fast_greedy() %>% membership()
+
+library(ape)  
+
+# FUNCTION TO RUN HIERARCHICAL CLUSTER ANALYSIS
+  # STEPS IN HIERARCHICAL CLUSTER ANALYSIS:
+  #create adjacency matrix of 1-mode university object
+  # create "distance matrix" using stats::dist() function
+  # conduct hierarchical clustering using stats::hclust
+  # cut the dendrogram to create the desired number of clusters using stats::cutree
+  # merge the cluster assignments to the igraph object as a vertex attribute
+
+create_hclust <- function(network, mode, k = NULL, h = NULL) {
+
+  # mode = psi or hs
+  if (mode == "hs") {
+    proj <- "proj1"
+  } else {  
+    
+    proj <- "proj2"
+    
+  }
+  
+  m <- "complete" # cluster analysis agglomeration method to use: "average" "complete" 
+  
+  #create adjacency matrix of 1-mode university object
+  hclust_obj <- as_adjacency_matrix(
+    graph = bipartite.projection(network)[[proj]],  # creates one-mode object w/ mode = universities
+      sparse = FALSE, 
+      attr = 'weight'
+    ) %>%
+    # create "distance matrix" using stats::dist() function
+    dist(
+      #x = affil_1mode_psi , # 	a numeric matrix, data frame or "dist" object.
+      method = "euclidean", # the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". default = euclidian where Usual distance between the two vectors (2 norm aka L_2), sqrt(sum((x_i - y_i)^2)).
+      diag = TRUE, # FALSE, # logical value indicating whether the diagonal of the distance matrix should be printed by print.dist. default = FALSE
+      upper = TRUE, # logical value indicating whether the upper triangle of the distance matrix should be printed by print.dist.
+      p = 2 # The power of the Minkowski distance. default = 2
+    ) %>% 
+    # conduct hierarchical clustering using stats::hclust
+    hclust(
+      #d = dist_1mode_psi, # a dissimilarity structure as produced by dist() function
+      method = m, # default = complete; the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
+      members = NULL # NULL or a vector with length size of d. See the ‘Details’ section. default = NUKK
+    ) 
+    
+    plot(hclust_obj)
+    # cut the dendrogram to create the desired number of clusters using stats::cutree
+    cutree(
+      tree = hclust_obj, # a tree as produced by hclust. cutree() only expects a list with components merge, height, and labels, of appropriate content each.
+      k = k, # NULL, # default = NULL an integer scalar or vector with the desired number of groups
+      h = h # default = NULL numeric scalar or vector with heights where the tree should be cut
+    )
+
+}
+# where
+  # k = desired number of groups, hierarchical cluster analysis only, default = NULL
+  # h = numeric scalar with heights where tree should be cut to create groups, hierarchical cluster analysis only, default = NULL
+
+
+create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL)
+
+
+
+## ---------------------------
+## PLOT 2-MODE IGRAPH OBJECTS
+## ---------------------------
+
+
+# analysis = whether to run hierarchical cluster analysis or fast_and_greeedy
+# k = number of groups (hierarchical cluster analysis only)
+# h = height to determine groups (hierarchical cluster analysis only)
+  
+save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+
+  # all visits for private; out-of-state only for publics; 
+  if (pubu_visits == 'outst' & privu_visits != 'outst') {
+    
+    network <- subgraph.edges(graph = network, eids = E(network)[(E(network)$visiting_univ == "public" & E(network)$visit_loc == "outofstate") | E(network)$visiting_univ == "private"]) 
+  }
+  
+  # out-of-state visits only for both public and private colleges/universities
+  if (pubu_visits == 'outst' & privu_visits == 'outst') {
+    
+    network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
+  }
+  
+  # print summary of network to check that network object has the right number of vertices and edges
+    summary(network)
+    #print(network)
+  
+  #network_name <- deparse(substitute(network)) # why doesn't this work?
+  #print(network_name)
+
+  # run desired cluster analysis to create communities
+    # create vertex attribute "cluster_psi" that is assigned only for vertices where V(network)$type == TRUE    
+  if (analysis == "hclust") { # run hierarchical cluster analysis
+
+      vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h)    
+      
+  } else {  # run igraph::fast_and_greedy() cluster analysis
+    
+    fast_obj <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() 
+    
+    dendPlot(fast_obj, mode="phylo")
+    
+    vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- fast_obj %>% membership()  
+    
+  }
+  #print(V(network)$cluster_psi)
+    
+  # create vertex attribute for value of cluster with high schools having value = 0
+  vertex_attr(graph = network, name = "cluster") <- if_else(V(network)$type, as.integer(vertex_attr(graph = network, name = "cluster_psi")), 0L)
+    
+    # merge the cluster assignments to the igraph object as a vertex attribute
+    #vertex_attr(graph = g_2mode, name = "temp") <- (as.data.frame(V(g_2mode)$name) %>% left_join(y = df_cut_1mode_psi, by = c(`V(g_2mode)$name` = "univ_id")))$cluster
+    
+    print(V(network)$cluster)
+    print(V(network)$cluster_psi[V(network)$type==TRUE])
+    V(network)$cluster %>% table() %>% print()
+    
+    #vertex_attr_names(g_2mode)
+    vertex_color <- recode(vertex_attr(graph = network, name = "cluster"),
+      `0` = "salmon",
+      `1` = 'lightblue',
+      `2` = 'lightgreen',      
+      `3` = 'violet',
+      `4` = 'yellow',
+    )
+    #print(vertex_color)
+    
+  #pdf(str_c('assets/figures/', plot_name), paper = "a4r")
+  
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+  par(mfrow=c(1, 1))
+
+  plot(
+    x = network, 
+    vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
+    vertex.color = vertex_color,
+    vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
+    vertex.shape = 'circle',
+    vertex.size = if_else(V(network)$type, 3, .5),
+    edge.lty = 3,
+    edge.lty = 0.5,
+    edge.color = 'lightgrey',
+    layout = layout_with_fr,
+    margin = plot_margin
+  )
+    
+  #dev.off()
+}
+
+# plots for igraph object g_2mode [public and private colleges/universities]
+save_2mode_plot(g_2mode, analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+save_2mode_plot(g_2mode, analysis = "hclust", k=2, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+
+
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
+
+
+# plots for igraph object g_2mode [private colleges/universities]
+save_2mode_plot(g_2mode_privu, analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_privu, analysis = "hclust", k=2, h = NULL, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+
+
+# plots for igraph object g_2mode [public research universities]
+save_2mode_plot(g_2mode_pubu, analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+save_2mode_plot(g_2mode_pubu, analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
+
+
+palette() %>% str() # character vector of length 8
+palette.colors() %>% str()
+
+colors() %>% str
+colors()
+
+hcl.pals() # list of palettes
+%>% str()
+
+
+
+# figuring out how to create subgraphs that eliminate in-state visits
+  # all visits; 1785 vertices, 11034 edges
+  g_2mode
+  
+  # out-of-state only; 1552 vertices, 9714 edges
+  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"])
+  
+  # all visits for private; out-of-state only for publics; 1611 vertices, 10405 edges
+  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"]) 
+
+
+
+(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"
+
+
+table(E(g_2mode)$visiting_univ, useNA = "always")
+
+
+# public universities, out-of-state visits only
+g_2mode_pubu_outst <- subgraph.edges(graph = g_2mode_pubu, eids = E(g_2mode_pubu)[E(g_2mode_pubu)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
+g_2mode_pubu_outst
+save_2mode_plot(g_2mode_pubu_outst, 'plot_2mode_pubu.pdf')
+
+
+g_2mode
+
+# all universities, out-of-state visits only
+g_2mode_outst <- subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"]) # 1552 vertices, 9714 edges
+g_2mode_outst
+
+save_2mode_plot(g_2mode_outst, 'lala.pdf', plot_margin = -0.8)
+
+
+table(E(g_2mode)$visiting_univ, useNA = "always")
+table(E(g_2mode)$visit_loc, useNA = "always")
+
+
+edge_attr_names(g_2mode_pubu)
+table(E(g_2mode_pubu)$visiting_univ, useNA = "always")
+table(E(g_2mode_pubu)$visit_loc, useNA = "always")
+
+
+
+network <- g_2mode_pubu
+network # 1481 vertices, 3724 edges
+subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
+
+
+  # network object
+  if (graph_order != 'both') {  # order == 1 or 2
+    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
+  }
+
+
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
 ## ---------------------------
@@ -543,308 +707,7 @@ plot(
 dev.off() # close the file
 
 
-## ---------------------------
-## PLOT 2-MODE IGRAPH OBJECTS
-## ---------------------------
 
-par(mfrow=c(1, 1))
-
-save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', plot_margin = -0.5, plot_name = "plot") {
-
-  # all visits for private; out-of-state only for publics; 
-  if (pubu_visits == 'outst' & privu_visits != 'outst') {
-    
-    network <- subgraph.edges(graph = network, eids = E(network)[(E(network)$visiting_univ == "public" & E(network)$visit_loc == "outofstate") | E(network)$visiting_univ == "private"]) 
-  }
-  
-  # out-of-state visits only for both public and private colleges/universities
-  if (pubu_visits == 'outst' & privu_visits == 'outst') {
-    
-    network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
-  }
-  
-  # print summary of network to check that network object has the right number of vertices and edges
-    summary(network)
-    #print(network)
-  
-  #network_name <- deparse(substitute(network)) # why doesn't this work?
-  #print(network_name)
-
-  # cluster analysis to create
-  cluster_2mode <- cluster_fast_greedy(network)
-  membership_2mode <- membership(cluster_2mode)
-  
-  library(plyr, quietly = TRUE, warn.conflicts = F)
-  colors_2mode_privu <- revalue(as.character(membership_2mode), c(
-    '1' = 'red',
-    '2' = 'lightblue',
-    '3' = 'green',
-    '4' = 'yellow'
-  ))
-  detach(package:plyr, unload = TRUE)
-  
-  pdf(str_c('assets/figures/', plot_name), paper = "a4r")
-  
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  
-  plot(
-    x = network, 
-    vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
-    vertex.color = colors_2mode_privu,
-    vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
-    vertex.shape = 'circle',
-    vertex.size = if_else(V(network)$type, 3, 1),
-    edge.lty = 3,
-    edge.lty = 0.5,
-    edge.color = 'lightgrey',
-    layout = layout_with_fr,
-    margin = plot_margin
-  )
-  
-  dev.off()
-}
-
-# plots for igraph object g_2mode [public and private colleges/universities]
-save_2mode_plot(g_2mode, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
-
-
-# plots for igraph object g_2mode [private colleges/universities]
-save_2mode_plot(g_2mode_privu, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
-
-
-# plots for igraph object g_2mode [public research universities]
-save_2mode_plot(g_2mode_pubu, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
-
-# figuring out how to create subgraphs that eliminate in-state visits
-  # all visits; 1785 vertices, 11034 edges
-  g_2mode
-  
-  # out-of-state only; 1552 vertices, 9714 edges
-  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"])
-  
-  # all visits for private; out-of-state only for publics; 1611 vertices, 10405 edges
-  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"]) 
-
-
-
-(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"
-
-
-table(E(g_2mode)$visiting_univ, useNA = "always")
-
-
-# public universities, out-of-state visits only
-g_2mode_pubu_outst <- subgraph.edges(graph = g_2mode_pubu, eids = E(g_2mode_pubu)[E(g_2mode_pubu)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
-g_2mode_pubu_outst
-save_2mode_plot(g_2mode_pubu_outst, 'plot_2mode_pubu.pdf')
-
-
-g_2mode
-
-# all universities, out-of-state visits only
-g_2mode_outst <- subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"]) # 1552 vertices, 9714 edges
-g_2mode_outst
-save_2mode_plot(g_2mode_outst, 'lala.pdf', plot_margin = -0.8)
-
-
-table(E(g_2mode)$visiting_univ, useNA = "always")
-table(E(g_2mode)$visit_loc, useNA = "always")
-
-
-edge_attr_names(g_2mode_pubu)
-table(E(g_2mode_pubu)$visiting_univ, useNA = "always")
-table(E(g_2mode_pubu)$visit_loc, useNA = "always")
-
-
-
-network <- g_2mode_pubu
-network # 1481 vertices, 3724 edges
-subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
-
-
-  # network object
-  if (graph_order != 'both') {  # order == 1 or 2
-    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
-  }
-
-## ------------------------------
-## PLAYING WITH COMMUNITY DETECTION
-## ------------------------------
-
-g_2mode
-
-# function igraph::as_incidence_matrix "This function can return a sparse or dense incidence matrix of a bipartite network. The incidence matrix is an n times m matrix, n and m are the number of vertices of the two kinds."
-as_incidence_matrix(
-  graph = g_2mode,
-  types = NULL,
-  attr = NULL,
-  names = TRUE,
-  sparse = FALSE
-) %>% str()
-
-# creates data frame where each observation is a college/university and each variable is a high school ID
-df_temp_univ <- as_incidence_matrix(
-  graph = g_2mode,
-  types = NULL,
-  attr = NULL,
-  names = TRUE,
-  sparse = FALSE
-) %>% t() %>% as.data.frame(
-  row.names = NULL, 
-  optional = FALSE,
-  make.names = TRUE,
-  stringsAsFactors = FALSE
-)
-
-df_temp_univ %>% dim() # 43 obs, 1742 variables
-
-# try performing principal component analysis on object
-pca_univ <- prcomp(
-  x = df_temp_univ, 
-  retx = TRUE, # a logical value indicating whether the rotated variables should be returned. default TRUE
-  center = TRUE, # a logical value indicating whether the variables should be shifted to be zero centered. default TRUE. Alternately, a vector of length equal the number of columns of x can be supplied. The value is passed to scale.
-  scale. = TRUE, # a logical value indicating whether the variables should be scaled to have unit variance before the analysis takes place. The default is FALSE for consistency with S, but in general scaling is advisable
-  tol = NULL, # a value indicating the magnitude below which components should be omitted. (Components are omitted if their standard deviations are less than or equal to tol times the standard deviation of the first component.) With the default null setting, no components are omitted (unless rank. is specified less than min(dim(x)).)
-  rank. = NULL # default = NULL # optionally, a number specifying the maximal rank, i.e., maximal number of principal components to be used. Can be set as alternative or in addition to tol, useful notably when the desired rank is considerably smaller than the dimensions of the matrix.
-) 
-
-summary(pca_univ)
-
-
-
-# creates data frame where each observation is a high school and each variable is a university ID
-df_temp %>% glimpse()
-df_temp <- as_incidence_matrix(
-  graph = g_2mode,
-  types = NULL,
-  attr = NULL,
-  names = TRUE,
-  sparse = FALSE
-) %>% as.data.frame(
-  row.names = NULL, 
-  optional = FALSE,
-  make.names = TRUE,
-  stringsAsFactors = FALSE
-) 
-
-df_temp %>% select(`100751`,`106397`)
-
-
-# 
-#bipartite.projection(g_2mode)[["proj1"]] # one mode object, mode = high schools
-#bipartite.projection(g_2mode)[["proj2"]] # one mode object, mode = universities
-
-
-#create adjacency matrix of 1-mode university object
-  # create adacency matrix
-  # convert matrix to data frame. ? necessary?
-  #rm(df_1mode_psi)
-affil_1mode_psi <- as_adjacency_matrix(
-  graph = bipartite.projection(g_2mode)[["proj2"]],  # creates one-mode object w/ mode = universities
-  sparse = FALSE, 
-  attr = 'weight'
-)
-affil_1mode_psi %>% str()
-
-%>% as.data.frame(
-  row.names = NULL, 
-  optional = FALSE,
-  make.names = TRUE,
-  stringsAsFactors = FALSE
-) 
-
-# create "distance matrix" using stats::dist() function
-  # what is distance matrix?
-    # https://online.stat.psu.edu/stat555/node/86/#:~:text=Clustering%20starts%20by%20computing%20a,is%20distance%20zero%20from%20itself).
-      # Clustering starts by computing a distance between every pair of units that you want to cluster.  A distance matrix will be symmetric (because the distance between x and y is the same as the distance between y and x) and will have zeroes on the diagonal (because every item is distance zero from itself).  The table below is an example of a distance matrix.  Only the lower triangle is shown, because the upper triangle can be filled in by reflection.
-dist_1mode_psi <- dist(
-  x = affil_1mode_psi , # 	a numeric matrix, data frame or "dist" object.
-  method = "euclidean", # the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". default = euclidian where Usual distance between the two vectors (2 norm aka L_2), sqrt(sum((x_i - y_i)^2)).
-  diag = TRUE, # FALSE, # logical value indicating whether the diagonal of the distance matrix should be printed by print.dist. default = FALSE
-  upper = TRUE, # logical value indicating whether the upper triangle of the distance matrix should be printed by print.dist.
-  p = 2 # The power of the Minkowski distance. default = 2
-)
-dist_1mode_psi %>% str()
-# conduct hierarchical clustering using stats::hclust
-  # https://www.datacamp.com/community/tutorials/hierarchical-clustering-R
-m <- "complete" # "average" "complete"
-hclust_1mode_psi <- hclust(
-  d = dist_1mode_psi, # a dissimilarity structure as produced by dist() function
-  method = m, # default = complete; the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
-  members = NULL # NULL or a vector with length size of d. See the ‘Details’ section. default = NUKK
-)
-hclust_1mode_psi %>% class()
-hclust_1mode_psi %>% str()
-plot(hclust_1mode_psi)
-
-# cut the dendrogram to create the desired number of clusters using stats::cutree
-  # https://www.datacamp.com/community/tutorials/hierarchical-clustering-R
-  # note: At least one of k or h must be specified, k overrides h if both are given.
-  # choosing number of clusters by specifying k
-  # choosing number of clusters by specifiying height
-    # how is "height" defined
-      # 
-    # from http://ccicada.org/wp-content/uploads/2017/06/Community-Detection-with-Hierarchical-Clustering-Algorithms-Feb-3-2017.pdf 
-    # Note. One way to subdivide a network into clusters is to choose a height along the y-axis of the dendrogram, and draw a horizontal line at that height (see the red line in the above dendrogram), and count how many vertical lines it crosses. Each vertical line corresponds to a grouping of clusters, and the members of that grouping are represented by the branches of the dendrogram that lie below the line
-
-cut_1mode_psi <- cutree(
-  tree = hclust_1mode_psi, # a tree as produced by hclust. cutree() only expects a list with components merge, height, and labels, of appropriate content each.
-  #k = 3, # NULL, # default = NULL an integer scalar or vector with the desired number of groups
-  h = 600 # default = NULL numeric scalar or vector with heights where the tree should be cut
-)
-cut_1mode_psi
-cut_1mode_psi %>% str() # this is just a named atomic vector
-
-df_cut_1mode_psi <- tibble(
-  univ_id = names(cut_1mode_psi),
-  cluster = cut_1mode_psi
-)
-
-g_2mode
-vertex_attr_names(g_2mode)
-V(g_2mode)$name[V(g_2mode)$type == TRUE]
-
-(as.data.frame(V(g_2mode)$name) %>% left_join(y = df_cut_1mode_psi, by = c(`V(g_2mode)$name` = "univ_id")))$cluster %>% str()
-
-vertex_attr(graph = g_2mode, name = "temp") <- (as.data.frame(V(g_2mode)$name) %>% left_join(y = df_cut_1mode_psi, by = c(`V(g_2mode)$name` = "univ_id")))$cluster
-
-vertex_attr(graph = g_2mode, name = "temp")
-vertex_attr(graph = g_2mode, name = "temp") %>% as.numeric()
-
-# a different approach, but this one doesn't work either
-set_vertex_attr(graph = g_2mode, name = "temp", index = V(g_2mode)[V(g_2mode)$type == TRUE], df_cut_1mode_psi$cluster)
-
-vertex_attr(graph = g_2mode, name = "temp")
-vertex_attr(graph = g_2mode, name = "temp") %>% as.numeric()
-
-V(g_2mode) %>% str()
-V(g_2mode)[V(g_2mode)$type == TRUE] %>% str()
-df_cut_1mode_psi %>% str()
-
-
-
-
-# starting w/ the one-mode igraph objects previously created
-
-df_temp3 <- as_adjacency_matrix(
-  graph = g_1mode_psi,  
-  sparse = FALSE, 
-  attr = 'weight'
-) %>% as.data.frame(
-  row.names = NULL, 
-  optional = FALSE,
-  make.names = TRUE,
-  stringsAsFactors = FALSE
-) 
-
-df_temp2 %>% select(`100751`,`106397`)
-df_temp3 %>% select(`100751`,`106397`)
-
-
-# we want to know which universities are visiting the same high schools;
 
 
 ## ------------------------------
