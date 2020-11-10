@@ -8,6 +8,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 library(kableExtra)
 library(tidyverse)
+library(ggplot2)
 ```
 
 # Top visited private HS (2-mode network)
@@ -41,10 +42,51 @@ df <- readRDS('./assets/tables/table_ego.RDS')
 knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styling(latex_options = 'scale_down')
 ```
 
+# Ego network barplot
+
+```{r, fig.width=3.5, fig.height=3}
+ego_df <- readRDS('./assets/tables/table_ego_privu.RDS')
+univ_order <- (ego_df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University
+
+plot_characteristic <- function(df, type, characteristics) {
+  sub_df <- df %>% select(University, characteristics) %>%
+    gather(key, value, characteristics) %>%
+    mutate(value = parse_number(value))
+
+  # colors <- sub_df$color[order(sub_df$University)]
+  
+  sub_df$University <- factor(sub_df$University, levels = rev(univ_order))
+  
+  ggplot(sub_df, aes(fill = key, y = value, x = University)) + 
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE)) +
+    ggtitle('Title') +
+    xlab('') + ylab('') +
+    labs(fill = type) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          # axis.text.y = element_text(color = rep(c('red', 'green', 'blue', 'yellow', 'black'), 5)),
+          text = element_text(size = 8),
+          plot.title = element_text(color = 'white')) +
+    coord_flip()
+}
+
+plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
+plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
+plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
+plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
+```
+
 # Ego network graph
 
 See Figure \@ref(fig:ego-plot).
 
-```{r ego-plot, fig.align = 'center', out.width = '50%', fig.cap = 'Ego network'}
-knitr::include_graphics('assets/figures/plot_g_2mode_privu.pdf')
+```{r ego-plot, fig.align = 'center', out.width = '100%', fig.cap = 'Ego network'}
+knitr::include_graphics('assets/figures/plot_2mode_privu.pdf')
 ```
