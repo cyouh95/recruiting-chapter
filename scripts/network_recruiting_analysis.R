@@ -340,37 +340,6 @@ plot_ego_graph(ego_network, characteristic = 'pct_blacklatinxnative_cat', values
 ## WRITE COMMUNITY DETECTION FUNCTION
 ## ------------------------------
 
-# STEPS IN HIERARCHICAL CLUSTER ANALYSIS
-  #create adjacency matrix of 1-mode university object
-  # create "distance matrix" using stats::dist() function
-  # conduct hierarchical clustering using stats::hclust
-  # cut the dendrogram to create the desired number of clusters using stats::cutree
-  # merge the cluster assignments to the igraph object as a vertex attribute
-
-
-  # cluster analysis to create
-  cluster_2mode <- cluster_fast_greedy(network)
-  membership_2mode <- membership(cluster_2mode)
-
-    # cluster analysis to create
-  cluster_2mode <- cluster_fast_greedy(network)
-  membership_2mode <- membership(cluster_2mode)
-
-  # cluster analysis to create
-  cluster_2mode <- cluster_fast_greedy(g_1mode_psi_pubu)
-  membership_2mode <- membership(cluster_2mode)
-  membership_2mode
-  
-
-    
-
-
-bipartite.projection(g_2mode_privu)[["proj2"]] %>% cluster_fast_greedy() %>% membership()
-
-bipartite.projection(g_2mode)[["proj1"]] %>% cluster_fast_greedy() %>% membership()
-
-library(ape)  
-
 # FUNCTION TO RUN HIERARCHICAL CLUSTER ANALYSIS
   # STEPS IN HIERARCHICAL CLUSTER ANALYSIS:
   #create adjacency matrix of 1-mode university object
@@ -379,7 +348,8 @@ library(ape)
   # cut the dendrogram to create the desired number of clusters using stats::cutree
   # merge the cluster assignments to the igraph object as a vertex attribute
 
-create_hclust <- function(network, mode, k = NULL, h = NULL) {
+
+create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "euclidean", hclust_method = "complete") {
 
   # mode = psi or hs
   if (mode == "hs") {
@@ -389,9 +359,7 @@ create_hclust <- function(network, mode, k = NULL, h = NULL) {
     proj <- "proj2"
     
   }
-  
-  m <- "complete" # cluster analysis agglomeration method to use: "average" "complete" 
-  
+
   #create adjacency matrix of 1-mode university object
   hclust_obj <- as_adjacency_matrix(
     graph = bipartite.projection(network)[[proj]],  # creates one-mode object w/ mode = universities
@@ -401,7 +369,7 @@ create_hclust <- function(network, mode, k = NULL, h = NULL) {
     # create "distance matrix" using stats::dist() function
     dist(
       #x = affil_1mode_psi , # 	a numeric matrix, data frame or "dist" object.
-      method = "euclidean", # the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". default = euclidian where Usual distance between the two vectors (2 norm aka L_2), sqrt(sum((x_i - y_i)^2)).
+      method = dist_method, # the distance measure to be used. This must be one of "euclidean", "maximum", "manhattan", "canberra", "binary" or "minkowski". default = euclidian where Usual distance between the two vectors (2 norm aka L_2), sqrt(sum((x_i - y_i)^2)).
       diag = TRUE, # FALSE, # logical value indicating whether the diagonal of the distance matrix should be printed by print.dist. default = FALSE
       upper = TRUE, # logical value indicating whether the upper triangle of the distance matrix should be printed by print.dist.
       p = 2 # The power of the Minkowski distance. default = 2
@@ -409,11 +377,13 @@ create_hclust <- function(network, mode, k = NULL, h = NULL) {
     # conduct hierarchical clustering using stats::hclust
     hclust(
       #d = dist_1mode_psi, # a dissimilarity structure as produced by dist() function
-      method = m, # default = complete; the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
+      method = hclust_method, # default = complete; the agglomeration method to be used. This should be (an unambiguous abbreviation of) one of "ward.D", "ward.D2", "single", "complete", "average" (= UPGMA), "mcquitty" (= WPGMA), "median" (= WPGMC) or "centroid" (= UPGMC).
       members = NULL # NULL or a vector with length size of d. See the ‘Details’ section. default = NUKK
     ) 
     
-    plot(hclust_obj)
+    # plot dendrogram associated with hclust object
+    hclust_obj %>% as.dendrogram() %>% plot(horiz = TRUE)
+    
     # cut the dendrogram to create the desired number of clusters using stats::cutree
     cutree(
       tree = hclust_obj, # a tree as produced by hclust. cutree() only expects a list with components merge, height, and labels, of appropriate content each.
@@ -422,13 +392,18 @@ create_hclust <- function(network, mode, k = NULL, h = NULL) {
     )
 
 }
+# create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "euclidean", hclust_method = "complete") {
 # where
   # k = desired number of groups, hierarchical cluster analysis only, default = NULL
   # h = numeric scalar with heights where tree should be cut to create groups, hierarchical cluster analysis only, default = NULL
 
 
-create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL)
+create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL) %>% table()
+create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL, hclust_method = "average") %>% table()
 
+create_hclust(network = g_2mode, mode = "psi", k = 6, h = NULL, hclust_method = "complete") %>% table()
+
+#create_hclust(network = g_2mode, mode = "psi", k = NULL, h = 600)
 
 
 ## ---------------------------
@@ -436,11 +411,15 @@ create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL)
 ## ---------------------------
 
 
+
 # analysis = whether to run hierarchical cluster analysis or fast_and_greeedy
-# k = number of groups (hierarchical cluster analysis only)
-# h = height to determine groups (hierarchical cluster analysis only)
+# k = number of groups to specify
+# h = height to determine groups 
+  #for cluster_fast_and_greedy() h refers to number of merges to determine cluster; 
+    # seems like n-2 equals number of merges in cluster_fast_and_greedy() %>% membership()
+
   
-save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
 
   # all visits for private; out-of-state only for publics; 
   if (pubu_visits == 'outst' & privu_visits != 'outst') {
@@ -463,17 +442,31 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
 
   # run desired cluster analysis to create communities
     # create vertex attribute "cluster_psi" that is assigned only for vertices where V(network)$type == TRUE    
-  if (analysis == "hclust") { # run hierarchical cluster analysis
+  if (c_analysis == "hclust") { # run hierarchical cluster analysis
 
       vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h)    
       
   } else {  # run igraph::fast_and_greedy() cluster analysis
     
-    fast_obj <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() 
+    c_obj <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() 
     
-    dendPlot(fast_obj, mode="phylo")
+    dendPlot(c_obj, mode="phylo")
+
+    if (is.null(k)==1 & is.null(h)==1) { # if k or h not specified, use membership() to determine number of groups
+      
+      m_obj <- c_obj %>% membership()
+      
+    } else if (is.null(k)==0 & is.null(h)==1) { # if k specified and h not specified, use k to determine number of groups
+      
+      m_obj <- c_obj %>% cut_at(no = k)
+      
+    } else if (is.null(k)==1 & is.null(h)==0) { # if k not specified and h specified, use h to determine number of groups
+      
+      m_obj <- c_obj %>% cut_at(steps = h)
+    }
+    # print(m_obj)
     
-    vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- fast_obj %>% membership()  
+    vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- m_obj
     
   }
   #print(V(network)$cluster_psi)
@@ -484,8 +477,8 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     # merge the cluster assignments to the igraph object as a vertex attribute
     #vertex_attr(graph = g_2mode, name = "temp") <- (as.data.frame(V(g_2mode)$name) %>% left_join(y = df_cut_1mode_psi, by = c(`V(g_2mode)$name` = "univ_id")))$cluster
     
-    print(V(network)$cluster)
-    print(V(network)$cluster_psi[V(network)$type==TRUE])
+    #print(V(network)$cluster)
+    #print(V(network)$cluster_psi[V(network)$type==TRUE])
     V(network)$cluster %>% table() %>% print()
     
     #vertex_attr_names(g_2mode)
@@ -510,40 +503,56 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     vertex.color = vertex_color,
     vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
     vertex.shape = 'circle',
-    vertex.size = if_else(V(network)$type, 3, .5),
+    vertex.size = if_else(V(network)$type, 3, .75),
     edge.lty = 3,
     edge.lty = 0.5,
     edge.color = 'lightgrey',
-    layout = layout_with_fr,
+    layout = layout,
     margin = plot_margin
   )
     
   #dev.off()
 }
 
+
+#save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+
 # plots for igraph object g_2mode [public and private colleges/universities]
-save_2mode_plot(g_2mode, analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
-save_2mode_plot(g_2mode, analysis = "hclust", k=2, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+save_2mode_plot(g_2mode, c_analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
 
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+save_2mode_plot(g_2mode, c_analysis = "fast", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+save_2mode_plot(g_2mode, c_analysis = "fast", k=NULL, h = 39, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+
+save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', c_analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
 
 
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
 
 
 # plots for igraph object g_2mode [private colleges/universities]
-save_2mode_plot(g_2mode_privu, analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
-save_2mode_plot(g_2mode_privu, analysis = "hclust", k=2, h = NULL, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_privu, c_analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_privu, c_analysis = "fast", layout = layout_with_fr, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_privu, c_analysis = "fast", layout = layout_with_kk, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
+
+save_2mode_plot(g_2mode_privu, c_analysis = "fast", k = 3, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
+
+
+save_2mode_plot(g_2mode_privu, c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
 
 # plots for igraph object g_2mode [public research universities]
-save_2mode_plot(g_2mode_pubu, analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-save_2mode_plot(g_2mode_pubu, analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+save_2mode_plot(g_2mode_pubu, c_analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+save_2mode_plot(g_2mode_pubu, c_analysis = "fast", k = 4, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
 
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
+save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=3, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
+
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
 
 
 palette() %>% str() # character vector of length 8
@@ -612,6 +621,145 @@ subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outof
 
 
 ## ---------------------------
+## WRITE FUNCTION TO PLOT 1-MODE IGRAPH OBJECTS
+## ---------------------------
+
+save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = 0.0, plot_name = "plot") {
+
+  # create subgraph of 2-mode network depending on whether including or excluding out-of-state visits from particular types of institutions
+  
+  if (pubu_visits == 'outst' & privu_visits != 'outst') { # all visits for private; out-of-state only for publics; 
+    
+    network <- subgraph.edges(graph = network, eids = E(network)[(E(network)$visiting_univ == "public" & E(network)$visit_loc == "outofstate") | E(network)$visiting_univ == "private"]) 
+  } else if (pubu_visits == 'outst' & privu_visits == 'outst') { # out-of-state visits only for both public and private colleges/universities
+    
+    network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
+  }
+    # print summary of network to check that network object has the right number of vertices and edges
+    summary(network)
+
+  # projection for mode = psi or hs
+  if (mode == "psi") {
+    proj <- "proj2" # for obtaining the 1-mode object from the 2-mode object
+    
+  } else {  
+    
+    proj <- "proj1"
+    
+  }
+
+  network2 <- network # save 2-mode network object as network2 before you overwrite object "network" with 1-mode projection
+  
+  network <- bipartite.projection(network)[[proj]] # create 1-mode object from 2-mode object
+    
+
+  # run desired cluster analysis to create communities
+    # create vertex attribute "cluster_psi" that is assigned only for vertices where V(network)$type == TRUE    
+  if (c_analysis == "hclust") { # run hierarchical cluster analysis
+
+      vertex_attr(graph = network, name = "cluster") <- create_hclust(network = network2, mode = mode, k = k, h = h) # create vertex attribute for cluster
+      #create_hclust(network = network2, mode = mode, k = k, h = h)
+      #vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h)    
+      
+  } else {  # run igraph::fast_and_greedy() cluster analysis
+    
+    c_obj <- network %>% cluster_fast_greedy() 
+    
+    if (mode == "psi") {
+      
+      dendPlot(c_obj, mode="phylo")
+    }
+    
+    if (is.null(k)==1 & is.null(h)==1) { # if k or h not specified, use membership() to determine number of groups
+      
+      m_obj <- c_obj %>% membership()
+      
+    } else if (is.null(k)==0 & is.null(h)==1) { # if k specified and h not specified, use k to determine number of groups
+      
+      m_obj <- c_obj %>% cut_at(no = k)
+      
+    } else if (is.null(k)==1 & is.null(h)==0) { # if k not specified and h specified, use h to determine number of groups
+      
+      m_obj <- c_obj %>% cut_at(steps = h)
+    }
+    # print(m_obj)
+    
+    vertex_attr(graph = network, name = "cluster") <- m_obj # create vertex attribute for cluster
+    
+  }
+  print(V(network)$cluster)
+  V(network)$cluster %>% table() %>% print()
+    
+    #vertex_attr_names(g_2mode)
+    vertex_color <- recode(vertex_attr(graph = network, name = "cluster"),
+      `1` = 'lightblue',
+      `2` = 'lightgreen',      
+      `3` = 'violet',
+      `4` = 'yellow',
+    )
+    #print(vertex_color)
+  
+  # modify plot depending on whether mode = psi or hs
+  if (mode == "psi") {
+
+    vertex_size <- 5
+    vertex_label <- V(network)$school_name
+    
+  } else {  
+    
+    vertex_size <- 1
+    vertex_label <- ''
+  }     
+  #pdf(str_c('assets/figures/', plot_name), paper = "a4r")
+  
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  
+  par(mfrow=c(1, 1))
+
+  plot(
+    x = network, 
+    vertex.label = vertex_label,
+    vertex.color = vertex_color,
+    #vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
+    vertex.frame.color = 'lightgray',
+    vertex.shape = 'circle',
+    vertex.size = vertex_size,
+    edge.lty = 3,
+    edge.lty = 0.5,
+    edge.color = 'lightgrey',
+    layout = layout,
+    margin = plot_margin
+  )
+    
+  #dev.off()
+}
+#save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+save_1mode_plot(g_2mode_pubu, mode = "hs", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+
+#### MODE = HS
+
+
+#### MODE = PSI
+save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=2, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+
+
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", k=4, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+
+
+#rutgers, pitt, cincinnati, irvine, stony brook, stevens, wellesley, uc san diego, kansas, berkeley scripps, nc state, baylor, arkansas
+#bama, smu, nova, notre dame
+#boulder, U. south caroline, sewanee, northwestern, harvey mudd, boston college, tulane, colorado college, tufts, middlebury
+# plots for igraph object g_2mode [public and private colleges/universities]
+
+
+
+## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
 ## ---------------------------
 
@@ -661,8 +809,25 @@ plot(
 dev.off() # close the file
 
 
-# plot 
+vertex_attr_names(g_1mode_psi)
+V(g_1mode_psi)$school_type
 
+graph_layout <- layout_with_fr # layout_with_fr layout_with_kk
+plot(
+  x = g_1mode_psi, 
+  vertex.label = V(g_1mode_psi)$school_name,
+  vertex.color = case_when(
+      vertex_attr(g_1mode_psi, "name") %in% privu_vec ~ 'green',
+      vertex_attr(g_1mode_psi, "name") %in% pubu_vec  ~ 'violet',
+    ),
+  vertex.shape = 'circle',
+  vertex.size = 3,
+  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
+  edge.lty = .5,
+  edge.color = 'lightgrey',
+  layout = graph_layout,
+  margin = 0.0
+)
 
 
 

@@ -113,8 +113,13 @@ hclust_1mode_psi <- hclust(
 )
 hclust_1mode_psi %>% class()
 hclust_1mode_psi %>% str()
-plot(hclust_1mode_psi)
 
+hclust_1mode_psi %>% as.dendrogram() %>% plot(horiz = TRUE)
+
+
+
+hclust_1mode_psi %>% as.() %>%   dendPlot(mode = "auto")
+  as.dendrogram(hang = -1, use.modularity = FALSE) %>%  dendPlot(mode = "auto")
 # cut the dendrogram to create the desired number of clusters using stats::cutree
   # https://www.datacamp.com/community/tutorials/hierarchical-clustering-R
   # note: At least one of k or h must be specified, k overrides h if both are given.
@@ -191,3 +196,34 @@ df_temp3 %>% select(`100751`,`106397`)
 
 # we want to know which universities are visiting the same high schools;
 
+g_2mode
+g_1mode_hs
+
+V(g_1mode_hs
+  
+  
+  
+  
+################ SOMETHING ELSE
+
+twomode_both <- create_2mode_table(g_2mode)
+saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
+saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
+  
+full <- twomode_both$full_table
+
+full %>% filter(state_code == "NE") %>% select(name, school_name, religion, pct_blacklatinxnative, ranking_numeric, degree, strength)
+
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs" & school_id == "02161678") %>%
+  select(univ_id, school_name)
+
+
+events_data %>% filter(event_type == "priv_hs" & school_id == "02161678") %>% select(univ_id)
+
+events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View()
+
+%>% select()
+glimpse(events_data)
+full %>% glimpse()
+ 
