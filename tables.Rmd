@@ -44,8 +44,10 @@ knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styl
 
 # Ego network barplot
 
+
 ```{r, fig.width=3.5, fig.height=3}
-ego_df <- readRDS('./assets/tables/table_ego_privu.RDS')
+#ego_df <- readRDS('./assets/tables/table_ego_privu.RDS')
+ego_df <- readRDS('./assets/tables/table_ego_pubu.RDS')
 univ_order <- (ego_df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University
 
 plot_characteristic <- function(df, type, characteristics) {
@@ -77,11 +79,47 @@ plot_characteristic <- function(df, type, characteristics) {
     coord_flip()
 }
 
+
+pdf(str_c('assets/figures/', "ego_network_figure.pdf"), paper = "a4r")
+par(mfrow=c(2, 2))
 plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
 plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
 plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
 plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
+
+dev.off()
+
 ```
+
+```{r, fig.width=3.5, fig.height=3}
+type_vec <- c("privu","pubu")
+  #type_vec
+
+for (i in 1:length(type_vec)) {
+ 
+  #df_name <- str_c("table_ego_",type_vec[i],".RDS")
+  ego_df <-readRDS(file.path('.','assets','tables',str_c("table_ego_",type_vec[i],".RDS")))
+  #ego_df %>% glimpse() %>% print()
+
+  univ_order <- (ego_df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University
+  
+  pdf(file.path('.','assets','figures',str_c("ego_network_figure_",type_vec[i],".pdf")), paper = "a4r")
+
+  
+  plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
+  plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
+  plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
+  plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
+
+  dev.off()
+}
+
+
+
+
+
+```
+
 
 # Ego network graph
 
