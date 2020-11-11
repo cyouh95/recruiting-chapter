@@ -9,6 +9,7 @@ knitr::opts_chunk$set(echo = FALSE)
 library(kableExtra)
 library(tidyverse)
 library(ggplot2)
+library(gridExtra)
 ```
 
 # Top visited private HS (2-mode network)
@@ -46,17 +47,13 @@ knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styl
 
 
 ```{r, fig.width=3.5, fig.height=3}
-#ego_df <- readRDS('./assets/tables/table_ego_privu.RDS')
-ego_df <- readRDS('./assets/tables/table_ego_pubu.RDS')
-univ_order <- (ego_df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University
-
 plot_characteristic <- function(df, type, characteristics) {
   sub_df <- df %>% select(University, characteristics) %>%
     gather(key, value, characteristics) %>%
     mutate(value = parse_number(value))
 
   # colors <- sub_df$color[order(sub_df$University)]
-  
+  univ_order <- (df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University  
   sub_df$University <- factor(sub_df$University, levels = rev(univ_order))
   
   ggplot(sub_df, aes(fill = key, y = value, x = University)) + 
@@ -80,44 +77,29 @@ plot_characteristic <- function(df, type, characteristics) {
 }
 
 
-pdf(str_c('assets/figures/', "ego_network_figure.pdf"), paper = "a4r")
-par(mfrow=c(2, 2))
-plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
-plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
-plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
-plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
-
-dev.off()
-
-```
-
-```{r, fig.width=3.5, fig.height=3}
-type_vec <- c("privu","pubu")
-  #type_vec
+type_vec <- c('privu', 'pubu')
 
 for (i in 1:length(type_vec)) {
- 
-  #df_name <- str_c("table_ego_",type_vec[i],".RDS")
-  ego_df <-readRDS(file.path('.','assets','tables',str_c("table_ego_",type_vec[i],".RDS")))
-  #ego_df %>% glimpse() %>% print()
+  ego_df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
 
-  univ_order <- (ego_df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University
+  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_figure_', type_vec[i], '.pdf')), paper = 'a4r')
+  par(mfrow=c(2, 2))
   
-  pdf(file.path('.','assets','figures',str_c("ego_network_figure_",type_vec[i],".pdf")), paper = "a4r")
-
+  a <- plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
+  b <- plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
+  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
+  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
   
-  plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
-  plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
-  plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
-  plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
-
+  grid.arrange(a, b, c, d, nrow=2, ncol=2)
   dev.off()
+  
+  # Need to use print() for ggplot inside loop in order for it to appear
+  # https://stackoverflow.com/a/15678596/6373540
+  print(a)
+  print(b)
+  print(c)
+  print(d)
 }
-
-
-
-
-
 ```
 
 
