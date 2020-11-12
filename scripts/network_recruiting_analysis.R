@@ -34,48 +34,12 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 
 
 ## --------------------
-## INVESTIGATING RELIGIOUS AFFILIATION OF UNIVERSITIES; put this somewhere else
-## --------------------
-
-
-# The U.S. Department of Education classifies conservative Christian schools
-# as those that have membership in at least one of four associations (Kena et al., 2016): 
-  # Accelerated Christian Education
-  # American Association of Christian Schools
-  # Association of Christian Schools International
-  # Oral Roberts University Education Fellowship
-
-# Texas Christian University
-  # https://en.wikipedia.org/wiki/Texas_Christian_University
-  # https://en.wikipedia.org/wiki/Christian_Church_(Disciples_of_Christ)
-
-# Southern Methodist university
-  # https://en.wikipedia.org/wiki/Southern_Methodist_University
-  # https://en.wikipedia.org/wiki/United_Methodist_Church
-
-# Baylor, baptist
-  # https://en.wikipedia.org/wiki/Baylor_University
-  # https://en.wikipedia.org/wiki/Baptist_General_Convention_of_Texas
-
-
-## --------------------
 ## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
 plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
 
   network <- egos_psi_privu[[univ_id]]
-
-  # recode religion for specific private universities
-  vertex_attr(network, "religion") <- case_when(
-    vertex_attr(network, "name") %in% c("173902","221519","139658","228246","223232","228875")==0 ~ vertex_attr(network, "religion"),
-    vertex_attr(network, "name")=="173902" ~ "other_religion", # Macalester presbyterian_church_(usa)
-    vertex_attr(network, "name")=="221519" ~ "other_religion", # Sewanee protestant_episcopa
-    vertex_attr(network, "name")=="139658" ~ "other_religion", # Emory united_methodist
-    vertex_attr(network, "name")=="228246" ~ "other_religion", # SMU united_methodist
-    vertex_attr(network, "name")=="223232" ~ "conservative_christian", # Baylor baptist
-    vertex_attr(network, "name")=="228875" ~ "other_religion" # TCU christian_church_(disciples_of_christ)
-  )
     
   # network object
   if (graph_order != 'both') {  # order == 1 or 2
@@ -880,7 +844,7 @@ dev.off() # close the file
 ## ------------------------------
 
 
-create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
+create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2', k = NULL, h = NULL) {
   
   ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), cluster = character(0), univ_type = character(0), univ_ranking = character(0), characteristics = character(0),
                         region_1 = character(0), region_2 = character(0), region_3 = character(0), region_4 = character(0),
@@ -889,7 +853,11 @@ create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'p
                         ranking_1 = character(0), ranking_2 = character(0), ranking_3 = character(0), ranking_4 = character(0),
                         stringsAsFactors=FALSE)
   
-  member <- membership(cluster_fast_greedy(twomode_network))
+  if (c_analysis == 'fast') {
+    member <- membership(cluster_fast_greedy(twomode_network))
+  } else {
+    member <- create_hclust(network = twomode_network, mode = 'psi', k = k, h = h)
+  }
   
   for (i in seq_along(univs)) {
     ego_network <- ego_networks[[univs[[i]]]]
@@ -958,12 +926,13 @@ create_ego_table <- function(twomode_network, ego_networks, univs, race_var = 'p
   ego_tbl
 }
 
-ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec)
+ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'fast')
 saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
-ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec)
+ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'fast')
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
+ego_table_privu_test <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
 
 # count number of total, in-state, and out-of-state visits to private high schools
 events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View() # all
