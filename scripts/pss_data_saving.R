@@ -575,16 +575,44 @@ all(nchar(pss$state_code) == 2)
 all(nchar(pss$state_fips_code) == 2)
 all(nchar(pss$county_fips_code) == 3)
 
-# Add religious affiliation
-pss <- pss %>% mutate(religious_orientation_category = ifelse(!(religious_orientation %in% c(-1, 1)), 'other', religious_orientation),
-                      catholic_type_category = ifelse(catholic_type == -1, -1, 'catholic'),
-                      typology_category = ifelse(typology %in% c(1, 2, 3), 'catholic', ifelse(typology %in% c(4, 5, 6), 'other', 'nonsectarian')),
-                      orient_category = ifelse(!(orient %in% c(-1, 30)), 99, orient),
-                      # Note: There are 16 Catholic schools that also belong to 4 Conservative Christian associations but count them as Catholic instead of Conservative Christian
-                      assoc_category = ifelse(religious_orientation != 1 & (accelerated_christian_edu == 1 | amer_assoc_christian_sch == 1 | assoc_christian_sch_intl == 1 | oral_roberts == 1), 'conservative', -1))
+# Codebook: https://nces.ed.gov/surveys/pss/pdf/codebook2017_18.pdf
 
-View(pss %>% select(is_religious, religious_orientation_category, catholic_type_category, typology_category, relig, orient_category, assoc_category) %>% unique())
-View(pss %>% group_by(is_religious, religious_orientation_category, assoc_category) %>% summarise(count = n()))
+val_labels(pss$religious_orientation)
+
+# Looking at variable P440 (religious_orientation):
+  # -1 - Valid Skip
+  # 1 - Roman Catholic: https://en.wikipedia.org/wiki/Catholic_Church
+  # 2 - African Methodist Episcopal: https://en.wikipedia.org/wiki/African_Methodist_Episcopal_Church
+  # 3 - Amish: https://en.wikipedia.org/wiki/Amish
+  # 4 - Assembly of God: https://en.wikipedia.org/wiki/Assemblies_of_God
+  # 5 - Baptist: https://en.wikipedia.org/wiki/Baptists
+  # 6 - Brethren: https://en.wikipedia.org/wiki/Church_of_the_Brethren
+  # 7 - Calvinist: https://en.wikipedia.org/wiki/Calvinism
+  # 8 - Christian (no specific denomination)
+  # 9 - Church of Christ: https://en.wikipedia.org/wiki/Churches_of_Christ
+  # 10 - Church of God: https://en.wikipedia.org/wiki/Church_of_God
+  # 11 - Church of God in Christ
+  # 12 - Church of the Nazarene: https://en.wikipedia.org/wiki/Church_of_the_Nazarene
+  # 13 - Disciples of Christ
+  # 14 - Episcopal: https://en.wikipedia.org/wiki/Episcopal_Church_(United_States)
+  # 15 - Friends: https://en.wikipedia.org/wiki/Quakers
+  # 16 - Greek Orthodox: https://en.wikipedia.org/wiki/Greek_Orthodox_Church
+  # 17 - Islamic: https://en.wikipedia.org/wiki/Islam
+  # 18 - Jewish: https://en.wikipedia.org/wiki/Judaism
+  # 19 - Latter Day Saints: https://en.wikipedia.org/wiki/The_Church_of_Jesus_Christ_of_Latter-day_Saints
+  # 20 - Lutheran Church - Missouri Synod: https://en.wikipedia.org/wiki/Lutheran_Church%E2%80%93Missouri_Synod
+  # 21 - Evangelical Lutheran Church in America: https://en.wikipedia.org/wiki/Evangelical_Lutheran_Church_in_America
+  # 22 - Wisconsin Evangelical Lutheran Synod: https://en.wikipedia.org/wiki/Wisconsin_Evangelical_Lutheran_Synod
+  # 23 - Other Lutheran: https://en.wikipedia.org/wiki/Lutheranism
+  # 24 - Mennonite: https://en.wikipedia.org/wiki/Mennonites
+  # 25 - Methodist: https://en.wikipedia.org/wiki/Methodism
+  # 26 - Pentecostal: https://en.wikipedia.org/wiki/Pentecostalism
+  # 27 - Presbyterian: https://en.wikipedia.org/wiki/Presbyterianism
+  # 28 - Seventh-Day Adventist: https://en.wikipedia.org/wiki/Seventh-day_Adventist_Church
+  # 29 - Other
+
+# https://en.wikipedia.org/wiki/Christian_denomination
+christian <- c(1:16, 19:28)  # Everything except Valid Skip, Islamic, Jewish, and Other
 
 # From: https://drive.google.com/file/d/1Uu-19FLD9KuIbKMAsop8UVLwNaI9A8V0/view
 
@@ -595,20 +623,34 @@ View(pss %>% group_by(is_religious, religious_orientation_category, assoc_catego
   # Association of Christian Schools International
   # Oral Roberts University Education Fellowship
 
-# Religion categories:
-  # Catholic: 5324+16=5340
-  # Conservative Christian: 2889
-  # Other religion-oriented: 7349
-  # Nonsectarian: 7317
+# Add religious affiliation
+pss <- pss %>% mutate(is_christian = ifelse(religious_orientation %in% christian, 1, 0),
+                      is_conservative = ifelse(accelerated_christian_edu == 1 | amer_assoc_christian_sch == 1 | assoc_christian_sch_intl == 1 | oral_roberts == 1, 1, 0))
 
-pss <- pss %>% mutate(religion = case_when(
+pss <- pss %>% mutate(religion_5 = case_when(
   is_religious == 0 ~ 'nonsectarian',
   religious_orientation == 1 ~ 'catholic',
-  assoc_category == -1 ~ 'other_religion',
-  TRUE ~ 'conservative_christian'
-))
+  is_conservative == 1 ~ 'conservative_christian',
+  is_christian == 1 ~ 'other_christian',
+  TRUE ~ 'other_religion'
+), religion_4 = case_when(
+  religion_5 %in% c('conservative_christian', 'other_christian') ~ 'christian',
+  religion_5 == 'other_religion' ~ 'other',
+  TRUE ~ religion_5
+), religion = ifelse(religion_5 %in% c('other_christian', 'other_religion'), 'other_religion', religion_5))
 
-View(pss %>% group_by(is_religious, religious_orientation_category, assoc_category, religion) %>% summarise(count = n()))
+View(pss %>% group_by(religion, is_christian, is_conservative) %>% summarise(count = n()))
+table(pss$religion_5)
+table(pss$religion_4)  # christian = conservative_christian + other_christian
+table(pss$religion)  # (current) other = other_christian + other_religion
+
+# Religion categories:
+  # Nonsectarian: 7317
+  # Catholic: 5324+16=5340 (There are 16 Catholic schools that also belong to 4 Conservative Christian associations but would count them as Catholic instead of Conservative Christian)
+  # Conservative Christian: 2829+60=2889 (There are 60 belonging to one of 4 Conservative Christian associations whose religious affiliation is either Other or Islamic)
+    View(pss %>% filter(is_christian == 0, is_conservative == 1) %>% select(religious_orientation, accelerated_christian_edu, amer_assoc_christian_sch, assoc_christian_sch_intl, oral_roberts) %>% arrange(religious_orientation))
+  # Other Christian: 6379
+  # Other religion-oriented: 970
 
 # Export data
 pss <- as_tibble(x = pss)

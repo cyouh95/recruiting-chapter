@@ -8,7 +8,7 @@ library(labelled)
 ## ----------
 
 # Recruiting events data from 43 univs (17 public research, 13 private national, 13 private liberal arts)
-events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
@@ -36,7 +36,7 @@ privhs_events <- events_data %>%
 # Select variables of interest from private HS data
 privhs_df <- privhs_data %>%
   mutate(type = 'priv hs') %>%
-  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, type)
+  select(ncessch, name, city, state_code, region, religion, religion_4, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, type)
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
@@ -60,14 +60,25 @@ get_abbrev <- function(x, y) {
   ifelse(length(univ_abbrev) == 0, y, univ_abbrev)
 }
 v_get_abbrev <- Vectorize(get_abbrev)
+
+unique(univ_data$religion)
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name),
+                                religion_4 = case_when(
+                                  religion == 'roman_catholic' ~ 'catholic',
+                                  religion == 'nonsectarian' ~ 'nonsectarian',
+                                  religion %in% c('undenominational', 'other_(none_of_the_above)', 'unitarian_universalist', 'jewish', 'muslim') ~ 'other',
+                                  is.na(religion) ~ NA_character_,
+                                  TRUE ~ 'christian'
+                                ),
                                 religion = case_when(
                                   religion == 'roman_catholic' ~ 'catholic',
                                   religion == 'baptist' ~ 'conservative_christian',
                                   religion != 'nonsectarian' ~ 'other_religion',
                                   TRUE ~ religion
                                 )) %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
+  select(univ_id, univ_abbrev, city, state_code, region, religion, religion_4, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
+
+univ_df$state_code <- as.character(univ_df$state_code)
 
 # Add ranking from US News & World Report data
 usnews_df <- usnews_data %>%
@@ -79,7 +90,7 @@ usnews_df <- usnews_data %>%
 univ_df <- univ_df %>% left_join(usnews_df)
 
 # Create attributes dataframe
-var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'school_type', 'ranking', 'ranking_numeric')
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'religion_4', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'school_type', 'ranking', 'ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
@@ -98,7 +109,9 @@ View(attributes_df %>% filter(school_id %in% univ_vec))
 View(attributes_df %>% filter(school_id %in% privhs_vec))
 
 attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion) %>% table(useNA = 'ifany')
+attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion_4) %>% table(useNA = 'ifany')
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion) %>% table(useNA = 'ifany')
+attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion_4) %>% table(useNA = 'ifany')
 
 # TODO: Check unmerged Niche data (61 unmerged, 1 truly missing data)
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
