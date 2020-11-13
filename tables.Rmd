@@ -45,6 +45,7 @@ knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styl
 
 # Ego network barplot
 
+\newpage
 
 ```{r, fig.width=3.5, fig.height=3}
 plot_characteristic <- function(df, type, characteristics) {
@@ -103,10 +104,3 @@ for (i in 1:length(type_vec)) {
 ```
 
 
-# Ego network graph
-
-See Figure \@ref(fig:ego-plot).
-
-```{r ego-plot, fig.align = 'center', out.width = '100%', fig.cap = 'Ego network'}
-knitr::include_graphics('assets/figures/plot_2mode_privu.pdf')
-```

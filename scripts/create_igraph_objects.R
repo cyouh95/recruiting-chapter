@@ -8,11 +8,13 @@ library(labelled)
 ## ----------
 
 # Recruiting events data from 43 univs (17 public research, 13 private national, 13 private liberal arts)
-events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+  # but get rid of wellesley; data seem messed up
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble() %>% filter(univ_id != "168218") 
 
 # University data from IPEDS
-univ_data <- readRDS('./data/ipeds_1718.RDS')
-univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+univ_data <- readRDS('./data/ipeds_1718.RDS') %>% filter(univ_id != "168218")
+
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble() %>% filter(univ_id != "168218")
 
 # Private HS data from PSS
 privhs_data <- readRDS('./data/pss_1718.RDS')
@@ -22,7 +24,6 @@ niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings = 
 
 # Rankings data from US News & World Report
 usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character')) %>% as_tibble()
-
 
 ## ----------
 ## PREP DATA
@@ -193,7 +194,7 @@ e_2mode <- e_2mode %>% mutate(
   state_codes = v_get_states(ncessch, univ_id)
 )
 
-# Vertex list (`name` must come first)
+# Vertex list (name must come first)
 v_2mode <- tibble(name = df$vertices$name, type = df$vertices$type)
 v_2mode <- left_join(v_2mode, attributes_df, c('name' = 'school_id'))
 

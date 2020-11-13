@@ -16,6 +16,7 @@ library(bookdown)
 
 library(kableExtra)
 library(tidyverse)
+library(gridExtra)
 ```
 
 # Introduction
@@ -115,9 +116,9 @@ We present results in three steps: First, visits by private colleges and univers
 
 Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We used XYZ community detection approach [add footnote w/ details?] to allocate private colleges and universities [? and private high schools] to clusters. Four clusters emerge. The largest cluster consists largely of nonsectarian liberal arts colleges (e.g., Williams, Swarthmore, Colorado College). Cluster 2 consists of Emory University, Tulane, Northwestern, and Sewanee. These universities all have relatively strong ties to Southern private high schools. Cluster 3 consists of three catholic universities -- Notre Dame, Villanova, Boston College -- and Case Western Reserve and Stevens Institute of Technology.  Although not a Catholic University, Stevens Institute of Technology has strong ties to Catholic private schools (representing X% of visits). Finally, cluster 4 consists of three religiously affiliated Texas universities -- Southern Methodist, Baylor, Texas Christian University -- and the University of Denver. 
 
-Figure \@ref(fig:two-mode-plot-privu) plots the two-mode network of visits by private colleges and universities to private high schools, with vertex color determined by community cluster.  The placement of college and high school vertices on an X-Y axis/coordinates is determined such that vertices with many direct and indirect ties are closer together. Although the process of placing vertices was separate from the process of determining community cluster, vertices within the same cluster tend to be closer to one another than those of different clusters. For example, the nonsectarian liberal arts colleges in Cluster 1 tend to be be close to one another and also relatively close to the highest concentration of private high schools in cluster 1, suggesting that these colleges visit substantially overlapping sets of private high schools. For Cluster 2, by contrast, Northwestern and Emory are relatively far from Tulane and Sewanee.
+Figure \@ref(fig:plot-1mode-privu) plots the two-mode network of visits by private colleges and universities to private high schools, with vertex color determined by community cluster.  The placement of college and high school vertices on an X-Y axis/coordinates is determined such that vertices with many direct and indirect ties are closer together. Although the process of placing vertices was separate from the process of determining community cluster, vertices within the same cluster tend to be closer to one another than those of different clusters. For example, the nonsectarian liberal arts colleges in Cluster 1 tend to be be close to one another and also relatively close to the highest concentration of private high schools in cluster 1, suggesting that these colleges visit substantially overlapping sets of private high schools. For Cluster 2, by contrast, Northwestern and Emory are relatively far from Tulane and Sewanee.
 
-Addressing our two motivating research questions -- which schools receive visits from which colleges/universities and the extent to which visits are more likely to occur between organizations that share certain characteristics -- requires analyses that are more granular than Figure \@ref(fig:two-mode-plot-privu).
+Addressing our two motivating research questions -- which schools receive visits from which colleges/universities and the extent to which visits are more likely to occur between organizations that share certain characteristics -- requires analyses that are more granular than Figure \@ref(fig:plot-1mode-privu).
 
 Table \@ref(tab:ego-table-privu) shows the characteristics of private high schools visited by each private college and university. This table was created from the ego networks of each private college and university. As such, we visualize selected ego networks to illustrate several patterns that emerge from Table \@ref(tab:ego-table-privu). Ego networks consist of an ego (a single college/university), the set of high schools the ego visted (one degree of separation from the ego), and the set of colleges/universities that also visited high schools visited by the ego (two degrees of separation from the ego).  Figure \@ref(fig:villanova-religion) shows the ego network of Villanova University, with vertex color determined by religious affiliation.  About 50% of Villanova's visits were to Catholic schools, a percentage [?percent?] much higher than most colleges and universities shown in Table \@ref(tab:ego-table-privu), and second only to Notre Dame University. In Figure \@ref(fig:villanova-religion), Notre Dame is closer to Villanova than any other college/university in the Villanova ego network, suggesting that Villanova and Notre Dame visit substantially overlapping sets of schools. Boston College, another Catholic university, is situated a bit further away from Villanova in the clump of colleges that includes Case Western, Tulane, Sewanee, Southern Methodist, and TCU, all of which visit a relatively high share of Catholic high schools, despite not being Catholic universities. By contrast, Villanova is far from nonsectarian liberal arts colleges (e.g., Swarthmore, Smith, Colorado College) which visit fewer Catholic high schools.
 
@@ -154,6 +155,8 @@ ADD TABLES/FIGURES OF VISITS BY PUBLIC RESEARCH UNIVERSITIES.
 
 <!-- TABLES -->
 
+\newpage
+
 ```{r, echo=FALSE}
 pct_budget <- data.frame(
   activity = c("Travel","Student search (purchased lists)","Prospective student communications","Events","Recruitment publications","Web services and digital advertising","Traditional advertising","International recruitment","Transfer recruitment","Other"),
@@ -174,7 +177,7 @@ kable(
 
 <!-- private col/univ -->
 
-```{r, ego-table-privu, echo = FALSE}
+```{r, ego-table-privu, echo = FALSE, include = FALSE, eval = FALSE}
 df <- readRDS('./assets/tables/table_ego_privu.RDS')
 knitr::kable(
   df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
@@ -212,7 +215,7 @@ knitr::kable(df, caption = 'characteristics of high schools by degree band, priv
 
 <!-- public research universities -->
 
-```{r, ego-table-pubu, echo = FALSE}
+```{r, ego-table-pubu, echo = FALSE, include = FALSE, eval = FALSE}
 df <- readRDS('./assets/tables/table_ego_pubu.RDS')
 knitr::kable(
   df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
@@ -283,10 +286,95 @@ knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
 
 
 
-```{r two-mode-plot-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_2mode_privu.pdf')
+
+```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-privu"}
+knitr::include_graphics('assets/figures/plot_1mode_privu.pdf')
 ```
 
+
+\end{landscape}
+
+\restoregeometry
+
+\newpage
+
+```{r, fig.width=3.5, fig.height=3, echo = FALSE, message = FALSE}
+plot_characteristic <- function(df, type, characteristics) {
+  sub_df <- df %>% select(University, characteristics) %>%
+    gather(key, value, characteristics) %>%
+    mutate(value = parse_number(value))
+
+  # colors <- sub_df$color[order(sub_df$University)]
+  univ_order <- (df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University  
+  sub_df$University <- factor(sub_df$University, levels = rev(univ_order))
+  
+  ggplot(sub_df, aes(fill = key, y = value, x = University)) + 
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE)) +
+    ggtitle('Title') +
+    xlab('') + ylab('') +
+    labs(fill = type) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          # axis.text.y = element_text(color = rep(c('red', 'green', 'blue', 'yellow', 'black'), 5)),
+          text = element_text(size = 8),
+          plot.title = element_text(color = 'white')) +
+    coord_flip()
+}
+
+
+type_vec <- c('privu', 'pubu')
+
+for (i in 1:length(type_vec)) {
+  ego_df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
+
+  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_figure_', type_vec[i], '.pdf')))
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  par(mfrow=c(2, 2))
+  
+  
+  a <- plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
+  b <- plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
+  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
+  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
+  
+  grid.arrange(a, b, c, d, nrow=2, ncol=2)
+  dev.off()
+  
+  # Need to use print() for ggplot inside loop in order for it to appear
+  # https://stackoverflow.com/a/15678596/6373540
+  #print(a)
+  #print(b)
+  #print(c)
+  #print(d)
+}
+```
+
+
+
+\newgeometry{margin=0cm}
+
+\newpage
+
+```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by private colleges and universities"}
+knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
+```
+
+\newpage
+```{r ego-network-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by private colleges and universities"}
+knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
+```
+
+
+\begin{landscape}
+
+\newpage
 
 ```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, with religious affiliation"}
 knitr::include_graphics('assets/figures/villanova_religion.pdf')
@@ -296,26 +384,20 @@ knitr::include_graphics('assets/figures/villanova_religion.pdf')
 knitr::include_graphics('assets/figures/emory_region.pdf')
 ```
 
-
-```{r rank-cluster1, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Academic rating of private high schools visited by selected colleges from cluster 1"}
-knitr::include_graphics('assets/figures/rank_cluster1.pdf')
+```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-pubu"}
+knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
 ```
 
-```{r race-cluster4, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Racial composition of visited private high schools, selected colleges"}
-knitr::include_graphics('assets/figures/race_cluster4.pdf')
+```{r plot-1mode-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-pubu out-of-state visits only"}
+knitr::include_graphics('assets/figures/plot_1mode_pubu_outst.pdf')
 ```
 
-
-
-```{r two-mode-plot-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_2mode_pubu.pdf')
+```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all"}
+knitr::include_graphics('assets/figures/plot_1mode_all.pdf')
 ```
 
-
-
-```{r two-mode-plot-community, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_2mode.pdf')
-#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
+```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all, out-of-state visits only for public universities"}
+knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
 ```
 
 

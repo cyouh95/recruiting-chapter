@@ -37,7 +37,7 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 ## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
-plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('blue', 'purple', 'red', 'green'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
+plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
 
   network <- egos_psi_privu[[univ_id]]
     
@@ -66,9 +66,9 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
   # vertex size; edge width, color, line type
   if (graph_order %in% c('both',2)) {  # graph order is 'both' 1 and 2; or graph order == 2
     vertex_size <- case_when(
-      vertex_attr(network, "type") == FALSE ~ 3,
-      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 12,
-      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 18,
+      vertex_attr(network, "type") == FALSE ~ 2,
+      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") != univ_id ~ 10,
+      vertex_attr(network, "type") == TRUE &  vertex_attr(network, "name") == univ_id ~ 15,
     )
     
     edge_width <- if_else(E(network)$order == 1, 0.5, 0)
@@ -76,7 +76,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
     edge_lty <- 5
 
   } else {  # graph order == 1
-    vertex_size <- if_else(V(network)$type, 18, 4)
+    vertex_size <- if_else(V(network)$type, 15, 2)
     
     edge_width <- if_else(E(network)$weight == 1, 0.5, as.numeric(E(network)$weight)^2)
     edge_color <- if_else(E(network)$weight == 1, 'lightgrey', 'black')
@@ -104,6 +104,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
     vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
     vertex.color = vertex_color,
     vertex.size = vertex_size,
+    vertex.frame.color = if_else(V(network)$type, 'lightgray', 'lightgray'),  
     # edge attributes
     edge.color = edge_color,
     edge.lty = edge_lty,
@@ -124,7 +125,7 @@ plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('bl
   }
   
 }
- dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
+ #dev.off() # to fix this: Error in .Call.graphics(C_palette, value) : invalid graphics state
 
 
 
@@ -140,34 +141,18 @@ plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3
 plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 2)
 plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 'both')
 
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View()
-
-events_data %>% glimpse()
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% group_by(school_name) %>% count()
-
-# focusing on variation within a cluster [cluster 1]
-  # swarthmore "216287"
-  # colorado college "126678"
-  # oberlin "204501"
-  # connecticut college ""128902
-
-#For cluster 1, show small multiples of ranking. Maybe one outlier. Show ego graph order 1. Replace later with bar graph  
-
-pdf("assets/figures/rank_cluster1.pdf") # open file
-
-par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-
-par(mfrow=c(2, 2))
-
-plot_ego_graph(univ_id = "216287", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "126678", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "204501", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "115409", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-# 115409
-dev.off() # close the file
 
 #For catholic, show order equals both. one big graph of one univ and maybe characteristic equals religious
+  vertex_attr_names(g_2mode)
+  
+  table(V(g_2mode)$religion, useNA = "always")
+  table(V(g_2mode)$religion_4, useNA = "always")
+
+  vertex_attr_names(egos_psi_privu[["216597"]])
+  
+  table(V(egos_psi_privu[["216597"]])$religion, useNA = "always")
+  table(V(egos_psi_privu[["216597"]])$religion_4, useNA = "always")
+  
 
   # villanova ego network, religion overlayed
   pdf("assets/figures/villanova_religion.pdf", paper = "a4r") # open file
@@ -175,7 +160,7 @@ dev.off() # close the file
     par(mar=c(5, 4, 4, 2) + 0.1) # default margins
     #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
-    plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
+    plot_ego_graph(univ_id = "216597", characteristic = 'religion_4', values = c('catholic', 'christian', 'nonsectarian', 'other'), keys = c('Catholic', 'Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
     
   dev.off() # close the file  
 
@@ -183,89 +168,16 @@ dev.off() # close the file
 # show order = both of one interesting university, with an overlay
 # EMORY
 par(mfrow=c(1, 1))  # resets to single plot 
-pdf("assets/figures/emory_region.pdf") # open file
+pdf("assets/figures/emory_region.pdf", paper = "a4r") # open file
   
-  par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-  #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  #par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
   # show order = 2 of one interesting university, with an overlay
-  plot_ego_graph(univ_id = "139658", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "", graph_order = 'both', margin = -0.3) 
+  plot_ego_graph(univ_id = "139658", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "", graph_order = 'both', margin = 0.0) 
     #plot_ego_graph(univ_id = "139658", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 'both', margin = -0.4)    
     
 dev.off() # close the file  
-  # williams 168342  
-  # middlebury 230959
-  # 221519 Sewanee 
-  # 120254 Occidental 
-  # 147767 Northwestern
-  # 139658 Emory
-  # 160755 Tulane
-  # 223232 baylor
-
-# baylor
-plot_ego_graph(univ_id = "223232", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
-    
-# Maybe for TEXAS cluster show small multiples of race 
-
-pdf("assets/figures/race_cluster4.pdf") # open file
-
-  par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-  #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  
-  par(mfrow=c(2, 2))
-
-  # southern schools from cluster 4
-  plot_ego_graph(univ_id = "228246", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-  plot_ego_graph(univ_id = "223232", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-  plot_ego_graph(univ_id = "228875", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-  plot_ego_graph(univ_id = "127060", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)  
-      
-dev.off() # close the file
-  
-#plot_ego_graph(univ_id = "216597", characteristic = 'religion', values = c('catholic', 'conservative_christian', 'nonsectarian', 'other_religion'), keys = c('Catholic', 'Conservative Christian', 'Nonsectarian', 'Other'), title = "religious affiliation", graph_order = 1)
-#plot_ego_graph(univ_id = "216597", characteristic = NA, values = NA, keys = NA, colors = NA, graph_order = 'both')
-  
-pdf("assets/figures/region_cluster1.pdf") # open file
-
-par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-
-par(mfrow=c(2, 2))
-plot_ego_graph(univ_id = "216287", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
-plot_ego_graph(univ_id = "126678", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
-plot_ego_graph(univ_id = "204501", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
-plot_ego_graph(univ_id = "128902", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), graph_order = 1)
-
-dev.off() # close the file
-
-pdf("assets/figures/race_cluster1.pdf") # open file
-
-par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-
-par(mfrow=c(2, 2))
-plot_ego_graph(univ_id = "216287", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-plot_ego_graph(univ_id = "126678", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-plot_ego_graph(univ_id = "204501", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-plot_ego_graph(univ_id = "128902", characteristic = 'pct_blacklatinxnative_cat', values = c('c1_lt10','c2_10to25','c3_25to50','c4_50+'), keys = c('LT 10%', '10-25%', '25-50%', 'GT 50%'), graph_order = 1)
-
-dev.off() # close the file
-
-
-pdf("assets/figures/rank_cluster1.pdf") # open file
-
-par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-#par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-par(mfrow=c(2, 2))
-plot_ego_graph(univ_id = "216287", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "126678", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "204501", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), graph_order = 1)
-plot_ego_graph(univ_id = "128902", characteristic = 'rank_cat2', values = c('c1_top200','c2_A+','c3_A','c4_ltA'), keys = c('Rank top 200', 'A+', 'A', 'A- or below'), title = "Academic reputation", graph_order = 1)
-
-dev.off() # close the file
-
-
-# ORDER = 1
 
 par(mfrow=c(2, 2))
 plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3, 4), keys = c('Northeast', 'Midwest', 'South', 'West'), title = "geographic region", graph_order = 1)
@@ -369,6 +281,48 @@ create_hclust(network = g_2mode, mode = "psi", k = 6, h = NULL, hclust_method = 
 
 #create_hclust(network = g_2mode, mode = "psi", k = NULL, h = 600)
 
+## ---------------------------
+## PLOT 2-MODE IGRAPH OBJECT; PUBLIC AND PRIVATE COLLEGES/UNIVERSITIES AND ALL HIGH SCHOOLS THEY VISIT
+## ---------------------------
+
+
+
+# which layout to choose? ask Russ?
+  # on layout_with_kk as an example of an "energy displacement" method, from Kolaczyk & Csardi 2020, pg 32-33
+    # motivated by the fact that it is possible to associate the collection of forces in spring systems with an overall system energy, another common approach to generating layouts is that of energy-placement methods. An energy, as a function of vertex positions, ostensibly is defined using expressions motivated by those found in physics. A vertex placement is chosen which minimizes the total system energy. A physical system with minimum energy is typically in its most relaxed state, and hence the assertion here is that a graph drawn according to similar principles should be visually appealing. 
+    # says that methods based on multidimensional scaling (MDS) are of the "energy displacement" type
+    # layout_with_kk is a commonly used variant of multidimensional scaling approach
+  # on layout_with_fr as an example of "spring-embedder methods", from Kolaczyk & Csardi 2020, pg 32
+    #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
+    #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
+
+par(mfrow=c(1, 1))  # resets to single plot
+#graph_layout <- layout_with_kk
+graph_layout <- layout_with_fr
+
+pdf("assets/figures/plot_g_2mode.pdf", paper = "a4r") # open file
+
+# par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+plot(
+  x = g_2mode, 
+  vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$school_name, ''),
+  vertex.color = case_when(
+      vertex_attr(g_2mode, "type") == FALSE ~ 'salmon',
+      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% privu_vec ~ 'green',
+      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% pubu_vec  ~ 'violet',
+    ),
+  vertex.frame.color = if_else(V(g_2mode)$type, 'lightgray', 'lightgray'),  
+  vertex.shape = if_else(V(g_2mode)$type, 'circle', 'circle'),
+  vertex.size = if_else(V(g_2mode)$type, 2.5, .5),
+  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
+  edge.lty = .5,
+  edge.color = 'lightgrey',
+  layout = graph_layout,
+  margin = -0.65
+)
+
+dev.off() # close the file
 
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECTS
@@ -383,7 +337,7 @@ create_hclust(network = g_2mode, mode = "psi", k = 6, h = NULL, hclust_method = 
     # seems like n-2 equals number of merges in cluster_fast_and_greedy() %>% membership()
 
   
-save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, hclust_method = "ward.D", plot_margin = -0.5, plot_name = "plot") {
 
   # all visits for private; out-of-state only for publics; 
   if (pubu_visits == 'outst' & privu_visits != 'outst') {
@@ -398,9 +352,8 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
   }
   
   # print summary of network to check that network object has the right number of vertices and edges
-    summary(network)
-    #print(network)
-  
+    #summary(network)
+
   #network_name <- deparse(substitute(network)) # why doesn't this work?
   #print(network_name)
 
@@ -408,7 +361,7 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     # create vertex attribute "cluster_psi" that is assigned only for vertices where V(network)$type == TRUE    
   if (c_analysis == "hclust") { # run hierarchical cluster analysis
 
-      vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h)    
+      vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h, hclust_method = hclust_method)
       
   } else {  # run igraph::fast_and_greedy() cluster analysis
     
@@ -443,7 +396,10 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     
     #print(V(network)$cluster)
     #print(V(network)$cluster_psi[V(network)$type==TRUE])
-    V(network)$cluster %>% table() %>% print()
+    
+    tibble(name = V(network)$school_name, cluster = V(network)$cluster, type = V(network)$type) %>%
+      filter(type == TRUE) %>% select(name, cluster) %>% arrange(cluster, name) %>% print(n = 50) # print obs
+    V(network)$cluster %>% table() %>% print() # print table
     
     #vertex_attr_names(g_2mode)
     vertex_color <- recode(vertex_attr(graph = network, name = "cluster"),
@@ -465,7 +421,7 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     x = network, 
     vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
     vertex.color = vertex_color,
-    vertex.frame.color = if_else(V(network)$type, 'black', 'lightgray'),
+    vertex.frame.color = if_else(V(network)$type, 'lightgray', 'lightgray'),
     vertex.shape = 'circle',
     vertex.size = if_else(V(network)$type, 3, .75),
     edge.lty = 3,
@@ -478,117 +434,31 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
   #dev.off()
 }
 
+# priv
+save_2mode_plot(g_2mode_privu, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-#save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
+# pub
+save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-# plots for igraph object g_2mode [public and private colleges/universities]
-save_2mode_plot(g_2mode, c_analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+# pub out-of-state
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-save_2mode_plot(g_2mode, c_analysis = "fast", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
-save_2mode_plot(g_2mode, c_analysis = "fast", k=NULL, h = 39, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+# all
+save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
+# all, out-of-state pub
+save_2mode_plot(g_2mode, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', c_analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'all', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_pubu_outst.pdf")
+# all, out-of-state all
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
-
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "fast", plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.7,  plot_name = "plot_2mode_all_outst.pdf")
-
-
-# plots for igraph object g_2mode [private colleges/universities]
-save_2mode_plot(g_2mode_privu, c_analysis = "fast", plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
-save_2mode_plot(g_2mode_privu, c_analysis = "fast", layout = layout_with_fr, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
-save_2mode_plot(g_2mode_privu, c_analysis = "fast", layout = layout_with_kk, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
-
-save_2mode_plot(g_2mode_privu, c_analysis = "fast", k = 3, plot_margin = -0.7, plot_name = "plot_2mode_privu.pdf")
-
-
-save_2mode_plot(g_2mode_privu, c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
-
-
-# plots for igraph object g_2mode [public research universities]
-save_2mode_plot(g_2mode_pubu, c_analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-save_2mode_plot(g_2mode_pubu, c_analysis = "fast", k = 4, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-
-save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=3, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu.pdf")
-
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "fast", plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "hclust", k=2, h = NULL, plot_margin = -0.6, plot_name = "plot_2mode_pubu_outst.pdf")
-
-
-palette() %>% str() # character vector of length 8
-palette.colors() %>% str()
-
-colors() %>% str
-colors()
-
-hcl.pals() # list of palettes
-%>% str()
-
-
-
-# figuring out how to create subgraphs that eliminate in-state visits
-  # all visits; 1785 vertices, 11034 edges
-  g_2mode
-  
-  # out-of-state only; 1552 vertices, 9714 edges
-  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"])
-  
-  # all visits for private; out-of-state only for publics; 1611 vertices, 10405 edges
-  subgraph.edges(graph = g_2mode, eids = E(g_2mode)[(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"]) 
-
-
-
-(E(g_2mode)$visiting_univ == "public" & E(g_2mode)$visit_loc == "outofstate") | E(g_2mode)$visiting_univ == "private"
-
-
-table(E(g_2mode)$visiting_univ, useNA = "always")
-
-
-# public universities, out-of-state visits only
-g_2mode_pubu_outst <- subgraph.edges(graph = g_2mode_pubu, eids = E(g_2mode_pubu)[E(g_2mode_pubu)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
-g_2mode_pubu_outst
-save_2mode_plot(g_2mode_pubu_outst, 'plot_2mode_pubu.pdf')
-
-
-g_2mode
-
-# all universities, out-of-state visits only
-g_2mode_outst <- subgraph.edges(graph = g_2mode, eids = E(g_2mode)[E(g_2mode)$visit_loc == "outofstate"]) # 1552 vertices, 9714 edges
-g_2mode_outst
-
-save_2mode_plot(g_2mode_outst, 'lala.pdf', plot_margin = -0.8)
-
-
-table(E(g_2mode)$visiting_univ, useNA = "always")
-table(E(g_2mode)$visit_loc, useNA = "always")
-
-
-edge_attr_names(g_2mode_pubu)
-table(E(g_2mode_pubu)$visiting_univ, useNA = "always")
-table(E(g_2mode_pubu)$visit_loc, useNA = "always")
-
-
-
-network <- g_2mode_pubu
-network # 1481 vertices, 3724 edges
-subgraph.edges(graph = network, eids = E(network)[E(network)$visit_loc == "outofstate"]) # 1223 vertices, 3095 edges
-
-
-  # network object
-  if (graph_order != 'both') {  # order == 1 or 2
-    network <- subgraph.edges(graph = network, eids = E(network)[E(network)$order == graph_order]) # create subgraph network object if order != "both"
-  }
 
 
 ## ---------------------------
 ## WRITE FUNCTION TO PLOT 1-MODE IGRAPH OBJECTS
 ## ---------------------------
 
-save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = 0.0, plot_name = "plot") {
+save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot") {
 
   # create subgraph of 2-mode network depending on whether including or excluding out-of-state visits from particular types of institutions
   
@@ -600,7 +470,7 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
   }
     # print summary of network to check that network object has the right number of vertices and edges
-    summary(network)
+      #summary(network)
 
   # projection for mode = psi or hs
   if (mode == "psi") {
@@ -621,7 +491,7 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     # create vertex attribute "cluster_psi" that is assigned only for vertices where V(network)$type == TRUE    
   if (c_analysis == "hclust") { # run hierarchical cluster analysis
 
-      vertex_attr(graph = network, name = "cluster") <- create_hclust(network = network2, mode = mode, k = k, h = h) # create vertex attribute for cluster
+      vertex_attr(graph = network, name = "cluster") <- create_hclust(network = network2, mode = mode, k = k, h = h, hclust_method = hclust_method) # create vertex attribute for cluster
       #create_hclust(network = network2, mode = mode, k = k, h = h)
       #vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h)    
       
@@ -651,9 +521,12 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     vertex_attr(graph = network, name = "cluster") <- m_obj # create vertex attribute for cluster
     
   }
-  print(V(network)$cluster)
-  V(network)$cluster %>% table() %>% print()
+  
+  tibble(name = V(network)$school_name, cluster = V(network)$cluster) %>%
+    select(name, cluster) %>% arrange(cluster, name) %>% print(n = 50) # print obs
     
+  V(network)$cluster %>% table() %>% print() # print table
+  
     #vertex_attr_names(g_2mode)
     vertex_color <- recode(vertex_attr(graph = network, name = "cluster"),
       `1` = 'lightblue',
@@ -673,8 +546,9 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     
     vertex_size <- 1
     vertex_label <- ''
-  }     
-  #pdf(str_c('assets/figures/', plot_name), paper = "a4r")
+  }
+    
+  pdf(str_c('assets/figures/', plot_name), paper = "a4r")
   
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
@@ -695,148 +569,33 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     margin = plot_margin
   )
     
-  #dev.off()
+  dev.off()
 }
-#save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, c_analysis, k = NULL, h = NULL, plot_margin = -0.5, plot_name = "plot") {
-save_1mode_plot(g_2mode_pubu, mode = "hs", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
-
-save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
-
-#### MODE = HS
 
 
 #### MODE = PSI
-save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, plot_margin = -0.7, plot_name = "plot_2mode_all.pdf")
-save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
 
-save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=2, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+# priv
+save_1mode_plot(g_2mode_privu, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_privu.pdf")
 
+# pub
+save_1mode_plot(g_2mode_pubu, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_pubu.pdf")
 
-save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
-save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "fast", k=4, plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
+# pub out-of-state
+save_1mode_plot(g_2mode_pubu, mode = "psi", pubu_visits = 'outst', layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_pubu_outst.pdf")
 
+# all
+save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all.pdf")
 
-#rutgers, pitt, cincinnati, irvine, stony brook, stevens, wellesley, uc san diego, kansas, berkeley scripps, nc state, baylor, arkansas
-#bama, smu, nova, notre dame
-#boulder, U. south caroline, sewanee, northwestern, harvey mudd, boston college, tulane, colorado college, tufts, middlebury
-# plots for igraph object g_2mode [public and private colleges/universities]
+# all, out-of-state pub
+save_1mode_plot(g_2mode, mode = "psi", pubu_visits = 'outst', layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all_pubu_outst.pdf")
 
+# all, out-of-state all
+#save_1mode_plot(g_2mode, mode = "psi", pubu_visits = 'outst', privu_visits = 'outst', layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
 
+#### MODE = HS
 
-## ---------------------------
-## PLOT 2-MODE IGRAPH OBJECTS
-## ---------------------------
-
-# Private univs and the private HS they visited
-vertex_attr_names(g_2mode_privu)
-
-par(mfrow=c(1, 1))  # resets to single plot
-
-# which layout to choose? ask Russ?
-  # on layout_with_kk as an example of an "energy displacement" method, from Kolaczyk & Csardi 2020, pg 32-33
-    # motivated by the fact that it is possible to associate the collection of forces in spring systems with an overall system energy, another common approach to generating layouts is that of energy-placement methods. An energy, as a function of vertex positions, ostensibly is defined using expressions motivated by those found in physics. A vertex placement is chosen which minimizes the total system energy. A physical system with minimum energy is typically in its most relaxed state, and hence the assertion here is that a graph drawn according to similar principles should be visually appealing. 
-    # says that methods based on multidimensional scaling (MDS) are of the "energy displacement" type
-    # layout_with_kk is a commonly used variant of multidimensional scaling approach
-  # on layout_with_fr as an example of "spring-embedder methods", from Kolaczyk & Csardi 2020, pg 32
-    #Often more effective for creating useful drawings are layouts based on exploiting analogies between the relational structure in graphs and the forces among elements in physical systems. One approach in this area, and the earliest proposed, is to introduce attractive and repulsive forces by associating vertices with balls and edges with springs. If a literal system of balls connected by springs is disrupted, thereby stretching some of the springs and compressing others, upon being let go it will return to its natural state. So-called spring-embedder methods of graph drawing define a notion of force for each vertex in the graph depending, at the very least, on the positions of pairs of vertices and the distances between them, and seek to iteratively update the placement of vertices until a vector of net forces across vertices converges. 
-    #The method of Fruchterman and Reingold [6] is a commonly used example of this type.
-
-vertex_attr_names(g_2mode)
-
-vcount(g_2mode)
-V(g_2mode)$state_code
-
-#graph_layout <- layout_with_kk
-graph_layout <- layout_with_fr
-
-pdf("assets/figures/plot_g_2mode.pdf") # open file
-
-# par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-plot(
-  x = g_2mode, 
-  vertex.label = if_else(V(g_2mode)$type, V(g_2mode)$school_name, ''),
-  vertex.color = case_when(
-      vertex_attr(g_2mode, "type") == FALSE ~ 'salmon',
-      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% privu_vec ~ 'green',
-      vertex_attr(g_2mode, "type") == TRUE &  vertex_attr(g_2mode, "name") %in% pubu_vec  ~ 'violet',
-    ),
-  vertex.shape = if_else(V(g_2mode)$type, 'circle', 'circle'),
-  vertex.size = if_else(V(g_2mode)$type, 3, 1),
-  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
-  edge.lty = .5,
-  edge.color = 'lightgrey',
-  layout = graph_layout,
-  margin = -0.7
-)
-
-dev.off() # close the file
-
-
-vertex_attr_names(g_1mode_psi)
-V(g_1mode_psi)$school_type
-
-graph_layout <- layout_with_fr # layout_with_fr layout_with_kk
-plot(
-  x = g_1mode_psi, 
-  vertex.label = V(g_1mode_psi)$school_name,
-  vertex.color = case_when(
-      vertex_attr(g_1mode_psi, "name") %in% privu_vec ~ 'green',
-      vertex_attr(g_1mode_psi, "name") %in% pubu_vec  ~ 'violet',
-    ),
-  vertex.shape = 'circle',
-  vertex.size = 3,
-  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
-  edge.lty = .5,
-  edge.color = 'lightgrey',
-  layout = graph_layout,
-  margin = 0.0
-)
-
-
-
-
-c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
-m_2mode_privu <- membership(c_2mode_privu)
-
-
-
-library(plyr)
-colors_2mode_privu <- revalue(as.character(m_2mode_privu), c(
-  '1' = 'red',
-  '2' = 'lightblue',
-  '3' = 'green',
-  '4' = 'yellow'
-))
-detach(package:plyr, unload = TRUE)
-
-pdf("assets/figures/plot_g_2mode_privu.pdf") # open file
-
-# par(mar=c(5, 4, 4, 2) + 0.1) # default margins
-par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-
-# graph_layout <- layout_with_kk
-graph_layout <- layout_with_fr
-
-plot(
-  x = g_2mode_privu, 
-  vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
-  # vertex.color = if_else(V(g_2mode_privu)$type, 'green', 'salmon'),
-  vertex.color = colors_2mode_privu,
-  vertex.frame.color = if_else(V(g_2mode_privu)$type, 'black', 'lightgray'),
-  vertex.shape = if_else(V(g_2mode_privu)$type, 'circle', 'circle'),
-  vertex.size = if_else(V(g_2mode_privu)$type, 3, 1),
-  edge.lty = 3, # 0 (“blank”), 1 (“solid”), 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
-  edge.lty = .5,
-  edge.color = 'lightgrey',
-  layout = graph_layout,
-  margin = -0.7
-)
-
-dev.off() # close the file
-
-
-
+#save_1mode_plot(g_2mode_pubu, mode = "hs", layout = layout_with_fr, c_analysis = "fast", plot_margin = 0.0, plot_name = "plot_2mode_all.pdf")
 
 
 ## ------------------------------
