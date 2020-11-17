@@ -37,6 +37,7 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 ## EGO IGRAPH FUNCTION (can utilize order =1, order =2, or both)
 ## --------------------
 
+
 plot_ego_graph <- function(univ_id, characteristic, values, keys, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), title = univ_info[univ_info$univ_id == univ_id, ] %>% select(univ_abbrev) %>% as.character(), graph_order = 'both', margin = 0) {
 
   network <- egos_psi_privu[[univ_id]]
@@ -279,8 +280,15 @@ create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL, hclust_method = 
 
 create_hclust(network = g_2mode, mode = "psi", k = 6, h = NULL, hclust_method = "complete") %>% table()
 
+create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL, hclust_method = "ward.D") %>% table()
 #create_hclust(network = g_2mode, mode = "psi", k = NULL, h = 600)
 
+bipartite.projection(g_2mode_privu)[["proj2"]] %>%
+  as_adjacency_matrix(
+    #graph = bipartite.projection(network)[[proj]],  # creates one-mode object w/ mode = universities
+    sparse = FALSE, 
+    attr = 'weight'
+  )
 ## ---------------------------
 ## PLOT 2-MODE IGRAPH OBJECT; PUBLIC AND PRIVATE COLLEGES/UNIVERSITIES AND ALL HIGH SCHOOLS THEY VISIT
 ## ---------------------------
@@ -319,7 +327,7 @@ plot(
   edge.lty = .5,
   edge.color = 'lightgrey',
   layout = graph_layout,
-  margin = -0.65
+  margin = -0.5
 )
 
 dev.off() # close the file
@@ -363,7 +371,7 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
 
       vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- create_hclust(network = network, mode = "psi", k = k, h = h, hclust_method = hclust_method)
       
-  } else {  # run igraph::fast_and_greedy() cluster analysis
+  } else if (c_analysis == "fast") {  # run igraph::fast_and_greedy() cluster analysis
     
     c_obj <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() 
     
@@ -385,11 +393,28 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     
     vertex_attr(graph = network, name = "cluster_psi", index = V(network)$name[V(network)$type == TRUE]) <- m_obj
     
+  } else  {  # !c_analysis %in% c("fast","hclust"); no cluster analysis; vertex color based on something else
+
+    characteristic <- c_analysis
+    characteristic
+    
+    values <- k # = c(1, 2, 3, 4), # argument = k
+    keys <- h #  c('Northeast', 'Midwest', 'South', 'West'), # argument = h
+    
+    color_palette <- c('lightblue', 'lightgreen', 'violet', 'yellow')
+    
+    names(color_palette) <- values
+    vertex_color <- recode(vertex_attr(g_2mode, characteristic), !!!color_palette) # use characteristic to determine vertex color/shape
+    #print(vertex_color)
+        
   }
   #print(V(network)$cluster_psi)
-    
+
   # create vertex attribute for value of cluster with high schools having value = 0
-  vertex_attr(graph = network, name = "cluster") <- if_else(V(network)$type, as.integer(vertex_attr(graph = network, name = "cluster_psi")), 0L)
+  if (c_analysis %in% c("hclust","fast")) {
+    
+    # create vertex attribute for value of cluster with high schools having value = 0
+    vertex_attr(graph = network, name = "cluster") <- if_else(V(network)$type, as.integer(vertex_attr(graph = network, name = "cluster_psi")), 0L)
     
     # merge the cluster assignments to the igraph object as a vertex attribute
     #vertex_attr(graph = g_2mode, name = "temp") <- (as.data.frame(V(g_2mode)$name) %>% left_join(y = df_cut_1mode_psi, by = c(`V(g_2mode)$name` = "univ_id")))$cluster
@@ -410,8 +435,9 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
       `4` = 'yellow',
     )
     #print(vertex_color)
-    
-  #pdf(str_c('assets/figures/', plot_name), paper = "a4r")
+  }
+  
+  pdf(str_c('assets/figures/', plot_name), paper = "a4r")
   
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
@@ -430,27 +456,44 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
     layout = layout,
     margin = plot_margin
   )
-    
-  #dev.off()
+
+  if (!c_analysis %in% c("hclust","fast")) {
+  #if (is.na(characteristic)==FALSE) {  # if characteristic ! FALSE then create legend    
+    legend(
+      x = .2,
+      y = 0.0,
+      legend = keys,
+      fill = color_palette,
+      bty = 'n'  # box drawn around legend: 'o' [default] = solid line box; 'n' = no box
+    )
+  }      
+  dev.off()
 }
+# note: when using characteristic rather than cluster analysis to color vertices
+  # argument c_analysis = characteristic (e.g., 'region')
+  # argument k = values (e.g., c(1, 2, 3, 4))
+  # argument h = keys (e.g., c('Northeast', 'Midwest', 'South', 'West'))
+
+
+save_2mode_plot(g_2mode, c_analysis = 'region', k=c(1, 2, 3, 4), h = c('Northeast', 'Midwest', 'South', 'West'), hclust_method = NULL, plot_margin = -0.6, plot_name = "plot_2mode_all_region.pdf")
 
 # priv
 save_2mode_plot(g_2mode_privu, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
 
 # pub
-save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_pubu, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_pubu.pdf")
 
 # pub out-of-state
-save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode_pubu, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_pubu_outst.pdf")
 
 # all
-save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_all.pdf")
 
 # all, out-of-state pub
-save_2mode_plot(g_2mode, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_all_pubu_outst.pdf")
 
 # all, out-of-state all
-save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_privu.pdf")
+save_2mode_plot(g_2mode, pubu_visits = 'outst', privu_visits = 'outst', c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = -0.74, plot_name = "plot_2mode_all_outst.pdf")
 
 
 
@@ -548,7 +591,7 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     vertex_label <- ''
   }
     
-  pdf(str_c('assets/figures/', plot_name), paper = "a4r")
+  #pdf(str_c('assets/figures/', plot_name), paper = "a4r")
   
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   
@@ -569,7 +612,7 @@ save_1mode_plot <- function(network, mode, pubu_visits = 'all', privu_visits = '
     margin = plot_margin
   )
     
-  dev.off()
+  #dev.off()
 }
 
 
@@ -613,11 +656,13 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
                         stringsAsFactors=FALSE)
   
   if (c_analysis == 'fast') {
-    member <- membership(cluster_fast_greedy(twomode_network))
+    #member <- membership(cluster_fast_greedy(twomode_network))
+    member <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() %>% membership()
   } else {
-    member <- create_hclust(network = twomode_network, mode = 'psi', k = k, h = h)
+    member <- create_hclust(network = twomode_network, mode = 'psi', k = k, h = h, hclust_method = "ward.D")
+    #create_hclust(network = network2, mode = mode, k = k, h = h, hclust_method = hclust_method)  
   }
-  
+
   for (i in seq_along(univs)) {
     ego_network <- ego_networks[[univs[[i]]]]
     ego_network_order1 <- subgraph.edges(graph = ego_network, eids = E(ego_network)[E(ego_network)$order==1])
@@ -685,10 +730,12 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
   ego_tbl
 }
 
-ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'fast')
+ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k=4)
+ego_table_privu %>% count(Cluster)
 saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
-ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'fast')
+ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k=4)
+ego_table_pubu %>% count(Cluster)
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
 ego_table_privu_test <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)

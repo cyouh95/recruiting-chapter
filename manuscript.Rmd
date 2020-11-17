@@ -92,31 +92,107 @@ We briefly define essential social network analysis concepts and their operation
 
 Our analyses draw from analyses of "corporate board-director" networks because these are the most commonly analyzed two-mode networks in the social networks literature [e.g.] [@RN4663]. Board-director networks consist of directors (mode 1) who serve on organizational boards (mode 2). Our school-college network is a two-mode network composed of two sets of vertices, private high schools (mode 1) and colleges/universities (mode 2). Off-campus recruiting visits are edges (e.g., high school $i$ shares an edge with college $j$ if high school $i$ receives at least one visit from college $j$) and visits can only occur between a school-college pair (not a school-school pair or a college-college pair). Our school-college network is a two-mode network composed of high schools (mode 1) who are visited by colleges and universities (mode 2). This (weighted) network is represented as a school-by-college matrix (e.g., a $500 \times 40$ matrix if our network contains 500 high schools and 40 colleges/universities) in which matrix cell $a_{i,j}$ identifies the number of visits that high school $i$ received from college/university $j$. [SHOW AN EXCERPT OF THE TWO MODE ADJACENY MATRIX, LIKE 4 BY 3 OR SOMETHING] [DEFINE WEIGHTED VS. UNWEIGHTED SOMEWHERE]
 
-Two-mode networks are ofen analyzed as one-mode networks [@RN2457]. @RN4663 states that "overlapping groups such as boards of directors form a two-mode membership network in which one can conceive of directors as nodes [vertices] connected by a tie of common board membership, or boards as nodes connected by a tie of one or more shared directors" [pg. xx]. Thus, a two-mode board-director network can be transformed into two one-mode networks. A weighted one-mode director network can be created as follows: create a director-by-director matrix (e.g., a $100 \times 100$ matrix if there are 100 directors in the network); two directors share an edge if they serve together on a board; matrix cell $a_{i,j}$ identifies the number of boards that include both director $i$ and director $j$ (e.g., $a_{i,j}=0$ if directors $i$ and $j$ do not serve on any of the same boards and $a_{i,j}=3$ if directors $i$ and $j$ do not serve on three boards together. Similarly, a one-mode board network is created based on a board-by-board matrix in which two boards share an edge if a director sits on both boards and matrix cell $a_{i,j}$ identifies the number of directors that serve on both board $i$ and board $j$. Following this approach, we create a one-mode high school network in which two private high schools share an edge if both receive a visit by the same college/university and cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of colleges/universities that visited both school $i$ and school $j$ [SHOW EXCERPT OF ONE-MODE SCHOOL BY SCHOOL MATRIX, LIKE 3 BY 3 OR SOMETHING]. Similarly, we create a one-mode college/university network (herein the college network) in which two colleges share an edge if both colleges visited the same high school and cell $c_{i,j}$ of the college-by-college matrix $C$ indicates the number of private high schools that received at least one visit from both college $i$ and college $j$ [SHOW EXCERPT OF ONE-MODE COLLEGE BY COLLEGE MATRIX, LIKE 3 BY 3 OR SOMETHING].
+## Two-mode vs. One-mode networks
+
+Two-mode networks are often analyzed as one-mode networks [@RN2457]. @RN4663 states that "overlapping groups such as boards of directors form a two-mode membership network in which one can conceive of directors as nodes [vertices] connected by a tie of common board membership, or boards as nodes connected by a tie of one or more shared directors" [pg. xx]. Thus, a two-mode board-director network can be transformed into two one-mode networks. A weighted one-mode director network can be created as follows: create a director-by-director matrix (e.g., a $100 \times 100$ matrix if there are 100 directors in the network); two directors share an edge if they serve together on a board; matrix cell $a_{i,j}$ identifies the number of boards that include both director $i$ and director $j$ (e.g., $a_{i,j}=0$ if directors $i$ and $j$ do not serve on any of the same boards and $a_{i,j}=3$ if directors $i$ and $j$ do not serve on three boards together. Similarly, a one-mode board network is created based on a board-by-board matrix in which two boards share an edge if a director sits on both boards and matrix cell $a_{i,j}$ identifies the number of directors that serve on both board $i$ and board $j$. Following this approach, we create a one-mode high school network in which two private high schools share an edge if both receive a visit by the same college/university and cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of colleges/universities that visited both school $i$ and school $j$ [SHOW EXCERPT OF ONE-MODE SCHOOL BY SCHOOL MATRIX, LIKE 3 BY 3 OR SOMETHING]. Similarly, we create a one-mode college/university network (herein the college network) in which two colleges share an edge if both colleges visited the same high school and cell $c_{i,j}$ of the college-by-college matrix $C$ indicates the number of private high schools that received at least one visit from both college $i$ and college $j$ [SHOW EXCERPT OF ONE-MODE COLLEGE BY COLLEGE MATRIX, LIKE 3 BY 3 OR SOMETHING].
+
+## Ego networks
 
 A limitation of our data collection is that we collected off-campus visit data only from a convenience sample of X colleges and universities, as described above. Thus, for each college and university in our sample, we know all the private high schools they visited (assuming no measurement error). However, for each private high school in our sample, we only know visits they received from the set of X colleges/universities in our sample. Given this limitation, it may be useful to think of our data collection as resulting in X "ego networks." An "ego" is a single "focal" node (e.g., The University of Notre Dame). An ego network consists "of a focal node ("ego") and the nodes to whom ego is directly connected to (these are called "alters") plus the ties, if any, among the alters" [from http://www.analytictech.com/networks/egonet.htm#:~:text=Ego%20networks%20consist%20of%20a,form%20The%20human%20social%20network ]. For example, the University of Notre Dame ego network consists of all private high schools that received at least one visit from Notre Dame. Additionally, for each high school visited by Notre Dame, the ego network may include all colleges/universities in our sample that also visited the high school.
 
-Figure X shows the ego network of all high schools visited by Notre Dame. 
+When analyzing ego networks, researchers often investigate the extent of "homophily" versus "heterophily" [@RN1722]. Homophily is the idea that two vertices are more likely to be connected if they have similar characteristics (e.g., two people are more likely to be freinds on Facebook if they have similar political ideologies). Heterophily, the opposite of homophily, is when pairs of connected vertices have different characteristics from one another. Analyses investigate the extent to which network ties are homopholous or heteropholous, focusing on the vertex characteristics of 
 
-When analyzing ego networks, researchers often investigate the extent of "homophily" versus "heterophily" [@RN1722]. Homophily is the idea that two vertices are more likely to be connected if they have similar characteristics (e.g., two people are more likely to be freinds on Facebook if they have similar political ideologies). Heterophily, the opposite of homophily, is when pairs of connected vertices have different characteristics from one another. Figure X shows the University of Notre Dame ego network, with separate panels for vertex characteristics (academic reputation, geography, religious affiliation, and racial composition) and with vertex shapes (?colors?) to identify values of vertex characteristics [INSERT FIGURE]. Visually, we can see that ....[DESCRIBE BIG TAKEAWAYS].
+<!--
+
+Figure X shows the University of Notre Dame ego network, with separate panels for vertex characteristics (academic reputation, geography, religious affiliation, and racial composition) and with vertex shapes (?colors?) to identify values of vertex characteristics [INSERT FIGURE]. Visually, we can see that ....[DESCRIBE BIG TAKEAWAYS].
 
 Figure X augments the Notre Dame ego network by including the private colleges/universities in our sample that visited private high schools visited by Notre Dame [INSERT FIGURE]. ADD BRIEF TEXT ABOUT FIGURE?
+
+-->
+
+
+## Community detection
+
+Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We used XYZ community detection approach [add footnote w/ details?] to allocate private colleges and universities [? and private high schools] to clusters. 
 
 # Network Analyses of Off-Campus Recruiting Visits
 
 This section presents network analyses of visits by colleges and universities to private high schools. Analyses are motivated by two, related research questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what extent do off-campus recruiting visits by colleges and universities to private high schools exhibit homophily versus heterophily with respect to the vertex characteristics of geographic region, religious affiliation, academic reputation, and racial composition?
 
-Figure \@ref(fig:two-mode-plot) plots the two-mode network of visits to private high schools by all colleges and universities in our sample, with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
+Figure \@ref(fig:two-mode-plot) plots the two-mode network of visits to private high schools by all colleges and universities in our sample, with large vertices indicating a college/university, small verticies indicating private high schools and with vertex color determined by geographic region (Northeast, Midwest, South, West). The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests a modest relationship between geographic region and network structure. For instance, the high school vertices closest to University of Alabama and University of Arkansas tend to be located in the south. Further, universities located in the same geographic region (e.g., SUNY Stony Brook and Rutgers) tend to be closer to one another than universities located in other regions. However, this relationship is not consistent, for example, Scripps College located in CA is closest to University of Pittsburgh (PA) and Stevens Institute of Technology (NJ). Moreover, the network depicted by \@ref(fig:two-mode-plot) is too large to detect nuanced patterns of network structure.
 
+
+<!--
+Figure \@ref(fig:two-mode-plot) plots the two-mode network of visits to private high schools by all colleges and universities in our sample with private high schools vertices the color salmon, public research universities shown in violet, and private colleges and universities shown in green green. The graph layout places vertices closer together if they are similar to one another in terms of network structure. [SAY WHAT THIS MEANS, DRAWING FROM NOTES FROM RUSS].  Figure \@ref(fig:two-mode-plot) suggests that the recruiting visit patterns of private colleges and universities tend to be more similar to one another than they are to those of public research universities. By contrast, many public research universities are far away from one another and a subset of public researchg universities appear to have network structure similar to many of the private colleges and universities (e.g., CU Boulder, UC Berkeley, University of South Carolina )
+-->
 
 We present results in three steps: First, visits by private colleges and universities; second, visits by public research universities; and, third, comparisons of visits by public research universities to visits by private colleges and universities.
 
 
 ## Visits by Private Colleges and Universities
 
-Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We used XYZ community detection approach [add footnote w/ details?] to allocate private colleges and universities [? and private high schools] to clusters. Four clusters emerge. The largest cluster consists largely of nonsectarian liberal arts colleges (e.g., Williams, Swarthmore, Colorado College). Cluster 2 consists of Emory University, Tulane, Northwestern, and Sewanee. These universities all have relatively strong ties to Southern private high schools. Cluster 3 consists of three catholic universities -- Notre Dame, Villanova, Boston College -- and Case Western Reserve and Stevens Institute of Technology.  Although not a Catholic University, Stevens Institute of Technology has strong ties to Catholic private schools (representing X% of visits). Finally, cluster 4 consists of three religiously affiliated Texas universities -- Southern Methodist, Baylor, Texas Christian University -- and the University of Denver. 
+Figure \@ref(fig:plot-1mode-privu) plots the one-mode network of visits by private colleges and universities. Here, the number of ties between a pair of universities (e.g., Sewanee and Texas Christian University) equals the number of private high schools visited by both universities. The graph layout places colleges/universities closer together if they have similar network structure [MAYBE SAY WHAT THIS MEANS IF YOU HAVEN'T YET].  Additionally, vertex color is determined by hierarchical cluster analysis specified to create $k = 4$ clusters.  Although the process of placing vertices was separate from the process of determining community cluster, vertices within the same cluster tend to be closer to one another than those of different clusters. Accompanying Figure \@ref(fig:plot-1mode-privu) is Figure \@ref(fig:ego-network-figure-privu), which shows the characteristics -- geographic region, religious affiliation, academic reputation, and racial composition -- of private high schools visited our sample of private colleges and universities.
 
-Figure \@ref(fig:plot-1mode-privu) plots the two-mode network of visits by private colleges and universities to private high schools, with vertex color determined by community cluster.  The placement of college and high school vertices on an X-Y axis/coordinates is determined such that vertices with many direct and indirect ties are closer together. Although the process of placing vertices was separate from the process of determining community cluster, vertices within the same cluster tend to be closer to one another than those of different clusters. For example, the nonsectarian liberal arts colleges in Cluster 1 tend to be be close to one another and also relatively close to the highest concentration of private high schools in cluster 1, suggesting that these colleges visit substantially overlapping sets of private high schools. For Cluster 2, by contrast, Northwestern and Emory are relatively far from Tulane and Sewanee.
+One cluster consists of Notre Dame, Villanova, Tulane, and Southern Methodist University. [text about this cluster]
+
+One cluster consists of Baylor, Harvey Mudd, Scripps, and Stevens Institute of Technology. Figure \@ref(fig:plot-1mode-privu) indicates that all four institutions are rather peripheral to the overall network. Harvey Mudd, Scripps and -- to a lesser extent -- Stevens made relatively fewer visits to private high schools. By contrast, Baylor visited a fundamentally different set of schools than other private colleges and universities in that they visited a large number of conservative Christian private high schools.
+
+Figure \@ref(fig:ego-network-figure-privu) indicates that, with the exception of Harvey Mudd and Scripps, these four institutions share little in common with respect to the characteristics of high schools they visit. 
+
+```{r, include = FALSE, eval = FALSE}
+
+df <- readRDS('./assets/tables/table_ego_privu.RDS')
+df %>% glimpse()
+df %>% select(ID,University,Cluster,total) %>% 
+  arrange(Cluster,University)
+```
+
+
+
+
+is based on ego graphs of private colleges and universities and 
+<!--
+
+ 1  2  3  4 
+ 4  6 11  4 
+ 
+   name              cluster
+   <chr>               <int>
+ 1 Baylor                  1
+ 2 Harvey Mudd             1
+ 3 Scripps                 1
+ 4 Stevens Ins. Tech       1
+ 5 Case Western Res.       2
+ 6 Macalester              2
+ 7 Occidental              2
+ 8 Smith                   2
+ 9 Swarthmore              2
+10 Williams                2
+11 Boston Coll.            3
+12 Colorado Coll.          3
+13 Conn Coll.              3
+14 Emory                   3
+15 Middlebury              3
+16 Northwestern            3
+17 Oberlin                 3
+18 Sewanee                 3
+19 TCU                     3
+20 Tufts                   3
+21 U of Denver             3
+22 Notre Dame              4
+23 SMU                     4
+24 Tulane                  4
+25 Villanova               4
+
+-->
+
+
+
+For example, the nonsectarian liberal arts colleges in Cluster 1 tend to be be close to one another and also relatively close to the highest concentration of private high schools in cluster 1, suggesting that these colleges visit substantially overlapping sets of private high schools. For Cluster 2, by contrast, Northwestern and Emory are relatively far from Tulane and Sewanee.
+
+Four clusters emerge. The largest cluster consists largely of nonsectarian liberal arts colleges (e.g., Williams, Swarthmore, Colorado College). Cluster 2 consists of Emory University, Tulane, Northwestern, and Sewanee. These universities all have relatively strong ties to Southern private high schools. Cluster 3 consists of three catholic universities -- Notre Dame, Villanova, Boston College -- and Case Western Reserve and Stevens Institute of Technology.  Although not a Catholic University, Stevens Institute of Technology has strong ties to Catholic private schools (representing X% of visits). Finally, cluster 4 consists of three religiously affiliated Texas universities -- Southern Methodist, Baylor, Texas Christian University -- and the University of Denver. 
+
+
 
 Addressing our two motivating research questions -- which schools receive visits from which colleges/universities and the extent to which visits are more likely to occur between organizations that share certain characteristics -- requires analyses that are more granular than Figure \@ref(fig:plot-1mode-privu).
 
@@ -280,7 +356,8 @@ knitr::include_graphics('assets/images/enrollment_funnel.png')
 
 
 ```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
-knitr::include_graphics('assets/figures/plot_g_2mode.pdf')
+knitr::include_graphics('assets/figures/plot_2mode_all_region.pdf')
+
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
