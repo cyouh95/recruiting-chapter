@@ -158,8 +158,10 @@ plot_ego_graph(univ_id = "160755", characteristic = 'region', values = c(1, 2, 3
   # villanova ego network, religion overlayed
   pdf("assets/figures/villanova_religion.pdf", paper = "a4r") # open file
   
-    par(mar=c(5, 4, 4, 2) + 0.1) # default margins
+    #par(mar=c(5, 4, 4, 2) + 0.1) # default margins
     #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+    #par(mar=c(0, 0, 0, 2) + 0.1, mai=c(0, 0, 0, 0))
+    par(mar=c(0, 0, 0, 4))
   
     plot_ego_graph(univ_id = "216597", characteristic = 'religion_4', values = c('catholic', 'christian', 'nonsectarian', 'other'), keys = c('Catholic', 'Christian', 'Nonsectarian', 'Other'), title = "", graph_order = 'both', margin = -0.3)
     
@@ -231,10 +233,11 @@ create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "eucl
   # mode = psi or hs
   if (mode == "hs") {
     proj <- "proj1"
+    type <- FALSE
   } else {  
     
     proj <- "proj2"
-    
+    type <- TRUE
   }
 
   #create adjacency matrix of 1-mode university object
@@ -258,15 +261,21 @@ create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "eucl
       members = NULL # NULL or a vector with length size of d. See the ‘Details’ section. default = NUKK
     ) 
     
-    # plot dendrogram associated with hclust object
-    hclust_obj %>% as.dendrogram() %>% plot(horiz = TRUE)
+  # plot dendrogram associated with hclust object
+    hclust_obj2 <- hclust_obj
+    hclust_obj2$labels <- V(network)$school_name[V(network)$type == type] # replace "labels" with school name rather than unitid
     
-    # cut the dendrogram to create the desired number of clusters using stats::cutree
+    par(mar=c(3,1,1,8)) # set the margin
+    #par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+    hclust_obj2 %>% as.dendrogram() %>% plot(horiz = TRUE)
+    
+  # cut the dendrogram to create the desired number of clusters using stats::cutree
     cutree(
       tree = hclust_obj, # a tree as produced by hclust. cutree() only expects a list with components merge, height, and labels, of appropriate content each.
       k = k, # NULL, # default = NULL an integer scalar or vector with the desired number of groups
       h = h # default = NULL numeric scalar or vector with heights where the tree should be cut
     )
+    #hclust_obj
 
 }
 # create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "euclidean", hclust_method = "complete") {
@@ -274,14 +283,10 @@ create_hclust <- function(network, mode, k = NULL, h = NULL, dist_method = "eucl
   # k = desired number of groups, hierarchical cluster analysis only, default = NULL
   # h = numeric scalar with heights where tree should be cut to create groups, hierarchical cluster analysis only, default = NULL
 
-
-create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL) %>% table()
-create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL, hclust_method = "average") %>% table()
-
-create_hclust(network = g_2mode, mode = "psi", k = 6, h = NULL, hclust_method = "complete") %>% table()
-
 create_hclust(network = g_2mode, mode = "psi", k = 4, h = NULL, hclust_method = "ward.D") %>% table()
-#create_hclust(network = g_2mode, mode = "psi", k = NULL, h = 600)
+
+create_hclust(network = g_2mode_privu, mode = "psi", k = 4, h = NULL, hclust_method = "ward.D") %>% table()
+
 
 bipartite.projection(g_2mode_privu)[["proj2"]] %>%
   as_adjacency_matrix(
@@ -681,10 +686,10 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
     pct_hs_region_4 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(region == 4)) / num_hs * 100)
     
     # Religion
-    pct_hs_religion_1 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'catholic')) / num_hs * 100)
-    pct_hs_religion_2 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'conservative_christian')) / num_hs * 100)
-    pct_hs_religion_3 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'nonsectarian')) / num_hs * 100)
-    pct_hs_religion_4 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion == 'other_religion')) / num_hs * 100)
+    pct_hs_religion_1 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion_4 == 'catholic')) / num_hs * 100)
+    pct_hs_religion_2 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion_4 == 'christian')) / num_hs * 100)
+    pct_hs_religion_3 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion_4 == 'nonsectarian')) / num_hs * 100)
+    pct_hs_religion_4 <- sprintf('%.1f%%', nrow(hs_characteristics %>% filter(religion_4 == 'other')) / num_hs * 100)
     
     # Race
     race_vals <- levels(as.factor(hs_characteristics[[race_var]]))
@@ -700,7 +705,7 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
     
     ego_tbl[i, ] <- c(as.character(univ_characteristics$name), as.character(univ_characteristics$school_name), member[names(member) == as.character(univ_characteristics$name)],
                       as.character(univ_characteristics$school_type), as.character(univ_characteristics$ranking_numeric),
-                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
+                      str_c(val_label(univ_df$region, univ_characteristics$region), univ_characteristics$religion_4, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
                       pct_hs_region_1, pct_hs_region_2, pct_hs_region_3, pct_hs_region_4,
                       pct_hs_religion_1, pct_hs_religion_2, pct_hs_religion_3, pct_hs_religion_4,
                       pct_hs_race_1, pct_hs_race_2, pct_hs_race_3, pct_hs_race_4,
@@ -724,13 +729,14 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
     
   names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'total', 'in_state', 'out_state','Characteristics',
                       'Northeast', 'Midwest', 'South', 'West',
-                      'Catholic', 'Conserv', 'Nonsect', 'Other',
+                      'Catholic', 'Christian', 'Nonsect', 'Other',
                       race_vals, ranking_vals)
   
   ego_tbl
 }
 
 ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k=4)
+ego_table_privu %>% print(n=40)
 ego_table_privu %>% count(Cluster)
 saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
@@ -738,7 +744,10 @@ ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_anal
 ego_table_pubu %>% count(Cluster)
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
-ego_table_privu_test <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
+ego_table_all <- create_ego_table(g_2mode, egos_psi, univ_vec, c_analysis = 'hclust', k=4)
+ego_table_all %>% count(Cluster)
+saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
+
 
 # count number of total, in-state, and out-of-state visits to private high schools
 events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View() # all
@@ -786,7 +795,9 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
       mutate(degree_band = case_when(degree > 5 ~ '6+',
                                      TRUE ~ as.character(degree)))
   }
+  twomode_df %>% glimpse() %>% print()
   
+  #BREAK SUCKA!  
   # Full table
   full_twomode_table <- twomode_df %>% arrange(-degree) %>%
     select_('name', 'school_name', 'city', 'state_code', 'region', 'religion', race_var, 'ranking', 'ranking_numeric', 'degree', 'closeness', 'strength')
@@ -812,7 +823,7 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
   
   list(full_table = full_twomode_table, agg_table = agg_twomode_table)
 }
-
+create_2mode_table(g_2mode)
 twomode_both <- create_2mode_table(g_2mode)
 saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
 saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
