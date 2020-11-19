@@ -799,8 +799,8 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
   
   #BREAK SUCKA!  
   # Full table
-  full_twomode_table <- twomode_df %>% arrange(-degree) %>%
-    select_('name', 'school_name', 'city', 'state_code', 'region', 'religion', race_var, 'ranking', 'ranking_numeric', 'degree', 'closeness', 'strength')
+  full_twomode_table <- twomode_df %>% arrange(-degree, -strength) %>%
+    select_('name', 'school_name', 'city', 'state_code', 'region', 'religion_4', race_var, 'ranking', 'ranking_numeric', 'degree', 'closeness', 'strength')
   
   # Aggregated table
   agg_twomode_table <- twomode_df %>%
@@ -808,7 +808,7 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
     summarise(Count = n())
 
   agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, 'region'))
-  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, 'religion'))
+  agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, 'religion_4'))
   agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, paste0(race_var, '_cat')))
   agg_twomode_table <- left_join(agg_twomode_table, create_agg_table(twomode_df, ranking_var))
   
@@ -817,13 +817,15 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
   
   names(agg_twomode_table) <- c('Degree', 'Count',
                                 'Northeast', 'Midwest', 'South', 'West',
-                                'Catholic', 'Conservative Christian', 'Nonsectarian', 'Other',
+                                'Catholic', 'Christian', 'Nonsectarian', 'Other',
                                 levels(as.factor(twomode_df[[paste0(race_var, '_cat')]])),
                                 levels(as.factor(twomode_df$rank_cat2)), 'rank_NA')
   
   list(full_table = full_twomode_table, agg_table = agg_twomode_table)
 }
+
 create_2mode_table(g_2mode)
+
 twomode_both <- create_2mode_table(g_2mode)
 saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
 saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
@@ -833,55 +835,8 @@ saveRDS(twomode_privu$full_table, file = './assets/tables/table_2mode_privu.RDS'
 saveRDS(twomode_privu$agg_table, file = './assets/tables/table_2mode_agg_privu.RDS')
 
 twomode_pubu <- create_2mode_table(g_2mode_pubu)
+twomode_pubu
 saveRDS(twomode_pubu$full_table, file = './assets/tables/table_2mode_pubu.RDS')
 saveRDS(twomode_pubu$agg_table, file = './assets/tables/table_2mode_agg_pubu.RDS')
 
 
-## -----------------------------------
-## CLUSTER FROM 2-MODE IGRAPH OBJECTS
-## -----------------------------------
-
-# Community cluster
-vertex_attr_names(g_2mode_privu)
-
-c_2mode_privu <- cluster_fast_greedy(g_2mode_privu)
-class(c_2mode_privu)
-length(c_2mode_privu)
-sizes(c_2mode_privu)
-
-membership(c_2mode_privu)
-
-length(V(g_2mode_privu)$type)
-membership(c_2mode_privu)[V(g_2mode_privu)$type==T]
-table(membership(c_2mode_privu)[V(g_2mode_privu)$type==T])
-
-plot(c_2mode_privu,
-     g_2mode_privu,
-     vertex.label = if_else(V(g_2mode_privu)$type, V(g_2mode_privu)$school_name, ''),
-     vertex.shape = if_else(V(g_2mode_privu)$type, 'square', 'circle'),
-     vertex.size = if_else(V(g_2mode_privu)$type, 5, 2),
-     layout = layout_with_kk,
-     edge.lty = 0)
-
-
-## -----------------------------------
-## CLUSTER FROM 1-MODE IGRAPH OBJECTS
-## -----------------------------------
-
-# Community cluster
-vertex_attr_names(g_1mode_psi)
-
-c_1mode_psi <- cluster_fast_greedy(g_1mode_psi)
-length(c_1mode_psi)
-sizes(c_1mode_psi)
-membership(c_1mode_psi)
-
-plot(
-  c_1mode_psi,
-  g_1mode_psi,
-  vertex.label = V(g_1mode_psi)$school_name,
-  col = ifelse(V(g_1mode_psi)$name %in% privu_vec, 'yellow', 'green'),
-  vertex.size = 5,
-  layout = layout_nicely,
-  edge.lty = 0
-)

@@ -163,7 +163,7 @@ Finally, we comment on the racial composition -- defined here as the percent of 
 
 [NEED TRANSITION TO FOCUS NOW ON HIGH SCHOOLS] Which private high schools received the most visits from private colleges and universities in our sample? Table \@ref(tab:hs-print-privu) shows characteristics of the 20 private high schools that were visited by the most private colleges and universities. The last two columns of Table \@ref(tab:hs-print-privu) are "degree" and "strength," which are related measures of vertex "centrality." Measures of centrality attempt to identify the most important or influential actors in a social network. "Degree" is defined as the number of edges direclty connected to a vertex. In Table \@ref(tab:hs-print-privu), the degree of a high school is the number of private colleges and universities in our sample that visited. The concept "strength" is generally defined as a weighted measure of degree. In our study, colleges often made more than one visit to the same high school in 2017. Thus, Table \@ref(tab:hs-print-privu) defines strength as the total number of visits from private colleges and universities in our sample.
 
-The Kent Denver School, the top ranked school in \@ref(tab:hs-print-privu),was visited by 23 of the 26 private colleges and universities in our sample. Choate Rosemary Hall was visited by 21 colleges and universities, but these 21 institutions made 34 total visits. Most schools in Table \@ref(tab:hs-print-privu) are mostly nonsectarian. Although all received a Niche grade of "A+", they are not uniformly in the upper-echelon of schools ranked in the top 50 or top 100 nationwide. With the exception of St. Ignatius Prep in Chicago and the Maret School in Washington DC, students who identify as Black, Latinx, or Native comprise less than 20% of all students.
+The Kent Denver School, the top ranked school in \@ref(tab:hs-print-privu),was visited by 23 of the 26 private colleges and universities in our sample. Choate Rosemary Hall was visited by 21 colleges and universities, but these 21 institutions made 34 total visits. Most schools in Table \@ref(tab:hs-print-privu) are mostly nonsectarian. Although all received a Niche grade of "A+", they are not uniformly in the upper-echelon of schools ranked in the top 100 nationwide. With the exception of St. Ignatius Prep in Chicago and the Maret School in Washington DC, students who identify as Black, Latinx, or Native comprise less than 20% of all students.
 
 Table \@ref(tab:hs-table-privu-agg) shows the characteristics of private high schools by degree band (e.g., visits from 15+, 10-14, etc). Schools that received visits from 4 or fewer private colleges and universities enrolled a greater share of Black/Latinx/Native students. These schools were also disproportionately Catholic schools and were more likely to recieve a grade of "A" or lower from Niche.
 
@@ -174,62 +174,225 @@ Whereas Tables \@ref(tab:hs-print-privu) and \@ref(tab:hs-table-privu-agg) exami
 ```{r, include = FALSE, eval = FALSE}
 df <- readRDS('./assets/tables/table_ego_pubu.RDS')
 df %>% glimpse()
-df %>% select(ID,University,Cluster,total) %>% 
-  arrange(Cluster,University) %>% print(n=30)
+df %>% select(ID,University,Cluster,Rank,total, in_state, out_state) %>% 
+  arrange(Cluster,desc(total)) %>% print(n=30)
 ```
+
+Figure \@ref(fig:plot-1mode-pubu) plots the one-mode network of visits by 17 public research universities, with vertex color determined by hierarchical cluster analysis specified to create $k = 4$ clusters. Accompanying Figure \@ref(fig:plot-1mode-pubu) and created from the respective ego networks of each university is Figure \@ref(fig:ego-network-figure-pubu), which shows the characteristics of private high schools visited by these public reearch universities. 
+
+We briefly sketch broad findings before discussing each cluster. First, for must public research universities in our sample, the vast majority of private school visits were to out-of-state schools [WHICH FIGURE/TABLE SHOWS THIS], which is consistent with the idea that public research universities pursue students from affluent households who can afford nonresident tuition price. Second, Figure \@ref(fig:ego-network-figure-pubu) indicates that public research universities tended to visit private high schools with weaker academic reputation than the set of schools visited by private colleges and universities [LATER, SAY GOING AFTER MONEY WITHOUT ACADEMIC REP]. Third, despite being nonsectarian, most public research universities visited a higher share of private high schools that were Catholic or Chrisitan than those visited by private colleges and universities. Fourth, racial composition of schools visited by public research universities was similar to the set of schools visited by private colleges and universities. A few public research universities appear (e.g., UC Irvine, UC Riverside) appear to visit a more racially diverse set of schools, but these institutions visited very few private schools.
+
 <!--
-
-   ID     University       Cluster total
-
- 1 100751 U of Alabama     1         985
-
-16 126614 CU Boulder       4         379
-17 218663 U of S.Carolina  4         486
-
- 2 186380 Rutgers          2         303
- 3 106397 U of Arkansas    2         225
- 4 201885 U of Cincinnati  2         283
- 5 139959 U of Georgia     2         302
- 6 155317 U of Kansas      2         235
- 7 215293 U of Pitt        2         261
- 8 110635 UC Berkeley      2         208
- 9 110680 UC San Diego     2         197
-10 166629 UMass Amherst    2         292
-
-11 199193 NCSU             3          23
-12 196097 SUNY Stony Brook 3         146
-13 110653 UC Irvine        3          60
-14 110671 UC Riverside     3          87
-15 181464 UNL              3         159
-
-
-
+Truly singular in the realm of recruiting, the University of Alabama is a cluster unto itself
 -->
 
+The University of Alabama is a cluster unto itself and is centrally located in the network graph in Figure \@ref(fig:plot-1mode-pubu). In 2017, the University of Alabama made 985 visits to U.S. private high schools. This number was more than double the 486 visits made by the University of South Carolina, which ranked second amongst public research universities in terms of number of private school visits, and substantially more than the 687 visits made by Notre Dame, which ranked first amongst private colleges and universities. Drawing from Figure \@ref(fig:ego-network-figure-pubu), more than 50% of visits by the University of Alabama were in the South. With respect to religious affiliation, nearly 50% of visits were to Catholic schools and about 25% of visits were to Christian schools. In contrast to the majority of private colleges and universities in our sample, the University of Alabama made nearly 50% of its visits at schools that received a grade of less than "A+" by Niche. At the same time 80% of visited schools enrolled fewer than 25% of students who identified as Black, Latinx, or Native. 
 
-Figure \@ref(fig:plot-1mode-pubu) plots the one-mode network of visits by 17 public research universities, with vertex color determined by hierarchical cluster analysis specified to create $k = 4$ clusters. Accompanying Figure \@ref(fig:plot-1mode-pubu) and created from the respective ego networks of each university is Figure \@ref(fig:ego-network-figure-pubu), which shows the characteristics of private high schools visited by these public reearch universities. Figure \@ref(fig:ego-network-figure-pubu) indicates that public research universities tended to visit private high schools with weaker academic reputation than the set of schools visited by private colleges and universities [LATER, SAY GOING AFTER MONEY WITHOUT ACADEMIC REP]. More surprisingly, despite being nonsectarian, most public research universities visited a higher share of private high schools that were Catholic or Chrisitan than those visited by private colleges and universities.`
+A second cluster, located nearly as centrally in Figure \@ref(fig:plot-1mode-pubu) as the University of Alabama, consists of the University of South Carolina (486 visits) and the University of Colorado-Boulder (379 visits). These institutions ranked second and third amongst public universities in our sample in terms of number of visits.  Geographically, both universities recruiting nationally but concentrated on some regions more than others. For both universities, the Northeast and Midwest accounted for about 25% of visits.  The University of South Carolina concentrated visits in its home region, the South. CU-Boulder made X% of visits in its home region, the West, and made X% of visits in the South.  Both universities made more than 60% of visits at Catholic or Christian affiliated schools. In terms of academic reputation, CU-Boulder visited a slightly stronger set of schools than the University of South Carolina and both universities visited a stronger set of schools than the University of Alabama.
 
-The University of Alabama is a cluster unto itself. In 2017, the University of Alabama made 985 visits to private high schools. This number was more than double the 486 visits made by the University of South Carolina, which ranked second amongst public research universities in terms of number of private school visits, and substantially more than the 687 visits made by Notre Dame, which ranked first amongst private colleges and universities. With respect to geographic region, more than 50% of visits were in the South. 
+Third, the largest cluster -- at nine universities -- and the most diverse in terms of geographic location and academic reputation consists of three universities from the Northeast (Rutgers, UMass Amherst, University of Pittsburgh), two Midwest universities (University of Cincinnati, University of Kansas), two universities in the South (University of Arkansas, University of Georgia), and two universities from the West (UC Berkeley, UC San Diego).  Located between the center and periphery in Figure \@ref(fig:plot-1mode-pubu), these universities made a moderate number of private school visits, ranging from 197 by UC-San Diego to 302 and 303, respectively, by the University of Georgia and Rutgers.
 
-[AT SOME POINT SAY THAT THE GOEGRAPHIC REGION IS NOT ALWAYS THE SAME AS REGION THEY ARE LOCATED IN; IN GENERAL SAY A LOT ABOUT GEOGRAPHIC REGION]
+These universities differ in the extent to which visits were concentrated in their home geographic region. At the high end, the University of Georgia -- 47th in YYYY US News rankings -- and the University of Arkansas -- 160th in US News rankings -- are located in the South and made at least 75% of visits in the South. The remaining seven universities generally made more visits in their home geographic than other regions but while also making substantial visits outside their home region, particularly in the South. For example, three highly ranked universities -- University of Pittsburgh (ranked 58), UC-Berkeley (ranked 22), and UC-San Diego  (ranked 35) each made a substantial share of visits in the South. In contrast to private colleges and universities, several public research universities in this cluster largely ignored particular geographic regions altogether. For example, the University of Kansas and the University of Arkansas did not visit the Northeast. The University of Georgia, UC-San Diego, and UMass Amherst largely ignored the MidWest, while the University of Pittsburgh did not visit the West.
 
-having made 985 visits to U.S. private high schools in 2017 In 2017
-At 985 visits, the University of Alabama made more 
+With the exception of UC-Berkeley, the universities in this cluster made more than 50% of visits to sectarian Catholic or Christian affiliated schools. Universities that made a substantial share of visits to Christian affiliated schools also tended to make a large share of visits in the share of visits in the South [OVERLAP BETWEEN SOUTH AND CHRISTIAN]. Finally, with the exception of UC-Berkeley, UC-San Diego, and to a lesser extent the University of Georgia -- three highly ranked universities -- the academic repuation of schools visited by this cluster was substantially lower than those visited by the majority of private colleges and universities in our sample. These results suggest that non-prestigious public research universities visit a large number non-elite private high schools that generally did not receive visits from selective private colleges and universities.
 
-created from the respective ego networks of each public research university, shows characteristics of private high schools visited our sample of private colleges and universities, specifically, geographic region, religious affiliation, academic reputation, and racial composition.
+The final cluster consists of five universities -- University of Nebraska-Lincoln (159 visits, 104 out-of-state), SUNY Stony Brook (146 visits, 107 out-of-state), UC Riverside (87 visits, 32 out-of-state), UC Irvine (60 visits, 40 out-of-state), North Carolina State University  (23 visits, 20 out-of-state). These universities made fewer private school visits than the other public research universities, made a relatively higher share of in-state visits, and generally concentrated visits within their home geographic region. As such, they are located on the periphery of the network in Figure \@ref(fig:plot-1mode-pubu). 
 
+<!-- reminder of RQs: 
+1. which schools receive visits from which colleges/universities? 
+2. to what extent are visits more likely to occur between organizations that share certain characteristics
+-->
 
+Transitioning from the focus on public research universities to a focus on the private high schools they visit, Table \@ref(tab:hs-print-pubu) shows the characteristics of the 20 private high schools that received visits from the greatest number of public research universities in our sample. 
 
-ADD TABLES/FIGURES OF VISITS BY PUBLIC RESEARCH UNIVERSITIES. 
+The top five high schools in  Table \@ref(tab:hs-print-pubu) each received visits from 11 (i.e., "degree" equals 11) of the 17 public research universities in our sample. Notably, all five schools were located in either California and Texas. Four of these schools are Catholic and one -- The Greenhill School -- is nonsectarian. These five schools differed in terms of the number of visits received. For example, both Jesuit College Prep in Dallas, TX and Santa Margarita Catholic High School in Rancho Santa Margarita, CA received 19 visits from 11 public research universities, while Cathedral Catholic High School in San Diego, CA received 13 visits from 11 public research universities [SAY SOMETHING ABOUT WHICH PUBLIC [OR PRIVATE] UNIVERSITIES VISITED THESE HIGH SCHOOLS? THIS CODE BELOW DOES THAT WORK IF YOU WANT TO INCLUDE IT; MAYBE SHOW EGO NETWORK OF A COUPLE HIGH SCHOOLS?]
+
+```{r, include = FALSE, eval = FALSE}
+df <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
+df %>% select(name, school_name, degree, strength)
+
+events_data %>% glimpse()
+events_data %>% left_join(y = univ_info, by = c("univ_id")) %>% count(control)
+
+# this shows which universities visited the top 5 high schools most visited by public resarch universities in our sample
+  # can filter on "control" below to show visits by public and/or private universities
+    # "Public"
+    # "Private not-for-profit"
+events_data %>% left_join(y = univ_info, by = c("univ_id")) %>% 
+  filter(event_type == "priv_hs", control == "Private not-for-profit") %>% 
+  filter(school_id %in% c("01324487","02187540","00071446","A0900259","A0109386")) %>% 
+  left_join(y = privhs_df, by = c("school_id")) %>% 
+  arrange(school_id, univ_id) %>%
+  select(school_id, school_name, event_state,univ_id, univ_name)
+```
+The set of schools visited by the greatest number of public research universities from our sample differs substanitally from the schools visited by the greatest number of private colleges and universities. Only four of the 20 schools in \@ref(tab:hs-print-pubu) were also in the anologous table for private colleges and universities (Table \@ref(tab:hs-print-privu)), specifically the Greenhill School in Addison, TX, Episcopal High School in Alexandria, VA, St. Ignatius College Prep in Chicago, IL, and the McDonogh School in Owings Mills, MD. Compared the top 20 private schools most visited by private colleges and universities, the 20 most-visited schools by public research universities were more likely to be Catholic schools and they had substantially lower academic reputations. Of the 20 schools in Table \@ref(tab:hs-print-pubu), only one -- The Greenhill School in Addison, TX, ranked 64 -- was ranked in the top 100 nationally by Niche. By contrast, of the 20 schools most visited by private colleges and universities, nine were ranked in the top 100 by Niche.
+
+```{r, include = FALSE, eval = FALSE}
+# which schools in top 20 most visited by public universities were also top 20 most visited by private colleges and universities
+df_pubu <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20) %>% rename(degree_pub = degree, strength_pub = strength)
+df_privu <- readRDS('./assets/tables/table_2mode_privu.RDS') %>% head(n=20) %>% rename(degree_priv = degree, strength_priv = strength )
+
+df_pubu %>% glimpse()
+
+df_privu %>% select(name, degree_priv, strength_priv) %>% right_join(y = df_pubu, by = c("name")) %>%
+  select(name, school_name, city, state_code, degree_pub, strength_pub, degree_priv, strength_priv, religion_4, pct_blacklatinxnative, ranking, ranking_numeric)
+```
+
+The top 20 most-visited schools by public research universities enrolled a somewhat higher percentage of students who identify as Black/Latinx/Native than the schools most-visited by private colleges and universities. For example, of the top-20 schools most visited by public research universities, there were five schools where students who identify as Black, Latinx, or Native represent at least 30% of student enrollment. By contrast, none of the top-20 schools most visited by private colleges and universities enrolled at least 30% of students who identify as Black, Latinx, or Native.
+
+```{r, include = FALSE, eval = FALSE}
+df_pubu <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
+df_pubu %>% filter(pct_blacklatinxnative>=30)
+
+df_privu <- readRDS('./assets/tables/table_2mode_privu.RDS') %>% head(n=20) 
+df_privu %>% filter(pct_blacklatinxnative>=30)
+```
+Table \@ref(tab:hs-table-pubu-agg) shows the characteristics of private high schools by number of public research universities that visited (e.g., 6+, 5, 4, etc.). Compared to schools that received visits from three or fewer public research universities, schools that received visits from several public research universities were disproportionaly located in the South, were more likely to be Catholic schools than Christian or nonsectarian, and were likely to be ranked in the top 200 by Niche or be graded as "A+" by Niche.
 
 
 
 ## Comparison of Public Versus Private Colleges and Universities
 
-shit to say about comparison
+<!-- reminder of RQs: 
+1. which schools receive visits from which colleges/universities? 
+2. to what extent are visits more likely to occur between organizations that share certain characteristics
+-->
 
-- on avg. private colleges and universities made more visits than publics, except university of Aalabama.
-- 
+WHICH TABLES/FIGURES IN THIS SECTION
+
+- one-mode plot w/ vertices colored by cluster
+  - probably better to show all or pub out-state but not both
+  - given the focus is which public universities behave like private universities, think there is rationale for restricting public university events to out-of-state because out-of-state visits are behavior associated w/ privatization; also this makes it slightly different than what has already been analyzed
+- show ego figure organized by cluster
+- maybe which schools most visited?
+
+WHAT SHOULD FOCUS OF RESULTS BE
+
+- which public universities behave like private universities
+  - this strikes me as the case for out-of-state only
+
+<!-- CLUSTERS, ALL
+
+ 1  2  3  4 
+ 4 21  5 12 
+ 
+> save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all.pdf")
+# A tibble: 42 x 2
+   name              cluster
+   <chr>               <int>
+ 1 Notre Dame              1
+ 2 SMU                     1
+ 3 U of Alabama            1
+ 4 Villanova               1
+ 
+ 5 Baylor                  2
+ 6 Case Western Res.       2
+ 7 Emory                   2
+ 8 Harvey Mudd             2
+ 9 Macalester              2
+10 Occidental              2
+11 Rutgers                 2
+12 Scripps                 2
+13 Smith                   2
+14 Stevens Ins. Tech       2
+15 Swarthmore              2
+16 U of Arkansas           2
+17 U of Cincinnati         2
+18 U of Denver             2
+19 U of Georgia            2
+20 U of Kansas             2
+21 U of Pitt               2
+22 UC Berkeley             2
+23 UC San Diego            2
+24 UMass Amherst           2
+25 Williams                2
+
+26 NCSU                    3
+27 SUNY Stony Brook        3
+28 UC Irvine               3
+29 UC Riverside            3
+30 UNL                     3
+
+31 Boston Coll.            4
+32 Colorado Coll.          4
+33 Conn Coll.              4
+34 CU Boulder              4
+35 Middlebury              4
+36 Northwestern            4
+37 Oberlin                 4
+38 Sewanee                 4
+39 TCU                     4
+40 Tufts                   4
+41 Tulane                  4
+42 U of S.Carolina         4
+.
+
+ 
+-->
+DD
+
+
+<!-- CLUSTERS, ONLY OUT-OF-STATE FOR PUBLIC RESEARCH UNIVERSITIES
+
+.
+ 1  2  3  4 
+11 13  5 13  
+
+> save_1mode_plot(g_2mode, mode = "psi", pubu_visits = 'outst', layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all_pubu_outst.pdf")
+
+# A tibble: 42 x 2
+
+   name              cluster
+   <chr>               <int>
+ 1 Boston Coll.            1
+ 2 CU Boulder              1
+ 3 Northwestern            1
+ 4 Notre Dame              1
+ 5 Sewanee                 1
+ 6 SMU                     1
+ 7 TCU                     1
+ 8 Tulane                  1
+ 9 U of Alabama            1
+10 U of S.Carolina         1
+11 Villanova               1
+
+12 Baylor                  2
+13 Harvey Mudd             2
+14 Rutgers                 2
+15 Scripps                 2
+16 Stevens Ins. Tech       2
+17 U of Arkansas           2
+18 U of Cincinnati         2
+19 U of Georgia            2
+20 U of Kansas             2
+21 U of Pitt               2
+22 UC Berkeley             2
+23 UC San Diego            2
+24 UMass Amherst           2
+
+25 NCSU                    3
+26 SUNY Stony Brook        3
+27 UC Irvine               3
+28 UC Riverside            3
+29 UNL                     3
+
+30 Case Western Res.       4
+31 Colorado Coll.          4
+32 Conn Coll.              4
+33 Emory                   4
+34 Macalester              4
+35 Middlebury              4
+36 Oberlin                 4
+37 Occidental              4
+38 Smith                   4
+39 Swarthmore              4
+40 Tufts                   4
+41 U of Denver             4
+42 Williams                4
+
+
+-->
+
 
 ```{r, include = FALSE, eval = FALSE}
 df <- readRDS('./assets/tables/table_ego_all.RDS')
@@ -265,29 +428,11 @@ kable(
 
 <!-- private col/univ -->
 
-```{r, ego-table-privu, echo = FALSE, include = FALSE, eval = FALSE}
-df <- readRDS('./assets/tables/table_ego_privu.RDS')
-knitr::kable(
-  df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
-  caption = 'ego table private colleges and universities') %>% landscape(margin = NULL) %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
-```{r, include = FALSE, eval = FALSE}
-df <- readRDS('./assets/tables/table_ego_privu.RDS')
-#df %>% select(ID,University,Cluster,Type,Rank,c1_lt10,c2_10to25,c3_25to50,`c4_50+`) %>%mutate(lt25 = as.numeric(c1_lt10) + as.numeric(c2_10to25))
-
-knitr::kable(
-  df %>% select(ID,University,Cluster,Rank,c1_lt10,c2_10to25,c3_25to50,`c4_50+`), row.names = F, # select(-ID, -Characteristics) Characteristics ,Type
-  caption = 'la la') %>% landscape(margin = NULL) %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
 ```{r, hs-print-privu, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_privu.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-name,-closeness), caption = 'most central private high schools, private colleges and universities') %>% 
+  df %>% select(-name,-closeness), caption = 'The 20 most central private high schools with respect to visits from private colleges and universities') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
@@ -303,19 +448,11 @@ knitr::kable(df, caption = 'characteristics of high schools by degree band, priv
 
 <!-- public research universities -->
 
-```{r, ego-table-pubu, echo = FALSE, include = FALSE, eval = FALSE}
-df <- readRDS('./assets/tables/table_ego_pubu.RDS')
-knitr::kable(
-  df %>% select(-ID,-Characteristics), row.names = F, # select(-ID, -Characteristics)
-  caption = 'ego table caption public universities') %>% landscape(margin = NULL) %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
 ```{r, hs-print-pubu, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-name,-closeness), caption = 'most central private high schools, private colleges and universities') %>% 
+  df %>% select(-name,-closeness), caption = 'The 20 most central private high schools with respect to visits from public research universities') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
@@ -324,7 +461,7 @@ knitr::kable(
 ```{r, hs-table-pubu-agg, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_agg_pubu.RDS')
 
-knitr::kable(df, caption = 'characteristics of high schools by degree band, private colleges and universities') %>% 
+knitr::kable(df, caption = 'characteristics of high schools by degree band, public research universities') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
