@@ -332,28 +332,9 @@ df %>% filter(Cluster ==4, Type == "univ") %>% select(ID, University, Type, Rank
 
 
 
-WHICH TABLES/FIGURES IN THIS SECTION
+# Summary and Discussion
 
-- one-mode plot w/ vertices colored by cluster
-  - probably better to show all or pub out-state but not both
-  - given the focus is which public universities behave like private universities, think there is rationale for restricting public university events to out-of-state because out-of-state visits are behavior associated w/ privatization; also this makes it slightly different than what has already been analyzed
-- show ego figure organized by cluster
-  - make this one only include out-of-state events for public research universities
-- maybe which schools most visited?
-
-WHAT SHOULD FOCUS OF RESULTS BE
-
-- which public universities behave like private universities
-  - this strikes me as the case for out-of-state only
-
-```{r, include = FALSE, eval = FALSE}
-#df <- readRDS('./assets/tables/table_ego_all.RDS')
-df <- readRDS('./assets/tables/table_ego_all_pubu_outst.RDS')
-df %>% glimpse()
-df %>% select(ID,University,Cluster,total) %>% 
-  arrange(Cluster,total) %>% print(n=50)
-```
-
+[ADD SUCCINCT, CONCRETE SUMMARY FOCUSING ON BIG FINDINGS AND THEMES; VERY BRIEF DISCUSSION]
 
 # References
 
