@@ -359,7 +359,7 @@ save_2mode_plot <- function(network, pubu_visits = 'all', privu_visits = 'all', 
   }
   
   # out-of-state visits only for both public and private colleges/universities
-  if (pubu_visits == 'outst' & privu_visits == 'outst') {
+  else if (pubu_visits == 'outst' & privu_visits == 'outst') {
     
     network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
   }
@@ -650,8 +650,7 @@ save_1mode_plot(g_2mode, mode = "psi", pubu_visits = 'outst', layout = layout_wi
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
 
-
-create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2', k = NULL, h = NULL) {
+create_ego_table <- function(twomode_network, ego_networks, univs, pubu_visits = 'all', privu_visits = 'all', c_analysis, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2', k = NULL, h = NULL) {
   
   ego_tbl <- data.frame(univ_id = character(0), univ_name = character(0), cluster = character(0), univ_type = character(0), univ_ranking = character(0), characteristics = character(0),
                         region_1 = character(0), region_2 = character(0), region_3 = character(0), region_4 = character(0),
@@ -659,10 +658,38 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
                         race_1 = character(0), race_2 = character(0), race_3 = character(0), race_4 = character(0),
                         ranking_1 = character(0), ranking_2 = character(0), ranking_3 = character(0), ranking_4 = character(0),
                         stringsAsFactors=FALSE)
+
+  # modify igraph objects depending on whether in-state visits are included
   
+    # all visits for private; out-of-state only for publics; 
+    if (pubu_visits == 'outst' & privu_visits != 'outst') {
+      
+      # modify two-mode network
+      twomode_network <- subgraph.edges(graph = twomode_network, eids = E(twomode_network)[(E(twomode_network)$visiting_univ == "public" & E(twomode_network)$visit_loc == "outofstate") | E(twomode_network)$visiting_univ == "private"]) 
+      
+      # create revised ego network
+      ego_networks <- make_ego_graph(graph = twomode_network,
+                                 order = 2,
+                                 nodes = V(twomode_network)[V(twomode_network)$type == TRUE],  # only include univs
+                                 mindist = 0)
+      
+      names(ego_networks) <- univs %>% str_sort()
+      
+      for (i in 1:length(ego_networks)) {
+        E(ego_networks[[i]])$order <- if_else(str_detect(string = attr(E(ego_networks[[i]]), 'vnames'), pattern = str_c('\\|', names(ego_networks)[[i]])), 1, 2)
+      }
+      
+    }
+    
+    # out-of-state visits only for both public and private colleges/universities
+    #else if (pubu_visits == 'outst' & privu_visits == 'outst') {
+    #  network <- subgraph.edges(graph = network, eids = E(g_2mode)[E(network)$visit_loc == "outofstate"])
+    #}
+  
+  # cluster analysis to identify communities
   if (c_analysis == 'fast') {
     #member <- membership(cluster_fast_greedy(twomode_network))
-    member <- bipartite.projection(network)[["proj2"]] %>% cluster_fast_greedy() %>% membership()
+    member <- bipartite.projection(twomode_network)[["proj2"]] %>% cluster_fast_greedy() %>% membership()
   } else {
     member <- create_hclust(network = twomode_network, mode = 'psi', k = k, h = h, hclust_method = "ward.D")
     #create_hclust(network = network2, mode = mode, k = k, h = h, hclust_method = hclust_method)  
@@ -714,6 +741,9 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
   
   ego_tbl <- ego_tbl %>% arrange(as.numeric(cluster), univ_type, as.numeric(univ_ranking))
   
+  # merge institutional control
+    ego_tbl <- univ_info %>% select(univ_id,control) %>% right_join(y = ego_tbl, by = c("univ_id"))
+  
   # merge in number of visits to private high schools (total, inst, outst)
     ego_tbl <- events_data %>% filter(event_type == "priv_hs") %>% group_by(univ_id) %>% 
       summarize(phs_visits_tot = n()) %>% right_join(y = ego_tbl)
@@ -724,39 +754,43 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, r
     ego_tbl <- events_data %>% filter(event_type == "priv_hs", univ_state != event_state) %>% group_by(univ_id) %>% 
       summarize(phs_visits_out = n()) %>% right_join(y = ego_tbl)  
     
-  # change order of variables
-    ego_tbl <- ego_tbl %>% relocate(univ_id, univ_name, cluster, univ_type, univ_ranking, phs_visits_tot, phs_visits_in, phs_visits_out, characteristics)
+  # modify total number of events and number of in-state events if we are excluding in-state events
+    if (pubu_visits == 'outst') {
+      
+      ego_tbl$phs_visits_tot <- if_else(ego_tbl$control == "Public", ego_tbl$phs_visits_tot - ego_tbl$phs_visits_in, ego_tbl$phs_visits_tot)
+      ego_tbl$phs_visits_in <- if_else(ego_tbl$control == "Public", 0L, ego_tbl$phs_visits_in)
+      
+    }
     
-  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'total', 'in_state', 'out_state','Characteristics',
+  # change order of variables
+    ego_tbl <- ego_tbl %>% relocate(univ_id, univ_name, cluster, univ_type, univ_ranking, control, phs_visits_tot, phs_visits_in, phs_visits_out, characteristics)
+    
+  names(ego_tbl) <- c('ID', 'University', 'Cluster', 'Type', 'Rank', 'control', 'total', 'in_state', 'out_state','Characteristics',
                       'Northeast', 'Midwest', 'South', 'West',
                       'Catholic', 'Christian', 'Nonsect', 'Other',
                       race_vals, ranking_vals)
   
   ego_tbl
 }
+# create_ego_table <- function(twomode_network, ego_networks, univs, pubu_visits = 'all', privu_visits = 'all', c_analysis, race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2', k = NULL, h = NULL) {
 
-ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k=4)
-ego_table_privu %>% print(n=40)
-ego_table_privu %>% count(Cluster)
-saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
-
-ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k=4)
-ego_table_pubu %>% count(Cluster)
-saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
-
-ego_table_all <- create_ego_table(g_2mode, egos_psi, univ_vec, c_analysis = 'hclust', k=4)
-ego_table_all %>% count(Cluster)
+ego_table_all <- create_ego_table(twomode_network = g_2mode, ego_networks = egos_psi, univs = univ_vec, pubu_visits = 'all', privu_visits = 'all', c_analysis = 'hclust', k=4)
 saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
 
+ego_table_all_pubu_outst <- create_ego_table(twomode_network = g_2mode, ego_networks = egos_psi, univs = univ_vec, pubu_visits = 'outst', privu_visits = 'all', c_analysis = 'hclust', k=4)
+ego_table_all_pubu_outst
+saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_outst.RDS')
 
-# count number of total, in-state, and out-of-state visits to private high schools
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs") %>% group_by(school_name) %>% count() %>% View() # all
+ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k=4)
+saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs", univ_state == event_state) %>% group_by(school_name) %>% count() %>% View() # in-state
+ego_table_pubu <- create_ego_table(twomode_network = g_2mode_pubu, ego_networks = egos_psi_pubu, univs = pubu_vec, c_analysis = 'hclust', k=4)
+saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
 
-events_data %>% left_join(y = univ_df, by = c("univ_id" = "school_id")) %>% filter(event_type == "priv_hs", univ_state != event_state) %>% group_by(school_name) %>% count() %>% View() # out-state
+ego_table_pubu_outst <- create_ego_table(twomode_network = g_2mode_pubu, ego_networks = egos_psi_pubu, univs = pubu_vec, pubu_visits = 'outst', privu_visits = 'all', c_analysis = 'hclust', k=4)
+ego_table_pubu_outst
+saveRDS(ego_table_pubu_outst, file = './assets/tables/table_ego_pubu_outst.RDS')
 
-events_data %>% glimpse()
 
 ## ---------------------------------
 ## TABLE FROM 2-MODE IGRAPH OBJECTS

@@ -39,7 +39,7 @@ Each of these marketing/recruiting interventions -- and dozens of other interven
 
 Access to concrete data about marketing and recruiting behaviors has been a persistent barrier to empirical research. To the extent that marketing/recruiting behaviors are inconsistent with public relations rhetoric (e.g., "our commitment to access"), colleges and universities may have incentive to withhold data from researchers. Therefore, conventional data collection methods such as surveys and even interviews should be appraised with healthy skepticism. We argue that pushing forward an empirical research agenda on marketing/recruiting behaviors depends on different modes of data collection -- including public records requests and "data science" methodologies, such as web-scraping and streaming social media data -- that record actual behaviors (e.g., contracts, transactions, records of expenditure) as opposed to statements by colleges/universities about their behavior. 
 
-We present this chapter as an example of empirical research about marketing/recruiting behavior. This chapter analyzes off-campus recruiting visits by a sample of public research universities and a sample of selective private colleges and universities in 2017. We collected visit data by "scraping" URLs (e.g., "Coming to a neighborhood near you") once per week from college/university admissions websites and -- for the sample of public research universities -- by issuring public records requests. Our analyses to date have focused on public research universities. As described in more detail below, 12 of the 15 public research universities in our sample made far more out-of-state visits than in-state visits, a finding antithetical to the stated mission of most public research universities. These out-of-state visits focused on wealthy, predominantly white schools and communities. Additionally, most public research universities made a disproportionate number of out-of-state visits to private schools, but visited few in-state private schools.
+We present this chapter as an example of empirical research about marketing/recruiting behavior. This chapter analyzes off-campus recruiting visits by a sample of public research universities and a sample of selective private colleges and universities in 2017. We collected visit data by "scraping" URLs (e.g., "Coming to a neighborhood near you") once per week from college/university admissions websites and -- for the sample of public research universities -- by issuring public records requests. Our analyses to date have focused on public research universities. As described in more detail below, 12 of the 15 [FIX NUMBERS, IT'S 17 PUBLICS] public research universities in our sample made far more out-of-state visits than in-state visits, a finding antithetical to the stated mission of most public research universities. These out-of-state visits focused on wealthy, predominantly white schools and communities. Additionally, most public research universities made a disproportionate number of out-of-state visits to private schools, but visited few in-state private schools.
 
 Building on these findings, this chapter analyzes off-campus visits to private high schools by public research universities and by selective private colleges and universities. We utilize social network methods and emphasize comparisons within and between public and private postsecondary institutions. Analyses are informed by two broad, related questions. First, which types of private high schools receive visits from which types of colleges and universities? Second, to what do extent colleges and universities visit private high schools that share similar characteristics with the college (e.g., geographic region, religious affiliation, academic reputation, and racial composition)? 
 
@@ -253,10 +253,84 @@ Table \@ref(tab:hs-table-pubu-agg) shows the characteristics of private high sch
 
 ## Comparison of Public Versus Private Colleges and Universities
 
+```{r, include = FALSE, eval = FALSE}
+# check to make sure ego table that exludes in-state events by public universities is correct
+df_all <- readRDS('./assets/tables/table_ego_all.RDS')
+df_all_pubu_outst <- readRDS('./assets/tables/table_ego_all_pubu_outst.RDS')
+
+df_all %>% glimpse()
+df_all_pubu_outst %>% glimpse()
+
+df_all %>% count(Cluster)
+df_all_pubu_outst %>% count(Cluster)
+
+df_all %>% arrange(ID) %>% filter(Type == "univ") %>% select(ID,University,total,Northeast,Midwest,South,West,Catholic,Christian,Nonsect,Other) %>% 
+   print(n=50)
+
+df_all_pubu_outst %>% arrange(ID) %>% filter(Type == "univ") %>% select(ID,University,total,Northeast,Midwest,South,West,Catholic,Christian,Nonsect,Other) %>% 
+   print(n=50)
+```
+
 <!-- reminder of RQs: 
+
 1. which schools receive visits from which colleges/universities? 
 2. to what extent are visits more likely to occur between organizations that share certain characteristics
+
 -->
+
+
+We conclude by comparing the off-campus recruiting visits to private high schools by public research universities to those of private colleges and universities.
+
+For these analyses, we include both in-state and out-of-state visits made by private colleges and universities but we exclude in-state visits by public research universities but we do not exclude. The motivation for this decision is as follows. For most public research universities in our sample, the overwhelming majority of visits to private schools are to out-of-state private schools. Prior research suggests that nonresident enrollment growth by public research universities is substantially motivated by the goal of growing tuition revenue [CITE]. Typically, nonresident tuition price at public research universities is substantially higher than resident tuition price but lower than the price charged by selective private colleges and universities (e.g., in 2018-19 fulltime annual resident tuition price at the University of Colorad-Boulder was \$10,728, compared to nonresident tuition price of \$35,482, compared to tuition price of $54,120 at Northwestern University).  We argue that the pursuit of out-of-state students by public universities is an example of "privatization" because out-of-state enrollment is antithetical to the traditional mission of public universities but is consistent with the mission of private colleges and universities. Furthermore, we argue that out-of-state recruiting efforts by public research universities focus on affluent households who are also considering private colleges and universities. Therefore, comparing recruiting visits by private colleges and universities to out-of-state visits by public research universities provides a helpful test of the extent to which public institutions are mimicking the behavior of private institutions.
+<!-- tuition price numbers from here:
+https://www.collegesimply.com/colleges/search
+-->
+Figure \@ref(fig:plot-1mode-pubu) plots the one-mode network of visits by the 42 public and private colleges and universities in our sample, with vertex color determined by hierarchical cluster analysis specified to create $k = 4$ clusters. Figure \@ref(ego-network-figure-all-pubu-outst) shows the characteristics of private high schools visited by these 42 institutions, sorted by cluster. Of the four clusters from Figures \@ref(fig:plot-1mode-pubu) and \@ref(ego-network-figure-all-pubu-outst), one contains solely of public research universities, one contains solely of private colleges and universities, and two contain a mix of private and public institutions.  
+
+The public-only cluster consists of five institutions: North Carolina State University, SUNY Stony Brook, UC Irvine, UC Riverside, and the Unviersity of Nebraska-Lincoln. These universities made relatively few (out-of-state) visits to private high schools -- ranging from 20 by NC State to 107 by SUNY Stony Brook -- and, thus, are located on the periphery of the network in Figure \@ref(fig:plot-1mode-pubu). The private-only cluster consists of 13 institutions: Case Western Reserve, Colorado College, Connecticut College, Emory University, Macalester, Middlebury, Oberlin, Occidental, Smith, Swarthmore, Tufts, University of Denver, Williams. This cluster contains nine liberal arts colleges and four universities (U of Denver, Emory, Tufts, Case Western Reserve). Geographically, six of these institutions are located in the Northeast, three in the Midwest, two in the West, and one in the South. Compared to other postsecondary institutions in our sample, the colleges in this cluster made a moderate number of private school visits, ranging from 164 visits by Smith to 337 by Oberlin. Drawing from \@ref(ego-network-figure-all-pubu-outst), visits were spread out geographically rather than concentrated in a particular region. The majority of visits were to nonsectarian schools. Compared to other clusters, these colleges visited schools with strong academic reputations.
+
+We devote more attention to the two clusters that contain a mix of public and private postsecondary institutions. The first of these contains 11 institutions, including eight private universities (Boston College, Northwestern University, Notre Dame, Sewanee, Southern Methodist, Texas Christian University, Tulane, Villanova) and three public research universities (University of Alabama, University of Colorado-Boulder, University of South Carolina).  The universities in this cluster made, relatively, a very high number of private school visits -- ranging from 333 by Boston College to 931 (out-of-state) visits by the University of Alabama -- and are located in the center of the network in Figure \@ref(fig:plot-1mode-pubu). Geographically, five of these institutions are located in the South, two in the Northeast, two in the Midwest, and one in the West. \@ref(ego-network-figure-all-pubu-outst) shows that most of these institutions -- even those not located in the South -- made a disproportionate number of recruiting visits in the South.  This cluster contains three private Catholic universities (Notre Dame, Villanova, Boston College), which visited a relatively high share of Catholic Schools, and X private Christian universities (Sewanee, Southern Methodist, Texas Christian), which visited a relatively high share of Christian affiliated schools. More notable, however, is the extent to which the three public research universities focused visits on Catholic or Christian private schools. Finally, the universities in this cluster -- albeit to a less extent for Boston College, Northwestern, and Tulane -- visited private high schools with weaker academic reputations than those visited by the cluster of 13 private colleges and universities. The weak academic reputation of schools visited by Notre Dame -- similar to those visited by the University of Alabama and the University of South Carolina -- is surprising given that Notre Dame is ranked 19th by US News.
+
+The final cluster contains 13 institutions, including nine public research universities (U. of Arkansas, U. of Cincinnati, U. of Georgia, U. of Kansas, U. of Pittsburgh, UC-Berkeley, UC-San Diego, and UMass Amherst) and four private institutions (Harvey Mudd, Scripps, Stevens Institute of Technology, and Baylor). The universities in this cluster made a moderate number of private school visits -- ranging from 111 by Scripps to 257 by Baylor -- and are located between the center and the periphery of the network in Figure \@ref(fig:plot-1mode-pubu). Whereas, the public and private institutions in the previous cluster (e.g., University of Alabama and Notre Dame) were clearly similar to one another in recruiting patterns, the similarities between public and private institutions in this cluster are less clear. Interestingly, in our analyses of visits by private colleges and universities (above), these four private institutiosn were their own cluster and were on the periphery of the network. Geographically, these institutions are spread across the country, with recruiting visits concentrated in their home region and often in the South.  [COMMENT ON SIMILARITIES BETWEEN PUBLIC AND PRIVATE W/ RESPECT TO REGION/RELIGION, ACADEMIC REPUTATION]
+
+
+
+```{r, include = FALSE, eval = FALSE}
+df <- readRDS('./assets/tables/table_ego_all_pubu_outst.RDS')
+
+# cluster 2; public and private
+df %>% filter(Cluster ==2) %>% select(ID, University, Type, Rank, control, total, in_state, out_state) %>% arrange(total)
+df %>% filter(Cluster ==2) %>% count(Type)
+df %>% filter(Cluster ==2) %>% count(control)
+```
+
+
+```{r, include = FALSE, eval = FALSE}
+df <- readRDS('./assets/tables/table_ego_all_pubu_outst.RDS')
+
+# cluster 2; public and private
+df %>% filter(Cluster ==2) %>% select(ID, University, Type, Rank, control, total, in_state, out_state) %>% arrange(total)
+df %>% filter(Cluster ==2) %>% count(Type)
+df %>% filter(Cluster ==2) %>% count(control)
+
+
+# cluster 1; public and private
+df %>% filter(Cluster ==1) %>% select(ID, University, Type, Rank, total, in_state, out_state) %>% arrange(total)
+df %>% filter(Cluster ==1) %>% count(Type)
+  
+# cluster 4; private only
+df %>% filter(Cluster ==4) %>% select(ID, University, Type, Rank, total, in_state, out_state) %>% arrange(total)
+df %>% filter(Cluster ==4) %>% count(Type)
+df %>% filter(Cluster ==4, Type == "univ") %>% select(ID, University, Type, Rank, total, in_state, out_state)
+
+# cluster 3; public only 
+df %>% filter(Cluster ==3) %>% select(ID, University, Type, Rank, total, in_state, out_state) %>% arrange(total)
+df %>% filter(Cluster ==4) %>% count(Type)
+df %>% filter(Cluster ==4, Type == "univ") %>% select(ID, University, Type, Rank, total, in_state, out_state)
+
+```
+
+
 
 WHICH TABLES/FIGURES IN THIS SECTION
 
@@ -264,6 +338,7 @@ WHICH TABLES/FIGURES IN THIS SECTION
   - probably better to show all or pub out-state but not both
   - given the focus is which public universities behave like private universities, think there is rationale for restricting public university events to out-of-state because out-of-state visits are behavior associated w/ privatization; also this makes it slightly different than what has already been analyzed
 - show ego figure organized by cluster
+  - make this one only include out-of-state events for public research universities
 - maybe which schools most visited?
 
 WHAT SHOULD FOCUS OF RESULTS BE
@@ -271,135 +346,15 @@ WHAT SHOULD FOCUS OF RESULTS BE
 - which public universities behave like private universities
   - this strikes me as the case for out-of-state only
 
-<!-- CLUSTERS, ALL
-
- 1  2  3  4 
- 4 21  5 12 
- 
-> save_1mode_plot(g_2mode, mode = "psi", layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all.pdf")
-# A tibble: 42 x 2
-   name              cluster
-   <chr>               <int>
- 1 Notre Dame              1
- 2 SMU                     1
- 3 U of Alabama            1
- 4 Villanova               1
- 
- 5 Baylor                  2
- 6 Case Western Res.       2
- 7 Emory                   2
- 8 Harvey Mudd             2
- 9 Macalester              2
-10 Occidental              2
-11 Rutgers                 2
-12 Scripps                 2
-13 Smith                   2
-14 Stevens Ins. Tech       2
-15 Swarthmore              2
-16 U of Arkansas           2
-17 U of Cincinnati         2
-18 U of Denver             2
-19 U of Georgia            2
-20 U of Kansas             2
-21 U of Pitt               2
-22 UC Berkeley             2
-23 UC San Diego            2
-24 UMass Amherst           2
-25 Williams                2
-
-26 NCSU                    3
-27 SUNY Stony Brook        3
-28 UC Irvine               3
-29 UC Riverside            3
-30 UNL                     3
-
-31 Boston Coll.            4
-32 Colorado Coll.          4
-33 Conn Coll.              4
-34 CU Boulder              4
-35 Middlebury              4
-36 Northwestern            4
-37 Oberlin                 4
-38 Sewanee                 4
-39 TCU                     4
-40 Tufts                   4
-41 Tulane                  4
-42 U of S.Carolina         4
-.
-
- 
--->
-DD
-
-
-<!-- CLUSTERS, ONLY OUT-OF-STATE FOR PUBLIC RESEARCH UNIVERSITIES
-
-.
- 1  2  3  4 
-11 13  5 13  
-
-> save_1mode_plot(g_2mode, mode = "psi", pubu_visits = 'outst', layout = layout_with_fr, c_analysis = "hclust", k=4, h = NULL, hclust_method = "ward.D", plot_margin = 0.0, plot_name = "plot_1mode_all_pubu_outst.pdf")
-
-# A tibble: 42 x 2
-
-   name              cluster
-   <chr>               <int>
- 1 Boston Coll.            1
- 2 CU Boulder              1
- 3 Northwestern            1
- 4 Notre Dame              1
- 5 Sewanee                 1
- 6 SMU                     1
- 7 TCU                     1
- 8 Tulane                  1
- 9 U of Alabama            1
-10 U of S.Carolina         1
-11 Villanova               1
-
-12 Baylor                  2
-13 Harvey Mudd             2
-14 Rutgers                 2
-15 Scripps                 2
-16 Stevens Ins. Tech       2
-17 U of Arkansas           2
-18 U of Cincinnati         2
-19 U of Georgia            2
-20 U of Kansas             2
-21 U of Pitt               2
-22 UC Berkeley             2
-23 UC San Diego            2
-24 UMass Amherst           2
-
-25 NCSU                    3
-26 SUNY Stony Brook        3
-27 UC Irvine               3
-28 UC Riverside            3
-29 UNL                     3
-
-30 Case Western Res.       4
-31 Colorado Coll.          4
-32 Conn Coll.              4
-33 Emory                   4
-34 Macalester              4
-35 Middlebury              4
-36 Oberlin                 4
-37 Occidental              4
-38 Smith                   4
-39 Swarthmore              4
-40 Tufts                   4
-41 U of Denver             4
-42 Williams                4
-
-
--->
-
-
 ```{r, include = FALSE, eval = FALSE}
-df <- readRDS('./assets/tables/table_ego_all.RDS')
+#df <- readRDS('./assets/tables/table_ego_all.RDS')
+df <- readRDS('./assets/tables/table_ego_all_pubu_outst.RDS')
 df %>% glimpse()
 df %>% select(ID,University,Cluster,total) %>% 
   arrange(Cluster,total) %>% print(n=50)
 ```
+
+
 # References
 
 <div id="refs"></div>
@@ -550,7 +505,7 @@ plot_characteristic <- function(df, type, characteristics) {
 }
 
 
-type_vec <- c('privu', 'pubu', 'all')
+type_vec <- c('privu', 'pubu', 'pubu_outst', 'all','all_pubu_outst')
 
 for (i in 1:length(type_vec)) {
   ego_df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
@@ -624,7 +579,7 @@ knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
 \begin{landscape}
 
 
-```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all"}
+```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all", include= FALSE, eval = FALSE}
 knitr::include_graphics('assets/figures/plot_1mode_all.pdf')
 ```
 
@@ -641,8 +596,8 @@ knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
 
 \newpage
 
-```{r ego-network-figure-all, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by public and private colleges and universities"}
-knitr::include_graphics('assets/figures/ego_network_figure_all.pdf')
+```{r ego-network-figure-all-pubu-outst, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by public and private colleges and universities, out-of-state visits only for public universities"}
+knitr::include_graphics('assets/figures/ego_network_figure_all_pubu_outst.pdf')
 #out.width="1.1\\linewidth", 
 ```
 
