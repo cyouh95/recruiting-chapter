@@ -63,16 +63,29 @@ ic_values <- read.csv('./data/ipeds_ic2017_values.csv', header = TRUE, na.string
 
 ic <- label_df(ic, ic_dictionary, ic_values)
 
-# Add religion variable
-get_val <- function(x) {
-  val_label(ic$relaffil, x) %>% tolower() %>% str_replace_all(' ', '_')
-}
-v_get_val <- Vectorize(get_val)
+# Inspect relaffil (-2 is nonsectarian)
+View(ic %>% distinct(cntlaffi, relaffil) %>% arrange(relaffil))
+val_labels(ic$relaffil)
 
-ic <- ic %>% mutate(religion = case_when(
-  cntlaffi != '4' ~ 'nonsectarian',
-  TRUE ~ v_get_val(relaffil)
-))
+# Add religion variable
+v_get_val <- Vectorize(function(x) val_label(ic$relaffil, x))
+ic <- ic %>% mutate(
+  relaffil_text = v_get_val(relaffil),
+  religion_4 = case_when(
+    relaffil == '-2' ~ 'nonsectarian',
+    relaffil == '30' ~ 'catholic',
+    # Baptist
+    relaffil == '54' ~ 'conservative_christian',
+    TRUE ~ 'other_religion'
+  ),
+  religion = case_when(
+    relaffil == '-2' ~ 'nonsectarian',
+    relaffil == '30' ~ 'catholic',
+    # Jewish, Muslim, Undenominational, Unitarian Universalist, Other (none of the above)
+    relaffil %in% c('80', '106', '88', '93', '99') ~ 'other',
+    TRUE ~ 'christian'
+  )
+)
 
 
 # Read in EF data and dictionary (127770 obs. of 65 variables)

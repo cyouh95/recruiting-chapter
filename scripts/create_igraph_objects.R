@@ -8,13 +8,11 @@ library(labelled)
 ## ----------
 
 # Recruiting events data from 43 univs (17 public research, 13 private national, 13 private liberal arts)
-  # but get rid of wellesley; data seem messed up
-events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble() %>% filter(univ_id != "168218") 
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 
 # University data from IPEDS
-univ_data <- readRDS('./data/ipeds_1718.RDS') %>% filter(univ_id != "168218")
-
-univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble() %>% filter(univ_id != "168218")
+univ_data <- readRDS('./data/ipeds_1718.RDS')
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
 
 # Private HS data from PSS
 privhs_data <- readRDS('./data/pss_1718.RDS')
@@ -25,19 +23,20 @@ niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings = 
 # Rankings data from US News & World Report
 usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character')) %>% as_tibble()
 
+
 ## ----------
 ## PREP DATA
 ## ----------
 
-# Focus on private HS visits by the univs
+# Focus on private HS visits by the univs (exclude Wellesley and mismatched HS)
 privhs_events <- events_data %>%
-  filter(event_type == 'priv_hs') %>%
-  select(univ_id, event_type, school_id, event_location_name, event_city, event_state)
+  filter(event_type == 'priv_hs', univ_id != '168218', pid != 55696) %>%
+  select(univ_id, univ_state, event_type, school_id, event_location_name, event_city, event_state)
 
 # Select variables of interest from private HS data
 privhs_df <- privhs_data %>%
-  mutate(type = 'priv hs') %>%
-  select(ncessch, name, city, state_code, region, religion, religion_4, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, type)
+  mutate(type = 'priv hs', control = 'private') %>%
+  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, type, control)
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
 # Add ranking from Niche data
@@ -53,7 +52,7 @@ niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
   overall_niche_grade == 1.66 ~ 'C-',
   TRUE ~ 'Unranked'
 )) %>% select(ncessch, overall_niche_letter_grade, rank_within_category)
-privhs_df <- privhs_df %>% left_join(niche_df)
+privhs_df <- privhs_df %>% left_join(niche_df, by = 'ncessch')
 
 # Select variables of interest from univ data
 get_abbrev <- function(x, y) {
@@ -62,22 +61,8 @@ get_abbrev <- function(x, y) {
 }
 v_get_abbrev <- Vectorize(get_abbrev)
 
-unique(univ_data$religion)
-univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name),
-                                religion_4 = case_when(
-                                  religion == 'roman_catholic' ~ 'catholic',
-                                  religion == 'nonsectarian' ~ 'nonsectarian',
-                                  religion %in% c('undenominational', 'other_(none_of_the_above)', 'unitarian_universalist', 'jewish', 'muslim') ~ 'other',
-                                  is.na(religion) ~ NA_character_,
-                                  TRUE ~ 'christian'
-                                ),
-                                religion = case_when(
-                                  religion == 'roman_catholic' ~ 'catholic',
-                                  religion == 'baptist' ~ 'conservative_christian',
-                                  religion != 'nonsectarian' ~ 'other_religion',
-                                  TRUE ~ religion
-                                )) %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, religion_4, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
+univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
+  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
 
 univ_df$state_code <- as.character(univ_df$state_code)
 
@@ -87,32 +72,29 @@ usnews_df <- usnews_data %>%
                        'national-liberal-arts-colleges' = 'lib arts',
                        'national-universities' = 'univ'
                        )) %>%
-  select(univ_id, type, score_text, rank)
-univ_df <- univ_df %>% left_join(usnews_df)
+  select(univ_id, type, control, score_text, rank)
+univ_df <- univ_df %>% left_join(usnews_df, by = 'univ_id')
 
 # Create attributes dataframe
-var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'religion_4', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'school_type', 'ranking', 'ranking_numeric')
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'school_type', 'control', 'ranking', 'ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
 
 # Vectors of private HS and univs
 univ_vec <- unique(privhs_events$univ_id) %>% str_sort(numeric = TRUE)
-privu_vec <- unique((univ_info %>% filter(search_sector == 'PRIVATE'))$univ_id)
-pubu_vec <- unique((univ_info %>% filter(search_sector == 'PUBLIC'))$univ_id)
+privu_vec <- unique((univ_info %>% filter(search_sector == 'PRIVATE', univ_id %in% univ_vec))$univ_id)
+pubu_vec <- unique((univ_info %>% filter(search_sector == 'PUBLIC', univ_id %in% univ_vec))$univ_id)
 
 privhs_vec <- unique(privhs_events$school_id) %>% str_sort(numeric = TRUE)
 privhs_visited_by_privu_vec <- unique((privhs_events %>% filter(univ_id %in% privu_vec))$school_id)
 privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu_vec))$school_id)
 
-# Preview vertex attributes that will be merged
-View(attributes_df %>% filter(school_id %in% univ_vec))
-View(attributes_df %>% filter(school_id %in% privhs_vec))
-
+# Check religion variable
 attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion) %>% table(useNA = 'ifany')
-attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion_4) %>% table(useNA = 'ifany')
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion) %>% table(useNA = 'ifany')
-attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion_4) %>% table(useNA = 'ifany')
+
+View(univ_data %>% filter(univ_id %in% univ_info$univ_id) %>% select(univ_id, univ_name, relaffil, relaffil_text, religion_4, religion))
 
 # TODO: Check unmerged Niche data (61 unmerged, 1 truly missing data)
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
@@ -154,6 +136,24 @@ attributes_df <- attributes_df %>% mutate(
     !is.na(ranking) & nchar(school_id) != 6 ~ 'c4_ltA'
   )
 )
+
+# Private HS visit counts
+privhs_count <- privhs_events %>% group_by(univ_id) %>% summarise(
+  privhs_visits_in = sum(univ_state == event_state),
+  privhs_visits_out = sum(univ_state != event_state),
+  privhs_visits_tot = n()
+)
+attributes_df <- attributes_df %>% left_join(privhs_count, by = c('school_id' = 'univ_id'))
+
+# Recode region variable
+v_get_val <- Vectorize(function(x) str_to_lower(val_label(attributes_df$region, x)))
+attributes_df <- attributes_df %>% mutate(
+  region = v_get_val(region)
+)
+
+# Preview vertex attributes that will be merged
+View(attributes_df %>% filter(school_id %in% univ_vec))
+View(attributes_df %>% filter(school_id %in% privhs_vec))
 
 
 ## -------------------
@@ -197,6 +197,10 @@ e_2mode <- e_2mode %>% mutate(
 # Vertex list (name must come first)
 v_2mode <- tibble(name = df$vertices$name, type = df$vertices$type)
 v_2mode <- left_join(v_2mode, attributes_df, c('name' = 'school_id'))
+
+# View vertex and edge attributes
+View(v_2mode)
+View(e_2mode)
 
 
 ## -----------------------------

@@ -627,22 +627,26 @@ christian <- c(1:16, 19:28)  # Everything except Valid Skip, Islamic, Jewish, an
 pss <- pss %>% mutate(is_christian = ifelse(religious_orientation %in% christian, 1, 0),
                       is_conservative = ifelse(accelerated_christian_edu == 1 | amer_assoc_christian_sch == 1 | assoc_christian_sch_intl == 1 | oral_roberts == 1, 1, 0))
 
-pss <- pss %>% mutate(religion_5 = case_when(
-  is_religious == 0 ~ 'nonsectarian',
-  religious_orientation == 1 ~ 'catholic',
-  is_conservative == 1 ~ 'conservative_christian',
-  is_christian == 1 ~ 'other_christian',
-  TRUE ~ 'other_religion'
-), religion_4 = case_when(
-  religion_5 %in% c('conservative_christian', 'other_christian') ~ 'christian',
-  religion_5 == 'other_religion' ~ 'other',
-  TRUE ~ religion_5
-), religion = ifelse(religion_5 %in% c('other_christian', 'other_religion'), 'other_religion', religion_5))
+pss <- pss %>% mutate(
+  religion_5 = case_when(
+    is_religious == 0 ~ 'nonsectarian',
+    religious_orientation == 1 ~ 'catholic',
+    is_conservative == 1 ~ 'conservative_christian',
+    is_christian == 1 ~ 'other_christian',
+    TRUE ~ 'other_religion'
+  ),
+  religion_4 = ifelse(religion_5 %in% c('other_christian', 'other_religion'), 'other_religion', religion_5),
+  religion = case_when(
+    religion_5 %in% c('conservative_christian', 'other_christian') ~ 'christian',
+    religion_5 == 'other_religion' ~ 'other',
+    TRUE ~ religion_5
+  )
+)
 
 View(pss %>% group_by(religion, is_christian, is_conservative) %>% summarise(count = n()))
 table(pss$religion_5)
-table(pss$religion_4)  # christian = conservative_christian + other_christian
-table(pss$religion)  # (current) other = other_christian + other_religion
+table(pss$religion_4)  # (old) other = other_christian + other_religion
+table(pss$religion)  # (new) christian = conservative_christian + other_christian
 
 # Religion categories:
   # Nonsectarian: 7317
