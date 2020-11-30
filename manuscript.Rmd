@@ -458,9 +458,9 @@ knitr::include_graphics('assets/figures/plot_1mode_privu.pdf')
 #df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS')))
 #df %>% glimpse()
 
-plot_characteristic <- function(df, type, characteristics) {
-  sub_df <- df %>% select(univ_name, characteristics) %>%
-    gather(key, value, characteristics) %>%
+plot_characteristic <- function(df, type, characteristic) {
+  sub_df <- df %>% select(univ_name, characteristic) %>%
+    gather(key, value, characteristic) %>%
     mutate(value = parse_number(value))
 
   # colors <- sub_df$color[order(sub_df$University)]

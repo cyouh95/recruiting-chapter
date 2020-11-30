@@ -605,7 +605,7 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
   col_names <- c('univ_id', 'univ_name', 'cluster', 'type', 'rank', 'control', 'total', 'in_state', 'out_of_state', 'characteristics',
                  region_vals, religion_vals, race_vals, ranking_vals)
   
-  ego_tbl <-data.frame(matrix(NA_character_, ncol = length(col_names), nrow = 0, dimnames = list(NULL, col_names)), stringsAsFactors = F)
+  ego_tbl <- data.frame(matrix(NA_character_, ncol = length(col_names), nrow = 0, dimnames = list(NULL, col_names)), stringsAsFactors = F, check.names = F)
     
   # Populate ego table
   for (i in seq_along(univs)) {
