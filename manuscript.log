@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.31)  19 NOV 2020 11:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2020.10.31)  30 NOV 2020 09:23
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -712,65 +712,78 @@ Underfull \hbox (badness 1348) in paragraph at lines 199--200
  []
 
 [8] [9] [10] [11]
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 2
-62.
-(c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-) [12] [13] [14pdfTeX warning (ext4): destination with the same identifier (nam
-e{table.1}) has been already used, duplicate ignored
+
+LaTeX Warning: Reference `ego-network-figure-all-pubu-outst' on page 12 undefin
+ed on input line 260.
+
+
+LaTeX Warning: Reference `ego-network-figure-all-pubu-outst' on page 12 undefin
+ed on input line 260.
+
+
+LaTeX Warning: Reference `ego-network-figure-all-pubu-outst' on page 12 undefin
+ed on input line 262.
+
+[12]
+
+LaTeX Warning: Reference `ego-network-figure-all-pubu-outst' on page 13 undefin
+ed on input line 264.
+
+[13] [14] [15pdfTeX warning (ext4): destination with the same identifier (name{
+table.1}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.375 \begin{landscape}
-                       \begin{table}] [15pdfTeX warning (ext4): destination wit
+l.349 \begin{landscape}
+                       \begin{table}] [16pdfTeX warning (ext4): destination wit
 h the same identifier (name{table.2}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.426 \end{landscape}
-                     ] [16pdfTeX warning (ext4): destination with the same iden
+l.400 \end{landscape}
+                     ] [17pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.3}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.451 \end{landscape}
-                     ] [17pdfTeX warning (ext4): destination with the same iden
+l.425 \end{landscape}
+                     ] [18pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.4}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.504 \end{landscape}
-                     ] [18pdfTeX warning (ext4): destination with the same iden
+l.478 \end{landscape}
+                     ] [19pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.5}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.529 \end{landscape}
-                     ] [19pdfTeX warning (ext4): destination with the same iden
+l.503 \end{landscape}
+                     ] [20pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.6}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.582 \end{landscape}
-                     ] [20pdfTeX warning (ext4): destination with the same iden
+l.556 \end{landscape}
+                     ] [21pdfTeX warning (ext4): destination with the same iden
 tifier (name{table.7}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.607 \end{landscape}
+l.581 \end{landscape}
                      ]
-<assets/images/enrollment_funnel.png, id=257, 496.85625pt x 651.18282pt>
+<assets/images/enrollment_funnel.png, id=272, 496.85625pt x 651.18282pt>
 File: assets/images/enrollment_funnel.png Graphic file (type png)
 <use assets/images/enrollment_funnel.png>
 Package pdftex.def Info: assets/images/enrollment_funnel.png  used on input lin
-e 610.
+e 584.
 (pdftex.def)             Requested size: 496.32433pt x 650.48569pt.
 
-Overfull \hbox (26.5693pt too wide) in paragraph at lines 610--610
+Overfull \hbox (26.5693pt too wide) in paragraph at lines 584--584
 [][]
  []
 
 
-LaTeX Warning: Float too large for page by 36.0001pt on input line 611.
+LaTeX Warning: Float too large for page by 36.0001pt on input line 585.
 
-[21pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
+[22pdfTeX warning (ext4): destination with the same identifier (name{figure.1})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.615 \newgeometry{margin=0cm}
+l.589 \newgeometry{margin=0cm}
                                <./assets/images/enrollment_funnel.png>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
@@ -804,29 +817,29 @@ l.615 \newgeometry{margin=0cm}
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/plot_2mode_all_region.pdf, id=265, 844.15375pt x 597.23125pt>
+<assets/figures/plot_2mode_all_region.pdf, id=279, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_2mode_all_region.pdf Graphic file (type pdf)
 <use assets/figures/plot_2mode_all_region.pdf>
 Package pdftex.def Info: assets/figures/plot_2mode_all_region.pdf  used on inpu
-t line 623.
+t line 597.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-<assets/figures/plot_1mode_privu.pdf, id=266, 844.15375pt x 597.23125pt>
+<assets/figures/plot_1mode_privu.pdf, id=280, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_1mode_privu.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_privu.pdf>
 Package pdftex.def Info: assets/figures/plot_1mode_privu.pdf  used on input lin
-e 635.
+e 609.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-[22pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
+[23pdfTeX warning (ext4): destination with the same identifier (name{figure.2})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.645 \end{landscape}
-                      <./assets/figures/plot_2mode_all_region.pdf>] [23pdfTeX w
+l.619 \end{landscape}
+                      <./assets/figures/plot_2mode_all_region.pdf>] [24pdfTeX w
 arning (ext4): destination with the same identifier (name{figure.3}) has been a
 lready used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.645 \end{landscape}
+l.619 \end{landscape}
                       <./assets/figures/plot_1mode_privu.pdf>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
@@ -860,13 +873,13 @@ l.645 \end{landscape}
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/ego_network_figure_privu.pdf, id=286, 505.89pt x 505.89pt>
+<assets/figures/ego_network_figure_privu.pdf, id=300, 505.89pt x 505.89pt>
 File: assets/figures/ego_network_figure_privu.pdf Graphic file (type pdf)
 <use assets/figures/ego_network_figure_privu.pdf>
 Package pdftex.def Info: assets/figures/ego_network_figure_privu.pdf  used on i
-nput line 655.
+nput line 629.
 (pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
-[24
+[25
 
 
 
@@ -888,43 +901,43 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.4}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.662 \begin{landscape}
+l.636 \begin{landscape}
                         <./assets/figures/ego_network_figure_privu.pdf>]
-<assets/figures/villanova_religion.pdf, id=297, 844.15375pt x 597.23125pt>
+<assets/figures/villanova_religion.pdf, id=312, 844.15375pt x 597.23125pt>
 File: assets/figures/villanova_religion.pdf Graphic file (type pdf)
 <use assets/figures/villanova_religion.pdf>
 Package pdftex.def Info: assets/figures/villanova_religion.pdf  used on input l
-ine 668.
+ine 642.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-<assets/figures/emory_region.pdf, id=298, 844.15375pt x 597.23125pt>
+<assets/figures/emory_region.pdf, id=313, 844.15375pt x 597.23125pt>
 File: assets/figures/emory_region.pdf Graphic file (type pdf)
 <use assets/figures/emory_region.pdf>
-Package pdftex.def Info: assets/figures/emory_region.pdf  used on input line 67
-7.
+Package pdftex.def Info: assets/figures/emory_region.pdf  used on input line 65
+1.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-<assets/figures/plot_1mode_pubu.pdf, id=299, 844.15375pt x 597.23125pt>
+<assets/figures/plot_1mode_pubu.pdf, id=314, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_1mode_pubu.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_pubu.pdf>
 Package pdftex.def Info: assets/figures/plot_1mode_pubu.pdf  used on input line
- 686.
+ 660.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-[25pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
+[26pdfTeX warning (ext4): destination with the same identifier (name{figure.5})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.695 \end{landscape}
-                      <./assets/figures/villanova_religion.pdf>] [26pdfTeX warn
+l.669 \end{landscape}
+                      <./assets/figures/villanova_religion.pdf>] [27pdfTeX warn
 ing (ext4): destination with the same identifier (name{figure.6}) has been alre
 ady used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.695 \end{landscape}
-                      <./assets/figures/emory_region.pdf>] [27pdfTeX warning (e
+l.669 \end{landscape}
+                      <./assets/figures/emory_region.pdf>] [28pdfTeX warning (e
 xt4): destination with the same identifier (name{figure.7}) has been already us
 ed, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.695 \end{landscape}
+l.669 \end{landscape}
                       <./assets/figures/plot_1mode_pubu.pdf>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
@@ -958,13 +971,13 @@ l.695 \end{landscape}
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/ego_network_figure_pubu.pdf, id=330, 505.89pt x 505.89pt>
+<assets/figures/ego_network_figure_pubu.pdf, id=344, 505.89pt x 505.89pt>
 File: assets/figures/ego_network_figure_pubu.pdf Graphic file (type pdf)
 <use assets/figures/ego_network_figure_pubu.pdf>
 Package pdftex.def Info: assets/figures/ego_network_figure_pubu.pdf  used on in
-put line 705.
+put line 679.
 (pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
-[28
+[29
 
 
 
@@ -973,20 +986,20 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.8}) ha
 s been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.712 \begin{landscape}
+l.686 \begin{landscape}
                         <./assets/figures/ego_network_figure_pubu.pdf>]
-<assets/figures/plot_1mode_all_pubu_outst.pdf, id=341, 844.15375pt x 597.23125p
+<assets/figures/plot_1mode_all_pubu_outst.pdf, id=355, 844.15375pt x 597.23125p
 t>
 File: assets/figures/plot_1mode_all_pubu_outst.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_all_pubu_outst.pdf>
 Package pdftex.def Info: assets/figures/plot_1mode_all_pubu_outst.pdf  used on 
-input line 719.
+input line 693.
 (pdftex.def)             Requested size: 794.98593pt x 562.44543pt.
-[29pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
+[30pdfTeX warning (ext4): destination with the same identifier (name{figure.9})
  has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.727 \end{landscape}
+l.701 \end{landscape}
                       <./assets/figures/plot_1mode_all_pubu_outst.pdf>]
 *geometry* verbose mode - [ newgeometry ] result:
 * driver: pdftex
@@ -1020,15 +1033,15 @@ l.727 \end{landscape}
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/ego_network_figure_all_pubu_outst.pdf, id=352, 505.89pt x 505.8
+<assets/figures/ego_network_figure_all_pubu_outst.pdf, id=366, 505.89pt x 505.8
 9pt>
 File: assets/figures/ego_network_figure_all_pubu_outst.pdf Graphic file (type p
 df)
 <use assets/figures/ego_network_figure_all_pubu_outst.pdf>
 Package pdftex.def Info: assets/figures/ego_network_figure_all_pubu_outst.pdf  
-used on input line 737.
+used on input line 711.
 (pdftex.def)             Requested size: 505.89645pt x 505.89645pt.
-[30
+[31
 
 
 
@@ -1037,42 +1050,44 @@ pdfTeX warning (ext4): destination with the same identifier (name{figure.10}) h
 as been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   
-l.744 \end{document}
+l.718 \end{document}
                      <./assets/figures/ego_network_figure_all_pubu_outst.pdf>] 
 (./manuscript.aux)
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
-(rerunfilecheck)             Checksum: 72BE0E660E1F5DC58E7EFB90C52B0EED;2369.
+(rerunfilecheck)             Checksum: A70E1E03BEBE5C533D45A92854E27A27;2529.
+
+LaTeX Warning: There were undefined references.
+
  ) 
 Here is how much of TeX's memory you used:
- 12537 strings out of 481433
- 183316 string characters out of 5918819
+ 12511 strings out of 481433
+ 182553 string characters out of 5918819
  506830 words of memory out of 5000000
- 28937 multiletter control sequences out of 15000+600000
- 594079 words of font info for 73 fonts, out of 8000000 for 9000
+ 28912 multiletter control sequences out of 15000+600000
+ 593714 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  66i,10n,72p,2113b,367s stack positions out of 5000i,500n,10000p,200000b,80000s
-{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.
-enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ma
-thit.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/
-lm-mathsy.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvip
-s/lm/lm-rm.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvi
-ps/lm/lm-ec.enc}<c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/
-public/lm/lmbx10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/t
-ype1/public/lm/lmbx12.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fo
-nts/type1/public/lm/lmmi10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-di
-st/fonts/type1/public/lm/lmmi7.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texm
-f-dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/
-texmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/ozanj/AppData/Roaming/Tiny
-TeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/ozanj/AppData/Roaming/
-TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/ozanj/AppData/Roami
-ng/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/ozanj/AppData/Ro
-aming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/ozanj/AppData
-/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/ozanj/Ap
-pData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on manuscript.pdf (30 pages, 915108 bytes).
+{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-math
+it.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm
+-mathsy.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/
+lm/lm-rm.enc}{c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips
+/lm/lm-ec.enc}<c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/pu
+blic/lm/lmbx10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/fonts/typ
+e1/public/lm/lmbx12.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist/font
+s/type1/public/lm/lmmi10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-dist
+/fonts/type1/public/lm/lmmi7.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/texmf-
+dist/fonts/type1/public/lm/lmr10.pfb><c:/Users/ozanj/AppData/Roaming/TinyTeX/te
+xmf-dist/fonts/type1/public/lm/lmr12.pfb><c:/Users/ozanj/AppData/Roaming/TinyTe
+X/texmf-dist/fonts/type1/public/lm/lmr17.pfb><c:/Users/ozanj/AppData/Roaming/Ti
+nyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb><c:/Users/ozanj/AppData/Roaming
+/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb><c:/Users/ozanj/AppData/Roam
+ing/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb><c:/Users/ozanj/AppData/R
+oaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmri10.pfb><c:/Users/ozanj/AppD
+ata/Roaming/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
+Output written on manuscript.pdf (31 pages, 909791 bytes).
 PDF statistics:
- 432 PDF objects out of 1000 (max. 8388607)
- 364 compressed objects within 4 object streams
- 86 named destinations out of 1000 (max. 500000)
- 139 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 445 PDF objects out of 1000 (max. 8388607)
+ 376 compressed objects within 4 object streams
+ 89 named destinations out of 1000 (max. 500000)
+ 147 words of extra memory for PDF output out of 10000 (max. 10000000)
 
