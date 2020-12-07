@@ -12,22 +12,22 @@ options(max.print = 2000)
 scripts_dir <- file.path('.', 'scripts')
 source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 
-# Summary of objects (1739 private HS + 42 univs = 1781 vertices total)
+# Summary of objects (1738 private HS + 42 univs = 1780 vertices total)
   # 2-mode igraph objects
-    # g_2mode (1781 vertices + 10907 edges)
-    # g_2mode_privu (1351 vertices + 7183 edges)
+    # g_2mode (1780 vertices + 10907 edges)
+    # g_2mode_privu (1350 vertices + 7183 edges)
     # g_2mode_pubu (1481 vertices + 3724 edges)
   # 1-mode igraph objects [HS]
-    # g_1mode_hs (1739 vertices + 744393 edges)
-    # g_1mode_hs_privu (1326 vertices + 519787 edges)
+    # g_1mode_hs (1738 vertices + 743661 edges)
+    # g_1mode_hs_privu (1325 vertices + 519083 edges)
     # g_1mode_hs_pubu (1464 vertices + 448865)
   # 1-mode igraph objects [PSI]
     # g_1mode_psi (42 vertices + 855 edges)
     # g_1mode_psi_privu (25 vertices + 300 edges)
     # g_1mode_psi_pubu (17 vertices + 130 edges)
   # Ego igraph objects [HS]
-    # egos_hs (1739 ego graphs)
-    # egos_hs_privu (1326 ego graphs)
+    # egos_hs (1738 ego graphs)
+    # egos_hs_privu (1325 ego graphs)
     # egos_hs_pubu (1464 ego graphs)
   # Ego igraph objects [PSI]
     # egos_psi (42 ego graphs)

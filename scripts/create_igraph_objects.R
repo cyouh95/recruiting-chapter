@@ -16,9 +16,11 @@ univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', st
 
 # Private HS data from PSS
 privhs_data <- readRDS('./data/pss_1718.RDS')
+privhs_overrides <- read.csv('./data/pss_updated_id.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
 
 # Rankings data from Niche
-niche_data  <- read.csv('./data/niche_private.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
+niche_data <- read.csv('./data/niche_private.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
+niche_overrides <- read.csv('./data/niche_updated_id.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
 
 # Rankings data from US News & World Report
 usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character')) %>% as_tibble()
@@ -32,6 +34,15 @@ usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings 
 privhs_events <- events_data %>%
   filter(event_type == 'priv_hs', univ_id != '168218', pid != 55696) %>%
   select(univ_id, univ_state, event_type, school_id, event_location_name, event_city, event_state)
+
+# Override school_id with updated 2017-18 PSS ID
+get_pss_override <- function(x) {
+  new_id <- privhs_overrides[privhs_overrides$old_id == x, ]$new_id
+  ifelse(length(new_id) == 0, x, new_id)
+}
+v_get_pss_override <- Vectorize(get_pss_override)
+
+privhs_events <- privhs_events %>% mutate(school_id = v_get_pss_override(school_id))
 
 # Select variables of interest from private HS data
 privhs_df <- privhs_data %>%
@@ -51,12 +62,17 @@ niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
   overall_niche_grade == 2 ~ 'C',
   overall_niche_grade == 1.66 ~ 'C-',
   TRUE ~ 'Unranked'
-)) %>% select(ncessch, overall_niche_letter_grade, rank_within_category)
-privhs_df <- privhs_df %>% left_join(niche_df, by = 'ncessch')
+))
+
+privhs_df <- privhs_df %>% left_join(dplyr::union(
+    niche_df %>% select(ncessch, overall_niche_letter_grade, rank_within_category),
+    niche_overrides %>% left_join(niche_df %>% select(guid, overall_niche_letter_grade, rank_within_category), by = 'guid') %>% select(-guid)
+  ), by = 'ncessch'
+)
 
 # Select variables of interest from univ data
 get_abbrev <- function(x, y) {
-  univ_abbrev <- univ_info[univ_info$univ_id == x, 'univ_abbrev']$univ_abbrev
+  univ_abbrev <- univ_info[univ_info$univ_id == x, ]$univ_abbrev
   ifelse(length(univ_abbrev) == 0, y, univ_abbrev)
 }
 v_get_abbrev <- Vectorize(get_abbrev)
@@ -96,8 +112,11 @@ attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion) %>% tab
 
 View(univ_data %>% filter(univ_id %in% univ_info$univ_id) %>% select(univ_id, univ_name, relaffil, relaffil_text, religion_4, religion))
 
-# TODO: Check unmerged Niche data (61 unmerged, 1 truly missing data)
+# TODO: Check unmerged Niche data
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
+View(attributes_df %>% filter(school_id %in% privhs_vec, is.na(ranking)))
+
+length(privhs_vec[!(privhs_vec %in% attributes_df$school_id)])
 
 
 ## ----------------------------
@@ -201,6 +220,10 @@ v_2mode <- left_join(v_2mode, attributes_df, c('name' = 'school_id'))
 # View vertex and edge attributes
 View(v_2mode)
 View(e_2mode)
+
+# Check unmerged
+nrow(v_2mode %>% filter(is.na(school_name)))  # unmerged PSS
+nrow(v_2mode %>% filter(is.na(ranking), !(name %in% niche_data$ncessch)))  # unmerged Niche
 
 
 ## -----------------------------
