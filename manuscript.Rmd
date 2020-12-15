@@ -21,6 +21,57 @@ library(gridExtra)
 
 # Introduction
 
+<!-- 
+A pair of papers by Stevens provide interesting statements about the functions of higher education and the behavior of colleges and universities
+-->
+
+
+Colleges and universities visit high schools that enroll desirable prospects, while high schools accept visits from colleges and universities that offer enrollment opportunities valued by some segment of the class. Drawing from a pair of papers by Mitchell Stevens [@RN2377; @RN4517], we argue that analysis of which high schools receive visits from which colleges and univeristies provides an opportunity how K-12 and postsecondary organizations form relationships that serve social reproduction.
+
+@RN2377 introduces the metaphors "sieve" and a "hub" to describe how sociologists conceive of the functions of higher education. Sociology's stratification and schooling tradition conceives of higher education as a "sieve" -- an instrument that strains and separates -- that allocates people to occupational and social positions. The sieve metaphor builds on "Max Weber's core insight that education has a dual character" [@RN2377, p. 129], on one hand, serving social mobility by redistributing access to privileged positions and, on the other, serving social reproduction by granting privileged families disproportionate access to universities that confer privileged positions. 
+
+[CUT THIS PARAGRAPH AND JUST SKIP TO RELIANCE ON PATRONAGE FROM ELITE ACTORS] Building on the sociology of organizational behavior, @RN2377 conceives of higher education as a "hub" that connects, pollinates, and legitimizes "prominent institutional sectors of modern societies" (e.g., professions, the philanthropic sector, nation-state, larger economy).  The paradox, writes @RN2377 is that as a hub, higher education is "simultaneously a powerful and fragile social institution. On the one hand, higher education [is powerful because it] connects and reciprocally blesses various forms of privilege. Elite groups (e.g., high-status families, professions, politicians, scientists, intellectuals) and those aspiring to be a part of them use higher education to certify their legitimacy" (p. 137). On the other hand, higher education is fragile because it depends on "patronage as a primary source of revenue."
+
+Building on @RN2377, @RN4517 introduces three historical configurations that describe the relationship between higher education and society. The "association configuration" -- which defined higher education through the 19th century, but remains important particularly for private colleges -- views colleges as voluntary associations that depended on patronage from other associations (e.g., religious congregations, local business interests, professions). Second, the "national service" configuration -- most associated with the decades following World War II -- views higher education as an engine of nation building and economic development and thus worthy of investment from federal and state givernments. Third, "market" configuration -- which has emerged since the 1980s -- is associated with declining public investment, and competition between colleges for "students, patrons, and prestige" (p. 121).
+
+These metaphors -- which describe higher education as simultaneously serving social mobility and social reproduction and depending on patronage from the government, from volunary associations, and private households -- provide a helpful lense from which to view the recruiting behavior of colleges and universities.  Selective private colleges and universities operate substantially under the association configuration and primarily serve the social reproduction of families and institutions they depend on for patronage. Public universities were founded from the "national service" configuration to serve social mobility and economic development, but declines in public funding compel public universities to find new patrons. 
+
+This paper analyzes the recruiting behavior of selective private colleges and universities to that of public research universities....
+
+Public universities were founded 
+
+
+
+
+means of nation building and economic development and 
+
+which defined higher education through the 19th century 
+
+<!-- 
+\cite{RN4517} describes the transformation from a ``national service'' political economy to a ``market'' political economy. Under the national service arrangement the state views higher education as a primary means of nation building and economic development \citep{RN4517}. Thus, the national service arrangement is associated with federal and state investments in higher education. The decades following World War II are most associated with this arrangement. At the federal level, the GI Bill in 1944, the National Defense Education Act of 1958, and the Higher Education Act of 1965 collectively increased federal investment in university research and created the federal financial aid system. State governments dramatically increased appropriations to public universities, with the California Master Plan serving as a model for other states. This federal and state funded expansion institutionalized the role of higher education in determining the allocation of individuals to occupations. In turn, higher education became the primary mechanism of social reproduction and a primary means of social mobility. This arrangement benefited universities directly, through increased government funding, and indirectly, in that ``they became the purveyors of the very credentials increasingly required for prosperous lives'' \citep[p.~128]{RN4517}.
+-->
+
+
+
+``patronage as a primary revenue source'' \citep[p.~138]{RN2377}. 
+
+
+The paradox, writes @RN2377 is that as 
+
+
+As a hub, @RN2377 writes that the paradox of higher 
+
+Building on the sociology of organizational behavior, @RN2377 conceives of higher education as a "hub" that connects, pollinates, and legitimizes "prominent institutional sectors of modern societies" (e.g., professions, philanthropic sector, : the labor market and the larger economy, the professions and the sciences, the philanthropic sector, the family, and the nation-state" (p. 135). 
+
+core functions of higher education.
+@RN2377 synthesizes how sociology conceives of the functions of higher education, introducing  functions of higher education by introducing
+
+@RN2377 synthesizes how sociology conceives the functions of higher education by introducing the metaphors "sieve," "incubator," "temple," and "hub." As a sieve - an instrument that strains and separates - higher education allocates people to occupational and social positions. The sieve metaphor builds on "Max Weber's core insight that education has a dual character" [@RN2377, p. 129], on one hand, serving social mobility by redistributing access to privileged positions and, on the other, serving social reproduction by granting privileged families disproportionate access to universities that confer privileged positions. 
+
+The extent to which higher education serves reproduction versus redistribution is sensitive to the external funding environment because universities depend on ``patronage as a primary revenue source'' [@RN2377, p. 138]. 
+
+
+
 <!-- The "enrollment funnel," shown in Figure X, describes stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, and enrolled students). -->
 
 Figure \@ref(fig:em-funnel) shows the "enrollment funnel," a conceptual heurisitc used by the enrollment management industry, which describe the stages in the student recruitment process (e.g., prospects, inquiries, applicants, accepted applicants, and enrolled students). For example, “prospects” are “all the potential students you would want to attract to your institution” [@RN4322]. “Inquiries” are prospects that contact the institution, including those who respond to a solicitation and those who reach out on their own. The enrollment management industry uses the enrollment funnel to inform interventions that target specific stages of the funnel. 
