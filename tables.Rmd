@@ -13,6 +13,44 @@ library(ggplot2)
 library(gridExtra)
 ```
 
+# Visit event count
+
+```{r}
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+
+df <- events_data %>%
+  select(univ_id, event_loc, event_type) %>% 
+  left_join(univ_info %>% select(univ_id, univ_name), by = 'univ_id') %>% 
+  mutate(event_loc = recode(event_loc, 'instate' = 'in', 'outofstate' = 'out'),
+         event_type = recode(event_type, 'pub_hs' = 'pub', 'priv_hs' = 'priv', 'pub_4yr' = 'other', 'pse' = 'other'),
+         event_cat = str_c(event_type, '_', event_loc),
+         univ_name = recode(univ_name,
+                            'The University of Alabama' = 'University of Alabama',
+                            'Tulane University of Louisiana' = 'Tulane University',
+                            'North Carolina State University at Raleigh' = 'North Carolina State University',
+                            'University of Colorado Boulder' = 'University of Colorado-Boulder',
+                            'University of Cincinnati-Main Campus' = 'University of Cincinnati',
+                            'University of Pittsburgh-Pittsburgh Campus' = 'University of Pittsburgh',
+                            'Sewanee-The University of the South' = 'Sewanee'
+                            )) %>% 
+  select(univ_id, univ_name, event_cat) %>% 
+  group_by(univ_id, univ_name, event_cat) %>% 
+  summarise(count = n()) %>% 
+  pivot_wider(names_from = event_cat, values_from = count, values_fill = list(count = 0)) %>% 
+  mutate(all_in = pub_in + priv_in + cc_in + other_in,
+         all_out = pub_out + priv_out + cc_out + other_out,
+         other_out = cc_out + other_out,
+         all = all_in + all_out) %>% 
+  arrange(univ_name)
+
+pub_df <- df %>% filter(univ_id %in% (univ_info %>% filter(classification == 'public_research'))$univ_id)
+priv_df <- df %>% filter(univ_id %in% (univ_info %>% filter(classification != 'public_research'))$univ_id, univ_id != '168218')
+
+write.csv(pub_df, './data/event_count_pub.csv', row.names = FALSE)
+write.csv(priv_df, './data/event_count_priv.csv', row.names = FALSE)
+```
+
 # Private HS universe
 
 ```{r}
