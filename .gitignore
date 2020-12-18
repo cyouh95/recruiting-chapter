@@ -4,5 +4,6 @@
 .Ruserdata
 
 .DS_Store
+*.log
 
 data/ccd_school_membership_1718.csv
