@@ -15,7 +15,9 @@ univ_data <- readRDS('./data/ipeds_1718.RDS')
 univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
 
 # Private HS data from PSS
-privhs_data <- readRDS('./data/pss_1718.RDS')
+privhs_data_1718 <- readRDS('./data/pss_1718.RDS')
+privhs_data_1516 <- readRDS('./data/pss_1516.RDS')
+privhs_data_1314 <- readRDS('./data/pss_1314.RDS')
 privhs_overrides <- read.csv('./data/pss_updated_id.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE) %>% as_tibble()
 
 # Rankings data from Niche
@@ -40,9 +42,20 @@ get_pss_override <- function(x) {
   new_id <- privhs_overrides[privhs_overrides$old_id == x, ]$new_id
   ifelse(length(new_id) == 0, x, new_id)
 }
-v_get_pss_override <- Vectorize(get_pss_override)
+v_get_pss_override <- Vectorize(get_pss_override, USE.NAMES = FALSE)
 
 privhs_events <- privhs_events %>% mutate(school_id = v_get_pss_override(school_id))
+
+# Combine 2017-18 PSS data w/ past years as needed
+pss_missing_ncessch <- setdiff(privhs_events$school_id, privhs_data_1718$ncessch)
+pss_1516_ncessch <- privhs_data_1516[privhs_data_1516$ncessch %in% pss_missing_ncessch, ]$ncessch
+pss_1314_ncessch <- setdiff(pss_missing_ncessch, pss_1516_ncessch)
+
+privhs_data <- privhs_data_1718 %>%
+  dplyr::union(privhs_data_1516 %>% filter(ncessch %in% pss_1516_ncessch)) %>%
+  dplyr::union(privhs_data_1314 %>% filter(ncessch %in% pss_1314_ncessch))
+
+privhs_data %>% group_by(year) %>% count()  # 105 from 2015-16, 144 from 2013-14
 
 # Select variables of interest from private HS data
 privhs_df <- privhs_data %>%
@@ -70,12 +83,22 @@ privhs_df <- privhs_df %>% left_join(dplyr::union(
   ), by = 'ncessch'
 )
 
+# Export universe of private HS
+
+privhs_universe <- privhs_data %>% left_join(dplyr::union(
+    niche_df %>% select(ncessch, overall_niche_letter_grade, rank_within_category),
+    niche_overrides %>% left_join(niche_df %>% select(guid, overall_niche_letter_grade, rank_within_category), by = 'guid') %>% select(-guid)
+  ), by = 'ncessch'
+)
+
+saveRDS(privhs_universe, file = str_c('./data/privhs_universe.RDS'))  # all 2017-18 + used schools from past years
+
 # Select variables of interest from univ data
 get_abbrev <- function(x, y) {
   univ_abbrev <- univ_info[univ_info$univ_id == x, ]$univ_abbrev
   ifelse(length(univ_abbrev) == 0, y, univ_abbrev)
 }
-v_get_abbrev <- Vectorize(get_abbrev)
+v_get_abbrev <- Vectorize(get_abbrev, USE.NAMES = FALSE)
 
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
   select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
@@ -202,8 +225,8 @@ df <- igraph::as_data_frame(g_2mode, 'both')
 # Edge list
 e_2mode <- df$edges %>% rename(ncessch = 'from', univ_id = 'to') %>% as_tibble()
 
-v_get_loc <- Vectorize(function(x, y) ifelse(privhs_events[privhs_events$school_id == x, ]$event_state[1] == univ_info[univ_info$univ_id == y, ]$state_code, 'instate', 'outofstate'))
-v_get_states <- Vectorize(function(x, y) paste0(privhs_events[privhs_events$school_id == x, ]$event_state[1], '|', univ_info[univ_info$univ_id == y, ]$state_code))
+v_get_loc <- Vectorize(function(x, y) ifelse(privhs_events[privhs_events$school_id == x, ]$event_state[1] == univ_info[univ_info$univ_id == y, ]$state_code, 'instate', 'outofstate'), USE.NAMES = FALSE)
+v_get_states <- Vectorize(function(x, y) paste0(privhs_events[privhs_events$school_id == x, ]$event_state[1], '|', univ_info[univ_info$univ_id == y, ]$state_code), USE.NAMES = FALSE)
 e_2mode <- e_2mode %>% mutate(
   visiting_univ = case_when(
     univ_id %in% privu_vec ~ 'private',

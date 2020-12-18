@@ -690,8 +690,8 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
   twomode_df$strength <- strength(twomode_network)
   twomode_df$closeness <- closeness(twomode_network, normalized = T)
   
-  # Filter for private HS (temporarily get rid of unmerged rows)
-  twomode_df <- twomode_df %>% filter(type == F, !is.na(school_name))
+  # Filter for private HS
+  twomode_df <- twomode_df %>% filter(type == F)
   
   # Create degree_band categorical variable
   twomode_df <- twomode_df %>% mutate(degree_band = case_when(

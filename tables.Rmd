@@ -8,9 +8,127 @@ knitr::opts_chunk$set(echo = FALSE)
 
 library(kableExtra)
 library(tidyverse)
+library(labelled)
 library(ggplot2)
 library(gridExtra)
 ```
+
+# Visit event count
+
+```{r}
+events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+
+df <- events_data %>%
+  select(univ_id, event_loc, event_type) %>% 
+  left_join(univ_info %>% select(univ_id, univ_name), by = 'univ_id') %>% 
+  mutate(event_loc = recode(event_loc, 'instate' = 'in', 'outofstate' = 'out'),
+         event_type = recode(event_type, 'pub_hs' = 'pub', 'priv_hs' = 'priv', 'pub_4yr' = 'other', 'pse' = 'other'),
+         event_cat = str_c(event_type, '_', event_loc),
+         univ_name = recode(univ_name,
+                            'The University of Alabama' = 'University of Alabama',
+                            'Tulane University of Louisiana' = 'Tulane University',
+                            'North Carolina State University at Raleigh' = 'North Carolina State University',
+                            'University of Colorado Boulder' = 'University of Colorado-Boulder',
+                            'University of Cincinnati-Main Campus' = 'University of Cincinnati',
+                            'University of Pittsburgh-Pittsburgh Campus' = 'University of Pittsburgh',
+                            'Sewanee-The University of the South' = 'Sewanee'
+                            )) %>% 
+  select(univ_id, univ_name, event_cat) %>% 
+  group_by(univ_id, univ_name, event_cat) %>% 
+  summarise(count = n()) %>% 
+  pivot_wider(names_from = event_cat, values_from = count, values_fill = list(count = 0)) %>% 
+  mutate(all_in = pub_in + priv_in + cc_in + other_in,
+         all_out = pub_out + priv_out + cc_out + other_out,
+         other_out = cc_out + other_out,
+         all = all_in + all_out) %>% 
+  arrange(univ_name)
+
+pub_df <- df %>% filter(univ_id %in% (univ_info %>% filter(classification == 'public_research'))$univ_id)
+priv_df <- df %>% filter(univ_id %in% (univ_info %>% filter(classification != 'public_research'))$univ_id, univ_id != '168218')
+
+write.csv(pub_df, './data/event_count_pub.csv', row.names = FALSE)
+write.csv(priv_df, './data/event_count_priv.csv', row.names = FALSE)
+```
+
+# Private HS universe
+
+```{r}
+privhs_universe <- readRDS('./data/privhs_universe.RDS')
+
+# Filter for private HS that fits our criteria
+# https://github.com/ksalazar3/recruiting-static-visuals/blob/62b08a202ca7c93433a91d7e72e6c0e93ac6eb5b/sql/update_imported_hs_data.sql#L52-L56
+val_labels(privhs_universe$school_type)
+privhs_universe %>% group_by(year) %>% count()
+
+v_get_val <- Vectorize(function(x) str_to_lower(val_label(privhs_universe$region, x)))
+
+df <- privhs_universe %>%
+  filter(school_type %in% c(1, 2, 5), total_12 > 10) %>% 
+  mutate(
+    region = v_get_val(region),
+    pct_blacklatinxnative = pct_black + pct_hispanic + pct_amerindian + pct_nativehawaii,
+    pct_blacklatinxnative_cat = case_when(
+      pct_blacklatinxnative < 10 ~ 'c1_lt10',
+      pct_blacklatinxnative < 25 ~ 'c2_10to25',
+      pct_blacklatinxnative < 50 ~ 'c3_25to50',
+      pct_blacklatinxnative >= 50 ~ 'c4_50+'
+    ),
+    rank_cat2 = case_when(
+      rank_within_category <= 200 & overall_niche_letter_grade == 'A+' ~ 'c1_top200',
+      rank_within_category > 200 & overall_niche_letter_grade == 'A+' ~ 'c2_A+',
+      overall_niche_letter_grade == 'A' ~ 'c3_A',
+      !is.na(overall_niche_letter_grade) ~ 'c4_ltA'
+    ) 
+  ) %>% 
+  select(total_12, region, religion, pct_blacklatinxnative_cat, rank_cat2)
+
+plot_characteristic <- function(var_name, type, characteristic, label_text) {
+
+  sub_df <- df %>% group_by(get(var_name)) %>% 
+    summarize(unweighted = n(), weighted = sum(total_12)) %>% 
+    pivot_longer(cols = c('unweighted', 'weighted'),
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df) <- c('key', 'universe', 'value')
+  sub_df <- sub_df %>% filter(!is.na(key))
+  
+  sub_df$universe <- factor(sub_df$universe, levels = c('weighted', 'unweighted'))
+  sub_df$key <- factor(sub_df$key, levels = characteristic)
+  
+  ggplot(sub_df, aes(fill = key, y = value, x = universe)) + 
+      geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
+      ggtitle('Title') +
+      xlab('') + ylab('') +
+      labs(fill = type) +
+      scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+      scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+      theme(legend.position = 'top',
+            legend.title = element_text(size = 6, face = 'bold'),
+            legend.text = element_text(size = 6),
+            legend.margin = margin(0, 0, 0, 0),
+            legend.box.margin = margin(0, 0, -5, -30),
+            legend.key.size = unit(0.3, 'cm'),
+            panel.background = element_blank(),
+            axis.ticks.y = element_blank(),
+            text = element_text(size = 8),
+            plot.title = element_text(color = 'white')) +
+      coord_flip()
+}
+
+pdf(file.path('.', 'assets', 'figures', 'plot_pss_universe.pdf'), width = 8, height = 4)
+par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+par(mfrow=c(2, 2))
+
+a <- plot_characteristic('region', 'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'))
+b <- plot_characteristic('religion', 'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
+c <- plot_characteristic('pct_blacklatinxnative_cat', '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'), c('<10%', '10-25%', '25-50%', '50%+'))
+d <- plot_characteristic('rank_cat2', 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
+
+grid.arrange(a, b, c, d, nrow=2, ncol=2)
+dev.off()
+```
+
 
 # Top visited private HS (2-mode network)
 
@@ -47,21 +165,33 @@ knitr::kable(df %>% select(-ID, -Characteristics), row.names = F) %>% kable_styl
 
 \newpage
 
-```{r, fig.width=3.5, fig.height=3}
-plot_characteristic <- function(df, type, characteristics) {
-  sub_df <- df %>% select(University, characteristics) %>%
-    gather(key, value, characteristics) %>%
+```{r, fig.width=3.5, fig.height=3, message=FALSE}
+# ggplot's default color palette
+# library(scales)
+# show_col(hue_pal()(4))
+
+plot_characteristic <- function(df, type, characteristic, label_text, visit_count = FALSE) {
+  if (visit_count) {
+    df <- df %>% mutate(univ_name = str_c(univ_name, ' (N=', total, ')'))
+  }
+  
+  ordered_df <- df %>% arrange(desc(cluster), univ_name)
+  univ_order <- ordered_df$univ_name
+  cluster_face <- map_chr(ordered_df$cluster, function(x) if_else(as.numeric(x) %% 2 == 0, 'bold', 'plain'))
+  
+  sub_df <- df %>% select(univ_name, all_of(characteristic)) %>%
+    gather(key, value, characteristic) %>%
     mutate(value = parse_number(value))
 
-  # colors <- sub_df$color[order(sub_df$University)]
-  univ_order <- (df %>% arrange(Cluster, Type, as.numeric(Rank), University))$University  
-  sub_df$University <- factor(sub_df$University, levels = rev(univ_order))
-  
-  ggplot(sub_df, aes(fill = key, y = value, x = University)) + 
+  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(univ_order))
+  sub_df$key <- factor(sub_df$key, levels = characteristic)
+
+  ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
     geom_bar(stat='identity', position = position_fill(reverse = TRUE)) +
     ggtitle('Title') +
     xlab('') + ylab('') +
     labs(fill = type) +
+    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),
@@ -71,36 +201,44 @@ plot_characteristic <- function(df, type, characteristics) {
           legend.key.size = unit(0.3, 'cm'),
           panel.background = element_blank(),
           axis.ticks.y = element_blank(),
-          # axis.text.y = element_text(color = rep(c('red', 'green', 'blue', 'yellow', 'black'), 5)),
+          axis.text.y = element_text(face = rev(cluster_face)),
           text = element_text(size = 8),
           plot.title = element_text(color = 'white')) +
     coord_flip()
 }
 
 
-type_vec <- c('privu', 'pubu')
+type_vec <- c('privu', 'pubu', 'pubu_outst', 'all', 'all_pubu_outst')
 
 for (i in 1:length(type_vec)) {
   ego_df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
 
-  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_figure_', type_vec[i], '.pdf')), paper = 'a4r')
+  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_figure_', type_vec[i], '.pdf')))
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   par(mfrow=c(2, 2))
   
-  a <- plot_characteristic(ego_df, 'Region', c('Northeast', 'Midwest', 'South', 'West'))
-  b <- plot_characteristic(ego_df, 'Religion', c('Catholic', 'Conserv', 'Nonsect', 'Other'))
-  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
-  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
+  a <- plot_characteristic(ego_df, 'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE)
+  b <- plot_characteristic(ego_df, 'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
+  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'), c('<10%', '10-25%', '25-50%', '50%+'), visit_count = TRUE)
+  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
   
-  grid.arrange(a, b, c, d, nrow=2, ncol=2)
+  grid.arrange(a, b, c, d, nrow=2, ncol=2, widths=c(1, 0.92))
   dev.off()
   
   # Need to use print() for ggplot inside loop in order for it to appear
   # https://stackoverflow.com/a/15678596/6373540
-  print(a)
-  print(b)
-  print(c)
-  print(d)
+  # print(a)
+  # print(b)
+  # print(c)
+  # print(d)
 }
 ```
 
+```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private high schools visited by private colleges and universities"}
+knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
+```
+
+\begin{center}
+* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
+\end{center}
 
