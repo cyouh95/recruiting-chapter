@@ -10,6 +10,8 @@ urlcolor: blue
 header-includes:
       - \usepackage{pdflscape}
       - \usepackage{geometry}
+      - \usepackage{floatrow}
+      - \floatsetup{capposition=top}
 ---
 
 ```{r setup, include=FALSE}
@@ -136,7 +138,7 @@ Our project collected data about off-campus recruiting visits made in 2017 by a 
 
 Our analyses to date have focused only on visits by public research universities [CITE]. The big-picture takeaways are as follows. Most public research universities in our sample made more out-of-state than in-state recruiting visits. The exceptions were UC-Berkeley, UC-Irvine, and North Carolina State University, three institutions with relatively generous state appropriations and the only three public universities in our sample that faced strong nonresident enrollment caps. Accross all universities, out-of-state visits systematically targeted affluent, predominantly white schools and communities, usually within populous metropoitan areas. Most public universities also made a disproportionate number of out-of-state visits to private high schools. Analyses of in-state visits also found that public high schools in affluent communities were more likely to receive a visit, but this relationship was modest compared to the income disparity between visited and not visited out-of-state public schools. Furthermore, in-state visits did not consistently indicate preferences for majority white high schools or for private high schools.
 
-Tables/Figures X and X show simple counts and descriptive staitistics of off-campus recruiting visits by colleges and universities in our sample. TEXT BRIEFLY DESCRIBING FINDINGS FROM DESCRIPTIVE TABLES.... Table/Figure X demonstrates the disproportionate number of visits to private high schools. The goal of this chapter is to investigate off-campus recruiting visits to private high schools. Which types of private high schools receive visits from which types of colleges and universities? Additionally, to what extent were visits a college/university to a private high school more likely if the two organizations were similar to one another on key characteristics? Our analyses focus on the characteristics of academic reputation, geographic region, religious affiliation, and racial composition. WHAT TO SHOW IN TABLES/FIGURES:
+Figures \@ref(fig:event-count-figure-privu) and \@ref(fig:event-count-figure-pubu) show simple counts and descriptive statistics of off-campus recruiting visits by colleges and universities in our sample. TEXT BRIEFLY DESCRIBING FINDINGS FROM DESCRIPTIVE TABLES.... Table/Figure X demonstrates the disproportionate number of visits to private high schools. The goal of this chapter is to investigate off-campus recruiting visits to private high schools. Which types of private high schools receive visits from which types of colleges and universities? Additionally, to what extent were visits a college/university to a private high school more likely if the two organizations were similar to one another on key characteristics? Our analyses focus on the characteristics of academic reputation, geographic region, religious affiliation, and racial composition. WHAT TO SHOW IN TABLES/FIGURES:
 <!--
 - Table/figure of number of visits by visit type and in/out-of-state
 - Table/figure showing disproportionate number of visits to private high schools.
@@ -419,7 +421,7 @@ df %>% filter(Cluster ==4, Type == "univ") %>% select(ID, University, Type, Rank
 
 \newpage
 
-```{r, echo=FALSE}
+```{r ug-recruit-budget, echo=FALSE}
 pct_budget <- data.frame(
   activity = c("Travel","Student search (purchased lists)","Prospective student communications","Events","Recruitment publications","Web services and digital advertising","Traditional advertising","International recruitment","Transfer recruitment","Other"),
   private = c(17,14,13,12,11,11,6,5,4,8),
@@ -439,60 +441,60 @@ kable(
 
 <!-- private col/univ -->
 
-```{r, hs-print-privu, echo = FALSE}
+```{r hs-print-privu, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_privu.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-name,-closeness), caption = 'The 20 most central private high schools with respect to visits from private colleges and universities') %>% 
+  df %>% select(-name,-closeness), caption = 'Top 20 most central private HS visited by private institutions') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 
-```{r, hs-table-privu-agg, echo = FALSE}
+```{r hs-table-privu-agg, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_agg_privu.RDS')
 
-knitr::kable(df, caption = 'characteristics of high schools by degree band, private colleges and universities') %>% 
+knitr::kable(df, caption = 'Characteristics of private HS visited by private institutions, by degree band') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 <!-- public research universities -->
 
-```{r, hs-print-pubu, echo = FALSE}
+```{r hs-print-pubu, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-name,-closeness), caption = 'The 20 most central private high schools with respect to visits from public research universities') %>% 
+  df %>% select(-name,-closeness), caption = 'Top 20 most central private HS visited by public institutions') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 
-```{r, hs-table-pubu-agg, echo = FALSE}
+```{r hs-table-pubu-agg, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_agg_pubu.RDS')
 
-knitr::kable(df, caption = 'characteristics of high schools by degree band, public research universities') %>% 
+knitr::kable(df, caption = 'Characteristics of private HS visited by public institutions, by degree band') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 <!-- public and private col/univ -->
 
-```{r, hs-print-both, echo = FALSE}
+```{r hs-print-both, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_both.RDS') %>% head(n=20)
 
 knitr::kable(
-  df %>% select(-name,-closeness), caption = 'most central private high schools, public and private colleges and universities') %>% 
+  df %>% select(-name,-closeness), caption = 'Top 20 most central private HS visited by all institutions') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
 
 
-```{r, hs-table-both-agg, echo = FALSE}
+```{r hs-table-both-agg, echo = FALSE}
 df <- readRDS('./assets/tables/table_2mode_agg_both.RDS')
 
-knitr::kable(df, caption = 'characteristics of high schools by degree band, public and private colleges and universities') %>% 
+knitr::kable(df, caption = 'Characteristics of private HS visited by all institutions, by degree band') %>% 
   landscape(margin = NULL) %>%
   kable_styling(latex_options = 'scale_down')
 ```
@@ -501,21 +503,39 @@ knitr::kable(df, caption = 'characteristics of high schools by degree band, publ
 <!-- FIGURES -->
 
 
-```{r em-funnel, echo = FALSE, fig.cap = "The enrollment funnel"}
+```{r em-funnel, echo = FALSE, fig.align = 'center', fig.cap = "The enrollment funnel", out.width = "70%"}
 knitr::include_graphics('assets/images/enrollment_funnel.png')
 #![The enrollment funnel](assets/images/enrollment_funnel.png)
+```
+
+```{r event-count-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for private institutions"}
+knitr::include_graphics('assets/figures/plot_event_count_privu.pdf')
+```
+
+```{r event-count-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for public institutions"}
+knitr::include_graphics('assets/figures/plot_event_count_pubu.pdf')
 ```
 
 
 \newpage
 
-\newgeometry{margin=0cm}
+```{r privhs-universe, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of universe of private HS and private HS that received at least 1 visit from sample institutions, unweighted and weighted by 12th grade enrollment"}
+knitr::include_graphics('assets/figures/plot_pss_universe.pdf')
+```
+
+\begin{center}
+* \textit{Universe of private HS (N=3673), private HS visited by sample institutions (N=1738); Universe of private HS is defined as any private schools that enrolls at least ten grade 12 students and is not a special education school, an alternative school, an early childhood center, or an independent school.}
+\end{center}
+
+\newpage
+
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \begin{landscape}
 
 
 
-```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption of 2 mode graph"}
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network for all institutions, colored by geographic region"}
 knitr::include_graphics('assets/figures/plot_2mode_all_region.pdf')
 
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
@@ -524,31 +544,38 @@ knitr::include_graphics('assets/figures/plot_2mode_all_region.pdf')
 
 
 
-```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-privu"}
+```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for private institutions, colored by cluster"}
 knitr::include_graphics('assets/figures/plot_1mode_privu.pdf')
 ```
 
 
 ```{r, fig.width=3.5, fig.height=3, echo = FALSE, message = FALSE}
-#df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS')))
-#df %>% glimpse()
+# ggplot's default color palette
+# library(scales)
+# show_col(hue_pal()(4))
 
-plot_characteristic <- function(df, type, characteristic) {
-  sub_df <- df %>% select(univ_name, characteristic) %>%
+plot_characteristic <- function(df, type, characteristic, label_text, visit_count = FALSE) {
+  if (visit_count) {
+    df <- df %>% mutate(univ_name = str_c(univ_name, ' (N=', total, ')'))
+  }
+  
+  ordered_df <- df %>% arrange(desc(cluster), univ_name)
+  univ_order <- ordered_df$univ_name
+  cluster_face <- map_chr(ordered_df$cluster, function(x) if_else(as.numeric(x) %% 2 == 0, 'bold', 'plain'))
+  
+  sub_df <- df %>% select(univ_name, all_of(characteristic)) %>%
     gather(key, value, characteristic) %>%
     mutate(value = parse_number(value))
 
-  # colors <- sub_df$color[order(sub_df$University)]
-  univ_order <- (df %>% arrange(desc(cluster), univ_name))$univ_name
-  #univ_order <- (df %>% arrange(desc(Cluster), Type, as.numeric(Rank), University))$University
   sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(univ_order))
-  #sub_df$univ_name
-  
+  sub_df$key <- factor(sub_df$key, levels = characteristic)
+
   ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
     geom_bar(stat='identity', position = position_fill(reverse = TRUE)) +
     ggtitle('Title') +
     xlab('') + ylab('') +
     labs(fill = type) +
+    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),
@@ -558,14 +585,14 @@ plot_characteristic <- function(df, type, characteristic) {
           legend.key.size = unit(0.3, 'cm'),
           panel.background = element_blank(),
           axis.ticks.y = element_blank(),
-          # axis.text.y = element_text(color = rep(c('red', 'green', 'blue', 'yellow', 'black'), 5)),
+          axis.text.y = element_text(face = rev(cluster_face)),
           text = element_text(size = 8),
           plot.title = element_text(color = 'white')) +
     coord_flip()
 }
 
 
-type_vec <- c('privu', 'pubu', 'pubu_outst', 'all','all_pubu_outst')
+type_vec <- c('privu', 'pubu', 'pubu_outst', 'all', 'all_pubu_outst')
 
 for (i in 1:length(type_vec)) {
   ego_df <-readRDS(file.path('.', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
@@ -574,21 +601,20 @@ for (i in 1:length(type_vec)) {
   par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
   par(mfrow=c(2, 2))
   
+  a <- plot_characteristic(ego_df, 'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE)
+  b <- plot_characteristic(ego_df, 'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
+  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'), c('<10%', '10-25%', '25-50%', '50%+'), visit_count = TRUE)
+  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
   
-  a <- plot_characteristic(ego_df, 'Region', c('northeast', 'midwest', 'south', 'west'))
-  b <- plot_characteristic(ego_df, 'Religion', c('catholic', 'christian', 'nonsectarian', 'other'))
-  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+'))
-  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'))
-  
-  grid.arrange(a, b, c, d, nrow=2, ncol=2)
+  grid.arrange(a, b, c, d, nrow=2, ncol=2, widths=c(1, 0.92))
   dev.off()
   
   # Need to use print() for ggplot inside loop in order for it to appear
   # https://stackoverflow.com/a/15678596/6373540
-  #print(a)
-  #print(b)
-  #print(c)
-  #print(d)
+  # print(a)
+  # print(b)
+  # print(c)
+  # print(d)
 }
 ```
 
@@ -596,31 +622,35 @@ for (i in 1:length(type_vec)) {
 
 \restoregeometry
 
-\newgeometry{margin=0cm}
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \newpage
 
-```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by private colleges and universities"}
+```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by private institutions"}
 knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
 ```
+
+\begin{center}
+* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
+\end{center}
 
 \begin{landscape}
 
 \newpage
 
-```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, with religious affiliation"}
+```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, colored by religious affiliation"}
 knitr::include_graphics('assets/figures/villanova_religion.pdf')
 ```
 
-```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Emory University, with geographic region"}
+```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Emory University, colored by geographic region"}
 knitr::include_graphics('assets/figures/emory_region.pdf')
 ```
 
-```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-pubu"}
+```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for public institutions, colored by cluster"}
 knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
 ```
 
-```{r plot-1mode-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-pubu out-of-state visits only", eval = FALSE}
+```{r plot-1mode-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for public institutions and out-of-state visits only, colored by cluster", eval = FALSE}
 knitr::include_graphics('assets/figures/plot_1mode_pubu_outst.pdf')
 ```
 
@@ -628,22 +658,26 @@ knitr::include_graphics('assets/figures/plot_1mode_pubu_outst.pdf')
 
 \restoregeometry
 
-\newgeometry{margin=0cm}
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \newpage
 
-```{r ego-network-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by public research universities"}
+```{r ego-network-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by public institutions"}
 knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
 ```
+
+\begin{center}
+* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
+\end{center}
 
 \begin{landscape}
 
 
-```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all", include= FALSE, eval = FALSE}
+```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for all institutions, colored by cluster", include= FALSE, eval = FALSE}
 knitr::include_graphics('assets/figures/plot_1mode_all.pdf')
 ```
 
-```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "caption plot-1mode-all, out-of-state visits only for public universities"}
+```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for all institutions, out-of-state visits only for public universities, colored by cluster"}
 knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
 ```
 
@@ -652,13 +686,16 @@ knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
 
 \restoregeometry
 
-\newgeometry{margin=0cm}
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \newpage
 
-```{r ego-network-figure-all-pubu-outst, fig.align = 'center', echo = FALSE, fig.cap = "characteristics of private high schools visited by public and private colleges and universities, out-of-state visits only for public universities"}
+```{r ego-network-figure-all-pubu-outst, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by all institutions, out-of-state visits only for public universities"}
 knitr::include_graphics('assets/figures/ego_network_figure_all_pubu_outst.pdf')
 #out.width="1.1\\linewidth", 
 ```
 
+\begin{center}
+* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
+\end{center}
 
