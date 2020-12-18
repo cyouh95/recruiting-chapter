@@ -55,6 +55,7 @@ write.csv(priv_df, './data/event_count_priv.csv', row.names = FALSE)
 
 ```{r}
 privhs_universe <- readRDS('./data/privhs_universe.RDS')
+privhs_visited <- readRDS('./data/privhs_visited.RDS')
 
 # Filter for private HS that fits our criteria
 # https://github.com/ksalazar3/recruiting-static-visuals/blob/62b08a202ca7c93433a91d7e72e6c0e93ac6eb5b/sql/update_imported_hs_data.sql#L52-L56
@@ -63,8 +64,7 @@ privhs_universe %>% group_by(year) %>% count()
 
 v_get_val <- Vectorize(function(x) str_to_lower(val_label(privhs_universe$region, x)))
 
-df <- privhs_universe %>%
-  filter(school_type %in% c(1, 2, 5), total_12 > 10) %>% 
+universe_df <- privhs_universe %>% 
   mutate(
     region = v_get_val(region),
     pct_blacklatinxnative = pct_black + pct_hispanic + pct_amerindian + pct_nativehawaii,
@@ -80,20 +80,31 @@ df <- privhs_universe %>%
       overall_niche_letter_grade == 'A' ~ 'c3_A',
       !is.na(overall_niche_letter_grade) ~ 'c4_ltA'
     ) 
-  ) %>% 
-  select(total_12, region, religion, pct_blacklatinxnative_cat, rank_cat2)
+  )
+
+visited_df <- universe_df %>% filter(ncessch %in% privhs_visited$school_id)
+universe_df <- universe_df %>% filter(school_type %in% c(1, 2, 5), total_12 > 10) 
 
 plot_characteristic <- function(var_name, type, characteristic, label_text) {
+  
+  sub_df_visited <- visited_df %>% group_by(get(var_name)) %>% 
+    summarize(`visited (unweighted)` = n(), `visited (weighted)` = sum(total_12, na.rm = TRUE)) %>% 
+    pivot_longer(cols = c('visited (unweighted)', 'visited (weighted)'),
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_visited) <- c('key', 'universe', 'value')
 
-  sub_df <- df %>% group_by(get(var_name)) %>% 
-    summarize(unweighted = n(), weighted = sum(total_12)) %>% 
-    pivot_longer(cols = c('unweighted', 'weighted'),
+  sub_df <- universe_df %>% group_by(get(var_name)) %>% 
+    summarize(`universe (unweighted)` = n(), `universe (weighted)` = sum(total_12)) %>% 
+    pivot_longer(cols = c('universe (unweighted)', 'universe (weighted)'),
                  names_to = 'universe',
                  values_to = 'value')
   names(sub_df) <- c('key', 'universe', 'value')
+  
+  sub_df <- dplyr::union(sub_df, sub_df_visited)
   sub_df <- sub_df %>% filter(!is.na(key))
   
-  sub_df$universe <- factor(sub_df$universe, levels = c('weighted', 'unweighted'))
+  sub_df$universe <- factor(sub_df$universe, levels = c('visited (weighted)', 'visited (unweighted)', 'universe (weighted)', 'universe (unweighted)'))
   sub_df$key <- factor(sub_df$key, levels = characteristic)
   
   ggplot(sub_df, aes(fill = key, y = value, x = universe)) + 
@@ -102,6 +113,7 @@ plot_characteristic <- function(var_name, type, characteristic, label_text) {
       xlab('') + ylab('') +
       labs(fill = type) +
       scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+      scale_x_discrete(labels = function(x) str_wrap(x, width = 10)) +
       scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
       theme(legend.position = 'top',
             legend.title = element_text(size = 6, face = 'bold'),
@@ -116,7 +128,7 @@ plot_characteristic <- function(var_name, type, characteristic, label_text) {
       coord_flip()
 }
 
-pdf(file.path('.', 'assets', 'figures', 'plot_pss_universe.pdf'), width = 8, height = 4)
+pdf(file.path('.', 'assets', 'figures', 'plot_pss_universe.pdf'))
 par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
 par(mfrow=c(2, 2))
 

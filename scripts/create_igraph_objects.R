@@ -197,6 +197,9 @@ attributes_df <- attributes_df %>% mutate(
 View(attributes_df %>% filter(school_id %in% univ_vec))
 View(attributes_df %>% filter(school_id %in% privhs_vec))
 
+# Export universe of private HS
+saveRDS(attributes_df %>% filter(school_id %in% privhs_vec), file = str_c('./data/privhs_visited.RDS'))
+
 
 ## -------------------
 ## AFFILIATION MATRIX
