@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  18 DEC 2020 16:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  18 DEC 2020 17:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1181,19 +1181,19 @@ LaTeX Warning: Reference `ego-network-figure-all-pubu-outst' on page 13 undefin
 ed on input line 280.
 
 [13] [14] [15] [16] [17] [18] [19] [20] [21] [22] <assets/images/enrollment_fun
-nel.png, id=263, 496.85625pt x 651.18282pt>
+nel.png, id=261, 496.85625pt x 651.18282pt>
 File: assets/images/enrollment_funnel.png Graphic file (type png)
 <use assets/images/enrollment_funnel.png>
 Package pdftex.def Info: assets/images/enrollment_funnel.png used on input line
  654.
 (pdftex.def)             Requested size: 328.82832pt x 430.9644pt.
-<assets/figures/plot_event_count_privu.pdf, id=265, 614.295pt x 794.97pt>
+<assets/figures/plot_event_count_privu.pdf, id=263, 614.295pt x 794.97pt>
 File: assets/figures/plot_event_count_privu.pdf Graphic file (type pdf)
 <use assets/figures/plot_event_count_privu.pdf>
 Package pdftex.def Info: assets/figures/plot_event_count_privu.pdf used on inpu
 t line 663.
 (pdftex.def)             Requested size: 469.75604pt x 607.9196pt.
-<assets/figures/plot_event_count_pubu.pdf, id=266, 614.295pt x 794.97pt>
+<assets/figures/plot_event_count_pubu.pdf, id=264, 614.295pt x 794.97pt>
 File: assets/figures/plot_event_count_pubu.pdf Graphic file (type pdf)
 <use assets/figures/plot_event_count_pubu.pdf>
 Package pdftex.def Info: assets/figures/plot_event_count_pubu.pdf used on input
@@ -1214,7 +1214,7 @@ Package pdftex.def Info: assets/figures/plot_event_count_pubu.pdf used on input
 
  <./assets/images/enrollment_funnel.png>] [24 <./assets/figures/plot_event_coun
 t_privu.pdf>] [25 <./assets/figures/plot_event_count_pubu.pdf>] <assets/figures
-/plot_pss_universe.pdf, id=592, 505.89pt x 505.89pt>
+/plot_pss_universe.pdf, id=590, 505.89pt x 505.89pt>
 File: assets/figures/plot_pss_universe.pdf Graphic file (type pdf)
 <use assets/figures/plot_pss_universe.pdf>
 Package pdftex.def Info: assets/figures/plot_pss_universe.pdf used on input lin
@@ -1253,13 +1253,13 @@ e 683.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/plot_2mode_all_region.pdf, id=603, 844.15375pt x 597.23125pt>
+<assets/figures/plot_2mode_all_region.pdf, id=601, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_2mode_all_region.pdf Graphic file (type pdf)
 <use assets/figures/plot_2mode_all_region.pdf>
 Package pdftex.def Info: assets/figures/plot_2mode_all_region.pdf used on input
  line 704.
 (pdftex.def)             Requested size: 722.71213pt x 511.31238pt.
-<assets/figures/plot_1mode_privu.pdf, id=604, 844.15375pt x 597.23125pt>
+<assets/figures/plot_1mode_privu.pdf, id=602, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_1mode_privu.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_privu.pdf>
 Package pdftex.def Info: assets/figures/plot_1mode_privu.pdf used on input line
@@ -1299,7 +1299,7 @@ ode_privu.pdf>]
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/ego_network_figure_privu.pdf, id=626, 505.89pt x 505.89pt>
+<assets/figures/ego_network_figure_privu.pdf, id=624, 505.89pt x 505.89pt>
 File: assets/figures/ego_network_figure_privu.pdf Graphic file (type pdf)
 <use assets/figures/ego_network_figure_privu.pdf>
 Package pdftex.def Info: assets/figures/ego_network_figure_privu.pdf used on in
@@ -1312,19 +1312,19 @@ put line 736.
 
 
  <./assets/figures/ego_network_figure_privu.pdf>] <assets/figures/villanova_rel
-igion.pdf, id=637, 844.15375pt x 597.23125pt>
+igion.pdf, id=635, 844.15375pt x 597.23125pt>
 File: assets/figures/villanova_religion.pdf Graphic file (type pdf)
 <use assets/figures/villanova_religion.pdf>
 Package pdftex.def Info: assets/figures/villanova_religion.pdf used on input li
 ne 753.
 (pdftex.def)             Requested size: 722.71213pt x 511.31238pt.
-<assets/figures/emory_region.pdf, id=638, 844.15375pt x 597.23125pt>
+<assets/figures/emory_region.pdf, id=636, 844.15375pt x 597.23125pt>
 File: assets/figures/emory_region.pdf Graphic file (type pdf)
 <use assets/figures/emory_region.pdf>
 Package pdftex.def Info: assets/figures/emory_region.pdf used on input line 762
 .
 (pdftex.def)             Requested size: 722.71213pt x 511.31238pt.
-<assets/figures/plot_1mode_pubu.pdf, id=639, 844.15375pt x 597.23125pt>
+<assets/figures/plot_1mode_pubu.pdf, id=637, 844.15375pt x 597.23125pt>
 File: assets/figures/plot_1mode_pubu.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_pubu.pdf>
 Package pdftex.def Info: assets/figures/plot_1mode_pubu.pdf used on input line 
@@ -1364,7 +1364,7 @@ on.pdf>] [32 <./assets/figures/plot_1mode_pubu.pdf>]
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-<assets/figures/ego_network_figure_pubu.pdf, id=674, 505.89pt x 505.89pt>
+<assets/figures/ego_network_figure_pubu.pdf, id=671, 505.89pt x 505.89pt>
 File: assets/figures/ego_network_figure_pubu.pdf Graphic file (type pdf)
 <use assets/figures/ego_network_figure_pubu.pdf>
 Package pdftex.def Info: assets/figures/ego_network_figure_pubu.pdf used on inp
@@ -1376,7 +1376,7 @@ ut line 790.
 
 
  <./assets/figures/ego_network_figure_pubu.pdf>]
-<assets/figures/plot_1mode_all_pubu_outst.pdf, id=685, 844.15375pt x 597.23125p
+<assets/figures/plot_1mode_all_pubu_outst.pdf, id=683, 844.15375pt x 597.23125p
 t>
 File: assets/figures/plot_1mode_all_pubu_outst.pdf Graphic file (type pdf)
 <use assets/figures/plot_1mode_all_pubu_outst.pdf>
@@ -1417,7 +1417,7 @@ nput line 808.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 
-<assets/figures/ego_network_figure_all_pubu_outst.pdf, id=697, 505.89pt x 505.8
+<assets/figures/ego_network_figure_all_pubu_outst.pdf, id=695, 505.89pt x 505.8
 9pt>
 File: assets/figures/ego_network_figure_all_pubu_outst.pdf Graphic file (type p
 df)
@@ -1442,13 +1442,13 @@ LaTeX Warning: There were undefined references.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 837.
  ) 
 Here is how much of TeX's memory you used:
- 16241 strings out of 492995
- 237604 string characters out of 6132704
+ 16237 strings out of 492995
+ 237564 string characters out of 6132704
  387446 words of memory out of 5000000
  19268 multiletter control sequences out of 15000+600000
- 69390 words of font info for 127 fonts, out of 8000000 for 9000
+ 69224 words of font info for 125 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 37i,10n,38p,2113b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,10n,38p,2030b,386s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2017/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
 17/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2017/texmf-d
@@ -1463,10 +1463,10 @@ cal/texlive/2017/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive
 c/lm/lmr7.pfb></usr/local/texlive/2017/texmf-dist/fonts/type1/public/lm/lmr8.pf
 b></usr/local/texlive/2017/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/lo
 cal/texlive/2017/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on manuscript.pdf (35 pages, 1041893 bytes).
+Output written on manuscript.pdf (35 pages, 1040341 bytes).
 PDF statistics:
- 826 PDF objects out of 1000 (max. 8388607)
- 451 compressed objects within 5 object streams
+ 824 PDF objects out of 1000 (max. 8388607)
+ 449 compressed objects within 5 object streams
  117 named destinations out of 1000 (max. 500000)
  14522 words of extra memory for PDF output out of 17280 (max. 10000000)
 
