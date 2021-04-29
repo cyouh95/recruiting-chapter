@@ -1,7 +1,9 @@
+
 library(igraph)
 library(tidyverse)
 library(labelled)
 
+#rm(list = ls())
 
 ## ----------
 ## LOAD DATA
@@ -12,7 +14,9 @@ events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.s
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
-univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble()
+univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble() %>% 
+  filter(!(univ_id %in% c('168218','199193','110653')))
+
 
 # Private HS data from PSS
 privhs_data_1718 <- readRDS('./data/pss_1718.RDS')
@@ -32,11 +36,19 @@ usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings 
 ## PREP DATA
 ## ----------
 
-# Focus on private HS visits by the univs (exclude Wellesley and mismatched HS)
+# Focus on private HS visits by the univs
+  # universities to exclude:
+    # wellesley college; data seem suspect
+    # NC State; univ_id ==199193
+        #rationale: data seem suspect
+    # UC Irvine: univ_id == 110653
+      # rationale: we have four UCs: berkeley; san diego; irvine; riverside; don't want so many; Irvine and San Diego have same ranking but San Diego has more out-of-state visits and more private hs visits so keep that one; and keep riverside because it has very different rank
+  # (exclude Wellesley and mismatched HS)
 privhs_events <- events_data %>%
-  filter(event_type == 'priv_hs', univ_id != '168218', pid != 55696) %>%
+  filter(event_type == 'priv_hs', !(univ_id %in% c('168218','199193','110653')), pid != 55696) %>%
   select(univ_id, univ_state, event_type, school_id, event_location_name, event_city, event_state)
 
+  
 # Override school_id with updated 2017-18 PSS ID
 get_pss_override <- function(x) {
   new_id <- privhs_overrides[privhs_overrides$old_id == x, ]$new_id
@@ -120,24 +132,98 @@ names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
 
-# Vectors of private HS and univs
-univ_vec <- unique(privhs_events$univ_id) %>% str_sort(numeric = TRUE)
-privu_vec <- unique((univ_info %>% filter(search_sector == 'PRIVATE', univ_id %in% univ_vec))$univ_id)
-pubu_vec <- unique((univ_info %>% filter(search_sector == 'PUBLIC', univ_id %in% univ_vec))$univ_id)
 
+# naming convention:
+  # all  
+    # g_2mode
+    # psi_vec
+  # private colleges and universities
+    # g_2mode_priv
+    # priv_vec
+  # public universities
+    # g_2mode_pubu
+    # pubu_vec
+  # public and private universities
+    #g_2mode_u
+    # univ_vec
+  # private universities
+    # g_2mode_privu
+    # privu_vec
+  # private colleges
+    # g_2mode_privc
+    # privc_vec
+
+##### Vectors of PSIs and of private hs
+
+# vector of all psis (all public and private, colleges and universities)
+psi_vec <- unique(privhs_events$univ_id) %>% str_sort(numeric = TRUE)
+  #psi_vec
+  #psi_vec %>% length()
+
+# vector of private universities and private colleges
+priv_vec <- unique((univ_info %>% filter(search_sector == 'PRIVATE', univ_id %in% psi_vec))$univ_id)
+  #priv_vec
+  #priv_vec %>% length()
+
+# vector of public universities    
+pubu_vec <- unique((univ_info %>% filter(search_sector == 'PUBLIC', univ_id %in% psi_vec))$univ_id)
+  #pubu_vec
+  #pubu_vec %>% length()
+
+# vector of public universities and private universities
+univ_vec <- unique((univ_info %>% filter(classification %in% c('public_research','private_national'), univ_id %in% psi_vec))$univ_id)
+  #univ_vec
+  #univ_vec %>% length()
+  
+# vector of private universities
+privu_vec <- unique((univ_info %>% filter(classification %in% c('private_national'), univ_id %in% psi_vec))$univ_id)
+  #privu_vec
+  #privu_vec %>% length()    
+
+# vector of private colleges
+privc_vec <- unique((univ_info %>% filter(classification %in% c('private_libarts'), univ_id %in% psi_vec))$univ_id)
+  #privc_vec
+  #privc_vec %>% length()    
+  
+
+##### vectors for private high schools visited by particular subsets of postsecondary institutions
+#####
+
+# private high schools visited by any psi in df privhs_events  
 privhs_vec <- unique(privhs_events$school_id) %>% str_sort(numeric = TRUE)
-privhs_visited_by_privu_vec <- unique((privhs_events %>% filter(univ_id %in% privu_vec))$school_id)
-privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu_vec))$school_id)
+  privhs_vec %>% length()
 
+# vector of private high schools visited by private universities and private colleges; priv_vec
+privhs_visited_by_priv_vec <- unique((privhs_events %>% filter(univ_id %in% priv_vec))$school_id)
+  privhs_visited_by_priv_vec %>% length()
+
+# vector of private high schools visited by public universities; pubu_vec
+privhs_visited_by_pubu_vec <- unique((privhs_events %>% filter(univ_id %in% pubu_vec))$school_id)
+  privhs_visited_by_pubu_vec %>% length()
+
+# vector of private high schools visited by public universities and private universities; univ_vec
+privhs_visited_by_univ_vec <- unique((privhs_events %>% filter(univ_id %in% univ_vec))$school_id)  
+  privhs_visited_by_univ_vec %>% length()
+  
+# vector of private high schools visited by private universities; privu_vec
+privhs_visited_by_privu_vec <- unique((privhs_events %>% filter(univ_id %in% privu_vec))$school_id)
+  privhs_visited_by_privu_vec %>% length()
+  
+# vector of private high schools visited by private colleges; privc_vec
+privhs_visited_by_privc_vec <- unique((privhs_events %>% filter(univ_id %in% privc_vec))$school_id)
+  privhs_visited_by_privc_vec %>% length()
+
+  
+  
 # Check religion variable
-attributes_df %>% filter(school_id %in% univ_vec) %>% select(religion) %>% table(useNA = 'ifany')
+attributes_df %>% filter(school_id %in% psi_vec) %>% select(religion) %>% table(useNA = 'ifany')
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(religion) %>% table(useNA = 'ifany')
 
-View(univ_data %>% filter(univ_id %in% univ_info$univ_id) %>% select(univ_id, univ_name, relaffil, relaffil_text, religion_4, religion))
+  #View(univ_data %>% filter(univ_id %in% univ_info$univ_id) %>% select(univ_id, univ_name, relaffil, relaffil_text, religion_4, religion))
 
 # TODO: Check unmerged Niche data
 attributes_df %>% filter(school_id %in% privhs_vec) %>% select(ranking) %>% table(useNA = 'always')
-View(attributes_df %>% filter(school_id %in% privhs_vec, is.na(ranking)))
+  #View(attributes_df %>% filter(school_id %in% privhs_vec, is.na(ranking)))
 
 length(privhs_vec[!(privhs_vec %in% attributes_df$school_id)])
 
@@ -194,8 +280,8 @@ attributes_df <- attributes_df %>% mutate(
 )
 
 # Preview vertex attributes that will be merged
-View(attributes_df %>% filter(school_id %in% univ_vec))
-View(attributes_df %>% filter(school_id %in% privhs_vec))
+  #View(attributes_df %>% filter(school_id %in% psi_vec))
+  #View(attributes_df %>% filter(school_id %in% privhs_vec))
 
 # Export universe of private HS
 saveRDS(attributes_df %>% filter(school_id %in% privhs_vec), file = str_c('./data/privhs_visited.RDS'))
@@ -206,12 +292,12 @@ saveRDS(attributes_df %>% filter(school_id %in% privhs_vec), file = str_c('./dat
 ## -------------------
 
 # Create empty matrix: # of rows = # of HS, # of cols = # of univs
-affiliation_matrix <- matrix(0, length(privhs_vec), length(univ_vec))
-dimnames(affiliation_matrix) <- list(privhs_vec, univ_vec)
+affiliation_matrix <- matrix(0, length(privhs_vec), length(psi_vec))
+dimnames(affiliation_matrix) <- list(privhs_vec, psi_vec)
 
 # Populate matrix
 for (i in privhs_vec) {
-  for (j in univ_vec) {
+  for (j in psi_vec) {
     affiliation_matrix[i, j] <- privhs_events %>% filter(school_id == i, univ_id == j) %>% nrow()
   }
 }
@@ -232,7 +318,7 @@ v_get_loc <- Vectorize(function(x, y) ifelse(privhs_events[privhs_events$school_
 v_get_states <- Vectorize(function(x, y) paste0(privhs_events[privhs_events$school_id == x, ]$event_state[1], '|', univ_info[univ_info$univ_id == y, ]$state_code), USE.NAMES = FALSE)
 e_2mode <- e_2mode %>% mutate(
   visiting_univ = case_when(
-    univ_id %in% privu_vec ~ 'private',
+    univ_id %in% priv_vec ~ 'private',
     univ_id %in% pubu_vec ~ 'public'
   ),
   visit_loc = v_get_loc(ncessch, univ_id),
@@ -244,8 +330,8 @@ v_2mode <- tibble(name = df$vertices$name, type = df$vertices$type)
 v_2mode <- left_join(v_2mode, attributes_df, c('name' = 'school_id'))
 
 # View vertex and edge attributes
-View(v_2mode)
-View(e_2mode)
+#View(v_2mode)
+#View(e_2mode)
 
 # Check unmerged
 nrow(v_2mode %>% filter(is.na(school_name)))  # unmerged PSS
@@ -256,65 +342,222 @@ nrow(v_2mode %>% filter(is.na(ranking), !(name %in% niche_data$ncessch)))  # unm
 ## CREATE 2-MODE IGRAPH OBJECTS
 ## -----------------------------
 
-# Recreate 2-mode graph with attributes
+# naming convention:
+  # all  
+    # g_2mode
+    # psi_vec
+  # private colleges and universities
+    # g_2mode_priv
+    # priv_vec
+  # public universities
+    # g_2mode_pubu
+    # pubu_vec
+  # public and private universities
+    #g_2mode_u
+    # univ_vec
+  # private universities
+    # g_2mode_privu
+    # privu_vec
+  # private colleges
+    # g_2mode_privc
+    # privc_vec
+
+# Recreate 2-mode graph with attributes, 
 g_2mode <- graph_from_data_frame(d = e_2mode,
                                  directed = FALSE,
                                  vertices = v_2mode)
-    
-# Create 2-mode subgraph for private univs and their private HS visits only
+
+  #vertex_attr(graph = g_2mode, name = "type") %>% str()
+  #sum(vertex_attr(graph = g_2mode, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  #sum(!(vertex_attr(graph = g_2mode, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+
+
+# create 2-mode subgraph for private colleges and universities and their private HS visits only
+  # g_2mode_priv
+  # priv_vec
+  # privhs_visited_by_priv_vec
+g_2mode_priv <- induced_subgraph(
+  graph = g_2mode,
+  vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_priv_vec, priv_vec)]
+)
+
+  #g_2mode_priv
+  E(graph = g_2mode_priv) %>% length() # number of edges
+  sum(vertex_attr(graph = g_2mode_priv, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  sum(!(vertex_attr(graph = g_2mode_priv, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+  priv_vec %>% length()
+  privhs_visited_by_priv_vec %>% length()
+
+
+# create 2-mode subgraph for public universities and their private HS visits only
+  # g_2mode_pubu
+  # pubu_vec
+  # privhs_visited_by_pubu_vec
+  
+g_2mode_pubu <- induced_subgraph(
+  graph = g_2mode,
+  vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_pubu_vec, pubu_vec)]
+)
+  
+  #E(graph = g_2mode_pubu) %>% length() # number of edges
+  #sum(vertex_attr(graph = g_2mode_pubu, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  #sum(!(vertex_attr(graph = g_2mode_pubu, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+  #pubu_vec %>% length()
+  #privhs_visited_by_pubu_vec %>% length()
+
+
+# create 2-mode subgraph for public and private universities and their private HS visits only
+  #g_2mode_u
+  # univ_vec
+  # privhs_visited_by_univ_vec
+
+g_2mode_u <- induced_subgraph(
+  graph = g_2mode,
+  vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_univ_vec, univ_vec)]
+)
+
+  #E(graph = g_2mode_u) %>% length() # number of edges
+  #sum(vertex_attr(graph = g_2mode_u, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  #sum(!(vertex_attr(graph = g_2mode_u, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+  #univ_vec %>% length()
+  #privhs_visited_by_univ_vec %>% length()
+
+
+# create 2-mode subgraph for private universities and their private HS visits only
+  # g_2mode_privu
+  # privu_vec
+  # privhs_visited_by_privu_vec
+
 g_2mode_privu <- induced_subgraph(
   graph = g_2mode,
   vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_privu_vec, privu_vec)]
 )
 
-# Create 2-mode subgraph for public univs and their private HS visits only
-g_2mode_pubu <- induced_subgraph(
+  #sum(vertex_attr(graph = g_2mode_privu, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  #sum(!(vertex_attr(graph = g_2mode_privu, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+  #privu_vec %>% length()
+  #privhs_visited_by_privu_vec %>% length()
+  #E(graph = g_2mode_privu) %>% length() # number of edges
+
+
+# create 2-mode subgraph for private colleges and their private HS visits only
+  # g_2mode_privc
+  # privc_vec    
+  # privhs_visited_by_privc_vec
+
+g_2mode_privc <- induced_subgraph(
   graph = g_2mode,
-  vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_pubu_vec, pubu_vec)]
+  vids = V(g_2mode)[V(g_2mode)$name %in% c(privhs_visited_by_privc_vec, privc_vec)]
 )
+
+  sum(vertex_attr(graph = g_2mode_privc, name = "type")) # counts number of vertices where type==TRUE, which refers to universities
+  sum(!(vertex_attr(graph = g_2mode_privc, name = "type"))) # counts number of vertices where type==FALSE, which refers to high schools
+  privc_vec %>% length()
+  privhs_visited_by_privc_vec %>% length()
+  E(graph = g_2mode_privc) %>% length() # number of edges
+
+
 
 
 ## -----------------------------
 ## CREATE 1-MODE IGRAPH OBJECTS
 ## -----------------------------
 
-# Create 1-mode graphs from g_2mode
-projection <- bipartite_projection(graph = g_2mode,
-                                   types = NULL,
-                                   multiplicity = TRUE,
-                                   which = c('both'),
-                                   probe1 = NULL,
-                                   remove.type = TRUE)
+# [private colleges and universities] Create 1-mode graphs from g_2mode_priv
+# [public universities] Create 1-mode graphs from g_2mode_pubu
+# [public and private universities] Create 1-mode graphs from g_2mode_u
+# [private universities] Create 1-mode graphs from g_2mode_privu
+# [private colleges] Create 1-mode graphs from g_2mode_privc  
+  
+  
+#vec_2mode <- c('g_2mode','g_2mode_priv','g_2mode_pubu','g_2mode_u','g_2mode_privu','g_2mode_privc')
+#vec_2mode <- c('mode','mode_priv','mode_pubu','mode_u','mode_privu','mode_privc')
+vec_2mode <- c('','_priv','_pubu','_u','_privu','_privc')
+vec_2mode
+    
+for(v in vec_2mode) {
+  
+  writeLines(str_c(''))
+  writeLines(str_c('object v=', v))
+  
+  v2 <- str_c('g_2mode',v)
+  writeLines(str_c('object v2=',v2))
+  
+  v1_hs <- str_c('g_1mode',v,'_hs')
+  writeLines(str_c('object v1_hs=',v1_hs))  
+  
+  v1_psi <- str_c('g_1mode',v,'_psi')
+  writeLines(str_c('object v1_hs=',v1_psi))  
+  
 
-g_1mode_hs <- projection[['proj1']]  # all private HS visited
-g_1mode_psi <- projection[['proj2']]  # all univs in sample
+  projection <- bipartite_projection(graph = get(v2),
+                                     types = NULL,
+                                     multiplicity = TRUE,
+                                     which = c('both'),
+                                     probe1 = NULL,
+                                     remove.type = TRUE)
+  
+  hs <- projection[['proj1']]  # all private HS visited
+  psi <- projection[['proj2']]  # all univs in sample
 
-# Create 1-mode graphs from g_2mode_privu
-projection <- bipartite_projection(graph = g_2mode_privu,
-                                   types = NULL,
-                                   multiplicity = TRUE,
-                                   which = c('both'),
-                                   probe1 = NULL,
-                                   remove.type = TRUE)
+  assign(x= v1_hs, value = hs)
+  assign(x= v1_psi, value = psi)
+  
+  
+    
+}
 
-g_1mode_hs_privu <- projection[['proj1']]  # all private HS visited by at least 1 private univ
-g_1mode_psi_privu <- projection[['proj2']]  # all private univs in sample
 
-# Create 1-mode graphs from g_2mode_pubu
-projection <- bipartite_projection(graph = g_2mode_pubu,
-                                   types = NULL,
-                                   multiplicity = TRUE,
-                                   which = c('both'),
-                                   probe1 = NULL,
-                                   remove.type = TRUE)
+# print out 1 mode objects to see if they look ok
 
-g_1mode_hs_pubu <- projection[['proj1']]  # all private HS visited by at least 1 public univ
-g_1mode_psi_pubu <- projection[['proj2']]  # all public univs in sample
+  # all
+  g_1mode_hs
+  g_1mode_psi
+
+  # [private colleges and universities] Create 1-mode graphs from g_2mode_priv
+  g_1mode_priv_hs
+  g_1mode_priv_psi
+  
+  # [public universities] Create 1-mode graphs from g_2mode_pubu
+  g_1mode_pubu_hs
+  g_1mode_pubu_psi
+  
+  # [public and private universities] Create 1-mode graphs from g_2mode_u
+  g_1mode_u_hs
+  g_1mode_u_psi
+  
+  # [private universities] Create 1-mode graphs from g_2mode_privu
+  g_1mode_privu_hs
+  g_1mode_privu_psi
+  
+  # [private colleges] Create 1-mode graphs from g_2mode_privc  
+  g_1mode_privc_hs
+  g_1mode_privc_psi
+  
+ 
+# [all] Create 1-mode graphs from g_2mode
+  projection <- bipartite_projection(graph = g_2mode,
+                                     types = NULL,
+                                     multiplicity = TRUE,
+                                     which = c('both'),
+                                     probe1 = NULL,
+                                     remove.type = TRUE)
+  
+  g_1mode_hs <- projection[['proj1']]  # all private HS visited
+  g_1mode_psi <- projection[['proj2']]  # all univs in sample
+
+  g_1mode_hs
+  g_1mode_psi
+
+    
+
 
 
 ## --------------------------
 ## CREATE EGO IGRAPH OBJECTS
 ## --------------------------
+  
+#### START HERE WEEK OF MONDAY MAY 3
 
 # Create ego networks for each private HS from g_2mode
 egos_hs <- make_ego_graph(graph = g_2mode,
@@ -334,7 +577,7 @@ egos_psi <- make_ego_graph(graph = g_2mode,
                            nodes = V(g_2mode)[V(g_2mode)$type == TRUE],  # only include univs
                            mindist = 0)
 
-names(egos_psi) <- univ_vec %>% str_sort()
+names(egos_psi) <- psi_vec %>% str_sort()
 
 for (i in 1:length(egos_psi)) {
   E(egos_psi[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi)[[i]])), 1, 2)
@@ -343,7 +586,7 @@ for (i in 1:length(egos_psi)) {
 # Create ego networks for each private HS from g_2mode_privu
 egos_hs_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(g_2mode_privu)[V(g_2mode_privu)$type == FALSE], mindist = 0)
 
-names(egos_hs_privu) <- privhs_visited_by_privu_vec %>% str_sort()
+names(egos_hs_privu) <- privhs_visited_by_priv_vec %>% str_sort()
 
 for (i in 1:length(egos_hs_privu)) {
   E(egos_hs_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_hs_privu[[i]]), 'vnames'), pattern = names(egos_hs_privu)[[i]]), 1, 2)
@@ -352,7 +595,7 @@ for (i in 1:length(egos_hs_privu)) {
 # Create ego networks for each univ from g_2mode_privu
 egos_psi_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(g_2mode_privu)[V(g_2mode_privu)$type == TRUE], mindist = 0)
 
-names(egos_psi_privu) <- privu_vec %>% str_sort()
+names(egos_psi_privu) <- priv_vec %>% str_sort()
 
 for (i in 1:length(egos_psi_privu)) {
   E(egos_psi_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_privu[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi_privu)[[i]])), 1, 2)
