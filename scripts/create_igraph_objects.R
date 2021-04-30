@@ -503,8 +503,6 @@ for(v in vec_2mode) {
   assign(x= v1_hs, value = hs)
   assign(x= v1_psi, value = psi)
   
-  
-    
 }
 
 
@@ -534,24 +532,6 @@ for(v in vec_2mode) {
   g_1mode_privc_hs
   g_1mode_privc_psi
   
- 
-# [all] Create 1-mode graphs from g_2mode
-  projection <- bipartite_projection(graph = g_2mode,
-                                     types = NULL,
-                                     multiplicity = TRUE,
-                                     which = c('both'),
-                                     probe1 = NULL,
-                                     remove.type = TRUE)
-  
-  g_1mode_hs <- projection[['proj1']]  # all private HS visited
-  g_1mode_psi <- projection[['proj2']]  # all univs in sample
-
-  g_1mode_hs
-  g_1mode_psi
-
-    
-
-
 
 ## --------------------------
 ## CREATE EGO IGRAPH OBJECTS
@@ -559,7 +539,105 @@ for(v in vec_2mode) {
   
 #### START HERE WEEK OF MONDAY MAY 3
 
-# Create ego networks for each private HS from g_2mode
+# [all] create from g_2mode  
+# [private colleges and universities] Create ego graphs from g_2mode_priv
+# [public universities] Create 1-mode graphs from g_2mode_pubu
+# [public and private universities] Create 1-mode graphs from g_2mode_u
+# [private universities] Create 1-mode graphs from g_2mode_privu
+# [private colleges] Create 1-mode graphs from g_2mode_privc  
+
+#vec_2mode <- c('','_priv','_pubu','_u','_privu','_privc')
+vec_2mode <- c('','_priv')
+vec_2mode
+
+vec_egos <- c('"" psi_vec privhs_vec','_priv priv_vec privhs_visited_by_priv_vec')
+
+
+for(v in vec_egos) {
+  
+  writeLines(str_c(''))
+  writeLines(str_c('object v=', v))
+  
+  #v2 <- str_c('g_2mode',v)
+  #writeLines(str_c('object v2=',v2))
+
+}
+
+#str_split(string, pattern, n = Inf, simplify = FALSE)
+
+# all
+  # g_2mode
+  # psi_vec
+  # privhs_vec   
+
+# create 2-mode subgraph for private colleges and universities and their private HS visits only
+  # g_2mode_priv
+  # priv_vec
+  # privhs_visited_by_priv_vec
+
+# create 2-mode subgraph for public universities and their private HS visits only
+  # g_2mode_pubu
+  # pubu_vec
+  # privhs_visited_by_pubu_vec
+  
+# create 2-mode subgraph for public and private universities and their private HS visits only
+  #g_2mode_u
+  # univ_vec
+  # privhs_visited_by_univ_vec
+
+# create 2-mode subgraph for private universities and their private HS visits only
+  # g_2mode_privu
+  # privu_vec
+  # privhs_visited_by_privu_vec
+
+# create 2-mode subgraph for private colleges and their private HS visits only
+  # g_2mode_privc
+  # privc_vec    
+  # privhs_visited_by_privc_vec
+
+
+
+
+
+
+
+
+
+
+
+
+    
+privhs_vec
+
+for(v in vec_2mode) {
+  
+  writeLines(str_c(''))
+  writeLines(str_c('object v=', v))
+  
+  v2 <- str_c('g_2mode',v)
+  writeLines(str_c('object v2=',v2))
+
+  hs <- str_c('egos_hs',v)
+  writeLines(str_c('object hs=',hs))
+  
+  psi <- str_c('egos_psi',v)
+  writeLines(str_c('object psi=',psi))
+  
+  # Create ego networks for each private HS
+  ego1 <- make_ego_graph(graph = get(v2),
+                          order = 2,
+                          nodes = V(get(v2))[V(get(v2))$type == FALSE],  # only include private HS
+                          mindist = 0)
+  #print(ego1)
+  #assign(x= v1_hs, value = hs)
+  #assign(x= v1_psi, value = psi)
+  names(ego1) <- privhs_vec %>% str_sort()  # name the list of ego networks  
+  
+}
+
+
+
+# Create ego networks for each private HS
 egos_hs <- make_ego_graph(graph = g_2mode,
                           order = 2,
                           nodes = V(g_2mode)[V(g_2mode)$type == FALSE],  # only include private HS
