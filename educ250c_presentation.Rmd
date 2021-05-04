@@ -14,8 +14,8 @@ output:
       #collapsed: false # collapsed (defaults to TRUE) controls whether the TOC appears with only the top-level (e.g., H2) headers. If collapsed initially, the TOC is automatically expanded inline when necessary
       #smooth_scroll: true # smooth_scroll (defaults to TRUE) controls whether page scrolls are animated when TOC items are navigated to via mouse clicks
     number_sections: true
-    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk    
-    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax    
+    fig_caption: true # ? this option doesn't seem to be working for figure inserted below outside of r code chunk
+    highlight: tango # Supported styles include "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", and "haddock" (specify null to prevent syntax
     theme: default # theme specifies the Bootstrap theme to use for the page. Valid themes include default, cerulean, journal, flatly, readable, spacelab, united, cosmo, lumen, paper, sandstone, simplex, and yeti.
     df_print: tibble #options: default, tibble, paged
 bibliography: ./other/burd_recruiting_chapter.bib
@@ -288,25 +288,24 @@ Community detection
 **Number of events by type and in-state, out-of-state for public research universities institutions**
 
 ```{r event-count-figure-pubu, echo = FALSE}
-knitr::include_graphics('assets/figures/plot_event_count_pubu.pdf')
+# knitr::include_graphics('assets/figures/plot_event_count_pubu.pdf')
+knitr::include_graphics('assets/figures/plot_event_count_pubu.png')
 ```
 
-<br>
-<br>
 
 **Number of events by type and in-state, out-of-state for private institutions**
 
 ```{r event-count-figure-privu, echo = FALSE}
-knitr::include_graphics('assets/figures/plot_event_count_privu.pdf')
+# knitr::include_graphics('assets/figures/plot_event_count_privu.pdf')
+knitr::include_graphics('assets/figures/plot_event_count_privu.png')
 ```
 
-<br>
-<br>
 
 **Actual versus proportional visits to out-of-state private high schools for public research universities**
 
 ```{r, echo = FALSE}
-knitr::include_graphics('assets/figures/figure_5.pdf')
+# knitr::include_graphics('assets/figures/figure_5.pdf')
+knitr::include_graphics('assets/figures/figure_5.png')
 ```
 
 <!-- ![Alternate Name](assets/figures/plot_event_count_privu.pdf){width=1000px; height = 1000px} -->
@@ -320,7 +319,8 @@ knitr::include_graphics('assets/figures/figure_5.pdf')
 **Characteristics of private HS visited by private institutions**
 
 ```{r ego-network-figure-privu, echo = FALSE}
-knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
+# knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
+knitr::include_graphics('assets/figures/ego_network_figure_privu.png')
 ```
 
 <br><br>
@@ -328,7 +328,8 @@ knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
 **Characteristics of private HS visited by public institutions**
 
 ```{r ego-network-figure-pubu, echo = FALSE}
-knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
+# knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
+knitr::include_graphics('assets/figures/ego_network_figure_pubu.png')
 ```
 
 ## RQ3: Overlapping networks of visits to private high schools
@@ -338,7 +339,8 @@ knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
 **1-mode network for public institutions, colored by cluster** 
 
 ```{r plot-1mode-pubu, echo = FALSE}
-knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
+# knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
+knitr::include_graphics('assets/figures/plot_1mode_pubu.png')
 ```
 
 <br><br>
@@ -346,7 +348,8 @@ knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
 **1-mode network for all institutions, out-of-state visits only for public universities, colored by cluster**
 
 ```{r plot-1mode-all-pubu-outst, echo = FALSE}
-knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
+# knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
+knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.png')
 ```
 
 # References
