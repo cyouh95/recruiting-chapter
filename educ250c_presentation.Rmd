@@ -56,6 +56,14 @@ library(tidyverse)
 library(gridExtra)
 ```
 
+Link to html presentation
+
+- [LINK](https://cyouh95.github.io/recruiting-chapter/educ250c_presentation.html)
+
+Link to slides by Prof Omar Lizardo
+
+- [LINK](https://docs.google.com/presentation/d/106TT6MHW-Fz5CmD23jZNrRbQ2wT7o07nBig0MUTSqPA/edit#slide=id.gbd14bdbd8f_0_1052)
+
 # Introduction
 
 @RN4450 analyzed off-campus recruiting visits made in 2017 by 15 public research universities
