@@ -1,5 +1,5 @@
 ---
-title: "Recruiting Chapter"
+title: "Recruiting visits to private high schools"
 author: 
   - Ozan Jaquette
   - Crystal Han
