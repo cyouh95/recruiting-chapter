@@ -7,7 +7,7 @@ author:
 date: 
 urlcolor: blue
 output: 
-  html_document:
+  bookdown::html_document2:
     toc: true
     toc_depth: 2
     toc_float: true # toc_float option to float the table of contents to the left of the main document content. floating table of contents will always be visible even when the document is scrolled
@@ -22,6 +22,28 @@ bibliography: ./other/burd_recruiting_chapter.bib
 csl: ./other/apa.csl
 ---
 
+<style>
+embed {
+  width: 745px;
+  height: 1000px;
+} 
+
+#rq2-characteristics-of-visits-to-private-high-schools embed {
+  width: 690px;
+  height: 735px;
+}
+
+#rq3-overlapping-networks-of-visits-to-private-high-schools embed {
+  width: 750px;
+  height: 590px;
+}
+
+caption {
+  color: black;
+  font-weight: bold;
+  white-space: pre !important;
+} 
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -145,7 +167,8 @@ kable(
   x = pct_budget, 
   col.names = c("Activity", "Private", "Public"),
   caption = "Percentage of budget allocated to marketing/recruiting activities by private non-profit 4yr and public 4yr institutions"
-)
+) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "responsive"), full_width = F, position = "left")
 #  <div id="refs"></div>
 ```
 
@@ -262,24 +285,27 @@ Community detection
 
 <br>
 
-Number of events by type and in-state, out-of-state for public research universities institutions
-```{r event-count-figure-pubu, echo = FALSE, out.width="125%"}
+**Number of events by type and in-state, out-of-state for public research universities institutions**
+
+```{r event-count-figure-pubu, echo = FALSE}
 knitr::include_graphics('assets/figures/plot_event_count_pubu.pdf')
 ```
 
 <br>
 <br>
 
-Number of events by type and in-state, out-of-state for private institutions
-```{r event-count-figure-privu, echo = FALSE, out.width="125%"}
+**Number of events by type and in-state, out-of-state for private institutions**
+
+```{r event-count-figure-privu, echo = FALSE}
 knitr::include_graphics('assets/figures/plot_event_count_privu.pdf')
 ```
 
 <br>
 <br>
 
-Actual versus proportional visits to out-of-state private high schools for public research universities
-```{r, echo = FALSE, out.width="125%"}
+**Actual versus proportional visits to out-of-state private high schools for public research universities**
+
+```{r, echo = FALSE}
 knitr::include_graphics('assets/figures/figure_5.pdf')
 ```
 
@@ -287,21 +313,40 @@ knitr::include_graphics('assets/figures/figure_5.pdf')
 
 
 
-
 ## RQ2: Characteristics of visits to private high schools
 
 <br>
 
-CRYSTAL - CAN YOU ADD FOLLOWING FIGURES CURRENTLY INCLUDED IN MANUSCRIPT.PDF
+**Characteristics of private HS visited by private institutions**
 
-- FIG 7, CHARACTERISTICS OF PRIVATE HS VISITED BY PRIVATE INSTITUTIONS
-- FIG 11, CHARACTERISTICS OF PRIVATE HS VISITED BY PUBLIC INSTITUTIONS
+```{r ego-network-figure-privu, echo = FALSE}
+knitr::include_graphics('assets/figures/ego_network_figure_privu.pdf')
+```
+
+<br><br>
+
+**Characteristics of private HS visited by public institutions**
+
+```{r ego-network-figure-pubu, echo = FALSE}
+knitr::include_graphics('assets/figures/ego_network_figure_pubu.pdf')
+```
 
 ## RQ3: Overlapping networks of visits to private high schools
 
-CYSTAL - CAN YOU ADD FOLLOWING FIGURES CURRENTLY INCLUDED IN MANUSCRIPT.PDF
+<br>
 
-- FIG 10, 1-mode network for public institutions, colored by cluster
-- FIG 12, 1-mode network for all institutions, out-of-state visits only for public universities, colored by cluster
+**1-mode network for public institutions, colored by cluster** 
+
+```{r plot-1mode-pubu, echo = FALSE}
+knitr::include_graphics('assets/figures/plot_1mode_pubu.pdf')
+```
+
+<br><br>
+
+**1-mode network for all institutions, out-of-state visits only for public universities, colored by cluster**
+
+```{r plot-1mode-all-pubu-outst, echo = FALSE}
+knitr::include_graphics('assets/figures/plot_1mode_all_pubu_outst.pdf')
+```
 
 # References
