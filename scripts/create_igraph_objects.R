@@ -14,6 +14,7 @@ library(labelled)
 events_data_temp1 <- read.csv('./data/events_data_2020-10-20.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data_marquette <- read.csv('./data/events_data_marquette.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data <- events_data_temp1 %>% bind_rows(events_data_marquette)
+rm(events_data_marquette,events_data_temp1)
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
@@ -61,14 +62,25 @@ v_get_pss_override <- Vectorize(get_pss_override, USE.NAMES = FALSE)
 
 privhs_events <- privhs_events %>% mutate(school_id = v_get_pss_override(school_id))
 
+privhs_events %>% glimpse()
+
 # Combine 2017-18 PSS data w/ past years as needed
 pss_missing_ncessch <- setdiff(privhs_events$school_id, privhs_data_1718$ncessch)
 pss_1516_ncessch <- privhs_data_1516[privhs_data_1516$ncessch %in% pss_missing_ncessch, ]$ncessch
 pss_1314_ncessch <- setdiff(pss_missing_ncessch, pss_1516_ncessch)
 
+# criteria for private hs to be included in our analysis is 12th grade enrollment of 10 or more
+# CRYSTAL MAY/JUNE 2021 - PLEASE CHECK THAT WE HAVE NON-MISSING VALUES OF THE VARIABLE total_12 
 privhs_data <- privhs_data_1718 %>%
   dplyr::union(privhs_data_1516 %>% filter(ncessch %in% pss_1516_ncessch)) %>%
-  dplyr::union(privhs_data_1314 %>% filter(ncessch %in% pss_1314_ncessch))
+  dplyr::union(privhs_data_1314 %>% filter(ncessch %in% pss_1314_ncessch)) %>% filter(total_12>=10)
+
+
+
+# merge privatehs_events to privhs_data; remove private high schools that have less than 10 12th graders; override object privhs_events
+
+privhs_events <- privhs_events %>% inner_join(y=select(privhs_data,ncessch), by = c('school_id'='ncessch')) 
+
 
 privhs_data %>% group_by(year) %>% count()  # 105 from 2015-16, 144 from 2013-14
 

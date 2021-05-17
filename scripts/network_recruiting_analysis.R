@@ -670,6 +670,10 @@ ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_
 saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 ego_table_privu
 
+ego_table_privc <- create_ego_table(g_2mode_privc, egos_psi_privc, privc_vec, c_analysis = 'hclust', k = 4)
+saveRDS(ego_table_privc, file = './assets/tables/table_ego_privc.RDS')
+ego_table_privc
+
 ego_table_univ <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4)
 saveRDS(ego_table_univ, file = './assets/tables/table_ego_univ.RDS')
 ego_table_univ

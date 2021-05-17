@@ -33,13 +33,10 @@ ADD TABLE OF UNIVERSITY CHARACTERISTICS HERE
 
 ## RQ1: Scale
 
-```{r event-count-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for public institutions"}
-knitr::include_graphics('./../assets/figures/plot_event_count_pubu.pdf')
-```
+Table \@ref(fig:event-count-figure-pubu): event count public universities
 
-```{r event-count-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for private institutions"}
-knitr::include_graphics('./../assets/figures/plot_event_count_privu.pdf')
-```
+
+Table \@ref(fig:event-count-figure-privu): event count, private univerisites
 
 
 
@@ -48,7 +45,7 @@ knitr::include_graphics('./../assets/figures/plot_event_count_privu.pdf')
 
 ```{r, include = FALSE}
 # ggplot's default color palette
-# library(scales)
+ library(scales)
 # show_col(hue_pal()(4))
 
 
@@ -125,8 +122,13 @@ plot_characteristic <- function(df, type, characteristic, label_text, visit_coun
     'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE
   )  
   
+  c <- plot_characteristic(
+    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privc', '.RDS'))),
+    'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE
+  ) 
+  
 
-  grid.arrange(a, b, nrow=2, ncol=1)
+  grid.arrange(a, b, c, nrow=3, ncol=1)
   
   dev.off()  
   
@@ -202,11 +204,6 @@ plot_characteristic <- function(df, type, characteristic, label_text, visit_coun
 
 ```
 
-\newpage
-
-```{r ego-network-figure-region, eval = FALSE, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of visited private HS, region"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_region.pdf')
-```
 
 
 ```{r, fig.width=3.5, fig.height=3, echo = FALSE, message = FALSE, eval = FALSE}
@@ -254,7 +251,7 @@ for (i in 1:length(type_vec)) {
 \newpage
 <!-- private col/univ -->
 
-```{r hs-print-privu, echo = FALSE}
+```{r hs-print-privu, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_privu.RDS') %>% head(n=20)
 
 knitr::kable(
@@ -264,7 +261,7 @@ knitr::kable(
 ```
 
 
-```{r hs-table-privu-agg, echo = FALSE}
+```{r hs-table-privu-agg, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_agg_privu.RDS')
 
 knitr::kable(df, caption = 'Characteristics of private HS visited by private institutions, by degree band') %>% 
@@ -274,7 +271,7 @@ knitr::kable(df, caption = 'Characteristics of private HS visited by private ins
 
 <!-- public research universities -->
 
-```{r hs-print-pubu, echo = FALSE}
+```{r hs-print-pubu, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_pubu.RDS') %>% head(n=20)
 
 knitr::kable(
@@ -284,7 +281,7 @@ knitr::kable(
 ```
 
 
-```{r hs-table-pubu-agg, echo = FALSE}
+```{r hs-table-pubu-agg, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_agg_pubu.RDS')
 
 knitr::kable(df, caption = 'Characteristics of private HS visited by public institutions, by degree band') %>% 
@@ -294,7 +291,7 @@ knitr::kable(df, caption = 'Characteristics of private HS visited by public inst
 
 <!-- public and private col/univ -->
 
-```{r hs-print-both, echo = FALSE}
+```{r hs-print-both, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_both.RDS') %>% head(n=20)
 
 knitr::kable(
@@ -304,7 +301,7 @@ knitr::kable(
 ```
 
 
-```{r hs-table-both-agg, echo = FALSE}
+```{r hs-table-both-agg, echo = FALSE, eval = FALSE}
 df <- readRDS('./../assets/tables/table_2mode_agg_both.RDS')
 
 knitr::kable(df, caption = 'Characteristics of private HS visited by all institutions, by degree band') %>% 
@@ -313,7 +310,7 @@ knitr::kable(df, caption = 'Characteristics of private HS visited by all institu
 ```
 
 
-<!-- FIGURES -->
+<!-- ###################################################################################### FIGURES -->
 
 
 ```{r em-funnel, echo = FALSE, fig.align = 'center', fig.cap = "The enrollment funnel", out.width = "70%"}
@@ -322,16 +319,87 @@ knitr::include_graphics('./../assets/images/enrollment_funnel.png')
 ```
 
 
+<!-- ########################################################## RQ 1: SCALE -->
+
+
+```{r event-count-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for public institutions"}
+knitr::include_graphics('./../assets/figures/plot_event_count_pubu.pdf')
+```
+
+```{r event-count-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Number of events by type and in-state, out-of-state for private institutions"}
+knitr::include_graphics('./../assets/figures/plot_event_count_privu.pdf')
+```
+
+<!-- ADD FIGURES: FIGURE X. Number of events at public high schools and private high schools 
+      within each university, separate line for in-state and out-of-state
+      separate figures for public and private universities
+-->
+
+<!-- ADD FIGURES: FIGURE X. Actual vs. proportional number of visits to private high schools
+      within each university, separate line for in-state and out-of-state
+      separate figures for public and private universities
+-->
+
+
+
+<!-- ########################################################## RQ 2: Characteristics of high schools -->
+
+
+\restoregeometry
+
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \newpage
 
-```{r privhs-universe, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of universe of private HS and private HS that received at least 1 visit from sample institutions, unweighted and weighted by 12th grade enrollment"}
+
+```{r ego-network-figure-region, fig.align = 'center', echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_region.pdf')
+```
+
+\newpage
+
+```{r ego-network-figure-religion, fig.align = 'center', echo = FALSE, fig.cap = "Religious affiliation of visited private high schools"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_religion.pdf')
+```
+
+\newpage
+
+```{r ego-network-figure-hs-rank, fig.align = 'center', echo = FALSE, fig.cap = "Academic reputation of of visited private high schools"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank.pdf')
+```
+
+
+\newpage
+
+```{r ego-network-figure-race, fig.align = 'center', echo = FALSE, fig.cap = "Racial composition of visited private high schools"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_race.pdf')
+```
+
+
+```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, eval=FALSE, fig.cap = "Characteristics of private HS visited by private institutions"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_privu.pdf')
+```
+
+
+
+
+
+
+\newpage
+
+```{r privhs-universe, fig.align = 'center', echo = FALSE, eval = FALSE,fig.cap = "Characteristics of universe of private HS and private HS that received at least 1 visit from sample institutions, unweighted and weighted by 12th grade enrollment"}
 knitr::include_graphics('./../assets/figures/plot_pss_universe.pdf')
 ```
 
+<!-- 
 \begin{center}
 * \textit{Universe of private HS (N=3673), private HS visited by sample institutions (N=1738); Universe of private HS is defined as any private schools that enrolls at least ten grade 12 students and is not a special education school, an alternative school, an early childhood center, or an independent school.}
 \end{center}
+-->
+
+
+
+<!-- RQ3: Overlapping sets of high schools -->
 
 \newpage
 
@@ -358,19 +426,6 @@ knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
 
 \end{landscape}
 
-\restoregeometry
-
-\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
-
-\newpage
-
-```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by private institutions"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_privu.pdf')
-```
-
-\begin{center}
-* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
-\end{center}
 
 \begin{landscape}
 
