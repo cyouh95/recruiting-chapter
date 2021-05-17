@@ -47,8 +47,8 @@ religion_values <- c('catholic', 'christian', 'nonsectarian', 'other')
 religion_keys <- c('Catholic', 'Christian', 'Nonsectarian', 'Other')
 religion_title <- 'religious affiliation'
 
-race_values <- c('c1_lt10', 'c2_10to25', 'c3_25to50', 'c4_50+')
-race_keys <- c('LT 10%', '10-25%', '25-50%', 'GT 50%')
+race_values <- c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+')
+race_keys <- c('LT 10%', '10-20%', '20-50%', 'GT 50%')
 race_title <- 'percent black, latinx, or native'
 
 ranking_values <- c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA')
@@ -656,20 +656,44 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
 }
 
 # Save tables
-ego_table_all <- create_ego_table(g_2mode, egos_psi, univ_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
-
-ego_table_all_pubu_outst <- create_ego_table(g_2mode, egos_psi, univ_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
-saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_outst.RDS')
-
-ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
 
 ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
+ego_table_pubu
 
 ego_table_pubu_outst <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate')
 saveRDS(ego_table_pubu_outst, file = './assets/tables/table_ego_pubu_outst.RDS')
+ego_table_pubu_outst
+
+
+ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
+saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
+ego_table_privu
+
+ego_table_univ <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4)
+saveRDS(ego_table_univ, file = './assets/tables/table_ego_univ.RDS')
+ego_table_univ
+
+ego_table_univ_pubu_outst <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
+saveRDS(ego_table_univ_pubu_outst, file = './assets/tables/table_ego_univ_pubu_outst.RDS')
+ego_table_univ_pubu_outst
+
+
+
+
+ego_table_all <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4)
+saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
+
+ego_table_all
+
+
+
+ego_table_all_pubu_outst <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
+saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_outst.RDS')
+ego_table_all_pubu_outst
+
+
+
 
 
 ## ---------------------------------

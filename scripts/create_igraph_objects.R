@@ -10,7 +10,10 @@ library(labelled)
 ## ----------
 
 # Recruiting events data from 43 univs (17 public research, 13 private national, 13 private liberal arts)
-events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+#events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+events_data_temp1 <- read.csv('./data/events_data_2020-10-20.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+events_data_marquette <- read.csv('./data/events_data_marquette.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
+events_data <- events_data_temp1 %>% bind_rows(events_data_marquette)
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
@@ -243,8 +246,8 @@ attributes_df <- attributes_df %>% mutate(
   pct_blacklatinxnative = pct_black + pct_hispanic + pct_amerindian + pct_nativehawaii,
   pct_blacklatinxnative_cat = case_when(
     pct_blacklatinxnative < 10 ~ 'c1_lt10',
-    pct_blacklatinxnative < 25 ~ 'c2_10to25',
-    pct_blacklatinxnative < 50 ~ 'c3_25to50',
+    pct_blacklatinxnative < 20 ~ 'c2_10to20',
+    pct_blacklatinxnative < 50 ~ 'c3_20to50',
     pct_blacklatinxnative >= 50 ~ 'c4_50+'
   )
 )
@@ -537,145 +540,78 @@ for(v in vec_2mode) {
 ## CREATE EGO IGRAPH OBJECTS
 ## --------------------------
   
-#### START HERE WEEK OF MONDAY MAY 3
 
-# [all] create from g_2mode  
-# [private colleges and universities] Create ego graphs from g_2mode_priv
-# [public universities] Create 1-mode graphs from g_2mode_pubu
-# [public and private universities] Create 1-mode graphs from g_2mode_u
-# [private universities] Create 1-mode graphs from g_2mode_privu
-# [private colleges] Create 1-mode graphs from g_2mode_privc  
+list_temp <- list(c('','psi_vec','privhs_vec'),c('_priv','priv_vec','privhs_visited_by_priv_vec'),c('_pubu','pubu_vec','privhs_visited_by_pubu_vec'),c('_u','univ_vec','privhs_visited_by_univ_vec'),c('_privu','privu_vec','privhs_visited_by_privu_vec'),c('_privc','privc_vec','privhs_visited_by_privc_vec'))
+#list_temp <- list(c('','psi_vec','privhs_vec'),c('_priv','priv_vec','privhs_visited_by_priv_vec'))  
 
-#vec_2mode <- c('','_priv','_pubu','_u','_privu','_privc')
-vec_2mode <- c('','_priv')
-#vec_egos <- c('"" psi_vec privhs_vec','_priv priv_vec privhs_visited_by_priv_vec')
+for(v in list_temp) {
 
-
-for(v in vec_egos) {
+  print('')  
+  #print(v)
   
-  writeLines(str_c(''))
-  #writeLines(str_c('object v=', v))
+  two_mode_name <- str_c('g_2mode',v[1])
+  writeLines(str_c('object two_mode_name=',two_mode_name))
   
-  #v2 <- str_c('g_2mode',v)
-  #writeLines(str_c('object v2=',v2))
-
-}
-
-#str_split(string, pattern, n = Inf, simplify = FALSE)
-
-# all
-  # g_2mode
-  # psi_vec
-  # privhs_vec   
-
-# create 2-mode subgraph for private colleges and universities and their private HS visits only
-  # g_2mode_priv
-  # priv_vec
-  # privhs_visited_by_priv_vec
-
-# create 2-mode subgraph for public universities and their private HS visits only
-  # g_2mode_pubu
-  # pubu_vec
-  # privhs_visited_by_pubu_vec
+  e_hs_name <- str_c('egos_hs',v[1])
+  writeLines(str_c('object e_hs_name=',e_hs_name))
   
-# create 2-mode subgraph for public and private universities and their private HS visits only
-  #g_2mode_u
-  # univ_vec
-  # privhs_visited_by_univ_vec
-
-# create 2-mode subgraph for private universities and their private HS visits only
-  # g_2mode_privu
-  # privu_vec
-  # privhs_visited_by_privu_vec
-
-# create 2-mode subgraph for private colleges and their private HS visits only
-  # g_2mode_privc
+  e_psi_name <- str_c('egos_psi',v[1])
+  writeLines(str_c('object e_psi_name=',e_psi_name))  
   
+  psi_vec_name <- v[2]
+  hs_vec_name <- v[3]
+  
+  #print(two_mode)
+  print(psi_vec_name)
+  print(hs_vec_name)
+  
+  two_mode_obj <- get(two_mode_name)
+
+  # Create ego objects for each high school  
+  
+    e_hs_obj <- make_ego_graph(graph = two_mode_obj,order = 2,nodes = V(two_mode_obj)[V(two_mode_obj)$type == FALSE],mindist = 0)  
+    #print(get(hs_vec_name))
     
-for(v in vec_2mode) {
+    # name the list of ego networks
+    names(e_hs_obj) <- get(hs_vec_name) %>% str_sort()  # name the list of ego networks
+    
+    # assign order as edge attribute
+    for (i in 1:length(e_hs_obj)) {  # assign order as edge attribute
+      E(e_hs_obj[[i]])$order <- if_else(str_detect(string = attr(E(e_hs_obj[[i]]), 'vnames'), pattern = names(e_hs_obj)[[i]]), 1, 2)
+    }
+
+  # create ego objects for each psi
+    e_psi_obj <- make_ego_graph(graph = two_mode_obj,
+                               order = 2,
+                               nodes = V(two_mode_obj)[V(two_mode_obj)$type == TRUE],  # only include univs
+                               mindist = 0)    
   
-  writeLines(str_c(''))
-  writeLines(str_c('object v=', v))
-  
-  v2 <- str_c('g_2mode',v)
-  writeLines(str_c('object v2=',v2))
+      
+    # name the list of ego networks
+    names(e_psi_obj) <- get(psi_vec_name) %>% str_sort()
 
-  hs <- str_c('egos_hs',v)
-  writeLines(str_c('object hs=',hs))
-  
-  psi <- str_c('egos_psi',v)
-  writeLines(str_c('object psi=',psi))
-  
-  # Create ego networks for each private HS
-  #ego1 <- make_ego_graph(graph = get(v2),
-    #                      order = 2,
-    #                      nodes = V(get(v2))[V(get(v2))$type == FALSE],  # only include private HS
-    #                      mindist = 0)
-  #print(ego1)
-  #assign(x= v1_hs, value = hs)
-  #assign(x= v1_psi, value = psi)
-  #names(ego1) <- privhs_vec %>% str_sort()  # name the list of ego networks  
-  
-}
+    # assign order as edge attribute    
+    for (i in 1:length(e_psi_obj)) {
+      E(e_psi_obj[[i]])$order <- if_else(str_detect(string = attr(E(e_psi_obj[[i]]), 'vnames'), pattern = str_c('\\|', names(e_psi_obj)[[i]])), 1, 2)
+    }
+    
+    
+  # assign ego objects desired object name  
+    
+    assign(x= e_hs_name, value = e_hs_obj)
+    assign(x= e_psi_name, value = e_psi_obj)
+}  
 
 
 
-# Create ego networks for each private HS
-egos_hs <- make_ego_graph(graph = g_2mode,
-                          order = 2,
-                          nodes = V(g_2mode)[V(g_2mode)$type == FALSE],  # only include private HS
-                          mindist = 0)
 
-names(egos_hs) <- privhs_vec %>% str_sort()  # name the list of ego networks
+#egos_hs
+egos_hs[[1]] %>% class()
+E(egos_hs[[1]])$order
+privhs_vec
 
-for (i in 1:length(egos_hs)) {  # assign order as edge attribute
-  E(egos_hs[[i]])$order <- if_else(str_detect(string = attr(E(egos_hs[[i]]), 'vnames'), pattern = names(egos_hs)[[i]]), 1, 2)
-}
+egos_psi_priv %>% length()
+egos_psi_priv[[1]]
+egos_psi_priv[1]
 
-# Create ego networks for each univ from g_2mode
-egos_psi <- make_ego_graph(graph = g_2mode,
-                           order = 2,
-                           nodes = V(g_2mode)[V(g_2mode)$type == TRUE],  # only include univs
-                           mindist = 0)
 
-names(egos_psi) <- psi_vec %>% str_sort()
-
-for (i in 1:length(egos_psi)) {
-  E(egos_psi[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi)[[i]])), 1, 2)
-}
-
-# Create ego networks for each private HS from g_2mode_privu
-egos_hs_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(g_2mode_privu)[V(g_2mode_privu)$type == FALSE], mindist = 0)
-
-names(egos_hs_privu) <- privhs_visited_by_priv_vec %>% str_sort()
-
-for (i in 1:length(egos_hs_privu)) {
-  E(egos_hs_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_hs_privu[[i]]), 'vnames'), pattern = names(egos_hs_privu)[[i]]), 1, 2)
-}
-
-# Create ego networks for each univ from g_2mode_privu
-egos_psi_privu <- make_ego_graph(graph = g_2mode_privu, order = 2, nodes = V(g_2mode_privu)[V(g_2mode_privu)$type == TRUE], mindist = 0)
-
-names(egos_psi_privu) <- priv_vec %>% str_sort()
-
-for (i in 1:length(egos_psi_privu)) {
-  E(egos_psi_privu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_privu[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi_privu)[[i]])), 1, 2)
-}
-
-# Create ego networks for each private HS from g_2mode_pubu
-egos_hs_pubu <- make_ego_graph(graph = g_2mode_pubu, order = 2, nodes = V(g_2mode_pubu)[V(g_2mode_pubu)$type == FALSE], mindist = 0)
-
-names(egos_hs_pubu) <- privhs_visited_by_pubu_vec %>% str_sort()
-
-for (i in 1:length(egos_hs_pubu)) {
-  E(egos_hs_pubu[[i]])$order <- if_else(str_detect(string = attr(E(egos_hs_pubu[[i]]), 'vnames'), pattern = names(egos_hs_pubu)[[i]]), 1, 2)
-}
-
-# Create ego networks for each univ from g_2mode_pubu
-egos_psi_pubu <- make_ego_graph(graph = g_2mode_pubu, order = 2, nodes = V(g_2mode_pubu)[V(g_2mode_pubu)$type == TRUE], mindist = 0)
-
-names(egos_psi_pubu) <- pubu_vec %>% str_sort()
-
-for (i in 1:length(egos_psi_pubu)) {
-  E(egos_psi_pubu[[i]])$order <- if_else(str_detect(string = attr(E(egos_psi_pubu[[i]]), 'vnames'), pattern = str_c('\\|', names(egos_psi_pubu)[[i]])), 1, 2)
-}
