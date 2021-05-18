@@ -62,7 +62,7 @@ plot_characteristic <- function(df, type, characteristic, label_text, visit_coun
     rank = as.numeric(rank)
   )
 
-  if (type == 'Region') {
+  if (type == 'region') {
     ordered_df <- df %>% arrange(univ_region, univ_name)
   } else {
     ordered_df <- df %>% arrange(rank, univ_name)
@@ -97,144 +97,83 @@ plot_characteristic <- function(df, type, characteristic, label_text, visit_coun
     coord_flip()
 }
 
-```
+# create function to run the plot_characteristic() function
+#plot_characteristic <- function(df, type, characteristic, label_text, visit_count = FALSE) {
 
 
+run_plot_characteristics <- function(which_psi,which_char,char_label,which_vars,which_labels) {
+  
+  # stuff to use later
+    num_plot <- length(which_psi)
+    name_suf <- str_c(which_psi,collapse = '_')
+    
+  #print function values as a check
+    print(which_psi)
+    #print(name_suf)
+    #print(num_plot)
+    print(str_c('which_char=',which_char))
+    print(str_c('char_label=',char_label))
+    #print(which_vars)
+    #print(which_labels)
 
-```{r, fig.width=3.5, fig.height=3, echo = FALSE, message = FALSE, include = FALSE}
-#all univ privu all_pubu_outst pub pubu_outst
-# running one plot at a time
+  # initiate pdf
+  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', which_char,'_',name_suf, '.pdf')))
+    par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+    par(mfrow=c(2, 1))
+  
+  #loop to create figure separately for each psi type
+  plot_list <- vector("list", length(which_psi))
+  for (i in 1:length(which_psi)) {
+    
+    plot_list[[i]] <- plot_characteristic(
+      df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', which_psi[i], '.RDS'))),
+      #df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
+      type = char_label,
+      characteristic = which_vars,
+      label_text = which_labels,
+      visit_count = TRUE
+    )
+
+  }
+
+  # plot sub-plots in grid
+  do.call("grid.arrange", c(plot_list, nrow=num_plot, ncol=1))
+
+  dev.off()
+
+}        
 
 # region
-
-  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', 'region', '.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  par(mfrow=c(2, 1))
-  
-  
-  a <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
-    'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE
-  )
-  
-  b <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS'))),
-    'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE
-  )  
-  
-  c <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privc', '.RDS'))),
-    'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE
-  ) 
-  
-
-  grid.arrange(a, b, c, nrow=3, ncol=1)
-  
-  dev.off()  
+  # pubu, privu, privc
+  run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'region', char_label = 'Region', which_vars = c('northeast', 'midwest', 'south', 'west'),which_labels =c('Northeast', 'Midwest', 'South', 'West'))
+  # pubu and privu
+  run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'region', char_label = 'Region', which_vars = c('northeast', 'midwest', 'south', 'west'),which_labels =c('Northeast', 'Midwest', 'South', 'West'))
   
 # religion
+  # pubu, privu, privc
+  run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'religion', char_label = 'Religion', which_vars = c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
   
-  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', 'religion', '.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  par(mfrow=c(2, 1))
-  
-  
-  a <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
-    'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'), visit_count = TRUE
-  )
-  
-  b <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS'))),
-    'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'), visit_count = TRUE
-  )  
+  # pubu, privu
+  run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'religion', char_label = 'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
+
+# high school rank
+  # pubu, privu, privc
+  run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'hs_rank', char_label = 'HS rank', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
+  # pubu, privu  
+  run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'hs_rank', char_label = 'HS rank', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
   
 
-  grid.arrange(a, b, nrow=2, ncol=1)
-  
-  dev.off()
-  
-
-    
 # racial composition
+  # pubu, privu, privc  
+  run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'pct_black_latinx_native', char_label = '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'))  
+  # pubu, privu  
+  run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'pct_black_latinx_native', char_label = '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'))  
   
-  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', 'race', '.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  par(mfrow=c(2, 1))
-  
-  
-  a <- plot_characteristic(
+  plot_characteristic(
     df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
     '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'), visit_count = TRUE
   )
-  
-  b <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS'))),
-    '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'), visit_count = TRUE
-  )  
-  
-
-  grid.arrange(a, b, nrow=2, ncol=1)
-  
-  dev.off()  
-  
-
-  
-# academic reputation
-
-  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', 'hs_rank', '.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  par(mfrow=c(2, 1))
-  
-  
-  a <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
-    'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'), visit_count = TRUE
-  )
-  
-  b <- plot_characteristic(
-    df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'privu', '.RDS'))),
-    'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'), visit_count = TRUE
-  )  
-  
-
-  grid.arrange(a, b, nrow=2, ncol=1)
-  
-  dev.off()
-
 ```
-
-
-
-```{r, fig.width=3.5, fig.height=3, echo = FALSE, message = FALSE, eval = FALSE}
-
-type_vec <- c('pubu', 'pubu_outst','privu','univ','univ_pubu_outst')
-#type_vec <- c('privu', 'pubu', 'pubu_outst', 'all', 'all_pubu_outst')
-
-for (i in 1:length(type_vec)) {
-  ego_df <-readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', type_vec[i], '.RDS')))
-
-  pdf(file.path('.','..', 'assets', 'figures', str_c('ego_network_figure_', type_vec[i], '.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
-  par(mfrow=c(2, 2))
-  
-  a <- plot_characteristic(ego_df, 'Region', c('northeast', 'midwest', 'south', 'west'), c('Northeast', 'Midwest', 'South', 'West'), visit_count = TRUE)
-  b <- plot_characteristic(ego_df, 'Religion', c('catholic', 'christian', 'other', 'nonsectarian'), c('Catholic', 'Christian', 'Other religion', 'Nonsectarian'))
-  c <- plot_characteristic(ego_df, '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'), visit_count = TRUE)
-  d <- plot_characteristic(ego_df, 'Ranking', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
-  
-  grid.arrange(a, b, c, d, nrow=2, ncol=2, widths=c(1, 0.92))
-  dev.off()
-  
-  # Need to use print() for ggplot inside loop in order for it to appear
-  # https://stackoverflow.com/a/15678596/6373540
-  # print(a)
-  # print(b)
-  # print(c)
-  # print(d)
-}
-```
-
 
 
 
@@ -351,33 +290,44 @@ knitr::include_graphics('./../assets/figures/plot_event_count_privu.pdf')
 
 \newpage
 
+```{r privhs-universe, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private high schools"}
+knitr::include_graphics('./../assets/figures/plot_pss_universe.pdf')
+```
+
+
+\begin{center}
+* \textit{Universe of private HS (N=3673), private HS visited by sample institutions (N=1738); Universe of private HS is defined as any private schools that enrolls at least ten grade 12.}
+\end{center}
+
+
+\newpage
+
 
 ```{r ego-network-figure-region, fig.align = 'center', echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_region.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu_privc.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu.pdf')
 ```
 
 \newpage
 
 ```{r ego-network-figure-religion, fig.align = 'center', echo = FALSE, fig.cap = "Religious affiliation of visited private high schools"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_religion.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu_privc.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu.pdf')
 ```
 
 \newpage
 
-```{r ego-network-figure-hs-rank, fig.align = 'center', echo = FALSE, fig.cap = "Academic reputation of of visited private high schools"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank.pdf')
+```{r ego-network-figure-hs-rank, fig.align = 'center', echo = FALSE, fig.cap = "High school rank of visited private high schools"}
+#knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu_privc.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu.pdf')
 ```
 
 
 \newpage
 
 ```{r ego-network-figure-race, fig.align = 'center', echo = FALSE, fig.cap = "Racial composition of visited private high schools"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_race.pdf')
-```
-
-
-```{r ego-network-figure-privu, fig.align = 'center', echo = FALSE, eval=FALSE, fig.cap = "Characteristics of private HS visited by private institutions"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_privu.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu_privc.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu.pdf')
 ```
 
 
@@ -385,17 +335,9 @@ knitr::include_graphics('./../assets/figures/ego_network_figure_privu.pdf')
 
 
 
-\newpage
 
-```{r privhs-universe, fig.align = 'center', echo = FALSE, eval = FALSE,fig.cap = "Characteristics of universe of private HS and private HS that received at least 1 visit from sample institutions, unweighted and weighted by 12th grade enrollment"}
-knitr::include_graphics('./../assets/figures/plot_pss_universe.pdf')
-```
 
-<!-- 
-\begin{center}
-* \textit{Universe of private HS (N=3673), private HS visited by sample institutions (N=1738); Universe of private HS is defined as any private schools that enrolls at least ten grade 12 students and is not a special education school, an alternative school, an early childhood center, or an independent school.}
-\end{center}
--->
+
 
 
 
@@ -408,87 +350,79 @@ knitr::include_graphics('./../assets/figures/plot_pss_universe.pdf')
 \begin{landscape}
 
 
+```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
+```
 
-```{r two-mode-plot, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "2-mode network for all institutions, colored by geographic region"}
+```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
+```
+
+
+```{r plot-1mode-privc, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private liberal arts colleges, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_privc.pdf')
+```
+
+
+
+```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
+```
+
+```{r plot-1mode-u-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster, five clusters"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u_k5.pdf')
+```
+
+
+
+```{r plot-1mode-all, fig.align = 'center', echo = FALSE, eval=FALSE, out.width = "100%", fig.cap = "One-mode network for public universities, private universities, private liberal arts, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_all.pdf')
+```
+
+```{r plot-1mode-all-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public universities, private universities, private liberal arts, colored by cluster, five clusters"}
+knitr::include_graphics('./../assets/figures/plot_1mode_all_k5.pdf')
+```
+
+
+
+
+```{r plot-1mode-pubu-outst, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, out-of-state visits only, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_pubu_outst.pdf')
+```
+
+
+```{r plot-1mode-u-pubu-outst, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, out-of-state visits only for public universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u_pubu_outst.pdf')
+```
+
+```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "One-mode network for all institutions, out-of-state visits only for public universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_all_pubu_outst.pdf')
+```
+
+```{r two-mode-plot, fig.align = 'center', echo = FALSE, eval=FALSE, out.width = "100%", fig.cap = "2-mode network for all institutions, colored by geographic region"}
+# <!-- plot of two-mode network; exclude for now -->
 knitr::include_graphics('./../assets/figures/plot_2mode_all_region.pdf')
 
 #https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
 
-
-
-```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for private institutions, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
-```
-
-
-
-\end{landscape}
-
-
-\begin{landscape}
-
-\newpage
-
-```{r villanova-religion, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, colored by religious affiliation"}
+```{r villanova-religion, fig.align = 'center', echo = FALSE, eval=FALSE, out.width = "100%", fig.cap = "Ego network of Villanova University, colored by religious affiliation"}
+#<!-- Ego networks; exclude for now -->
 knitr::include_graphics('./../assets/figures/villanova_religion.pdf')
 ```
 
-```{r emory-region, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "Ego network of Emory University, colored by geographic region"}
+```{r emory-region, fig.align = 'center', echo = FALSE, eval= FALSE, out.width = "100%", fig.cap = "Ego network of Emory University, colored by geographic region"}
 knitr::include_graphics('./../assets/figures/emory_region.pdf')
 ```
 
-```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for public institutions, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
-```
-
-```{r plot-1mode-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for public institutions and out-of-state visits only, colored by cluster", eval = FALSE}
-knitr::include_graphics('./../assets/figures/plot_1mode_pubu_outst.pdf')
-```
-
 \end{landscape}
 
-\restoregeometry
-
-\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
-
-\newpage
-
-```{r ego-network-figure-pubu, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by public institutions"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_pubu.pdf')
-```
-
-\begin{center}
-* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
-\end{center}
-
-\begin{landscape}
 
 
-```{r plot-1mode-all, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for all institutions, colored by cluster", include= FALSE, eval = FALSE}
-knitr::include_graphics('./../assets/figures/plot_1mode_all.pdf')
-```
-
-```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "1-mode network for all institutions, out-of-state visits only for public universities, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_all_pubu_outst.pdf')
-```
 
 
-\end{landscape}
 
-\restoregeometry
 
-\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
-\newpage
-
-```{r ego-network-figure-all-pubu-outst, fig.align = 'center', echo = FALSE, fig.cap = "Characteristics of private HS visited by all institutions, out-of-state visits only for public universities"}
-knitr::include_graphics('./../assets/figures/ego_network_figure_all_pubu_outst.pdf')
-#out.width="1.1\\linewidth", 
-```
-
-\begin{center}
-* \textit{Universities are grouped by clusters, as indicated by alternating bolded and normal font}
-\end{center}
 

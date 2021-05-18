@@ -499,6 +499,12 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
   
   vertex_color <- recode(vertex_attr(network, 'cluster'), !!!color_palette)
   
+  # starting coordinates of graph
+    # layout_with_fr(g, coords); coords argument = "Optional starting positions for the vertices. If this argument is not NULL then it should be an appropriate matrix of starting coordinates"
+  coords_kk <- layout_with_kk(graph = network)
+    #print(coords_kk) # print layout_with_kk coordinates; these remain the same
+    #print(layout_with_fr(graph = network)) # print layout_with_fr coordinates; these change each time
+  
   # Plot graph
   plot(
     x = network, 
@@ -512,6 +518,7 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
     edge.width = log(as.numeric(E(network)$weight)/10),
     #edge.width = 1,
     edge.color = 'lightgrey',
+    cooords = coords_kk, # starting positions for vertices
     layout = layout,
     margin = margin
   )
@@ -526,18 +533,24 @@ save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k
 
 # private colleges
 
-save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('red', 'yellow', 'green', 'blue', 'purple')),
+save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_privc.pdf')
 
 # Public univs
 save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_pubu.pdf')
-  plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4, layout=layout_with_kk)
+
 
 # Public univs, out-of-state
 save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_pubu_outst.pdf')
 
+# private and public universities
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 4),
+          plot_name = 'plot_1mode_u.pdf')
+
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
+          plot_name = 'plot_1mode_u_k5.pdf')
 
 # Private and public universities; out-of-state visits only for public universities
 save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
@@ -547,6 +560,11 @@ save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', pubu_visits = 'outofstate', 
 save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_all.pdf')
 
+save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
+          plot_name = 'plot_1mode_all_k5.pdf')
+
+save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 6, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink')),
+          plot_name = 'plot_1mode_all_k6.pdf')
 # All, out-of-state public univs
 save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_all_pubu_outst.pdf')
