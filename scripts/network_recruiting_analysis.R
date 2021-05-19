@@ -55,6 +55,14 @@ ranking_values <- c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA')
 ranking_keys <- c('Rank top 200', 'A+', 'A', 'A- or below')
 ranking_title <- 'academic reputation'
 
+enroll1_values <- c('c1_lt50','c2_50to100','c3_100to150','c4_gt150')
+enroll1_keys <- c('LT 50','50-100','100-150','GT 150')
+enroll1_title <- '12th grade enrollment'
+
+enroll2_values <- c('c1_lt100','c2_100to150','c3_150to200','c4_gt200')
+enroll2_keys <- c('LT 100','100-150','150-200','GT 200')
+enroll2_title <- '12th grade enrollment'
+
 
 ## -------------------
 ## SAVE PLOT FUNCTION
@@ -317,8 +325,8 @@ create_fast_greedy <- function(twomode_network, mode, no = NULL, steps = NULL, p
 }
 
 # Usage
-create_fast_greedy(twomode_network = g_2mode, mode = 'psi', no = 4, plot_tree = TRUE)
-create_fast_greedy(twomode_network = g_2mode, mode = 'psi', steps = 38, plot_tree = TRUE)
+#create_fast_greedy(twomode_network = g_2mode, mode = 'psi', no = 4, plot_tree = TRUE)
+#create_fast_greedy(twomode_network = g_2mode, mode = 'psi', steps = 38, plot_tree = TRUE)
 
 
 ## ---------------------------
@@ -378,6 +386,13 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
     vertex_color <- recode(vertex_attr(twomode_network, c_analysis), !!!color_palette)
   }
   
+  
+  # starting coordinates of graph
+    # layout_with_fr(g, coords); coords argument = "Optional starting positions for the vertices. If this argument is not NULL then it should be an appropriate matrix of starting coordinates"
+  coords_kk <- layout_with_kk(graph = twomode_network)
+    #print(coords_kk) # print layout_with_kk coordinates; these remain the same
+    #print(layout_with_fr(graph = twomode_network)) # print layout_with_fr coordinates; these change each time
+  
   # Plot graph
   plot(
     x = twomode_network, 
@@ -389,6 +404,7 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
     edge.lty = 3,
     #edge.lty = 0.5,
     edge.color = 'lightgrey',
+    coords = coords_kk, # starting positions for vertices
     layout = layout,
     margin = margin
   )
@@ -409,6 +425,14 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
 plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys)
 plot_2mode_graph(g_2mode_privu, c_analysis = 'hclust', k = 4)
 plot_2mode_graph(g_2mode_pubu, c_analysis = 'fast', steps = 11, colors = c('red', 'orange', 'yellow', 'green', 'blue', 'purple'))
+
+# public and private universities
+
+save_plot(plot_2mode_graph(g_2mode_u, c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'), margin = -.75),
+          plot_name = 'plot_2mode_u_k5.pdf')
+
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
+          plot_name = 'plot_1mode_u_k5.pdf')
 
 # Region characteristic
 save_plot(plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys, margin = -0.6),
@@ -518,7 +542,7 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
     edge.width = log(as.numeric(E(network)$weight)/10),
     #edge.width = 1,
     edge.color = 'lightgrey',
-    cooords = coords_kk, # starting positions for vertices
+    coords = coords_kk, # starting positions for vertices
     layout = layout,
     margin = margin
   )
@@ -574,6 +598,59 @@ save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', pr
           plot_name = 'plot_1mode_all_outst.pdf')
 
 
+## ---------------------------
+## TABLE OF MATRIX OF NUMBER OF PRIVATE HIGH SCHOOLS VISITED IN COMMON
+## ---------------------------
+
+vertex_attr_names(graph = g_1mode_u_psi)
+
+vertex_attr(graph=g_1mode_u_psi, name='school_name') 
+
+
+
+g_1mode_u <- g_1mode_u_psi
+V(g_1mode_u)$name <- V(g_1mode_u)$school_name
+  
+as_adjacency_matrix(
+  graph = g_1mode_u,
+  type = "lower",
+  attr="weight",
+  names = TRUE,
+  edges = TRUE
+) 
+
+
+
+g_1mode_pubu <- g_1mode_pubu_psi
+
+vertex_attr(graph=g_1mode_pubu, name='name') <- vertex_attr(graph=g_1mode_pubu, name='school_name') 
+
+m_1mode_pubu <- as_adjacency_matrix(
+  #graph = g_1mode_u_psi,
+  graph = g_1mode_pubu,
+  type = "both",
+  attr="weight",
+  names = TRUE,
+  #edges = TRUE,
+  #sparse = igraph_opt("sparsematrices")
+  sparse = FALSE
+)
+
+
+
+
+
+m_1mode_pubu
+attributes(m_1mode_pubu)
+
+attr(x=m_1mode_pubu, which='dim') %>% str()
+
+attr(x=m_1mode_pubu, which='dimnames')
+attr(x=m_1mode_pubu, which='dimnames') %>% length()
+
+attr(x=m_1mode_pubu, which='dimnames'[[1]])
+
+
 ## ------------------------------
 ## TABLE FROM EGO IGRAPH OBJECTS
 ## ------------------------------
@@ -604,7 +681,7 @@ get_characteristic_pct <- function(hs_df, characteristic_var, characteristic_val
   output
 }
 
-create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k = NULL, h = NULL, no = NULL, steps = NULL, pubu_visits = 'all', privu_visits = 'all', race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2') {
+create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k = NULL, h = NULL, no = NULL, steps = NULL, pubu_visits = 'all', privu_visits = 'all', race_var = 'pct_blacklatinxnative_cat', ranking_var = 'rank_cat2', enroll_var = 'enroll_cat1') {
 
   # Cluster analysis to identify communities
   if (pubu_visits != 'all' & privu_visits == 'all') {
@@ -615,7 +692,7 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
     twomode_network <- subgraph.edges(graph = twomode_network, eids = E(twomode_network)[(E(twomode_network)$visiting_univ == 'public' & E(twomode_network)$visit_loc == pubu_visits) | (E(twomode_network)$visiting_univ == 'private' & E(twomode_network)$visit_loc == privu_visits)])
   }
   
-  summary(twomode_network)
+  #summary(twomode_network)
   
   if (c_analysis == 'fast') {
     member <- create_fast_greedy(twomode_network = twomode_network, mode = 'psi', no = no, steps = steps)
@@ -626,14 +703,20 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
   # Characteristics variables
   twomode_df <- igraph::as_data_frame(twomode_network, 'vertices')
   
+  #print(twomode_df)
+  #print(twomode_df[[enroll_var]])
+  
   region_vals <- levels(as.factor(twomode_df$region))
   religion_vals <- levels(as.factor(twomode_df$religion))
   race_vals <- levels(as.factor(twomode_df[[race_var]]))
   ranking_vals <- levels(as.factor(twomode_df[[ranking_var]]))
   
+  enroll_vals <- levels(as.factor(twomode_df[[enroll_var]]))
+  #print(enroll_vals)
+  
   # Create empty dataframe to populate with stats from ego graphs
   col_names <- c('univ_id', 'univ_name', 'cluster', 'type', 'rank', 'control', 'total', 'in_state', 'out_of_state', 'characteristics',
-                 region_vals, religion_vals, race_vals, ranking_vals)
+                 region_vals, religion_vals, race_vals, ranking_vals, enroll_vals)
   
   ego_tbl <- data.frame(matrix(NA_character_, ncol = length(col_names), nrow = 0, dimnames = list(NULL, col_names)), stringsAsFactors = F, check.names = F)
     
@@ -658,6 +741,8 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
     univ_characteristics <- ego_df %>% filter(type == TRUE)
     hs_characteristics <- ego_df %>% filter(type == FALSE)
     
+    #print(hs_characteristics)
+    
     ego_tbl[i, ] <- c(univ_characteristics$name, univ_characteristics$school_name, member[names(member) == univ_characteristics$name],
                       univ_characteristics$school_type, univ_characteristics$ranking_numeric, univ_characteristics$control,
                       if_else(privhs_visits_var == 'all', univ_characteristics$privhs_visits_tot, univ_characteristics[[privhs_visits_var]]),
@@ -667,13 +752,17 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
                       get_characteristic_pct(hs_characteristics, 'region', region_vals),
                       get_characteristic_pct(hs_characteristics, 'religion', religion_vals),
                       get_characteristic_pct(hs_characteristics, race_var, race_vals),
-                      get_characteristic_pct(hs_characteristics, ranking_var, ranking_vals))
+                      get_characteristic_pct(hs_characteristics, ranking_var, ranking_vals),
+                      get_characteristic_pct(hs_characteristics, enroll_var, enroll_vals))
   }
   
   ego_tbl %>% arrange(as.numeric(cluster), type, as.numeric(rank))
 }
 
 # Save tables
+
+
+create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
 
 ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
 saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
@@ -701,13 +790,9 @@ saveRDS(ego_table_univ_pubu_outst, file = './assets/tables/table_ego_univ_pubu_o
 ego_table_univ_pubu_outst
 
 
-
-
 ego_table_all <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4)
 saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
-
 ego_table_all
-
 
 
 ego_table_all_pubu_outst <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')

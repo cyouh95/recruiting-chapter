@@ -87,9 +87,13 @@ privhs_data %>% group_by(year) %>% count()  # 105 from 2015-16, 144 from 2013-14
 # Select variables of interest from private HS data
 privhs_df <- privhs_data %>%
   mutate(type = 'priv hs', control = 'private') %>%
-  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, type, control)
+  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces,total_12, type, control)
 val_labels(privhs_df$region)  # https://www2.census.gov/geo/pdfs/maps-data/maps/reference/us_regdiv.pdf
 
+
+#privhs_df %>% glimpse()
+#privhs_df %>% count(total_12) %>% print(n=350)
+  
 # Add ranking from Niche data
 niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
   overall_niche_grade == 4.33 ~ 'A+',
@@ -120,6 +124,10 @@ privhs_universe <- privhs_data %>% left_join(dplyr::union(
 
 saveRDS(privhs_universe, file = str_c('./data/privhs_universe.RDS'))  # all 2017-18 + used schools from past years
 
+#privhs_universe %>% glimpse()
+#privhs_universe %>% count(total_12) %>% print(n=350)
+
+
 # Select variables of interest from univ data
 get_abbrev <- function(x, y) {
   univ_abbrev <- univ_info[univ_info$univ_id == x, ]$univ_abbrev
@@ -128,7 +136,7 @@ get_abbrev <- function(x, y) {
 v_get_abbrev <- Vectorize(get_abbrev, USE.NAMES = FALSE)
 
 univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces)
+  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces,eftotlt)
 
 univ_df$state_code <- as.character(univ_df$state_code)
 
@@ -141,8 +149,17 @@ usnews_df <- usnews_data %>%
   select(univ_id, type, control, score_text, rank)
 univ_df <- univ_df %>% left_join(usnews_df, by = 'univ_id')
 
+
+
+univ_df %>% glimpse()
+
+privhs_df %>% glimpse()
+privhs_df %>% count(total_12) %>% print(n=350)
+
+
 # Create attributes dataframe
-var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'school_type', 'control', 'ranking', 'ranking_numeric')
+#,'total_12'
+var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'enroll','school_type', 'control', 'ranking', 'ranking_numeric')
 names(privhs_df) <- var_names
 names(univ_df) <- var_names
 attributes_df <- dplyr::union(privhs_df, univ_df)
@@ -246,6 +263,26 @@ length(privhs_vec[!(privhs_vec %in% attributes_df$school_id)])
 ## ----------------------------
 ## CREATE ADDITIONAL VARIABLES
 ## ----------------------------
+
+
+# 12th grade enrollment variables
+attributes_df <- attributes_df %>% mutate(
+  enroll_cat1 = case_when(
+    enroll<50  ~ 'c1_lt50',
+    enroll>=50 & enroll<100  ~ 'c2_50to100',
+    enroll>=100 & enroll<150  ~ 'c3_100to150',
+    enroll>=150  ~ 'c4_gt150'
+  ),
+  enroll_cat2 = case_when(
+    enroll<100  ~ 'c1_lt100',
+    enroll>=100 & enroll<150  ~ 'c2_100to150',
+    enroll>=150 & enroll<200  ~ 'c3_150to200',
+    enroll>=200  ~ 'c4_gt200'
+  )
+)
+
+attributes_df %>% filter(school_type == 'priv hs') %>% count(enroll_cat1)
+attributes_df %>% filter(school_type == 'priv hs') %>% count(enroll_cat2)
 
 # Race categorical variables
 attributes_df <- attributes_df %>% mutate(

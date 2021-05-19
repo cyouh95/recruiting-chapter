@@ -141,7 +141,7 @@ run_plot_characteristics <- function(which_psi,which_char,char_label,which_vars,
 
   dev.off()
 
-}        
+}
 
 # region
   # pubu, privu, privc
@@ -162,7 +162,6 @@ run_plot_characteristics <- function(which_psi,which_char,char_label,which_vars,
   # pubu, privu  
   run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'hs_rank', char_label = 'HS rank', c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA'), c('Top 200 A+', 'Other A+', 'A', 'Less than A'))
   
-
 # racial composition
   # pubu, privu, privc  
   run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'pct_black_latinx_native', char_label = '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'))  
@@ -173,6 +172,16 @@ run_plot_characteristics <- function(which_psi,which_char,char_label,which_vars,
     df = readRDS(file.path('.','..', 'assets', 'tables', str_c('table_ego_', 'pubu', '.RDS'))),
     '% Black/Latinx/Native', c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+'), c('<10%', '10-20%', '20-50%', '50%+'), visit_count = TRUE
   )
+  
+# enrollment
+  # pubu, privu, privc  
+  run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'g12_enroll', char_label = '12th grade enrollment', c('c1_lt50','c2_50to100','c3_100to150','c4_gt150'), c('LT 50','50-100','100-150','GT 150'))
+  
+  #run_plot_characteristics(which_psi = c('pubu','privu','privc'), which_char = 'g12_enroll', char_label = '12th grade enrollment', c('c1_lt100','c2_100to150','c3_150to200','c4_gt200'), c('LT 100','100-150','150-200','GT 200'))
+  
+  # pubu, privu
+  run_plot_characteristics(which_psi = c('pubu','privu'), which_char = 'g12_enroll', char_label = '12th grade enrollment', c('c1_lt50','c2_50to100','c3_100to150','c4_gt150'), c('LT 50','50-100','100-150','GT 150'))
+  
 ```
 
 
@@ -304,30 +313,37 @@ knitr::include_graphics('./../assets/figures/plot_pss_universe.pdf')
 
 
 ```{r ego-network-figure-region, fig.align = 'center', echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
-#knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu_privc.pdf')
-knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu_privc.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_region_pubu_privu.pdf')
 ```
 
 \newpage
 
 ```{r ego-network-figure-religion, fig.align = 'center', echo = FALSE, fig.cap = "Religious affiliation of visited private high schools"}
-#knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu_privc.pdf')
-knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu_privc.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_religion_pubu_privu.pdf')
+```
+
+\newpage
+
+```{r ego-network-figure-g12-enroll, fig.align = 'center', echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools"}
+knitr::include_graphics('./../assets/figures/ego_network_figure_g12_enroll_pubu_privu_privc.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_g12_enroll_pubu_privu.pdf')
 ```
 
 \newpage
 
 ```{r ego-network-figure-hs-rank, fig.align = 'center', echo = FALSE, fig.cap = "High school rank of visited private high schools"}
-#knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu_privc.pdf')
-knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu_privc.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_hs_rank_pubu_privu.pdf')
 ```
 
 
 \newpage
 
 ```{r ego-network-figure-race, fig.align = 'center', echo = FALSE, fig.cap = "Racial composition of visited private high schools"}
-#knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu_privc.pdf')
-knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu.pdf')
+knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu_privc.pdf')
+#knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx_native_pubu_privu.pdf')
 ```
 
 
@@ -345,6 +361,47 @@ knitr::include_graphics('./../assets/figures/ego_network_figure_pct_black_latinx
 
 \newpage
 
+```{r, echo = FALSE, eval = FALSE}
+g_1mode_pubu <- g_1mode_pubu_psi
+
+vertex_attr(graph=g_1mode_pubu, name='name') <- vertex_attr(graph=g_1mode_pubu, name='school_name') 
+
+m_1mode_pubu <- as_adjacency_matrix(
+  #graph = g_1mode_u_psi,
+  graph = g_1mode_pubu,
+  type = "both",
+  attr="weight",
+  names = TRUE,
+  #edges = TRUE,
+  #sparse = igraph_opt("sparsematrices")
+  sparse = FALSE
+)
+
+m_1mode_pubu
+```
+
+
+```{r, echo = FALSE, eval = FALSE}
+g_1mode_privu <- g_1mode_privu_psi
+
+vertex_attr(graph=g_1mode_privu, name='name') <- vertex_attr(graph=g_1mode_privu, name='school_name') 
+
+m_1mode_privu <- as_adjacency_matrix(
+  #graph = g_1mode_u_psi,
+  graph = g_1mode_privu,
+  type = "both",
+  attr="weight",
+  names = TRUE,
+  #edges = TRUE,
+  #sparse = igraph_opt("sparsematrices")
+  sparse = FALSE
+)
+
+m_1mode_privu
+```
+
+\newpage
+
 \newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 \begin{landscape}
@@ -359,13 +416,8 @@ knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
 ```
 
 
-```{r plot-1mode-privc, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private liberal arts colleges, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_privc.pdf')
-```
 
-
-
-```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+```{r plot-1mode-u, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
 knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
 ```
 
@@ -373,13 +425,23 @@ knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
 knitr::include_graphics('./../assets/figures/plot_1mode_u_k5.pdf')
 ```
 
+```{r plot-2mode-u-k5, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "Two-mode network for public and private universities, colored by cluster, five clusters"}
 
+knitr::include_graphics('./../assets/figures/plot_2mode_u_k5.pdf')
 
-```{r plot-1mode-all, fig.align = 'center', echo = FALSE, eval=FALSE, out.width = "100%", fig.cap = "One-mode network for public universities, private universities, private liberal arts, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_all.pdf')
+#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
+
+```{r plot-1mode-privc, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private liberal arts colleges, colored by cluster"}
+# appendix
+knitr::include_graphics('./../assets/figures/plot_1mode_privc.pdf')
+```
+
+
+
 ```{r plot-1mode-all-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public universities, private universities, private liberal arts, colored by cluster, five clusters"}
+# appendix
 knitr::include_graphics('./../assets/figures/plot_1mode_all_k5.pdf')
 ```
 
@@ -397,13 +459,6 @@ knitr::include_graphics('./../assets/figures/plot_1mode_u_pubu_outst.pdf')
 
 ```{r plot-1mode-all-pubu-outst, fig.align = 'center', echo = FALSE, eval = FALSE, out.width = "100%", fig.cap = "One-mode network for all institutions, out-of-state visits only for public universities, colored by cluster"}
 knitr::include_graphics('./../assets/figures/plot_1mode_all_pubu_outst.pdf')
-```
-
-```{r two-mode-plot, fig.align = 'center', echo = FALSE, eval=FALSE, out.width = "100%", fig.cap = "2-mode network for all institutions, colored by geographic region"}
-# <!-- plot of two-mode network; exclude for now -->
-knitr::include_graphics('./../assets/figures/plot_2mode_all_region.pdf')
-
-#https://stackoverflow.com/questions/15625990/how-to-set-size-for-local-image-using-knitr-for-markdown
 ```
 
 
