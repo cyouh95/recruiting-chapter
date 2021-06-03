@@ -12,27 +12,48 @@ options(max.print = 2000)
 scripts_dir <- file.path('.', 'scripts')
 source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 
-# Summary of objects (1738 private HS + 42 univs = 1780 vertices total)
-  # 2-mode igraph objects
-    # g_2mode (1780 vertices + 10907 edges)
-    # g_2mode_privu (1350 vertices + 7183 edges)
-    # g_2mode_pubu (1481 vertices + 3724 edges)
+# [private colleges and universities] Create 1-mode graphs from g_2mode_priv
+# [public universities] Create 1-mode graphs from g_2mode_pubu
+# [public and private universities] Create 1-mode graphs from g_2mode_u
+# [private universities] Create 1-mode graphs from g_2mode_privu
+# [private colleges] Create 1-mode graphs from g_2mode_privc  
+
+# Summary of objects (1890 private HS + 41 univs = 1931 vertices total)
+  # 2-mode igraph objects - vertices is sum of vertices of below 1-mode graphs
+    # g_2mode (1931 vertices + 11804 edges)
+    # g_2mode_priv (1488 vertices + 7980 edges)
+    # g_2mode_pubu (1564 vertices + 3824 edges)
+    # g_2mode_u (1869 vertices + 8952 edges)
+    # g_2mode_privu (1365 vertices + 5128 edges)
+    # g_2mode_privc (889 vertices + 2852 edges)
   # 1-mode igraph objects [HS]
-    # g_1mode_hs (1738 vertices + 743661 edges)
-    # g_1mode_hs_privu (1325 vertices + 519083 edges)
-    # g_1mode_hs_pubu (1464 vertices + 448865)
+    # g_1mode_hs (1890 vertices + 858702 edges)
+    # g_1mode_priv_hs (1462 vertices + 606659 edges)
+    # g_1mode_pubu_hs (1549 vertices + 499055 edges)
+    # g_1mode_u_hs (1840 vertices + 811755 edges)
+    # g_1mode_privu_hs (1351 vertices + 541204 edges)
+    # g_1mode_privc_hs (877 vertices + 215317 edges)
   # 1-mode igraph objects [PSI]
-    # g_1mode_psi (42 vertices + 855 edges)
-    # g_1mode_psi_privu (25 vertices + 300 edges)
-    # g_1mode_psi_pubu (17 vertices + 130 edges)
+    # g_1mode_psi (41 vertices + 817 edges)
+    # g_1mode_priv_psi (26 vertices + 325 edges)
+    # g_1mode_pubu_psi (15 vertices + 102 edges)
+    # g_1mode_u_psi (29 vertices + 403 edges)
+    # g_1mode_privu_psi (14 vertices + 91 edges)
+    # g_1mode_privc_psi (12 vertices + 66 edges)
   # Ego igraph objects [HS]
-    # egos_hs (1738 ego graphs)
-    # egos_hs_privu (1325 ego graphs)
-    # egos_hs_pubu (1464 ego graphs)
+    # egos_hs (1890 ego graphs)
+    # egos_hs_priv (1462 ego graphs)
+    # egos_hs_pubu (1549 ego graphs)
+    # egos_hs_u (1840 ego graphs)
+    # egos_hs_privu (1351 ego graphs)
+    # egos_hs_privc (877 ego graphs)
   # Ego igraph objects [PSI]
-    # egos_psi (42 ego graphs)
-    # egos_psi_privu (25 ego graphs)
-    # egos_psi_pubu (17 ego graphs)
+    # egos_psi (41 ego graphs)
+    # egos_psi_priv (26 ego graphs)
+    # egos_psi_pubu (15 ego graphs)
+    # egos_psi_u (29 ego graphs)
+    # egos_psi_privu (14 ego graphs)
+    # egos_psi_privc (12 ego graphs)
 
 
 ## --------------------------
@@ -404,8 +425,8 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
     edge.lty = 3,
     #edge.lty = 0.5,
     edge.color = 'lightgrey',
-    coords = coords_kk, # starting positions for vertices
-    layout = layout,
+    #coords = coords_kk, # starting positions for vertices
+    layout = layout(twomode_network, coords = coords_kk),
     margin = margin
   )
   
@@ -542,8 +563,8 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
     edge.width = log(as.numeric(E(network)$weight)/10),
     #edge.width = 1,
     edge.color = 'lightgrey',
-    coords = coords_kk, # starting positions for vertices
-    layout = layout,
+    #coords = coords_kk, # starting positions for vertices
+    layout = layout(network, coords = coords_kk),
     margin = margin
   )
 }
