@@ -10,10 +10,18 @@ library(labelled)
 ## ----------
 
 # Recruiting events data
+# universities to exclude:
+  # Wellesley college; data seem suspect
+  # NC State; univ_id ==199193
+    # rationale: data seem suspect
+  # UC Irvine: univ_id == 110653
+    # rationale: we have four UCs: berkeley; san diego; irvine; riverside; don't want so many; Irvine and San Diego have same ranking but San Diego has more out-of-state visits and more private hs visits so keep that one; and keep riverside because it has very different rank
+
 #events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data_temp1 <- read.csv('./data/events_data_2020-10-20.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data_marquette <- read.csv('./data/events_data_marquette.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
-events_data <- events_data_temp1 %>% bind_rows(events_data_marquette)
+events_data <- events_data_temp1 %>% bind_rows(events_data_marquette) %>% 
+  filter(!(univ_id %in% c('168218','199193','110653')))  # Wellesley, NCSU, UCI
 rm(events_data_marquette,events_data_temp1)
 
 # University data from IPEDS
@@ -44,20 +52,13 @@ usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings 
 ## ----------
 
 # Focus on private HS visits by the univs
-  # universities to exclude:
-    # wellesley college; data seem suspect
-    # NC State; univ_id ==199193
-        #rationale: data seem suspect
-    # UC Irvine: univ_id == 110653
-      # rationale: we have four UCs: berkeley; san diego; irvine; riverside; don't want so many; Irvine and San Diego have same ranking but San Diego has more out-of-state visits and more private hs visits so keep that one; and keep riverside because it has very different rank
-  # (exclude Wellesley and mismatched HS)
-      # Mismatched HS: events matched to some private school ID are merged wrong - event is not at private HS (ie. at public HS)
+    # Exclude mismatched HS: events matched to some private school ID are merged wrong - event is not at private HS (ie. at public HS)
 # Final univ sample: 15 public research, 14 private nationals, 12 private liberal arts
 privhs_events <- events_data %>%
-  filter(event_type == 'priv_hs', !(univ_id %in% c('168218','199193','110653')), !(pid %in% c(55696, 44420, 43964, 30678, 25278, 27707, 52235, 32037, 34938, 82251, 43944, 46788, 84552, 64238, 25637, 63281, 68942, 44224, 24830)), !(school_id %in% c('00299041', 'A0109336', 'A0701311', 'A0702146', 'A0901459', 'A1192055', 'A1303450', 'A9101558', 'A9101599', 'A9105352', 'A9300600', 'BB060710', 'BB161076'))) %>%
+  filter(event_type == 'priv_hs', !(pid %in% c(55696, 44420, 43964, 30678, 25278, 27707, 52235, 32037, 34938, 82251, 43944, 46788, 84552, 64238, 25637, 63281, 68942, 44224, 24830)), !(school_id %in% c('00299041', 'A0109336', 'A0701311', 'A0702146', 'A0901459', 'A1192055', 'A1303450', 'A9101558', 'A9101599', 'A9105352', 'A9300600', 'BB060710', 'BB161076'))) %>%
   select(univ_id, univ_state, event_type, school_id, event_location_name, event_city, event_state)
 
-  
+
 # Override school_id with updated 2017-18 PSS ID
 get_pss_override <- function(x) {
   new_id <- privhs_overrides[privhs_overrides$old_id == x, ]$new_id
@@ -113,17 +114,9 @@ privhs_universe <- privhs_data %>% left_join(dplyr::union(
 ), by = 'ncessch'
 )
 
-saveRDS(privhs_universe, file = str_c('./data/privhs_universe.RDS'))  # all 2017-18 + used schools from past years
-
 # All NA/unmerged Niche data were checked and manually added if available. There are 33 known true NA's
 table((privhs_universe %>% filter(ncessch %in% privhs_events$school_id))$overall_niche_letter_grade, useNA = 'always')
 
-
-
-# Select variables of interest from private HS data to build attributes_df
-privhs_df <- privhs_universe %>%
-  mutate(type = 'priv hs', control = 'private') %>%
-  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, total_12, type, control, overall_niche_letter_grade, rank_within_category)
 
 
 # Select variables of interest from univ data
@@ -133,10 +126,10 @@ get_abbrev <- function(x, y) {
 }
 v_get_abbrev <- Vectorize(get_abbrev, USE.NAMES = FALSE)
 
-univ_df <- univ_data %>% mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, eftotlt)
-
-univ_df$state_code <- as.character(univ_df$state_code)
+univ_universe <- univ_data %>%
+  mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>% 
+  select(-control)
+univ_universe$state_code <- as.character(univ_universe$state_code)
 
 # Add ranking from US News & World Report data
 usnews_df <- usnews_data %>%
@@ -145,8 +138,19 @@ usnews_df <- usnews_data %>%
                        'national-universities' = 'univ'
                        )) %>%
   select(univ_id, type, control, score_text, rank)
-univ_df <- univ_df %>% left_join(usnews_df, by = 'univ_id')
+univ_universe <- univ_universe %>% left_join(usnews_df, by = 'univ_id')
 
+saveRDS(univ_info %>% select(univ_id, classification) %>% left_join(univ_universe), file = str_c('./data/univ_sample.RDS'))
+
+
+# Select variables of interest from private HS data to build attributes_df
+privhs_df <- privhs_universe %>%
+  mutate(type = 'priv hs', control = 'private') %>%
+  select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, total_12, type, control, overall_niche_letter_grade, rank_within_category)
+
+# Select variables of interest from univ sample data to build attributes_df
+univ_df <- univ_universe %>%
+  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, eftotlt, type, control, score_text, rank)
 
 # Create attributes_df
 var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'enroll', 'school_type', 'control', 'ranking', 'ranking_numeric')
@@ -324,6 +328,9 @@ table(attributes_df$region, useNA = 'always')
 
 # Export attributes data on the private HS visited by at least 1 univ in our sample
 saveRDS(attributes_df %>% filter(school_id %in% privhs_vec), file = str_c('./data/privhs_visited.RDS'))
+
+# Export attributes data on universe of private HS
+saveRDS(attributes_df %>% filter(nchar(school_id) == 8), file = str_c('./data/privhs_universe.RDS'))  # all 2017-18 + used schools from past years
 
 
 ## -------------------

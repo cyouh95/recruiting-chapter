@@ -1,0 +1,122 @@
+varnumber,varname,DataType,Fieldwidth,format,imputationvar,varTitle
+1,UNITID,N,6,Cont,,Unique identification number of the institution
+11616,TUITION1,N,5,Cont,XTUIT1,In-district average tuition for full-time undergraduates
+11621,FEE1,N,5,Cont,XFEE1,In-district required fees for full-time undergraduates
+11626,HRCHG1,N,5,Cont,XHRCHG1,In-district per credit hour charge for part-time undergraduates
+11636,TUITION2,N,5,Cont,XTUIT2,In-state average tuition for full-time undergraduates
+11641,FEE2,N,5,Cont,XFEE2,In-state required fees for full-time undergraduates
+11646,HRCHG2,N,5,Cont,XHRCHG2,In-state per credit hour charge for part-time undergraduates
+11656,TUITION3,N,5,Cont,XTUIT3,Out-of-state average tuition for full-time undergraduates
+11661,FEE3,N,5,Cont,XFEE3,Out-of-state required fees for full-time undergraduates
+11666,HRCHG3,N,5,Cont,XHRCHG3,Out-of-state per credit hour charge for part-time undergraduates
+11676,TUITION5,N,5,Cont,XTUIT5,In-district average tuition full-time graduates
+11681,FEE5,N,5,Cont,XFEE5,In-district required fees for full-time graduates
+11686,HRCHG5,N,5,Cont,XHRCHG5,In-district per credit hour charge part-time graduates
+11691,TUITION6,N,5,Cont,XTUIT6,In-state average tuition full-time graduates
+11696,FEE6,N,5,Cont,XFEE6,In-state required fees for full-time graduates
+11701,HRCHG6,N,5,Cont,XHRCHG6,In-state per credit hour charge part-time graduates
+11706,TUITION7,N,5,Cont,XTUIT7,Out-of-state average tuition full-time graduates
+11711,FEE7,N,5,Cont,XFEE7,Out-of-state required fees for full-time graduates
+11716,HRCHG7,N,5,Cont,XHRCHG7,Out-of-state per credit hour charge part-time graduates
+11721,ISPROF1,N,5,Cont,XISPRO1,Chiropractic: In-state tuition
+11726,ISPFEE1,N,5,Cont,XISPFE1,Chiropractic: In-state required fees
+11731,OSPROF1,N,5,Cont,XOSPRO1,Chiropractic: Out-of-state tuition
+11736,OSPFEE1,N,5,Cont,XOSPFE1,Chiropractic: Out-of-state required fees
+11741,ISPROF2,N,5,Cont,XISPRO2,Dentistry: In-state tuition
+11746,ISPFEE2,N,5,Cont,XISPFE2,Dentistry: In-state required fees
+11751,OSPROF2,N,5,Cont,XOSPRO2,Dentistry: Out-of-state tuition
+11756,OSPFEE2,N,5,Cont,XOSPFE2,Dentistry: Out-of-state required fees
+11761,ISPROF3,N,5,Cont,XISPRO3,Medicine: In-state tuition
+11766,ISPFEE3,N,5,Cont,XISPFE3,Medicine: In-state required fees
+11771,OSPROF3,N,5,Cont,XOSPRO3,Medicine: Out-of-state tuition
+11776,OSPFEE3,N,5,Cont,XOSPFE3,Medicine: Out-of-state required fees
+11781,ISPROF4,N,5,Cont,XISPRO4,Optometry: In-state tuition
+11786,ISPFEE4,N,5,Cont,XISPFE4,Optometry: In-state required fees
+11791,OSPROF4,N,5,Cont,XOSPRO4,Optometry: Out-of-state tuition
+11796,OSPFEE4,N,5,Cont,XOSPFE4,Optometry: Out-of-state required fees
+11801,ISPROF5,N,5,Cont,XISPRO5,Osteopathic Medicine: In-state tuition
+11806,ISPFEE5,N,5,Cont,XISPFE5,Osteopathic Medicine: In-state required fees
+11811,OSPROF5,N,5,Cont,XOSPRO5,Osteopathic Medicine: Out-of-state tuition
+11816,OSPFEE5,N,5,Cont,XOSPFE5,Osteopathic Medicine: Out-of-state required fees
+11821,ISPROF6,N,5,Cont,XISPRO6,Pharmacy: In-state tuition
+11826,ISPFEE6,N,5,Cont,XISPFE6,Pharmacy: In-state required fees
+11831,OSPROF6,N,5,Cont,XOSPRO6,Pharmacy: Out-of-state tuition
+11836,OSPFEE6,N,5,Cont,XOSPFE6,Pharmacy: Out-of-state required fees
+11841,ISPROF7,N,5,Cont,XISPRO7,Podiatry: In-state tuition
+11846,ISPFEE7,N,5,Cont,XISPFE7,Podiatry: In-state required fees
+11851,OSPROF7,N,5,Cont,XOSPRO7,Podiatry: Out-of-state tuition
+11856,OSPFEE7,N,5,Cont,XOSPFE7,Podiatry: Out-of-state required fees
+11861,ISPROF8,N,5,Cont,XISPRO8,Veterinary Medicine: In-state tuition
+11866,ISPFEE8,N,5,Cont,XISPFE8,Veterinary Medicine: In-state required fees
+11871,OSPROF8,N,5,Cont,XOSPRO8,Veterinary Medicine: Out-of-state tuition
+11876,OSPFEE8,N,5,Cont,XOSPFE8,Veterinary Medicine: Out-of-state required fees
+11881,ISPROF9,N,5,Cont,XISPRO9,Law: In-state tuition
+11886,ISPFEE9,N,5,Cont,XISPFE9,Law: In-state required fees
+11891,OSPROF9,N,5,Cont,XOSPRO9,Law: Out-of-state tuition
+11896,OSPFEE9,N,5,Cont,XOSPFE9,Law: Out-of-state required fees
+15262,CHG1AT0,N,5,Cont,Xchg1at0,Published in-district tuition 2014-15
+15263,CHG1AF0,N,5,Cont,Xchg1af0,Published in-district fees 2014-15
+15261,CHG1AY0,N,5,Cont,Xchg1ay0,Published in-district tuition and fees 2014-15
+11942,CHG1AT1,N,5,Cont,Xchg1at1,Published in-district tuition 2015-16
+11943,CHG1AF1,N,5,Cont,Xchg1af1,Published in-district fees 2015-16
+11941,CHG1AY1,N,5,Cont,Xchg1ay1,Published in-district tuition and fees 2015-16
+11947,CHG1AT2,N,5,Cont,Xchg1at2,Published in-district tuition 2016-17
+11948,CHG1AF2,N,5,Cont,Xchg1af2,Published in-district fees 2016-17
+11946,CHG1AY2,N,5,Cont,Xchg1ay2,Published in-district tuition and fees 2016-17
+11952,CHG1AT3,N,5,Cont,Xchg1at3,Published in-district tuition 2017-18
+11953,CHG1AF3,N,5,Cont,Xchg1af3,Published in-district fees 2017-18
+11951,CHG1AY3,N,5,Cont,Xchg1ay3,Published in-district tuition and fees 2017-18
+11954,CHG1TGTD,N,3,Cont,,Published in-district tuition 2017-18 guaranteed percent increase (if applicable)
+11955,CHG1FGTD,N,3,Cont,,Published in-district fees 2017-18 guaranteed percent increase (if applicable)
+15272,CHG2AT0,N,5,Cont,Xchg2at0,Published in-state tuition 2014-15
+15273,CHG2AF0,N,5,Cont,Xchg2af0,Published in-state fees 2014-15
+15271,CHG2AY0,N,5,Cont,Xchg2ay0,Published in-state tuition and fees 2014-15
+11957,CHG2AT1,N,5,Cont,Xchg2at1,Published in-state tuition 2015-16
+11958,CHG2AF1,N,5,Cont,Xchg2af1,Published in-state fees 2015-16
+11956,CHG2AY1,N,5,Cont,Xchg2ay1,Published in-state tuition and fees 2015-16
+11962,CHG2AT2,N,5,Cont,Xchg2at2,Published in-state tuition 2016-17
+11963,CHG2AF2,N,5,Cont,xchg2af2,Published in-state fees 2016-17
+11961,CHG2AY2,N,5,Cont,Xchg2ay2,Published in-state tuition and fees 2016-17
+11967,CHG2AT3,N,5,Cont,xchg2at3,Published in-state tuition 2017-18
+11968,CHG2AF3,N,5,Cont,xchg2af3,Published in-state fees 2017-18
+11966,CHG2AY3,N,5,Cont,Xchg2ay3,Published in-state tuition and fees 2017-18
+11969,CHG2TGTD,N,3,Cont,,Published in-state tuition 2017-18 guaranteed percent increase (if applicable)
+11970,CHG2FGTD,N,3,Cont,,Published in-state fees 2017-18 guaranteed percent increase (if applicable)
+15282,CHG3AT0,N,5,Cont,Xchg3at0,Published out-of-state tuition 2014-15
+15283,CHG3AF0,N,5,Cont,Xchg3af0,Published out-of-state fees 2014-15
+15281,CHG3AY0,N,5,Cont,Xchg3ay0,Published out-of-state tuition and fees 2014-15
+11972,CHG3AT1,N,5,Cont,Xchg3at1,Published out-of-state tuition 2015-16
+11973,CHG3AF1,N,5,Cont,Xchg3af1,Published out-of-state fees 2015-16
+11971,CHG3AY1,N,5,Cont,Xchg3ay1,Published out-of-state tuition and fees 2015-16
+11977,CHG3AT2,N,5,Cont,Xchg3at2,Published out-of-state tuition 2016-17
+11978,CHG3AF2,N,5,Cont,Xchg3af2,Published out-of-state fees 2016-17
+11976,CHG3AY2,N,5,Cont,Xchg3ay2,Published out-of-state tuition and fees 2016-17
+11982,CHG3AT3,N,5,Cont,Xchg3at3,Published out-of-state tuition 2017-18
+11983,CHG3AF3,N,5,Cont,xchg3af3,Published out-of-state fees 2017-18
+11981,CHG3AY3,N,5,Cont,Xchg3ay3,Published out-of-state tuition and fees 2017-18
+15298,CHG3TGTD,N,3,Cont,,Published out-of-state tuition 2017-18 guaranteed percent increase (if applicable)
+15299,CHG3FGTD,N,3,Cont,,Published out-of-state fees 2017-18 guaranteed percent increase (if applicable)
+11985,CHG4AY0,N,5,Cont,Xchg4ay0,Books and supplies 2014-15
+11986,CHG4AY1,N,5,Cont,Xchg4ay1,Books and supplies 2015-16
+11991,CHG4AY2,N,5,Cont,Xchg4ay2,Books and supplies 2016-17
+11996,CHG4AY3,N,5,Cont,Xchg4ay3,Books and supplies 2017-18
+12000,CHG5AY0,N,5,Cont,Xchg5ay0,"On campus, room and board 2014-15"
+12001,CHG5AY1,N,5,Cont,Xchg5ay1,"On campus, room and board 2015-16"
+12006,CHG5AY2,N,5,Cont,Xchg5ay2,"On campus, room and board 2016-17"
+12011,CHG5AY3,N,5,Cont,Xchg5ay3,"On campus, room and board 2017-18"
+12015,CHG6AY0,N,5,Cont,Xchg6ay0,"On campus, other expenses 2014-15"
+12016,CHG6AY1,N,5,Cont,Xchg6ay1,"On campus, other expenses 2015-16"
+12021,CHG6AY2,N,5,Cont,Xchg6ay2,"On campus, other expenses 2016-17"
+12026,CHG6AY3,N,5,Cont,Xchg6ay3,"On campus, other expenses 2017-18"
+12030,CHG7AY0,N,5,Cont,Xchg7ay0,"Off campus (not with family), room and board 2014-15"
+12031,CHG7AY1,N,5,Cont,Xchg7ay1,"Off campus (not with family), room and board 2015-16"
+12036,CHG7AY2,N,5,Cont,Xchg7ay2,"Off campus (not with family), room and board 2016-17"
+12041,CHG7AY3,N,5,Cont,Xchg7ay3,"Off campus (not with family), room and board 2017-18"
+12045,CHG8AY0,N,5,Cont,Xchg8ay0,"Off campus (not with family), other expenses 2014-15"
+12046,CHG8AY1,N,5,Cont,Xchg8ay1,"Off campus (not with family), other expenses 2015-16"
+12051,CHG8AY2,N,5,Cont,Xchg8ay2,"Off campus (not with family), other expenses 2016-17"
+12056,CHG8AY3,N,5,Cont,Xchg8ay3,"Off campus (not with family), other expenses 2017-18"
+12060,CHG9AY0,N,5,Cont,Xchg9ay0,"Off campus (with family), other expenses 2014-15"
+12061,CHG9AY1,N,5,Cont,Xchg9ay1,"Off campus (with family), other expenses 2015-16"
+12066,CHG9AY2,N,5,Cont,Xchg9ay2,"Off campus (with family), other expenses 2016-17"
+12071,CHG9AY3,N,5,Cont,Xchg9ay3,"Off campus (with family), other expenses 2017-18"

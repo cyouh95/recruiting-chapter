@@ -1,5 +1,6 @@
 library(igraph)
 library(tidyverse)
+library(gridExtra)
 
 options(max.print = 2000)
 
@@ -769,7 +770,7 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
                       if_else(privhs_visits_var == 'all', univ_characteristics$privhs_visits_tot, univ_characteristics[[privhs_visits_var]]),
                       if_else(privhs_visits_var == 'privhs_visits_out', 0L, univ_characteristics$privhs_visits_in),
                       if_else(privhs_visits_var == 'privhs_visits_in', 0L, univ_characteristics$privhs_visits_out),
-                      str_c(univ_characteristics$region, univ_characteristics$religion, univ_characteristics[[race_var]], univ_characteristics$ranking, sep = '|'),
+                      str_c(univ_characteristics$region, univ_characteristics$religion, univ_characteristics[[str_sub(race_var, end = -5)]], univ_characteristics$ranking_numeric, univ_characteristics$enroll, sep = '|'),
                       get_characteristic_pct(hs_characteristics, 'region', region_vals),
                       get_characteristic_pct(hs_characteristics, 'religion', religion_vals),
                       get_characteristic_pct(hs_characteristics, race_var, race_vals),
@@ -821,7 +822,106 @@ saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_out
 ego_table_all_pubu_outst
 
 
+## ------------------------------
+## PLOT USING EGO IGRAPH OBJECTS
+## ------------------------------
 
+universe_df <- readRDS('./data/privhs_universe.RDS')
+visited_df <- readRDS('./data/privhs_visited.RDS')
+
+ego_df <- ego_table_all %>% 
+  mutate(
+    univ_region = str_split(characteristics, '\\|', simplify = T)[,1],
+    univ_religion = str_split(characteristics, '\\|', simplify = T)[,2],
+    univ_race = round(as.numeric(str_split(characteristics, '\\|', simplify = T)[,3]), 1),
+    univ_rank = as.numeric(str_split(characteristics, '\\|', simplify = T)[,4]),
+    univ_enroll = as.numeric(str_split(characteristics, '\\|', simplify = T)[,5])
+  )
+
+
+
+plot_characteristic <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
+  
+  sub_df_visited <- visited_df %>% group_by(get(var_name)) %>% 
+    summarize(`Visited private HS` = n()) %>% 
+    pivot_longer(cols = 'Visited private HS',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_visited) <- c('key', 'univ_name', 'value')
+  
+  sub_df_universe <- universe_df %>% group_by(get(var_name)) %>% 
+    summarize(`Universe of private HS` = n()) %>% 
+    pivot_longer(cols = 'Universe of private HS',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_universe) <- c('key', 'univ_name', 'value')
+  
+  sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
+    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
+  
+  sub_df_univs <- sub_ego_df %>% 
+    select(univ_name, all_of(characteristic)) %>%
+    gather(key, value, characteristic) %>%
+    mutate(value = parse_number(value)) %>% 
+    select(key, univ_name, value)
+  
+  sub_df <- bind_rows(sub_df_universe, sub_df_visited, sub_df_univs) %>% filter(!is.na(key))
+
+  # sort univs by characteristic, then alphabetically by name
+  if (plot_type %in% c('region', 'religion')) {
+    univ_order <- (sub_ego_df[order(match(sub_ego_df[[str_c('univ_', plot_type)]], characteristic), sub_ego_df$univ_name), ])$univ_name
+  } else {
+    univ_order <- (sub_ego_df[order(sub_ego_df[[str_c('univ_', plot_type)]]), ])$univ_name
+  }
+
+  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Universe of private HS', 'Visited private HS', univ_order)))
+  sub_df$key <- factor(sub_df$key, levels = characteristic)
+
+  ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
+    ggtitle('Title') +
+    xlab('') + ylab('') +
+    labs(fill = label) +
+    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          text = element_text(size = 8),
+          plot.title = element_text(color = 'white')) +
+    coord_flip()
+}
+
+
+plot_types <- c('region', 'religion', 'race', 'rank', 'enroll')
+var_names <- c('region', 'religion', 'pct_blacklatinxnative_cat', 'rank_cat2', 'enroll_cat1')
+var_labels <- c('Region', 'Religion', '% Black/Latinx/Native', 'Ranking', '12th grade enrollment')
+var_values <- list(region_values, religion_values, race_values, ranking_values, enroll1_values)
+var_keys <- list(region_keys, religion_keys, race_keys, ranking_keys, enroll1_keys)
+
+for (i in seq_along(var_names)) {
+  a <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]])
+  b <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'univ')
+  c <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'lib arts')
+  
+  # pubu + privu + privc
+  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_', plot_types[[i]], '_pubu_privu_privc.pdf')))
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  grid.arrange(a, b, c, nrow=3, ncol=1)
+  dev.off()
+  
+  # pubu + privu
+  pdf(file.path('.', 'assets', 'figures', str_c('ego_network_', plot_types[[i]], '_pubu_privu.pdf')))
+  par(mar=c(0, 0, 0, 0) + 0.1, mai=c(0, 0, 0, 0))
+  grid.arrange(a, b, nrow=2, ncol=1)
+  dev.off()
+}
 
 
 ## ---------------------------------

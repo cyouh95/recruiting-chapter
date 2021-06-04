@@ -2,23 +2,29 @@ library(tidyverse)
 library(labelled)
 
 
+data_dir <- file.path('.', 'data')
+
+
 # Function for labeling variables and values
-label_df <- function(df, df_dict, df_vals) {
+label_df <- function(df, df_dict, df_vals = NULL) {
 
   # Turn variables to lowercase
   names(df) <- tolower(names(df))
   df_dict <- df_dict %>% mutate(varname_lc = tolower(varname))
-  df_vals <- df_vals %>% mutate(varname_lc = tolower(varname))
   
-  # Label values
-  for (i in 1:nrow(df_vals)) {
-    varname <- df_vals[[i, 'varname_lc']]
+  if (!is.null(df_vals)) {
+    df_vals <- df_vals %>% mutate(varname_lc = tolower(varname))
     
-    if (class(df[[varname]]) != 'haven_labelled') {
-      df[[varname]] <- as.character(df[[varname]])
+    # Label values
+    for (i in 1:nrow(df_vals)) {
+      varname <- df_vals[[i, 'varname_lc']]
+      
+      if (class(df[[varname]]) != 'haven_labelled') {
+        df[[varname]] <- as.character(df[[varname]])
+      }
+      
+      val_label(df[[varname]], df_vals[[i, 'codevalue']]) <- df_vals[[i, 'valuelabel']]
     }
-    
-    val_label(df[[varname]], df_vals[[i, 'codevalue']]) <- df_vals[[i, 'valuelabel']]
   }
   
   # Label variables
@@ -32,9 +38,9 @@ label_df <- function(df, df_dict, df_vals) {
 
 
 # Read in HD data and dictionary (7153 obs. of 72 variables)
-hd <- read.csv('./data/ipeds_hd2017.csv', header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character', 'OPEID' = 'character', 'FIPS' = 'character'))
-hd_dictionary <- read.csv('./data/ipeds_hd2017_dictionary.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
-hd_values <- read.csv('./data/ipeds_hd2017_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+hd <- read.csv(file.path(data_dir, 'ipeds_hd2017.csv'), header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character', 'OPEID' = 'character', 'FIPS' = 'character'))
+hd_dictionary <- read.csv(file.path(data_dir, 'ipeds_hd2017_dictionary.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+hd_values <- read.csv(file.path(data_dir, 'ipeds_hd2017_values.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
 
 hd <- label_df(hd, hd_dictionary, hd_values)
 
@@ -57,9 +63,9 @@ val_label(hd$region, 4) <- 'West'
 
 
 # Read in IC data and dictionary (6882 obs. of 121 variables)
-ic <- read.csv('./data/ipeds_ic2017_rv.csv', header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
-ic_dictionary <- read.csv('./data/ipeds_ic2017_dictionary.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
-ic_values <- read.csv('./data/ipeds_ic2017_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F,  colClasses = c('codevalue' = 'character'))
+ic <- read.csv(file.path(data_dir, 'ipeds_ic2017_rv.csv'), header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
+ic_dictionary <- read.csv(file.path(data_dir, 'ipeds_ic2017_dictionary.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+ic_values <- read.csv(file.path(data_dir, 'ipeds_ic2017_values.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F,  colClasses = c('codevalue' = 'character'))
 
 ic <- label_df(ic, ic_dictionary, ic_values)
 
@@ -89,9 +95,9 @@ ic <- ic %>% mutate(
 
 
 # Read in EF data and dictionary (127770 obs. of 65 variables)
-ef <- read.csv('./data/ipeds_ef2017a_rv.csv', header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
-ef_dictionary <- read.csv('./data/ipeds_ef2017a_dictionary.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
-ef_values <- read.csv('./data/ipeds_ef2017a_values.csv', header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F,  colClasses = c('codevalue' = 'character'))
+ef <- read.csv(file.path(data_dir, 'ipeds_ef2017a_rv.csv'), header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
+ef_dictionary <- read.csv(file.path(data_dir, 'ipeds_ef2017a_dictionary.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+ef_values <- read.csv(file.path(data_dir, 'ipeds_ef2017a_values.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F,  colClasses = c('codevalue' = 'character'))
 
 ef <- label_df(ef, ef_dictionary, ef_values)
 
@@ -123,9 +129,50 @@ ef <- ef %>% mutate(
 )
 
 
+# Read in ADM data and dictionary (2075 obs. of 68 variables)
+adm <- read.csv(file.path(data_dir, 'ipeds_adm2017_rv.csv'), header = TRUE, na.strings = c('', ' ', 'NA'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
+adm_dictionary <- read.csv(file.path(data_dir, 'ipeds_adm2017_dictionary.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+adm_values <- read.csv(file.path(data_dir, 'ipeds_adm2017_values.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F,  colClasses = c('codevalue' = 'character'))
+
+adm <- label_df(adm, adm_dictionary, adm_values)
+
+# Filter variables (39 remaining variables)
+adm <- adm %>% select(-starts_with('x'))
+
+# Add SAT composite variables
+adm <- adm %>% mutate(
+  satcm25 = satvr25 + satmt25,
+  satcm75 = satvr75 + satmt75
+)
+
+var_label(adm$satcm25) <- 'SAT Composite 25th percentile score'
+var_label(adm$satcm75) <- 'SAT Composite 75th percentile score'
+
+
+# Read in IC_AY data and dictionary (4281 obs. of 235 variables)
+ic_ay <- read.csv(file.path(data_dir, 'ipeds_ic2017_ay.csv'), header = TRUE, na.strings = c('', ' ', 'NA', '.'), stringsAsFactors = F,  colClasses = c('UNITID' = 'character'))
+ic_ay_dictionary <- read.csv(file.path(data_dir, 'ipeds_ic2017_ay_dictionary.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
+
+ic_ay <- label_df(ic_ay, ic_ay_dictionary)
+
+# Filter variables (121 remaining variables)
+ic_ay <- ic_ay %>% select(-starts_with('x'))
+
+# Add tuition + fee variables
+ic_ay <- ic_ay %>% mutate(
+  tuit_fees_instate = tuition2 + fee2,
+  tuit_fees_outstate = tuition3 + fee3
+)
+
+var_label(ic_ay$tuit_fees_instate) <- 'In-state average tuition + required fees for full-time undergraduates'
+var_label(ic_ay$tuit_fees_outstate) <- 'Out-of-state average tuition + required fees for full-time undergraduates'
+
+
 # Join tables
-ipeds <- left_join(hd, ic, by = 'unitid')
-ipeds <- left_join(ipeds, ef, by = 'unitid')
+ipeds <- left_join(hd, ic, by = 'unitid') %>% 
+  left_join(ef, by = 'unitid') %>% 
+  left_join(adm, by = 'unitid') %>% 
+  left_join(ic_ay, by = 'unitid')
 
 # Rename variables
 ipeds <- ipeds %>% rename(univ_id = 'unitid',
@@ -146,4 +193,4 @@ all(nchar(ipeds$zip_code) == 5)
 
 # Export data
 ipeds <- as_tibble(x = ipeds)
-saveRDS(ipeds, file = './data/ipeds_1718.RDS')
+saveRDS(ipeds, file = file.path(data_dir, 'ipeds_1718.RDS'))

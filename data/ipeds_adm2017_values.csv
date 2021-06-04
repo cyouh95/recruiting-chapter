@@ -1,0 +1,37 @@
+varnumber,varname,codevalue,valuelabel,frequency,percent
+10521,ADMCON1,1,Required,"1,557",75.04
+10521,ADMCON1,5,Considered but not required,59,2.84
+10521,ADMCON1,2,Recommended,193,9.3
+10521,ADMCON1,3,Neither required nor recommended,266,12.82
+10526,ADMCON2,1,Required,206,9.93
+10526,ADMCON2,5,Considered but not required,201,9.69
+10526,ADMCON2,2,Recommended,798,38.46
+10526,ADMCON2,3,Neither required nor recommended,870,41.93
+10531,ADMCON3,1,Required,"1,857",89.49
+10531,ADMCON3,5,Considered but not required,25,1.2
+10531,ADMCON3,2,Recommended,105,5.06
+10531,ADMCON3,3,Neither required nor recommended,88,4.24
+10536,ADMCON4,1,Required,622,29.98
+10536,ADMCON4,5,Considered but not required,73,3.52
+10536,ADMCON4,2,Recommended,821,39.57
+10536,ADMCON4,3,Neither required nor recommended,559,26.94
+10541,ADMCON5,1,Required,818,39.42
+10541,ADMCON5,5,Considered but not required,118,5.69
+10541,ADMCON5,2,Recommended,400,19.28
+10541,ADMCON5,3,Neither required nor recommended,739,35.61
+10546,ADMCON6,1,Required,223,10.75
+10546,ADMCON6,5,Considered but not required,70,3.37
+10546,ADMCON6,2,Recommended,259,12.48
+10546,ADMCON6,3,Neither required nor recommended,"1,523",73.4
+10551,ADMCON7,1,Required,"1,212",58.41
+10551,ADMCON7,5,Considered but not required,143,6.89
+10551,ADMCON7,2,Recommended,279,13.45
+10551,ADMCON7,3,Neither required nor recommended,441,21.25
+10556,ADMCON8,1,Required,"1,355",65.3
+10556,ADMCON8,5,Considered but not required,53,2.55
+10556,ADMCON8,2,Recommended,235,11.33
+10556,ADMCON8,3,Neither required nor recommended,432,20.82
+10559,ADMCON9,1,Required,261,12.58
+10559,ADMCON9,5,Considered but not required,22,1.06
+10559,ADMCON9,2,Recommended,64,3.08
+10559,ADMCON9,3,Neither required nor recommended,"1,728",83.28
