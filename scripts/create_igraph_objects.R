@@ -26,8 +26,14 @@ rm(events_data_marquette,events_data_temp1)
 
 # University data from IPEDS
 univ_data <- readRDS('./data/ipeds_1718.RDS')
+univ_ipeds <- read.csv('./data/ipeds_data.csv', header = TRUE, na.strings = c('', 'NULL', 'NA'), stringsAsFactors = FALSE, colClasses = c('unitid' = 'character')) %>% as_tibble() %>%
+  filter(endyear == 2017)
 univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble() %>% 
   filter(!(univ_id %in% c('168218','199193','110653','149222')))  # Wellesley, NCSU, UCI, SIU-Carbondale
+
+# Public HS data from CCD
+pubhs_data_1718 <- readRDS('./data/ccd_1718.RDS')
+pubhs_data_1415 <- read.csv('./data/meta_high_school_public.csv', header = TRUE, na.strings = c('', 'NA', 'NULL'), stringsAsFactors = FALSE, colClasses = c('ncessch' = 'character'))  # original set used for merging
 
 # Private HS data from PSS
 privhs_data_1718 <- readRDS('./data/pss_1718.RDS')
@@ -51,13 +57,45 @@ usnews_data <- read.csv('./data/usnews_rankings.csv', header = TRUE, na.strings 
 ## PREP DATA
 ## ----------
 
-# Focus on private HS visits by the univs
-    # Exclude mismatched HS: events matched to some private school ID are merged wrong - event is not at private HS (ie. at public HS)
-# Final univ sample: 15 public research, 14 private nationals, 12 private liberal arts
-privhs_events <- events_data %>%
-  filter(event_type == 'priv_hs', !(pid %in% c(55696, 44420, 43964, 30678, 25278, 27707, 52235, 32037, 34938, 82251, 43944, 46788, 84552, 64238, 25637, 63281, 68942, 44224, 24830)), !(school_id %in% c('00299041', 'A0109336', 'A0701311', 'A0702146', 'A0901459', 'A1192055', 'A1303450', 'A9101558', 'A9101599', 'A9105352', 'A9300600', 'BB060710', 'BB161076'))) %>%
-  select(univ_id, univ_state, event_type, school_id, event_location_name, event_city, event_state)
+# Add overrides for miscategorized events
+# View(events_data %>% filter(!(pid %in% c(55696, 44420, 43964, 30678, 25278, 27707, 52235, 32037, 34938, 82251, 43944, 46788, 84552, 64238, 25637, 63281, 68942, 44224, 24830)) | !(school_id %in% c('00299041', 'A0109336', 'A0701311', 'A0702146', 'A0901459', 'A1192055', 'A1303450', 'A9101558', 'A9101599', 'A9105352', 'A9300600', 'BB060710', 'BB161076'))))
+table(events_data$event_type, useNA = 'always')
 
+events_data$event_type[events_data$pid %in% c(55696, 44420, 43964, 30678, 25278, 27707, 32037, 82251, 46788, 63281, 68942, 24830, 33944) | events_data$school_id %in% c('00299041', 'A0109336', 'A0701311', 'A0901459', 'A1303450', 'A9101599', 'A9300600')] <- 'pub_hs'
+events_data$school_id[events_data$pid == 55696] <- '340126002704'  # Bayonne High School
+events_data$school_id[events_data$pid == 44420] <- '170993006467'  # Acero Chtr Netrk - Major Garcia
+events_data$school_id[events_data$pid == 43964] <- '170993006454'  # Noble St Chtr-hansberry Prep Slvr
+events_data$school_id[events_data$pid == 30678] <- '220117000939'  # Mcdonogh #35 College Preparatory School
+events_data$school_id[events_data$pid == 25278] <- '340840003152'  # Lawrence High School
+events_data$school_id[events_data$pid == 27707] <- '080002006437'  # Thomas Maclaren State Charter School
+events_data$school_id[events_data$pid == 32037] <- '069100514059'  # Contra Costa School Of Performing Arts
+events_data$school_id[events_data$pid == 82251] <- '080687001171'  # Telluride High School
+events_data$school_id[events_data$pid == 46788] <- '420006100503'  # Philadelphia Academy Cs
+events_data$school_id[events_data$pid == 63281] <- '481134000612'  # Bridgeport H S
+events_data$school_id[events_data$pid == 68942] <- '450390101620'  # Green Charter School
+events_data$school_id[events_data$pid == 24830] <- '422109006413'  # Scranton HS
+events_data$school_id[events_data$pid == 33944] <- '401059000474'  # Memorial HS
+events_data$school_id[events_data$school_id == '00299041'] <- '130012004145'  # Atlanta Classical Academy
+events_data$school_id[events_data$school_id == 'A0109336'] <- '481527013128'  # Veterans Memorial H S
+events_data$school_id[events_data$school_id == 'A0701311'] <- '251143001887'  # Swampscott High
+events_data$school_id[events_data$school_id == 'A0901459'] <- '170993006499'  # Noble St Chtr Rauner College Prep
+events_data$school_id[events_data$school_id == 'A1303450'] <- '482364002483'  # Debakey H S For Health Prof
+events_data$school_id[events_data$school_id == 'A9101599'] <- '080336006441'  # VENTURE PREP HIGH SCHOOL
+events_data$school_id[events_data$school_id == 'A9300600'] <- '340075103180'  # Great Oaks Legacy Charter School
+
+events_data$event_type[events_data$school_id == 'A9101558'] <- 'pub_4yr'
+events_data$ipeds_id[events_data$school_id == 'A9101558'] <- '126775'  # Colorado School of Mines
+
+events_data$event_type[events_data$pid %in% c(52235, 43944, 84552, 64238) | events_data$school_id == 'BB161076'] <- 'other'  # non-profit org, outreach program, etc.
+events_data$school_id[events_data$pid %in% c(52235, 43944, 84552, 64238) | events_data$school_id %in% c('BB161076', 'A9101558')] <- NA
+
+events_data <- events_data %>% filter(!(pid %in% c(34938, 44224, 33941, 25637)), !(school_id %in% c('A0702146', 'A1192055', 'BB060710')))  # private HS w/ no NCES ID
+table(events_data$event_type, useNA = 'always')
+
+
+# Clean up events data (drop visits to HS not meeting criteria - 45533 to 41054 obs)
+events_df <- events_data %>% 
+  select(univ_id, univ_state, event_type, school_id, event_state, event_loc)
 
 # Override school_id with updated 2017-18 PSS ID
 get_pss_override <- function(x) {
@@ -66,11 +104,11 @@ get_pss_override <- function(x) {
 }
 v_get_pss_override <- Vectorize(get_pss_override, USE.NAMES = FALSE)
 
-privhs_events <- privhs_events %>% mutate(school_id = v_get_pss_override(school_id))
+events_df <- events_df %>% mutate(school_id = v_get_pss_override(school_id))
 
 
 # Combine 2017-18 PSS data w/ past years as needed
-pss_missing_ncessch <- setdiff(privhs_events$school_id, privhs_data_1718$ncessch)
+pss_missing_ncessch <- setdiff(events_df$school_id[events_df$event_type == 'priv_hs'], privhs_data_1718$ncessch)
 pss_1516_ncessch <- privhs_data_1516[privhs_data_1516$ncessch %in% pss_missing_ncessch, ]$ncessch
 pss_1314_ncessch <- setdiff(pss_missing_ncessch, pss_1516_ncessch)
 
@@ -80,7 +118,7 @@ privhs_data <- privhs_data_1718 %>%
 
 
 # Verify no unmerged pss id
-setdiff(privhs_events$school_id, privhs_data$ncessch)
+setdiff(events_df$school_id[events_df$event_type == 'priv_hs'], privhs_data$ncessch)
 
 # Criteria for private HS to be included in our analysis is 12th grade enrollment of 10 or more (we're no longer restricting by school type)
 # This is the universe of private HS in our analysis (23184 to 4439 obs) - all 2017-18 schools + any previous year's schools that were visited
@@ -89,8 +127,48 @@ privhs_data <- privhs_data %>% filter(total_12 >= 10)
 privhs_data %>% group_by(year) %>% count()  # 4168 from 2017-18, 116 from 2015-16, 155 from 2013-14
 
 
-# Filter privhs_events to only ones in universe privhs_data that met criteria (13880 to 13459 obs)
-privhs_events <- privhs_events %>% filter(school_id %in% privhs_data$ncessch)
+# Filter private HS events to only ones that meet criteria (13880 to 13459 obs)
+events_df <- events_df %>% filter(event_type != 'priv_hs' | school_id %in% privhs_data$ncessch)
+table(events_df$event_type, useNA = 'always')
+
+
+# Determine public HS that meet criteria (use 2017-18 if available, otherwise original 2014-15 dataset)
+ccd_missing_ncessch <- setdiff(events_df$school_id[events_df$event_type == 'pub_hs'], pubhs_data_1718$ncessch)
+ccd_meet_criteria_1718 <- pubhs_data_1718 %>%
+  filter(g_12_offered == 'Yes', g12 >= 10, virtual %in% c('NOTVIRTUAL', 'SUPPVIRTUAL'), fipst < 60, updated_status %in% c('1', '3', '8')) %>% 
+  mutate(year = '1718') %>% 
+  select(year, ncessch, state_code, g12)
+
+# Verify no unmerged ccd id
+setdiff(ccd_missing_ncessch, pubhs_data_1415$ncessch)
+ccd_meet_criteria_1415 <- pubhs_data_1415 %>%
+  filter(g12offered == 1, g12 >= 10, virtual == 0, state_fips_code < 60, updated_status %in% c(1, 3, 8)) %>% 
+  mutate(year = '1415') %>% 
+  select(year, ncessch, state_code, g12)
+
+# Universe of public HS meeting criteria (20809 obs)
+pubhs_data <- ccd_meet_criteria_1718 %>%
+  dplyr::union(ccd_meet_criteria_1415 %>% filter(ncessch %in% ccd_missing_ncessch))
+rm(ccd_meet_criteria_1718, ccd_meet_criteria_1415)
+
+pubhs_data %>% group_by(year) %>% count()  # 20756 from 2017-18, 53 from 2014-15
+
+# Filter public HS events to only ones that meet criteria (24397 to 23945 obs)
+events_df <- events_df %>% filter(event_type != 'pub_hs' | school_id %in% pubhs_data$ncessch)
+table(events_df$event_type, useNA = 'always')
+
+
+# Save dataframes
+saveRDS(pubhs_data, file = str_c('./data/pubhs_universe.RDS'))
+saveRDS(events_df %>% left_join(univ_info %>% select(univ_id, univ_abbrev, classification), by ='univ_id'), file = str_c('./data/events_data.RDS'))
+
+
+
+# Focus on private HS visits by the univs
+# Final univ sample: 15 public research, 14 private nationals, 12 private liberal arts
+privhs_events <- events_df %>%
+  filter(event_type == 'priv_hs')
+
 
 
 # Add ranking from Niche data
@@ -108,28 +186,17 @@ niche_df <- niche_data %>% mutate(overall_niche_letter_grade = case_when(
 ))
 
 # Universe of private HS - NCES data + Niche data
-privhs_universe <- privhs_data %>% left_join(dplyr::union(
-  niche_df %>% select(ncessch, overall_niche_letter_grade, rank_within_category),
-  niche_overrides %>% left_join(niche_df %>% select(guid, overall_niche_letter_grade, rank_within_category), by = 'guid') %>% select(-guid)
-), by = 'ncessch'
-)
+privhs_df <- privhs_data %>% left_join(dplyr::union(
+    niche_df %>% select(ncessch, overall_niche_letter_grade, rank_within_category),
+    niche_overrides %>% left_join(niche_df %>% select(guid, overall_niche_letter_grade, rank_within_category), by = 'guid') %>% select(-guid)
+  ), by = 'ncessch'
+  ) %>%
+  mutate(type = 'priv hs', control = 'private')
+
 
 # All NA/unmerged Niche data were checked and manually added if available. There are 33 known true NA's
-table((privhs_universe %>% filter(ncessch %in% privhs_events$school_id))$overall_niche_letter_grade, useNA = 'always')
+table((privhs_df %>% filter(ncessch %in% privhs_events$school_id))$overall_niche_letter_grade, useNA = 'always')
 
-
-
-# Select variables of interest from univ data
-get_abbrev <- function(x, y) {
-  univ_abbrev <- univ_info[univ_info$univ_id == x, ]$univ_abbrev
-  ifelse(length(univ_abbrev) == 0, y, univ_abbrev)
-}
-v_get_abbrev <- Vectorize(get_abbrev, USE.NAMES = FALSE)
-
-univ_universe <- univ_data %>%
-  mutate(univ_abbrev = v_get_abbrev(univ_id, univ_name)) %>% 
-  select(-control)
-univ_universe$state_code <- as.character(univ_universe$state_code)
 
 # Add ranking from US News & World Report data
 usnews_df <- usnews_data %>%
@@ -138,19 +205,39 @@ usnews_df <- usnews_data %>%
                        'national-universities' = 'univ'
                        )) %>%
   select(univ_id, type, control, score_text, rank)
-univ_universe <- univ_universe %>% left_join(usnews_df, by = 'univ_id')
 
-saveRDS(univ_info %>% select(univ_id, classification) %>% left_join(univ_universe), file = str_c('./data/univ_sample.RDS'))
+# Create variables from IPEDS data
+univ_ipeds <- univ_ipeds %>% 
+  mutate(
+    pgrnt_p = pgrnt_n / cohortsfaef * 100,
+    pctfreshwh = ugftptfreshwhmf / ugftptfreshtot * 100,
+    pctfreshbl = ugftptfreshblmf / ugftptfreshtot * 100,
+    pctfreshap = ugftptfreshapmf / ugftptfreshtot * 100,  # ap = as + nh
+    pctfreshhi = ugftptfreshhimf / ugftptfreshtot * 100,
+    pctfreshal = ugftptfreshalmf / ugftptfreshtot * 100,
+    pctfreshmr = ugftptfreshmrmf / ugftptfreshtot * 100,
+    pctfreshna = ugftptfreshnamf / ugftptfreshtot * 100,
+    pctfreshun = ugftptfreshunmf / ugftptfreshtot * 100,
+    pctfreshas = ugftptfreshasmf / ugftptfreshtot * 100,
+    pctfreshnh = ugftptfreshnhmf / ugftptfreshtot * 100
+  )
+
+# Sample of universities - IPEDS data + USNWR data
+univ_df <- univ_info %>% select(univ_id, univ_abbrev, classification, state_code) %>%
+  left_join(univ_data %>% select(-control, -state_code), by = 'univ_id') %>% 
+  left_join(univ_ipeds %>% select(-locale, -sector), by = c('univ_id' = 'unitid')) %>% 
+  left_join(usnews_df, by = 'univ_id')
+
+saveRDS(univ_df, file = str_c('./data/univ_sample.RDS'))
 
 
-# Select variables of interest from private HS data to build attributes_df
-privhs_df <- privhs_universe %>%
-  mutate(type = 'priv hs', control = 'private') %>%
+# Select variables of interest from private HS universe data to build attributes_df
+privhs_df <- privhs_df %>%
   select(ncessch, name, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, total_12, type, control, overall_niche_letter_grade, rank_within_category)
 
 # Select variables of interest from univ sample data to build attributes_df
-univ_df <- univ_universe %>%
-  select(univ_id, univ_abbrev, city, state_code, region, religion, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces, eftotlt, type, control, score_text, rank)
+univ_df <- univ_df %>%
+  select(univ_id, univ_abbrev, city, state_code, region, religion, pctfreshwh, pctfreshbl, pctfreshhi, pctfreshap, pctfreshna, pctfreshnh, pctfreshmr, ugftptfreshtot, type, control, score_text, rank)
 
 # Create attributes_df
 var_names <- c('school_id', 'school_name', 'city', 'state_code', 'region', 'religion', 'pct_white', 'pct_black', 'pct_hispanic', 'pct_asian', 'pct_amerindian', 'pct_nativehawaii', 'pct_tworaces', 'enroll', 'school_type', 'control', 'ranking', 'ranking_numeric')
@@ -649,12 +736,12 @@ for(v in list_temp) {
 
 
 #egos_hs
-egos_hs[[1]] %>% class()
-E(egos_hs[[1]])$order
-privhs_vec
-
-egos_psi_priv %>% length()
-egos_psi_priv[[1]]
-egos_psi_priv[1]
+# egos_hs[[1]] %>% class()
+# E(egos_hs[[1]])$order
+# privhs_vec
+# 
+# egos_psi_priv %>% length()
+# egos_psi_priv[[1]]
+# egos_psi_priv[1]
 
 
