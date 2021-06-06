@@ -36,7 +36,7 @@ getwd()
 setwd("/Users/irmacastaneda/Documents/UCLA/GSR/recruiting-chapter")
 
 #Loading Data; Starting with public high school data
-hs_directory <- read.csv('./data/ccd_school_directory_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = "character", 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'LEA_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 
+hs_directory <- read.csv('./data/archive/ccd_school_directory_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = "character", 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'LEA_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 
                                                                                                                       'MSTREET1' = 'character', 'MSTREET2' = 'character', 'MSTREET3' = 'character', 'MCITY' = 'character', 'MSTATE' = 'character', 'MZIP' = 'character', 'MZIP4' = 'character', 'LSTREET1' = 'character', 'LSTREET2' = 'character', 'LSTREET3'= 'character', 'LCITY' = 'character', 'LSTATE' = 'character', 'LZIP' = 'character', 'LZIP4' = 'character',
                                                                                                                       'PHONE' = 'character','WEBSITE' = 'character','SY_STATUS' = 'character', 'SY_STATUS_TEXT' = 'character', 'UPDATED_STATUS' = 'character', 'UPDATED_STATUS_TEXT' = 'character', 'EFFECTIVE_DATE' = 'character', 'SCH_TYPE' = 'character', 'SCH_TYPE_TEXT' = 'character', 'RECON_STATUS' = 'character', 'OUT_OF_STATE_FLAG' = 'character',  
                                                                                                                       'CHARTER_TEXT' = 'character','CHARTAUTH1' = 'character', 'CHARTAUTHN1' = 'character', 'CHARTAUTH2' = 'character', 'CHARTAUTHN2' = 'character', 'G_9_OFFERED' = 'character', 'G_10_OFFERED' = 'character', 'G_11_OFFERED' = 'character', 'G_12_OFFERED' = 'character', 'G_13_OFFERED'= 'character', 'LEVEL' = 'character', 'GSLO' = 'character', 'GSHI' = 'character'))
@@ -59,7 +59,7 @@ hs_directory %>% arrange(ncessch, sch_name, school_year, sy_status, sch_type, g_
 
 ##Labeling variables 
 #Importing data dictionary
-hs_dictionary <- read.csv('./data/ccd_school_directory_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
+hs_dictionary <- read.csv('./data/archive/ccd_school_directory_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
 hs_direct_dict <- hs_dictionary %>% select(Variable.Name, Description)
 
 #Lowercase variable names in dictionary
@@ -288,7 +288,7 @@ for(i in names(hs_directory)) {
 
 
 ##Loading & investigating data: CCD School Characteristics Data for 2017-2018
-hs_character<- read.csv('./data/ccd_school_characteristics_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character',
+hs_character<- read.csv('./data/archive/ccd_school_characteristics_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character',
                                                                                                                            'SHARED_TIME' = 'character', 'TITLEI_STATUS' = 'character', 'TITLEI_STATUS_TEXT' = 'character', 'MAGNET_TEXT' = 'character', 'NSLP_STATUS' = 'character', 'NSLP_STATUS_TEXT' = 'character', 'VIRTUAL' = 'character', 'VIRTUAL_TEXT' = 'character'))
 str(hs_character) # structure of the data frame
 
@@ -304,7 +304,7 @@ hs_character %>% arrange(ncessch, sch_name, school_year, titlei_status, nslp_sta
 
 ##Labeling variables 
 #Importing data dictionary
-hs_character_dictionary <- read.csv('./data/ccd_school_characteristics_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
+hs_character_dictionary <- read.csv('./data/archive/ccd_school_characteristics_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
 hs_character_dict_subset <- hs_character_dictionary %>% select(Variable.Name, Description)
 
 #Lowercase variable names in dictionary
@@ -408,7 +408,7 @@ for(i in names(hs_character)) {
 #union: 97,438 missing
 
 ##Loading & investigating data: CCD School Lunch Program Eligibility Data for 2017-2018
-hs_lunch <- read.csv('./data/ccd_school_lunch_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character',  
+hs_lunch <- read.csv('./data/archive/ccd_school_lunch_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character',  
                                                                                                               'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character','DATA_GROUP' = 'character', 'LUNCH_PROGRAM' = 'character', 'STUDENT_COUNT' = 'integer', 'TOTAL_INDICATOR' = 'character', 'DMS_FLAG' = 'character'))
 
 #Investigate the data & data frame
@@ -426,7 +426,7 @@ hs_lunch %>% arrange(ncessch, sch_name, school_year, data_group, lunch_program, 
 
 ##Labeling variables 
 #Importing data dictionary
-hs_lunch_dictionary <- read.csv('./data/ccd_school_lunch_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
+hs_lunch_dictionary <- read.csv('./data/archive/ccd_school_lunch_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
 hs_lunch_dict_subset <- hs_lunch_dictionary %>% select(Variable.Name, Description)
 
 #Lowercase variable names in dictionary
@@ -546,7 +546,7 @@ hs_lunch <- hs_lunch %>% rename(
 hs_lunch$free_reduced_lunch <- rowSums(hs_lunch[,c('free_lunch','reduced_lunch')], na.rm = TRUE)
 
 ##Loading & investigating data: CCD School Membership Data for 2017-2018
-hs_membership <- read.csv('./data/ccd_school_membership_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'GRADE' = 'character', 'RACE_ETHNICITY' = 'character', 'SEX' = 'character', 'TOTAL_INDICATOR' = 'character', 'DMS_FLAG' = 'character'))
+hs_membership <- read.csv('./data/archive/ccd_school_membership_1718.csv', header = TRUE, na.strings=c("","NA"), colClasses = c('SCHOOL_YEAR' = 'character', 'FIPST' = 'character', 'STATENAME' = 'character', 'ST' = 'character', 'SCH_NAME' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character', 'ST_LEAID' = 'character', 'LEAID' = 'character', 'ST_SCHID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'GRADE' = 'character', 'RACE_ETHNICITY' = 'character', 'SEX' = 'character', 'TOTAL_INDICATOR' = 'character', 'DMS_FLAG' = 'character'))
 
 #Investigate the data & data frame
 str(hs_membership) # structure of the data frame
@@ -564,7 +564,7 @@ hs_membership %>% arrange(school_year,sch_name, ncessch, race_ethnicity, sex) %>
 
 ##Labeling variables 
 #Importing data dictionary
-hs_membership_dict <- read.csv('./data/ccd_school_membership_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
+hs_membership_dict <- read.csv('./data/archive/ccd_school_membership_dictionary_1718.csv', header = TRUE, na.strings=c("","NA")) #na.strings converts empty strings to NA value    
 hs_membership_dict_subset <- hs_membership_dict %>% select(Variable.Name, Description)
 
 #Lowercase variable names in dictionary
