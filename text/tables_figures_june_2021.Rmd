@@ -1,0 +1,172 @@
+---
+title: 'Recruiting Chapter'
+author: 
+  - Ozan Jaquette
+  - Crystal Han
+  - Irma Castaneda
+bibliography: ./../other/burd_recruiting_chapter.bib
+output: 
+  bookdown::pdf_document2:
+    toc: FALSE
+csl: ./../other/apa.csl
+urlcolor: blue
+header-includes:
+  - \usepackage{pdflscape}
+  - \usepackage{geometry}
+  - \usepackage{floatrow}
+  - \floatsetup{capposition=top}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(bookdown)
+
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_pdf.pdf
+library(kableExtra)
+library(tidyverse)
+library(gridExtra)
+library(scales)
+
+knitr::opts_chunk$set(echo = F, message = F)
+
+data_dir <- file.path('..', 'data')
+tables_dir <- file.path('..', 'assets', 'tables')
+figures_dir <- file.path('..', 'assets', 'figures')
+
+univ_sample_df <- readRDS(file.path(data_dir, 'univ_sample.RDS')) %>%
+  arrange(desc(classification), rank)
+events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+
+pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+```
+
+
+# University characteristics
+
+```{r}
+univ_sample <- univ_sample_df %>% 
+  select(classification, univ_abbrev, rank, satactcomp25, satactcomp75, tfuginst, tfugoutst, ugftptfreshtot, freshoutstpct, pgrnt_p, pctfreshwh, pctfreshbl, pctfreshap, pctfreshhi, pctfreshal)
+
+kable(univ_sample %>% arrange(desc(classification), rank)) %>%
+  collapse_rows(columns = 1, latex_hline = 'major', valign = 'middle') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+# RQ1
+
+```{r}
+events_count <- events_df %>%
+  mutate(event_type = case_when(
+    event_type %in% c('pub_hs', 'priv_hs') ~ event_type,
+    event_type == 'cc' & event_loc == 'instate' ~ event_type,
+    TRUE ~ 'other'
+  )) %>%
+  select(univ_abbrev, event_loc, event_type) %>% 
+  group_by(univ_abbrev, event_loc, event_type) %>% 
+  summarise(count = n())
+
+kable(events_count[order(match(events_count$univ_abbrev, univ_sample_df$univ_abbrev)), ], longtable = TRUE) %>%
+  kable_styling(font_size = 7.1, latex_options = c('repeat_header'))
+```
+
+
+## Number of events by type, in-state vs. out-of-state
+
+- `events_count_pubu.pdf`
+- `events_count_privu.pdf`
+- `events_count_privc.pdf`
+
+```{r}
+include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
+include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
+include_graphics(file.path(figures_dir, 'events_count_privc.pdf'))
+```
+
+\newpage
+
+## Number of events by public vs. private HS
+
+- `events_hs_count_pubu.pdf`
+- `events_hs_count_privu.pdf`
+- `events_hs_count_privc.pdf`
+
+```{r}
+include_graphics(file.path(figures_dir, 'events_hs_count_pubu.pdf'))
+include_graphics(file.path(figures_dir, 'events_hs_count_privu.pdf'))
+include_graphics(file.path(figures_dir, 'events_hs_count_privc.pdf'))
+```
+
+\newpage
+
+## Actual vs. proportional visited HS
+
+- Below shows actual/proportional numbers for all vs. out-of-state HS visited
+- Numbers differ from above plots because above shows event counts (some HS can be visited multiple times) whereas below numbers count each HS once (no matter how many times they're visited)
+- % private is generally higher for out-of-state. If we include all HS (both in and out) the % actual private is usually lowered, as seen below
+
+
+```{r}
+for (i in 1:nrow(univ_sample_df)) {
+  print(univ_sample_df[[i, 'univ_abbrev']])
+  uid <- univ_sample_df[[i, 'univ_id']]
+  ust <- univ_sample_df[[i, 'state_code']]
+  
+  visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
+  visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
+  universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
+  
+  visited_pub_state_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$state_code %>% unique()
+  visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
+  universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
+  
+  visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
+  visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
+  universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
+  
+  visited_priv_state_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$state_code %>% unique()
+  visited_priv_hs_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$school_id %>% unique()
+  universe_priv_hs_out <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state_out))$school_id %>% unique()
+  
+  visited_hs <- c(visited_pub_hs, visited_priv_hs)
+  visited_hs_out <- c(visited_pub_hs_out, visited_priv_hs_out)
+  
+  universe_hs <- c(universe_pub_hs, universe_priv_hs)
+  universe_hs_out <- c(universe_pub_hs_out, universe_priv_hs_out)
+  
+  writeLines(str_c('Total HS visited (unique): ', length(visited_hs)))
+  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs) / length(visited_hs) * 100, 1)))
+  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs) / length(universe_hs) * 100, 1)))
+  
+  writeLines(str_c('Total out-of-state HS visited (unique): ', length(visited_hs_out)))
+  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs_out) / length(visited_hs_out) * 100, 1)))
+  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs_out) / length(universe_hs_out) * 100, 1)))
+}
+```
+
+\newpage
+
+# RQ2
+
+## Characteristics of visited private HS
+
+- `ego_network_region_pubu_privu_privc.pdf`
+- `ego_network_religion_pubu_privu_privc.pdf`
+- `ego_network_race_pubu_privu_privc.pdf`
+- `ego_network_rank_pubu_privu_privc.pdf`
+- `ego_network_enroll_pubu_privu_privc.pdf`
+
+```{r}
+include_graphics(file.path(figures_dir, 'ego_network_region_pubu_privu_privc.pdf'))
+include_graphics(file.path(figures_dir, 'ego_network_religion_pubu_privu_privc.pdf'))
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu_privc.pdf'))
+include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu_privc.pdf'))
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu_privc.pdf'))
+```
+
+
+\newpage
+
+# RQ3
+

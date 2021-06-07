@@ -2,10 +2,12 @@ library(tidyverse)
 library(gridExtra)
 
 
+# File paths
 data_dir <- file.path('.', 'data')
 tables_dir <- file.path('.', 'assets', 'tables')
 figures_dir <- file.path('.', 'assets', 'figures')
 
+# Characteristic variables
 region_values <- c('northeast', 'midwest', 'south', 'west')
 region_keys <- c('Northeast', 'Midwest', 'South', 'West')
 region_title <- 'Region'
@@ -36,13 +38,18 @@ var_labels <- c(region_title, religion_title, race_title, ranking_title, enroll_
 var_values <- list(region_values, religion_values, race_values, ranking_values, enroll_values)
 var_keys <- list(region_keys, religion_keys, race_keys, ranking_keys, enroll_keys)
 
+# Load data
+univ_sample_df <- readRDS(file.path(data_dir, 'univ_sample.RDS')) %>% arrange(desc(classification), rank)
 
-## ------------------------------
-## PLOT USING EGO IGRAPH OBJECTS
-## ------------------------------
+univ_public_research <- (univ_sample_df %>% filter(classification == 'public_research'))$univ_abbrev
+univ_private_national <- (univ_sample_df %>% filter(classification == 'private_national'))$univ_abbrev
+univ_private_libarts <- (univ_sample_df %>% filter(classification == 'private_libarts'))$univ_abbrev
 
-universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
-visited_df <- readRDS(file.path(data_dir, 'privhs_visited.RDS'))
+pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+
+privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+privhs_visited_df <- readRDS(file.path(data_dir, 'privhs_visited.RDS'))
 
 ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>% 
   mutate(
@@ -54,16 +61,195 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
   )
 
 
+## -------------------
+## SAVE PLOT FUNCTION
+## -------------------
+
+# FUNCTION: save_plot(graph_object, plot_name, <paper>, <mar>, <mai>)
+# graph_object: call function that plots the graph
+# plot_name: name of file with extension
+# paper: paper type (default: a4r)
+# mar: margin in lines (default: c(0, 0, 0, 0))
+# mai: margin in inches (default: c(0, 0, 0, 0))
+
+save_plot <- function(graph_object, plot_name, paper = 'a4r', mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0)) {
+  
+  pdf(file.path(figures_dir, plot_name), paper = paper)
+  par(mfrow = c(1, 1))
+  par(mar = mar + 0.1, mai = mai)
+  
+  print(graph_object)
+  
+  dev.off()
+}
+
+
+## --------------------------------------
+## NUMBER OF EVENTS BY TYPE AND LOCATION
+## --------------------------------------
+
+events_count <- events_df %>%
+  mutate(event_type = case_when(
+    event_type %in% c('pub_hs', 'priv_hs') ~ event_type,
+    event_type == 'cc' & event_loc == 'instate' ~ event_type,
+    TRUE ~ 'other'
+  )) %>%
+  select(univ_abbrev, event_loc, event_type) %>% 
+  group_by(univ_abbrev, event_loc, event_type) %>% 
+  summarise(count = n())
+
+# View(events_count[order(match(events_count$univ_abbrev, univ_sample_df$univ_abbrev)), ])
+
+events_count$event_type <- factor(events_count$event_type, levels = c('pub_hs', 'priv_hs', 'cc', 'other'))
+events_count$univ_abbrev <- factor(events_count$univ_abbrev, levels = rev(univ_sample_df$univ_abbrev))
+
+plot_event_count <- function(univ_sample, in_lim = 0, out_lim = 0, hjust = 0.1) {
+  sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
+  
+  ggplot(sub_events_count, aes(univ_abbrev)) +
+    geom_bar(data = subset(sub_events_count, event_loc == 'instate'), aes(y = -count, fill = event_type), stat = 'identity', position = position_stack(reverse = T), width = 0.5) +
+    geom_bar(data = subset(sub_events_count, event_loc == 'outofstate'), aes(y = count, fill = event_type), stat = 'identity', position = position_stack(reverse = T), width = 0.5) +
+    geom_hline(yintercept = 0, colour = 'grey90', linetype = 'dotted') +
+    geom_text(data = subset(sub_events_count, event_loc == 'instate'), aes(y = -count, label = format(abs(stat(y)), big.mark = ',')), stat = 'summary', fun = sum, hjust = 1.2, size = 3) +
+    geom_text(data = subset(sub_events_count, event_loc == 'outofstate'), aes(y = count, label = format(abs(stat(y)), big.mark = ',')), stat = 'summary', fun = sum, hjust = 0, size = 3) +
+    xlab('') + ylab('') + 
+    expand_limits(y = c(-in_lim, out_lim)) +
+    theme(
+      panel.background = element_blank(),
+      axis.text.x = element_blank(),
+      axis.ticks = element_blank(),
+      plot.subtitle = element_text(hjust = hjust, size = 10)
+    ) +
+    labs(subtitle = 'In-state                   Out-of-state') +
+    coord_flip()
+}
+
+
+save_plot(plot_event_count(univ_public_research, in_lim = 1500, out_lim = 4300, hjust = 0.17), 'events_count_pubu.pdf')
+save_plot(plot_event_count(univ_private_national, in_lim = 600, out_lim = 1350, hjust = 0.23), 'events_count_privu.pdf')
+save_plot(plot_event_count(univ_private_libarts, in_lim = 250, out_lim = 900), 'events_count_privc.pdf')
+
+
+## --------------------------------------
+## NUMBER OF PUBLIC VS PRIVATE HS VISITS
+## --------------------------------------
+
+plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
+  sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
+  sub_events_count$univ_abbrev <- factor(sub_events_count$univ_abbrev, levels = rev(univ_sample))
+  
+  sub_events_instate <- subset(sub_events_count, event_loc == 'instate' & event_type %in% c('pub_hs', 'priv_hs'))
+  sub_events_outofstate <- subset(sub_events_count, event_loc == 'outofstate' & event_type %in% c('pub_hs', 'priv_hs'))
+  
+  sub_events_instate_pct <- sub_events_instate %>%
+    pivot_wider(names_from = event_type, values_from = count) %>% 
+    mutate(
+      tot_hs = priv_hs + pub_hs,
+      pct_priv = round(priv_hs / tot_hs * 100, 1),
+      label_text = str_c(tot_hs, ' (', pct_priv, '% priv)')
+    )
+  
+  sub_events_outofstate_pct <- sub_events_outofstate %>%
+    pivot_wider(names_from = event_type, values_from = count) %>% 
+    mutate(
+      tot_hs = priv_hs + pub_hs,
+      pct_priv = round(priv_hs / tot_hs * 100, 1),
+      label_text = str_c(tot_hs, ' (', pct_priv, '% priv)')
+    )
+  
+  ggplot() +
+    geom_bar(data = sub_events_instate, 
+             mapping = aes(x = univ_abbrev, y = count, fill = event_type), 
+             stat = 'identity', 
+             position = 'stack', 
+             width = 0.35) +
+    geom_text(data = sub_events_instate_pct,
+              aes(x = univ_abbrev, y = tot_hs, label = label_text),
+              hjust = 0, size = 2.5) +
+    geom_bar(data = sub_events_outofstate, 
+             mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_type), 
+             stat = 'identity', 
+             position = 'stack', 
+             width = 0.35) +
+    geom_text(data = sub_events_outofstate_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs, label = label_text),
+              hjust = 0, size = 2.5) +
+    theme(
+      panel.background = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(vjust = vjust),
+      axis.ticks = element_blank()
+    ) +
+    xlab('') + ylab('') + 
+    expand_limits(y = c(0, out_lim)) +
+    coord_flip()
+}
+
+
+save_plot(plot_hs_count(univ_public_research, out_lim = 4000, vjust = 1.2), 'events_hs_count_pubu.pdf')
+save_plot(plot_hs_count(univ_private_national, out_lim = 1300), 'events_hs_count_privu.pdf')
+save_plot(plot_hs_count(univ_private_libarts, out_lim = 900, vjust = 1.6), 'events_hs_count_privc.pdf')
+
+
+## ------------------------------------------
+## ACTUAL VS PROPORTIONAL HIGH SCHOOL VISITS
+## ------------------------------------------
+
+table(events_df$univ_id)
+pubhs_universe_df %>% nrow()
+privhs_universe_df %>% nrow()
+
+for (i in 1:nrow(univ_sample_df)) {
+  print(univ_sample_df[[i, 'univ_abbrev']])
+  uid <- univ_sample_df[[i, 'univ_id']]
+  ust <- univ_sample_df[[i, 'state_code']]
+  
+  visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
+  visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
+  universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
+  
+  visited_pub_state_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$state_code %>% unique()
+  visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
+  universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
+  
+  visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
+  visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
+  universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
+  
+  visited_priv_state_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$state_code %>% unique()
+  visited_priv_hs_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$school_id %>% unique()
+  universe_priv_hs_out <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state_out))$school_id %>% unique()
+  
+  visited_hs <- c(visited_pub_hs, visited_priv_hs)
+  visited_hs_out <- c(visited_pub_hs_out, visited_priv_hs_out)
+  
+  universe_hs <- c(universe_pub_hs, universe_priv_hs)
+  universe_hs_out <- c(universe_pub_hs_out, universe_priv_hs_out)
+  
+  writeLines(str_c('Total HS visited (unique): ', length(visited_hs)))
+  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs) / length(visited_hs) * 100, 1)))
+  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs) / length(universe_hs) * 100, 1)))
+  
+  writeLines(str_c('Total out-of-state HS visited (unique): ', length(visited_hs_out)))
+  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs_out) / length(visited_hs_out) * 100, 1)))
+  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs_out) / length(universe_hs_out) * 100, 1)))
+}
+
+
+## ------------------------------------------------------
+## CHARACTERISTICS OF PRIVATE HS VISITED BY UNIVERSITIES
+## ------------------------------------------------------
+
 plot_characteristic <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
   
-  sub_df_visited <- visited_df %>% group_by(get(var_name)) %>% 
+  sub_df_visited <- privhs_visited_df %>% group_by(get(var_name)) %>% 
     summarize(`Private HS, 1+ visit` = n()) %>% 
     pivot_longer(cols = 'Private HS, 1+ visit',
                  names_to = 'universe',
                  values_to = 'value')
   names(sub_df_visited) <- c('key', 'univ_name', 'value')
   
-  sub_df_universe <- universe_df %>% group_by(get(var_name)) %>% 
+  sub_df_universe <- privhs_universe_df %>% group_by(get(var_name)) %>% 
     summarize(`Private HS, universe` = n()) %>% 
     pivot_longer(cols = 'Private HS, universe',
                  names_to = 'universe',
@@ -122,7 +308,7 @@ for (i in seq_along(plot_types)) {
   
   # pubu + privu + privc
   pdf(file.path(figures_dir, str_c('ego_network_', plot_types[[i]], '_pubu_privu_privc.pdf')))
-  par(mar=c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+  par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
   grid.arrange(a, b, c, nrow = 3, ncol = 1)
   dev.off()
   
@@ -132,3 +318,6 @@ for (i in seq_along(plot_types)) {
   grid.arrange(a, b, nrow = 2, ncol = 1)
   dev.off()
 }
+
+
+
