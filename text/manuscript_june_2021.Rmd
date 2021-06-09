@@ -33,6 +33,8 @@ library(scales)
 
 knitr::opts_chunk$set(echo = F, message = F)
 
+knitr::knit_hooks$set(inline = function(x) {   if(!is.numeric(x)){     x   }else{    prettyNum(round(x,2), big.mark=",")    } })
+
 data_dir <- file.path('..', 'data')
 tables_dir <- file.path('..', 'assets', 'tables')
 figures_dir <- file.path('..', 'assets', 'figures')
@@ -186,7 +188,10 @@ A common finding in social networks research is that actors are more likely to f
 
 In our analyses of recruiting visits from colleges to private high schools, we are interested in the existence of homophily versus heterophily for two reasons. First, prior scholarship suggests that private colleges and private high schools are more likely to have a relationship when they share common ideologies or view themselves as belonging to the same echelon [@RN3519; @RN4321;@RN4407]. Second, with respect to our substantive interest the behavior of public research universities, the characteristics of visited private high schools have consequences for subsequent enrollment composition of public research universities. Therefore, we are interested in whether universities tend to visit high schools that are similar to them on certain characteristics. Additionally, we are interested in whether public research universities favor high schools with certain characteristics, independent of homophily. These interests motivate research question 2, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by private universities?" 
 
-Decisions about which particular characteristics to analyze were driven by substantive considerations and data limitations. In particular, we analyzed geographic region, religious affiliation, academic reputation, racial composition, and enrollment size. We analyze geographic region because, for most colleges and universities, enrollment demand is likely to be stronger at high schools in the same geographic region, but nationally prestigious colleges and universities may experience high demand throughout the country. We analyze religious affiliation because private colleges are more likely to have a relationship with private high schools with a similar religious affiliation. Although public universities are formally secular, we are interested in whether particular public universities tend to target religiously affiliated private high schools. We analyze academic reputation based on the idea that more highly ranked colleges are likely to target highly ranked private high schools. Racial composition is of substantive interest because the racial composition of visited high schools has consequences for the rational composition of colleges and universities. Given our interests in social reproduction versus social mobility, we would also analyze tuition price and household income, but these data are not avalable for private high schools.
+Decisions about which private school characteristics to analyze were informed by prior research [e.g., @RN4504; @RN4321; @RN3519; @RN4588; @RN4724]. In particular, @RN4504 used data from several national surveys to analyze long-term trends in private school enrollment by family income. The percentage of American (elementary school) students attending private school declined from 15% in the mid-1960s to 10% in the mid-1970s, and declined gradually from 11% in 1999 to 9% in 2015. With respect to family income, the private school enrollment rate of high-income families (around 17%) and low-income families (around 4%) remained stable over time, but the enrollment rate for middle-income families declined from 12% in 1968 to 6% in 2013.  These declines were substantially driven by declines in the number of students attending Catholic school, which represented 89% of private school enrollment in 1965 and 42% of enrollment in 2013. Private school enrollment rates are higher for families located in urban areas than those in suburban areas. With respect to race, in 2013, 11% of white students attended private school compared to 5% of Black students, and 3% of Hispanic students. However, for high income families, rates of private school enrollment do not differ substantially across race. In the South, there has been a long-term increase in private school enrollment, driven by growing enrollment in Christian private schools by middle-income families and growing enrollment in nonsetarian private schools by high-income families.
+
+
+Based on these findings and logical argument (and also data limitations), our analyses focus on the following private school characteristics: geographic region, religious affiliation, academic reputation, racial composition, and enrollment size. We analyze geographic region because, for most colleges and universities, enrollment demand is likely to be stronger at high schools in the same geographic region, but nationally prestigious colleges and universities may experience high demand throughout the country. We analyze religious affiliation because private colleges are more likely to have a relationship with private high schools with a similar religious affiliation. Although public universities are formally secular, we are interested in whether particular public universities tend to target religiously affiliated private high schools. We analyze academic reputation based on the idea that more highly ranked colleges are likely to target highly ranked private high schools. Racial composition is of substantive interest because the racial composition of visited high schools has consequences for the rational composition of colleges and universities. Given our interests in social reproduction versus social mobility, we would also analyze tuition price and household income, but these data are not avalable for private high schools.
 
 
 ## RQ3: Network similarity and community detection
@@ -211,16 +216,109 @@ ADD TABLE OF UNIVERSITY CHARACTERISTICS HERE
 
 ## Research question 1: scale of visits
 
-Research question 1 asks, how does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities? This question can be answered by counting the number of visits to private high schools, which equivalent to calculating degree centrality for each university. In addition to scale, we are also interested in the relative scale of visits to private high schools. That is, the number of visits to private high schools as a proportion of all off-campus recruiting visits, or as a proportion of all recruiting visits to high schools.  Appendix Figures \@ref(fig:events-count-pubu) and \@ref(fig:events-count-privu) show the number of visits by "type" (public high school, private high school, community college, other), respectively, for public research universities and selective private universities. Figures \@ref(fig:events-hs-count-pubu) and \@ref(fig:events-hs-count-privu) show the number of visits to private high schools and public high schools, respectively, for public research universities and selective private universities, with separate bars for in-state and out-of-state visits.
+Research question 1 asks, how does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities? This question can be answered by counting the number of visits to private high schools, which equivalent to calculating degree centrality for each university. In addition to scale, we are also interested in the relative scale of visits to private high schools. That is, the number of visits to private high schools as a proportion of all off-campus recruiting visits, or as a proportion of all recruiting visits to high schools.  
+
+Appendix Figures \@ref(fig:events-count-pubu) and \@ref(fig:events-count-privu) show the number of visits by "type" (public high school, private high school, community college, other), respectively, for public research universities and selective private universities. On average, the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample conducted `r round((events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()), digits = 0)` off-campus recruiting events in 2017, ranging from a low of `r events_df %>% filter(univ_id == '139959') %>% count() %>% as.numeric()` for the University of Georgia to a high of `r events_df %>% filter(univ_id == '100751') %>% count() %>% as.numeric()` for the University of Alabama. By contrast, the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample conducted an average of `r round((events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()), digits = 0)` events, ranging from a low of `r events_df %>% filter(univ_id == '186867') %>% count() %>% as.numeric()` by Stevens Institute of Technology (located in Hoboken, NJ) to a high of `r events_df %>% filter(univ_id == '239105') %>% count() %>% as.numeric()` to Marquette University (located in Milwaukee, WI).  Across all public research universities, `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())*100, digits=1)`% of visits were to a public or private high school, whereas for selective private universities `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())*100, digits=1)`% of all visits were to a public or private high school. The lower percentage for public research universities is because many public research universities made a substantial number of visits to community colleges whereas private universities did not.
 
 
+Figures \@ref(fig:events-hs-count-pubu) and \@ref(fig:events-hs-count-privu) show the number of visits to private high schools and public high schools for for public research universities (Figure \@ref(fig:events-hs-count-pubu)) and selective private universities (Figure \@ref(fig:events-hs-count-privu)), with separate bars for in-state and out-of-state visits. Only three of the 15 public research Universities -- UC-Berkeley, UC-San Diego, and UC-Riverside -- made more in-state than out-of-state high school visits. Notably, the University of California voluntarily adopted a nonresident enrollment cap in 2017, following pressure from state legislators who had issued a bill to cap nonresident enrollment. Of the 14 selective private universities in our sample, only Baylor University (Waco, TX) made more in-state than out-of-state high school visits.
 
 INSERT FIGURE \@ref(fig:events-hs-count-pubu) AND FIGURE \@ref(fig:events-hs-count-privu) ABOUT HERE
 
+With respect to research question 1, the scale of visits to private high schools by public research universities ranged from a low of `r events_df %>% filter(univ_id == '110671', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` visits by UC-Riverside to a high of `r events_df %>% filter(univ_id == '100751', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` visits by the University of Alabama (which accounted for `r round((events_df %>% filter(univ_id == '100751', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())*100, digits=1)` of all visits to private schools by public research universities in our sample), with the median university, The University of Pittsburgh, making `r events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n) %>% summarize(median = median(n)) %>% as.numeric()` visits.  Across all public research universities, `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())*100, digits=1)`% of private high school visits were to out-of-state schools while `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric())*100, digits=1)`% of public high school visits were to out-of-state schools. This result is consistent with the notion that public research universities placed more value on out-of-state private high school students than in-state private high school students because out-of-state students generate substantially more tuition revenue.
+
+
+For selective private universities, the number of visits to private high schools ranged from a low of `r events_df %>% filter(univ_id == '186867', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` by Stevens Institute of Technology to a high of `r events_df %>% filter(univ_id == '152080', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` by Notre Dame, with the median universities -- Boston College and Northwestern University -- visiting `r events_df %>% filter(univ_id == '164924', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` and `r events_df %>% filter(univ_id == '147767', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` private high schools, respectively. Thus, for the universities in our sample, the scale of visits to private high schools tended to be higher for selective private universities than public research universities. That said, several public research universities in our sample -- University of Colorado-Boulder (`r events_df %>% filter(univ_id == '126614', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` visits), University of South Carolina (`r events_df %>% filter(univ_id == '218663', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` visits), and University of Alabama  (`r events_df %>% filter(univ_id == '100751', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()` visits) -- made a relatively high number of private high school visits even when compared to the selective private universities in our sample.
+
+The relative scale of visits to private high schools -- defined as private high school visits as a percentage of all high school visits -- also tended to be substantially higher at selective private universities than at public research universities.  Across all selective private universities in our sample, `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)`% of high school visits were to private high schools, compared to `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)`% for public research universities. However, the relative emphasis on private high schools was a bit closer for out-of-state visits; across all selective private universities, `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)`% out-of-state high school visits were to private schools, compared to `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)`% for public research universities.
+
+
+Although selective private universities tend to emphasize visits to private high schools more than public research universities, both groups visited private high schools at a much higher rate than public high schools. 
+
+- DISCUSS TABLE COMPARING ACTUAL TO PROPORTIONAL VISITS; main point is that while private universities visit private high schools at a higher rate than public research universities, both groups visit private high schools at a higher rate than they do public high schools; note the exceptions to this statement and note that public research universities that are closer to the behavior of private universities (e.g., university of Georgia)
+
+```{r, eval = FALSE, include = FALSE}
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count(univ_abbrev) %>% arrange(n)
+
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count(univ_abbrev) %>% arrange(n)
+
+237/543*100 # Georgia
+381/1008*100 # CU Boulder
+461/1362*100 # U. South Carolina
+983/3410*100 # U. Alabama
+
+# private
+round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)
+
+# private out of state
+round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)
+
+# public
+round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)
+
+# public, out of state
+round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)
+```
+
+
+```{r, eval = FALSE, include = FALSE}
+
+events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n)
+
+events_df %>% filter(univ_id == '186867', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()
+
+events_df %>% filter(univ_id == '152080', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()
+      
+events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n) %>% summarize(median = median(n)) %>% as.numeric()
+      
+# number of visits to private schools by public research universities
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n)
+
+round((events_df %>% filter(univ_id == '100751', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())*100, digits=1)
+
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric()/univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()
+
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n)
+
+events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n) %>% summarize(median = median(n)) %>% as.numeric()
+```
+
+
+```{r, eval = FALSE, include = FALSE}
+
+
+# percentage of visits that were out-of-state
+
+# private high school visits
+round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())*100, digits=1)
+
+# public high school visits
+round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric())*100, digits=1)
+
+
+events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs'),univ_state != event_state) %>% count() %>% as.numeric()
+events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric()
+```
 
 ## Research question 2: characteristics of visited schools
 
-TEXT
+
+Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-pubu-privu) address research question 2, how do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
+
+Figure \@ref(fig:region-pubu-privu) shows the geographic region of visited private high schools. With respect to the private high school universe, there are more schools located in the South than any other region, consisting with the finding from @RN4504 about the long-term growth in private school enrollment in the South. START HERE THURSDAY
+
+
+
+RN4504
+
+high schools visited by universities in our sample. visited private high schools, 
+
+Figure \@ref(fig:region-pubu-privu) shows the geographic region of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). 
+
+INSERT FIGURE \@ref(fig:region-pubu-privu) ABOUT HERE
+
+
+FOR RACE; CAN TALK A BIT ABOUT FINDINGS FROM PURDY AND LAWRENCE GRAHAM BASICALLY SAYING THAT RICH BLACK STUDENTS STARTED GOING TO THE BEST OF THE BEST TYPE PRIVATE SCHOOLS ONCE THEY WERE ALLOWED TO [@RN4588; @RN4724]
 
 ## Research question 3: overlapping network structure
 
@@ -272,6 +370,37 @@ include_graphics(file.path(figures_dir, 'events_hs_count_pubu.pdf'))
 ```{r events-hs-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits to public and private high schools by selective private universities"}
 include_graphics(file.path(figures_dir, 'events_hs_count_privu.pdf'))
 ```
+
+\newpage
+
+```{r region-pubu-privu, echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_region_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r religion-pubu-privu, echo = FALSE, fig.cap = "Religious affiliation of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_religion_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r enroll-pubu-privu, echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r rank-pubu-privu, echo = FALSE, fig.cap = "High school rank of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r race-pubu-privu, echo = FALSE, fig.cap = "Racial composition of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
+```
+
 
 # Appendix
 

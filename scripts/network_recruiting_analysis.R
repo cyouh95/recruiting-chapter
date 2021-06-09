@@ -561,6 +561,7 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
     edge.color = 'lightgrey',
     #coords = coords_kk, # starting positions for vertices
     layout = layout(network, coords = coords_kk),
+    #layout=layout_with_fr(network, coords = coords_kk),
     margin = margin
   )
 }
