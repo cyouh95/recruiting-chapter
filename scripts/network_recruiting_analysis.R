@@ -554,7 +554,7 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
     vertex.frame.color = 'lightgray',
     vertex.shape = 'circle',
     vertex.size = vertex_size,
-    edge.lty = 3,
+    edge.lty = 1, # 0 and “blank” mean no edges, 1 and “solid” are for solid lines, the other possible values are: 2 (“dashed”), 3 (“dotted”), 4 (“dotdash”), 5 (“longdash”), 6 (“twodash”).
     #edge.lty = 0.5,
     edge.width = log(as.numeric(E(network)$weight)/10),
     #edge.width = 1,
@@ -567,7 +567,9 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
 }
 
 # Usage
-# plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
+plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
+plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4)
+plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
 
 # Private univs
 save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4),
@@ -582,10 +584,6 @@ save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'hclust', k
 save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4),
           plot_name = 'plot_1mode_pubu.pdf')
 
-
-# Public univs, out-of-state
-# save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
-#           plot_name = 'plot_1mode_pubu_outst.pdf')
 
 # private and public universities
 save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 4),

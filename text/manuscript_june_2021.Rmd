@@ -205,11 +205,10 @@ Based on these findings and logical argument (and also data limitations), our an
 
 ## RQ3: Network similarity and community detection
 
-This chapter conceptualizes recruiting visits to private high schools as a behavior consistent with the social reproduction orientation of selective private colleges and universities. We are interested in how similar the recruiting networks of public research universities are to those of private colleges and universities, thereby motivating research question 3: to what extent do public research universities and private universities visit overlapping sets of private high schools? This research question is addressed, simultaneously, through the use of network graphs and by allocating each college/university to a "community" cluster.
+This chapter conceptualizes recruiting visits to private high schools as a behavior consistent with the social reproduction orientation of selective private colleges and universities. We are interested in how similar the recruiting networks of public research universities are to those of private colleges and universities, thereby motivating research question 3: to what extent do public research universities and private universities visit overlapping sets of private high schools? 
 
-Network graphs show vertices as nodes and edges as lines connecting two nodes. Conceptually, we think of nodes as repelling one another and edges as pulling nodes together. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Nodes that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, while nodes that are relatively disconnected are located at the periphery of the graph.  In the analyses below, we graph the one-mode college network, using relative proximity of nodes to convey whether a pair colleges have a similar network structure.
+We address RQ3 by graphing the recruiting network and by identifying "clusters" of universities that have similar recruiting networks. First, network graphs show vertices (e.g., universities) as circles, with vertices that share many connections located close together and vertices that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph. In addition to network graphs, network scholarship often uses cluster analysis methodologies to identify vertices that share common structure, based purely on patterns of network ties.
 
-We also address research question 3 by using cluster analysis to identify colleges/universities that share common network structure. Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We performed hierarchical cluster analysis to allocate colleges and universities into clusters based on their private high schools visits
 
 # Data and Methods
 
@@ -304,15 +303,55 @@ We answer research question 3 by, first, analyzing overlap in the recruiting net
 
 ### Public university network
 
-text
+Tables \@ref(tab:pubu-count-matrix) and \@ref(tab:pubu-percent-matrix) provides a tabular representation of the extent to which public universities visited overlapping sets of private high schools. Table \@ref(tab:pubu-count-matrix) shows, for each pair of public universities (e.g., University of Alabama and University of South Caroline,  the number of high schools that were visited by both universities. For example, column 1 shows that of the X different private high schools visited by the University of Alabama, the University of California also visited X of these high schools. Table \@ref(tab:pubu-percent-matrix) shows overlap in high schools visited in terms of percent rather than count. For example, of the X private high schools visited by CU Boulder, the University of Alabama visited X% of these high schools and the University of South Carolina visited X% of these high schools.
+
+INSERT TABLE \@ref(tab:pubu-count-matrix) AND TABLE \@ref(tab:pubu-percent-matrix) ABOUT HERE
+
+ADD PARAGRAPH THAT SUBSTANTIVELY INTERPRETS BIG PICTURE FINDINGS FROM THESE TABLES.
+
+
+```{r, eval = FALSE, include = FALSE}
+table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
+table_1mode_pubu %>% glimpse()
+```
+
+
+
+DESCRIBE HOW TO READ TABLE AND WHAT THE RESULTS SHOW
+
+
+
+
+INSERT TABLE X ABOUT HERE
+
+Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a dotted line -- if both universities visit at least one high school in common. 
+
+
+For our one-mode public 
+
+We address RQ3 by graphing the recruiting network and by identifying "clusters" of universities that have similar recruiting networks. First, network graphs show vertices (e.g., universities) as circles, with vertices that share many connections located close together and vertices that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph. In addition to network graphs, network scholarship often uses cluster analysis methodologies to identify vertices that share common structure, based purely on patterns of network ties.
+
+
+Network graphs show vertices as nodes and edges as lines connecting two nodes. Conceptually, we think of nodes as repelling one another and edges as pulling nodes together. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Nodes that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, while nodes that are relatively disconnected are located at the periphery of the graph.  In the analyses below, we graph the one-mode college network, using relative proximity of nodes to convey whether a pair colleges have a similar network structure.
+
+We also address research question 3 by using cluster analysis to identify colleges/universities that share common network structure. Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We performed hierarchical cluster analysis to allocate colleges and universities into clusters based on their private high schools visits
+
+INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
+
+
+
 
 ### Private university network
 
-text
+INSERT TABLE \@ref(tab:privu-percent-matrix) ABOUT HERE
+
+INSERT FIGURE \@ref(fig:plot-1mode-privu) ABOUT HERE
+
 
 ### Public and private university network
 
 
+INSERT FIGURE \@ref(fig:plot-1mode-u-k5) ABOUT HERE
 
 
 ```{r, eval = FALSE, include = FALSE}
@@ -386,7 +425,9 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pub
 
 <div id="refs"></div>
 
-<!-- TABLES -->
+
+
+\newpage
 
 # Social network data appendix
 
@@ -399,6 +440,8 @@ A social network consists of a set of actors -- referred to as "vertices" -- and
 Following this approach, we create a one-mode high school network in which two private high schools share an edge if they both receive a visit by the same university. Cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of universities that visited both school $i$ and school $j$<!-- [SHOW EXCERPT OF ONE-MODE SCHOOL BY SCHOOL MATRIX, LIKE 3 BY 3 OR SOMETHING]-->. Similarly, we create a one-mode university network in which two universities share an edge if both universities visited the same high school. Cell $c_{i,j}$ of the university-by-university matrix $C$ indicates the number of private high schools that received at least one visit from both university $i$ and university $j$. 
 
 The social network analyses presented in this chapter -- particularly for research question 3 -- are primarily based on analysis of one-mode university networks. We created separate one-mode university networks for: public universities; private universities; both public and private universities.
+
+<!-- TABLES -->
 
 \newpage
 
@@ -420,8 +463,8 @@ kable(
 #  <div id="refs"></div>
 ```
 
+\clearpage
 
-\newpage
 
 ```{r sample-characteristics}
 univ_sample <- univ_sample_df %>% 
@@ -432,9 +475,57 @@ kable(univ_sample %>% arrange(desc(classification), rank), caption = "Characteri
   kable_styling(latex_options = 'scale_down')
 ```
 
+\clearpage
+
+```{r pubu-count-matrix}
+table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
+
+kable(table_1mode_pubu$onemode_df, caption = 'One-mode public university count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(c(14, 16), width = '6em')
+```
+
+
+```{r pubu-percent-matrix}
+kable(table_1mode_pubu$onemode_pct_df, caption = 'One-mode public university percent matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(c(14, 16), width = '6em')
+
+```
+
+\clearpage
+
+```{r privu-count-matrix, eval=FALSE, include=FALSE}
+
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+
+kable(table_1mode_privu$onemode_df, caption = 'Private universities count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+```
+
+
+```{r privu-percent-matrix}
+
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+
+kable(table_1mode_privu$onemode_pct_df, caption = 'One-mode private university percent matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+
+```
+
 <!-- FIGURES -->
 
-\newpage
+\clearpage
 
 ```{r em-funnel, echo = FALSE, fig.align = 'center', fig.cap = "The enrollment funnel", out.width = "70%"}
 knitr::include_graphics('./../assets/images/enrollment_funnel.png')
@@ -489,6 +580,8 @@ include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
 ```{r race-pubu-privu, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
 include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
 ```
+
+
 
 ```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, colored by cluster"}
 knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
