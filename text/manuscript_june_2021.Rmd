@@ -17,7 +17,7 @@ header-includes:
       - \usepackage{setspace}
       - \doublespacing
       - \floatsetup{capposition=top}
-fontsize: 12pt
+fontsize: 11pt
 ---
 
 
@@ -45,6 +45,15 @@ events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
 
 pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
 privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+
+ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>% 
+  mutate(
+    univ_region = str_split(characteristics, '\\|', simplify = T)[,1],
+    univ_religion = str_split(characteristics, '\\|', simplify = T)[,2],
+    univ_race = round(as.numeric(str_split(characteristics, '\\|', simplify = T)[,3]), 1),
+    univ_rank = as.numeric(str_split(characteristics, '\\|', simplify = T)[,4]),
+    univ_enroll = format(as.numeric(str_split(characteristics, '\\|', simplify = T)[,5]), big.mark = ',')
+  )
 ```
 
 # Introduction
@@ -208,7 +217,11 @@ We also address research question 3 by using cluster analysis to identify colleg
 
 Our broader project collected data on off-campus recruiting visits made by a convenience sample of colleges and universities during the 2017 calendar year. The data collection sample comes from three different lists of postsecondary institutions: all public research-extensive universities as defined by the 2000 Carnegie Classification (N=102); all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58); and all private colleges in the top 50 of U.S. News and World Report Liberal Arts Colleges rankings (N=47). For each of these institutions, we investigated their admissions website for pages that posted their upcoming off-campus recruiting visits. For institutions that posted such pages, we scraped the pages once per week throughout 2017. Many colleges and university only posted certain kinds of events (e.g., hotel receptions and national college fairs) but not others (e.g., day-time visits to high schools). These institutions are excluded from the analyses. Our final analysis sample consists of 15 public research universities, 14 private research universities, and 12 private liberal arts colleges. <!--[MAYBE ADD TABLE/FIGURE OR APPENDIX TABLE/FIGURE ON CHARACTERISTICS OF INSTITUTIONS IN OUR SAMPLE?]-->
 
-ADD TABLE OF UNIVERSITY CHARACTERISTICS HERE
+INSERT TABLE \@ref(tab:sample-characteristics) ABOUT HERE
+
+Table \@ref(tab:sample-characteristics) shows selected characteristics for universities in our analysis sample. Given that we collected recruiting data for private universities ranked in the top 100 of US News and World Report, one concern is whether it makes sense to compare public research universities not ranked in the top 100 to private universities ranked in the top 100. However, the columns in Table \@ref(tab:sample-characteristics) for 25th and 75th percentile SAT score of enrolled freshmen suggest that private universities ranked lower than 75 have test score ranges that are fairly similar to public research universities not ranked in the top 100. The five public research universities ranked 124 or below have score ranges that are modestly lower, particularly the University of Nebraska-Lincoln, but remain comparable to private universities ranked 75 to 100. One exception is that Stevens Institute of Technology (rank 80) has substantially higher test scores. 
+
+CRYSTAL - ADD ONE BRIEF PARAGRAPH LISTING THE DIFFERENT SECONDARY DATA SOURCES WE USED
 
 ## Methods
 
@@ -236,6 +249,71 @@ The relative scale of visits to private high schools -- defined as private high 
 Although selective private universities tend to emphasize visits to private high schools more than public research universities, both groups visited private high schools at a much higher rate than public high schools. 
 
 - DISCUSS TABLE COMPARING ACTUAL TO PROPORTIONAL VISITS; main point is that while private universities visit private high schools at a higher rate than public research universities, both groups visit private high schools at a higher rate than they do public high schools; note the exceptions to this statement and note that public research universities that are closer to the behavior of private universities (e.g., university of Georgia)
+
+
+
+
+## Research question 2: characteristics of visited schools
+
+
+Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-pubu-privu) address research question 2, how do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
+
+Figure \@ref(fig:region-pubu-privu) shows the geographic region -- Northeast, Midwest, South, and West -- of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). Scholarship on the relationship between geographic proximity and student demand tends to find that nationally prestigious universities enjoy strong demand across the nation, while less prestigious universities rely primarily on demand from students located nearby [e.g., @RN2133]. The visit patterns for private universities are consistent with this finding; less prestiguous universities tended to focus on private high schools in their home region, while more prestigious universities tended to visit many private high schools outside their home region.  Similarly, scholarship on student demand for out-of-state public universities finds that most public universities rely on demand from out-of-state students living in nearby states [@RN2536; @RN2535; @RN2546]. Most public research universities in our sample visited a disproportionate number of private high schools in their home geographic region. UC-Berkeley and CU Boulder -- universities with strong national brand recognition -- visited a large number of private high schools outside their home region. 
+
+INSERT FIGURE \@ref(fig:region-pubu-privu) ABOUT HERE
+
+In the universe of all private high schools (top row of Figure \@ref(fig:region-pubu-privu)), there are more schools located in the South than any other geographic region, consistent with the finding from @RN4504 about the long-term growth in private school enrollment in the South. Universities not located in the South tended to visit more private high schools in the South than any other region, except their home region. This finding emerged for both the public universities and private universities in our sample.
+
+Figure \@ref(fig:religion-pubu-privu) shows the religious affiliation -- Catholic, Christian, Nonsectarian, and Other -- of visited private high schools. The results for selective private universities (bottom panel) follow expectations: Nonsetarian universities tended to visit a higher proportion of nonsectarian private high schools; Catholic universities visited a higher proportion of Catholic high schools; and Christian universities tended to visit a relatively higher share of Christian high schools. 
+
+INSERT FIGURE \@ref(fig:religion-pubu-privu) ABOUT HERE
+
+Results for public research universities (top panel) are more interesting. Despite being nonsectarian, the majority of public research universities visited a high share of religiously affiliated private high schools, particularly Catholic schools. Surprisingly, Catholic schools represented at least 40% of private high school visits for `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'public') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample. By contrast, Catholic schools represented at least 40% of visits for only `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'private') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample (the four Catholic universities and also Texas Christian University and Stevens Institute of Technology). For public research universities, the emphasis on visiting Catholic and Christian high schools rather than nonsectarian private high schools tended to be stronger at less prestigious institutions. 
+
+Figure \@ref(fig:rank-pubu-privu) shows the academic reputation -- defined by the Niche private high school ranking -- of visited private high schools. For the private universities in our sample, we see the predictable pattern that more highly ranked universities tend to visit a higher share of private high schools that are ranked in the top 200 nationally or are rated "A+" whereas less prestigious universities visted a higher share of private high schools rated "A" or "A- or below." Notre Dame University is a notable exception to this pattern. A potential explanation is that Notre Dame has developed a strategy of targeting the very top students at relatively less-prestigious Catholic high schools, believing that these students will choose Notre Dame because of its status as the preeminent Catholic University.
+
+INSERT FIGURE \@ref(fig:rank-pubu-privu) ABOUT HERE
+
+A similar pattend emerged for the public research universities in our sample; more highly ranked universities tended to visit a higher share of higly rated private high schools than lower ranked universities. In comparison to the private universities in our sample, the public universities in our sample tended to visit a higher share of private high schools that were not highly rated. To a great extent, this finding is merely a consequence of our sampling strategy; we attempted to collected recruiting visit data from all public research universities but we only collected recruiting visit data from private universities ranked in the top 100 of US News and World Report. That said, the finding that public research universities visited a large share of low-rated private high schools is consistent with the idea that many public research universities visit private high schools in search of full-pay students rather than academic superstars.
+
+Figure \@ref(fig:enroll-pubu-privu) shows the 12th grade enrollment of visited private high schools. Compared to the universe of private high schools, the universities in our sample tended to visit schools that enrolled more 12th graders. Generally, the findings were pretty similar across universities public and private universities; for must universities, more than half of private school visits were to schools that enrolled at least 100 12th graders. However, public universities tended to visit a slightly larger share of high schools with fewer than 50 12th graders and private universities tended to visit a higher share of high schools with 12th grade enrollment of 50-100.
+
+INSERT FIGURES \@ref(fig:enroll-pubu-privu) AND \@ref(fig:enroll-pubu-privu) [the one for public high schools] ABOUT HERE
+
+Figure X shows the 12th grade enrollment of visited private high schools to the 12th grade enrollment of visited public high schools for the public research universities in our sample. DISCUSS RESULTS; MAIN TAKEAWAY IS THAT, COMPARED TO THE PUBLICH HIGH SCHOOLS THEY VISIT, PUBLIC UNIVERSITIES SEEM TO BE WILLING TO VISIT PRIVATE SCHOOLS THAT ENROLL FAR FEWER 12TH GRADERS.
+
+
+
+
+Figure \@ref(fig:race-pubu-privu) shows the percentage of 12th graders who identify as Black, Latinx, or Native at visited private high schools. Consistent with @RN4504, most private high schools enroll relatively few students from historically underrepresented race/ethnicity groups. For about 70% [CRYSTAL - CHECK THIS] of schools in the universe of private high schools (top row of Figure \@ref(fig:race-pubu-privu)), Black/Latinx/Native students comprise less than 20% of enrolled students. Therefore, even if universities visited schools with racial composition on par with the universe of private high schools, most visited schools would enroll relatively few Black/Latinx/Native students. Figure \@ref(fig:race-pubu-privu) shows that for most universities in our sample, the set of visited private high schools enrolled *fewer* Black/Latinx/Native students than the universe of private high schools. For public universities, exceptions to this finding were were UC-San Diego, UC-Riverside, and -- to a lesser extent -- SUNY Stony Brook. For private universities, Marquette was the only exception to this finding.
+
+Several studies suggest that universities -- particularly elite private universities -- pursue racial diversity by recruiting non-white students who attend predominantly white private high schools [e.g., @RN4495]. Additionally, scholarship that engages with enrollment in private schools by Black students suggests that many high-income Black families began sending their children to elite, predominantly white private schools once these schools were willing to enroll Black students [@RN4724]. Therefore, universities may visit predominantly white private high schools in search of non-white students. Once concern about this practice is that non-white students at elite private schools may be in high demand by many universities, but similarly achieving non-white students at predominantly non-white public schools might be ignored.
+
+INSERT FIGURE \@ref(fig:race-pubu-privu) ABOUT HERE
+
+Figure X compares the racial composition of private high schools visited by public research universities to the racial composition of public high schools visited by these universities. [TAKEAWAY: the private high schools visited are much less racially diverse that the public high schools they visit, so recruiting aggresively from private schools may shift the racial composition of public research universities away from black/latinx/native]
+
+
+## Research question 3: overlapping network structure
+
+Research question 3 asks, to what extent do public research universities and selective private universities visit overlapping sets of private high schools? In contrast to RQ1 and RQ2, answering RQ3 requires social network analysis techniques.
+
+Appendix X describes how we constructed social network data. Briefly, we began by constructing a two-mode social network of visits to private high schools (mode 1) by universities (mode 2). Each university and each private high school is a "vertex." A visit from a university to a school is an "edge." Because large two-mode networks like our school-university network are difficult to visualize, two-mode networks are often analyzed as one-mode networks [@RN2457;@RN4663]. We transformed our two-mode school-university network into a one-mode university network in which each university is a vertex and two universities share an edge if both universities visited at least one high school in common. The *weight* of an edge indicates the number of high schools that both universities visited. For example, if there are 200 private high schools that received a visit from both Notre Dame and Villanova, the weight of the edge between Notre Dame and Villanova is 200. We created three separate one-mode university networks: a public university network; a private university network; a public and private university network. 
+
+We answer research question 3 by, first, analyzing overlap in the recruiting network of public universities (the public university network), second, analyzing overlap in the network of private universities (the private university network), and third, analyzing overlap amongst public and private universities (the public and private university network).
+
+### Public university network
+
+text
+
+### Private university network
+
+text
+
+### Public and private university network
+
+
+
 
 ```{r, eval = FALSE, include = FALSE}
 events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count(univ_abbrev) %>% arrange(n)
@@ -283,10 +361,14 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pri
 events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count(univ_abbrev) %>% arrange(n) %>% summarize(median = median(n)) %>% as.numeric()
 ```
 
-
 ```{r, eval = FALSE, include = FALSE}
 
+ego_df %>% glimpse()
 
+ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40) %>% count(control)
+
+
+ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'public') %>% count() %>% as.numeric()
 # percentage of visits that were out-of-state
 
 # private high school visits
@@ -300,35 +382,23 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pub
 events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric()
 ```
 
-## Research question 2: characteristics of visited schools
-
-
-Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-pubu-privu) address research question 2, how do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
-
-Figure \@ref(fig:region-pubu-privu) shows the geographic region of visited private high schools. With respect to the private high school universe, there are more schools located in the South than any other region, consisting with the finding from @RN4504 about the long-term growth in private school enrollment in the South. START HERE THURSDAY
-
-
-
-RN4504
-
-high schools visited by universities in our sample. visited private high schools, 
-
-Figure \@ref(fig:region-pubu-privu) shows the geographic region of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). 
-
-INSERT FIGURE \@ref(fig:region-pubu-privu) ABOUT HERE
-
-
-FOR RACE; CAN TALK A BIT ABOUT FINDINGS FROM PURDY AND LAWRENCE GRAHAM BASICALLY SAYING THAT RICH BLACK STUDENTS STARTED GOING TO THE BEST OF THE BEST TYPE PRIVATE SCHOOLS ONCE THEY WERE ALLOWED TO [@RN4588; @RN4724]
-
-## Research question 3: overlapping network structure
-
-TEXT
-
 # References
 
 <div id="refs"></div>
 
 <!-- TABLES -->
+
+# Social network data appendix
+
+A social network consists of a set of actors -- referred to as "vertices" -- and the connections -- referred to as "network ties" or "edges" between these actors. "One-mode" networks consist of vertices of a "type." For example, the social network of Facebook consists of users (vertices) who are connected to one another via friendship ties (edges). "Two-mode" networks consist of vertices associated with one type of actor/entity having connections to vertices of another type. Data on recruiting visits by universities to high schools yields a two-mode network, in which an edge -- a recruiting visit -- occurs between a high school (mode 1) and a university (mode 2).
+
+**Constructing two-mode network** We describe construction of social network data with reference to "corporate board-director" networks -- the most commonly analyzed two-mode network -- which consist of directors (mode 1) who serve on organizational boards (mode 2). In our school-university two-mode network, the vertices are private high schools (mode 1) and universities (mode 2), and an edge is defined as an off-campus recruiting visits made between the two (e.g., high school $i$ shares an edge with university $j$ if high school $i$ receives at least one visit from university $j$). Visits can only occur between a school-university pair (not a school-school pair or a university-university pair). This (weighted) network can be represented as a school-by-university matrix (e.g., a $500 \times 40$ matrix if our network contains 500 high schools and 40 universities) in which matrix cell $a_{i,j}$ identifies the number of visits  high school $i$ received from university $j$. <!--[SHOW AN EXCERPT OF THE TWO MODE ADJACENY MATRIX, LIKE 4 BY 3 OR SOMETHING] [DEFINE WEIGHTED VS. UNWEIGHTED SOMEWHERE]-->
+
+**Transforming two-mode network to one-mode networks** Two-mode networks are often analyzed as one-mode networks [@RN2457]. @RN4663 states that "overlapping groups such as boards of directors form a two-mode membership network in which one can conceive of directors as nodes [vertices] connected by a tie of common board membership, or boards as nodes connected by a tie of one or more shared directors" (p. XXX). Thus, a two-mode board-director network can be transformed into two one-mode networks. A weighted one-mode director network can be created as follows: create a director-by-director matrix (e.g., a $100 \times 100$ matrix if there are 100 directors in the network); two directors share an edge if they serve together on a board; matrix cell $a_{i,j}$ identifies the number of boards that include both director $i$ and director $j$ (e.g., $a_{i,j}=0$ if directors $i$ and $j$ do not serve on any of the same boards and $a_{i,j}=3$ if directors $i$ and $j$ serve on three boards together). Similarly, a one-mode board network is created based on a board-by-board matrix in which two boards share an edge if a director sits on both boards and matrix cell $a_{i,j}$ identifies the number of directors that serve on both board $i$ and board $j$. 
+
+Following this approach, we create a one-mode high school network in which two private high schools share an edge if they both receive a visit by the same university. Cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of universities that visited both school $i$ and school $j$<!-- [SHOW EXCERPT OF ONE-MODE SCHOOL BY SCHOOL MATRIX, LIKE 3 BY 3 OR SOMETHING]-->. Similarly, we create a one-mode university network in which two universities share an edge if both universities visited the same high school. Cell $c_{i,j}$ of the university-by-university matrix $C$ indicates the number of private high schools that received at least one visit from both university $i$ and university $j$. 
+
+The social network analyses presented in this chapter -- particularly for research question 3 -- are primarily based on analysis of one-mode university networks. We created separate one-mode university networks for: public universities; private universities; both public and private universities.
 
 \newpage
 
@@ -350,6 +420,18 @@ kable(
 #  <div id="refs"></div>
 ```
 
+
+\newpage
+
+```{r sample-characteristics}
+univ_sample <- univ_sample_df %>% 
+  select(classification, univ_abbrev, rank, satactcomp25, satactcomp75, tfuginst, tfugoutst, ugftptfreshtot, freshoutstpct, pgrnt_p, pctfreshwh, pctfreshbl, pctfreshap, pctfreshhi, pctfreshal)
+
+kable(univ_sample %>% arrange(desc(classification), rank), caption = "Characteristics of universities in analysis sample") %>%
+  collapse_rows(columns = 1, latex_hline = 'major', valign = 'middle') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
 <!-- FIGURES -->
 
 \newpage
@@ -359,7 +441,12 @@ knitr::include_graphics('./../assets/images/enrollment_funnel.png')
 #![The enrollment funnel](assets/images/enrollment_funnel.png)
 ```
 
+
+
 \newpage
+
+\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
+
 
 ```{r events-hs-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits to public and private high schools by public research universities"}
 include_graphics(file.path(figures_dir, 'events_hs_count_pubu.pdf'))
@@ -385,24 +472,37 @@ include_graphics(file.path(figures_dir, 'ego_network_religion_pubu_privu.pdf'))
 
 \newpage
 
-```{r enroll-pubu-privu, echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools"}
-include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
-```
-
-\newpage
 
 ```{r rank-pubu-privu, echo = FALSE, fig.cap = "High school rank of visited private high schools"}
 include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
 ```
 
+
 \newpage
 
-```{r race-pubu-privu, echo = FALSE, fig.cap = "Racial composition of visited private high schools"}
-include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
+```{r enroll-pubu-privu, echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
 ```
 
 
-# Appendix
+
+```{r race-pubu-privu, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
+```
+
+```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
+```
+
+```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
+```
+
+```{r plot-1mode-u-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster, five clusters"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u_k5.pdf')
+```
+
+
 
 ```{r events-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, public research universities"}
 include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
@@ -413,3 +513,6 @@ include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
 ```{r events-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, selective private universities"}
 include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
 ```
+
+
+
