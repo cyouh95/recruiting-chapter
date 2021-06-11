@@ -170,3 +170,25 @@ include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu_privc.pdf
 
 # RQ3
 
+## 1-mode plots
+
+- `plot_1mode_pubu.pdf`
+- `plot_1mode_privu.pdf`
+- `plot_1mode_privc.pdf`
+- `plot_1mode_u.pdf`, `plot_1mode_u_k5.pdf`
+- `plot_1mode_all.pdf`, `plot_1mode_all_k5.pdf`, `plot_1mode_all_k6.pdf`
+
+```{r}
+include_graphics(file.path(figures_dir, 'plot_1mode_pubu.pdf'))
+include_graphics(file.path(figures_dir, 'plot_1mode_privu.pdf'))
+include_graphics(file.path(figures_dir, 'plot_1mode_privc.pdf'))
+
+include_graphics(file.path(figures_dir, 'plot_1mode_u.pdf'))
+include_graphics(file.path(figures_dir, 'plot_1mode_u_k5.pdf'))
+
+include_graphics(file.path(figures_dir, 'plot_1mode_all.pdf'))
+include_graphics(file.path(figures_dir, 'plot_1mode_all_k5.pdf'))
+include_graphics(file.path(figures_dir, 'plot_1mode_all_k6.pdf'))
+```
+
+
