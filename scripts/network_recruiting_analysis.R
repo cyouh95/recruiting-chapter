@@ -62,19 +62,19 @@ source(file = file.path(scripts_dir, 'create_igraph_objects.R'))
 
 region_values <- c('northeast', 'midwest', 'south', 'west')
 region_keys <- c('Northeast', 'Midwest', 'South', 'West')
-region_title <- 'geographic region'
+region_title <- 'Region'
 
 religion_values <- c('catholic', 'christian', 'nonsectarian', 'other')
 religion_keys <- c('Catholic', 'Christian', 'Nonsectarian', 'Other')
-religion_title <- 'religious affiliation'
+religion_title <- 'Religion'
 
 race_values <- c('c1_lt10', 'c2_10to20', 'c3_20to50', 'c4_50+')
 race_keys <- c('LT 10%', '10-20%', '20-50%', 'GT 50%')
-race_title <- 'percent black, latinx, or native'
+race_title <- '% Black/Latinx/Native'
 
 ranking_values <- c('c1_top200', 'c2_A+', 'c3_A', 'c4_ltA')
 ranking_keys <- c('Rank top 200', 'A+', 'A', 'A- or below')
-ranking_title <- 'academic reputation'
+ranking_title <- 'Ranking'
 
 enroll_values <- c('c1_lt50', 'c2_50to100', 'c3_100to150', 'c4_gt150')
 enroll_keys <- c('LT 50', '50-100', '100-150', 'GT 150')
@@ -228,12 +228,12 @@ plot_ego_graph(egos_psi_privu, '160755', characteristic = 'pct_blacklatinxnative
 plot_ego_graph(egos_psi_privu, '160755', characteristic = 'rank_cat2', values = ranking_values, keys = ranking_keys, title = ranking_title, graph_order = 1)
 
 # Villanova + religion
-save_plot(plot_ego_graph(egos_psi_privu, '216597', characteristic = 'religion', values = religion_values, keys = religion_keys, title = '', graph_order = 'both'),
-          plot_name = 'villanova_religion.pdf')
+# save_plot(plot_ego_graph(egos_psi_privu, '216597', characteristic = 'religion', values = religion_values, keys = religion_keys, title = '', graph_order = 'both'),
+#           plot_name = 'villanova_religion.pdf')
 
 # Emory + region
-save_plot(plot_ego_graph(egos_psi_privu, '139658', characteristic = 'region', values = region_values, keys = region_keys, title = '', graph_order = 'both'),
-          plot_name = 'emory_region.pdf')
+# save_plot(plot_ego_graph(egos_psi_privu, '139658', characteristic = 'region', values = region_values, keys = region_keys, title = '', graph_order = 'both'),
+#           plot_name = 'emory_region.pdf')
 
 
 ## ------------------------------
@@ -445,39 +445,39 @@ plot_2mode_graph(g_2mode_pubu, c_analysis = 'fast', steps = 11, colors = c('red'
 
 # public and private universities
 
-save_plot(plot_2mode_graph(g_2mode_u, c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'), margin = -.75),
-          plot_name = 'plot_2mode_u_k5.pdf')
-
-save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
-          plot_name = 'plot_1mode_u_k5.pdf')
+# save_plot(plot_2mode_graph(g_2mode_u, c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'), margin = -.75),
+#           plot_name = 'plot_2mode_u_k5.pdf')
+# 
+# save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
+#           plot_name = 'plot_1mode_u_k5.pdf')
 
 # Region characteristic
-save_plot(plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys, margin = -0.6),
-          plot_name = 'plot_2mode_all_region.pdf')
+# save_plot(plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys, margin = -0.6),
+#           plot_name = 'plot_2mode_all_region.pdf')
 
 # Private univs
-save_plot(plot_2mode_graph(g_2mode_privu, c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_privu.pdf')
+# save_plot(plot_2mode_graph(g_2mode_privu, c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_privu.pdf')
 
 # Public univs
-save_plot(plot_2mode_graph(g_2mode_pubu, c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_pubu.pdf')
+# save_plot(plot_2mode_graph(g_2mode_pubu, c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_pubu.pdf')
 
 # Public univs, out-of-state
-save_plot(plot_2mode_graph(g_2mode_pubu, pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_pubu_outst.pdf')
+# save_plot(plot_2mode_graph(g_2mode_pubu, pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_pubu_outst.pdf')
 
 # All
-save_plot(plot_2mode_graph(g_2mode, c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_all.pdf')
+# save_plot(plot_2mode_graph(g_2mode, c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_all.pdf')
 
 # All, out-of-state public univs
-save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_all_pubu_outst.pdf')
+# save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_all_pubu_outst.pdf')
 
 # All, out-of-state both
-save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', privu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
-          plot_name = 'plot_2mode_all_outst.pdf')
+# save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', privu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
+#           plot_name = 'plot_2mode_all_outst.pdf')
 
 
 ## ---------------------------
@@ -500,7 +500,7 @@ save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', privu_visits = '
 
 # RETURNS: 1-mode plot colored by cluster
 
-plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NULL, no = NULL, steps = NULL, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, margin = 0.0) {
+plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NULL, no = NULL, steps = NULL, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), pubu_visits = 'all', privu_visits = 'all', layout = layout_with_fr, margin = 0.1) {
   
   # Cluster analysis to identify communities
   if (pubu_visits != 'all' & privu_visits == 'all') {
@@ -566,8 +566,8 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
   )
 }
 
-plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
 # Usage
+# plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
 
 # Private univs
 save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4),
@@ -584,8 +584,8 @@ save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k 
 
 
 # Public univs, out-of-state
-save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
-          plot_name = 'plot_1mode_pubu_outst.pdf')
+# save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
+#           plot_name = 'plot_1mode_pubu_outst.pdf')
 
 # private and public universities
 save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 4),
@@ -595,8 +595,8 @@ save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5
           plot_name = 'plot_1mode_u_k5.pdf')
 
 # Private and public universities; out-of-state visits only for public universities
-save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
-          plot_name = 'plot_1mode_u_pubu_outst.pdf')
+# save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
+#           plot_name = 'plot_1mode_u_pubu_outst.pdf')
 
 # All
 save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 4),
@@ -607,66 +607,65 @@ save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 5, 
 
 save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 6, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink')),
           plot_name = 'plot_1mode_all_k6.pdf')
+
 # All, out-of-state public univs
-save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
-          plot_name = 'plot_1mode_all_pubu_outst.pdf')
+# save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
+#           plot_name = 'plot_1mode_all_pubu_outst.pdf')
 
 # All, out-of-state both
-save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', privu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
-          plot_name = 'plot_1mode_all_outst.pdf')
+# save_plot(plot_1mode_graph(g_2mode, mode = 'psi', pubu_visits = 'outofstate', privu_visits = 'outofstate', c_analysis = 'hclust', k = 4),
+#           plot_name = 'plot_1mode_all_outst.pdf')
 
 
 ## ---------------------------
 ## TABLE OF MATRIX OF NUMBER OF PRIVATE HIGH SCHOOLS VISITED IN COMMON
 ## ---------------------------
 
-vertex_attr_names(graph = g_1mode_u_psi)
-
-vertex_attr(graph=g_1mode_u_psi, name='school_name') 
-
-
-
-g_1mode_u <- g_1mode_u_psi
-V(g_1mode_u)$name <- V(g_1mode_u)$school_name
+create_1mode_table <- function(onemode_network) {
   
-as_adjacency_matrix(
-  graph = g_1mode_u,
-  type = "lower",
-  attr="weight",
-  names = TRUE,
-  edges = TRUE
-) 
+  vertex_attr(graph=onemode_network, name='name') <- str_c(vertex_attr(graph=onemode_network, name='school_name'), ' (N=', vertex_attr(graph=onemode_network, name='privhs_visits_tot'), ')')
+
+  onemode_matrix <- as_adjacency_matrix(
+    graph = onemode_network,
+    type = "both",
+    attr = "weight",
+    names = TRUE,
+    sparse = FALSE
+  )
+  
+  # Sort by number of visits
+  univs_order_by_privhs_visits_tot <- (igraph::as_data_frame(onemode_network, 'vertices') %>% arrange(desc(privhs_visits_tot)))$name
+  onemode_df <- as.data.frame(onemode_matrix[univs_order_by_privhs_visits_tot, univs_order_by_privhs_visits_tot])
+  
+  rownames(onemode_df) <- (igraph::as_data_frame(onemode_network, 'vertices') %>% arrange(desc(privhs_visits_tot)))$school_name
+  
+  onemode_pct_df <- onemode_df
+  
+  for (i in seq_along(onemode_pct_df)) {
+    total_visits <- as.numeric(str_extract(names(onemode_pct_df)[[i]], '\\d+'))
+    
+    # Replace column w/ pct
+    onemode_pct_df[[i]] <- round(onemode_pct_df[[i]] / total_visits * 100, 1)
+  }
+  
+  list(onemode_df = onemode_df, onemode_pct_df = onemode_pct_df)
+}
 
 
+# Public univs
+table_1mode_pubu <- create_1mode_table(g_1mode_pubu_psi)
+saveRDS(table_1mode_pubu, file = './assets/tables/table_1mode_pubu.RDS')
 
-g_1mode_pubu <- g_1mode_pubu_psi
+View(table_1mode_pubu$onemode_df)  # count matrix
+View(table_1mode_pubu$onemode_pct_df)  # pct matrix
 
-vertex_attr(graph=g_1mode_pubu, name='name') <- vertex_attr(graph=g_1mode_pubu, name='school_name') 
+# Private univs
+table_1mode_privu <- create_1mode_table(g_1mode_privu_psi)
+saveRDS(table_1mode_privu, file = './assets/tables/table_1mode_privu.RDS')
 
-m_1mode_pubu <- as_adjacency_matrix(
-  #graph = g_1mode_u_psi,
-  graph = g_1mode_pubu,
-  type = "both",
-  attr="weight",
-  names = TRUE,
-  #edges = TRUE,
-  #sparse = igraph_opt("sparsematrices")
-  sparse = FALSE
-)
-
-
-
-
-
-m_1mode_pubu
-attributes(m_1mode_pubu)
-
-attr(x=m_1mode_pubu, which='dim') %>% str()
-
-attr(x=m_1mode_pubu, which='dimnames')
-attr(x=m_1mode_pubu, which='dimnames') %>% length()
-
-attr(x=m_1mode_pubu, which='dimnames'[[1]])
+# Private colleges
+table_1mode_privc <- create_1mode_table(g_1mode_privc_psi)
+saveRDS(table_1mode_privc, file = './assets/tables/table_1mode_privc.RDS')
 
 
 ## ------------------------------
@@ -780,32 +779,30 @@ create_ego_table <- function(twomode_network, ego_networks, univs, c_analysis, k
 # Save tables
 
 
-create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
-
-ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
-ego_table_pubu
-
-ego_table_pubu_outst <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate')
-saveRDS(ego_table_pubu_outst, file = './assets/tables/table_ego_pubu_outst.RDS')
-ego_table_pubu_outst
-
-
-ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
-ego_table_privu
-
-ego_table_privc <- create_ego_table(g_2mode_privc, egos_psi_privc, privc_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_privc, file = './assets/tables/table_ego_privc.RDS')
-ego_table_privc
-
-ego_table_univ <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4)
-saveRDS(ego_table_univ, file = './assets/tables/table_ego_univ.RDS')
-ego_table_univ
-
-ego_table_univ_pubu_outst <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
-saveRDS(ego_table_univ_pubu_outst, file = './assets/tables/table_ego_univ_pubu_outst.RDS')
-ego_table_univ_pubu_outst
+# ego_table_pubu <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4)
+# saveRDS(ego_table_pubu, file = './assets/tables/table_ego_pubu.RDS')
+# ego_table_pubu
+# 
+# ego_table_pubu_outst <- create_ego_table(g_2mode_pubu, egos_psi_pubu, pubu_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate')
+# saveRDS(ego_table_pubu_outst, file = './assets/tables/table_ego_pubu_outst.RDS')
+# ego_table_pubu_outst
+# 
+# 
+# ego_table_privu <- create_ego_table(g_2mode_privu, egos_psi_privu, privu_vec, c_analysis = 'hclust', k = 4)
+# saveRDS(ego_table_privu, file = './assets/tables/table_ego_privu.RDS')
+# ego_table_privu
+# 
+# ego_table_privc <- create_ego_table(g_2mode_privc, egos_psi_privc, privc_vec, c_analysis = 'hclust', k = 4)
+# saveRDS(ego_table_privc, file = './assets/tables/table_ego_privc.RDS')
+# ego_table_privc
+# 
+# ego_table_univ <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4)
+# saveRDS(ego_table_univ, file = './assets/tables/table_ego_univ.RDS')
+# ego_table_univ
+# 
+# ego_table_univ_pubu_outst <- create_ego_table(g_2mode_u, egos_psi_u, univ_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
+# saveRDS(ego_table_univ_pubu_outst, file = './assets/tables/table_ego_univ_pubu_outst.RDS')
+# ego_table_univ_pubu_outst
 
 
 ego_table_all <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4)
@@ -813,9 +810,9 @@ saveRDS(ego_table_all, file = './assets/tables/table_ego_all.RDS')
 ego_table_all
 
 
-ego_table_all_pubu_outst <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
-saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_outst.RDS')
-ego_table_all_pubu_outst
+# ego_table_all_pubu_outst <- create_ego_table(g_2mode, egos_psi, psi_vec, c_analysis = 'hclust', k = 4, pubu_visits = 'outofstate', privu_visits = 'all')
+# saveRDS(ego_table_all_pubu_outst, file = './assets/tables/table_ego_all_pubu_outst.RDS')
+# ego_table_all_pubu_outst
 
 
 ## ---------------------------------
@@ -878,14 +875,14 @@ create_2mode_table <- function(twomode_network, race_var = 'pct_blacklatinxnativ
 }
 
 # Save tables
-twomode_both <- create_2mode_table(g_2mode)
-saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
-saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
-
-twomode_privu <- create_2mode_table(g_2mode_privu)
-saveRDS(twomode_privu$full_table, file = './assets/tables/table_2mode_privu.RDS')
-saveRDS(twomode_privu$agg_table, file = './assets/tables/table_2mode_agg_privu.RDS')
-
-twomode_pubu <- create_2mode_table(g_2mode_pubu)
-saveRDS(twomode_pubu$full_table, file = './assets/tables/table_2mode_pubu.RDS')
-saveRDS(twomode_pubu$agg_table, file = './assets/tables/table_2mode_agg_pubu.RDS')
+# twomode_both <- create_2mode_table(g_2mode)
+# saveRDS(twomode_both$full_table, file = './assets/tables/table_2mode_both.RDS')
+# saveRDS(twomode_both$agg_table, file = './assets/tables/table_2mode_agg_both.RDS')
+# 
+# twomode_privu <- create_2mode_table(g_2mode_privu)
+# saveRDS(twomode_privu$full_table, file = './assets/tables/table_2mode_privu.RDS')
+# saveRDS(twomode_privu$agg_table, file = './assets/tables/table_2mode_agg_privu.RDS')
+# 
+# twomode_pubu <- create_2mode_table(g_2mode_pubu)
+# saveRDS(twomode_pubu$full_table, file = './assets/tables/table_2mode_pubu.RDS')
+# saveRDS(twomode_pubu$agg_table, file = './assets/tables/table_2mode_agg_pubu.RDS')

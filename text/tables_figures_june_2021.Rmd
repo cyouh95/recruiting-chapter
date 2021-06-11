@@ -192,3 +192,75 @@ include_graphics(file.path(figures_dir, 'plot_1mode_all_k6.pdf'))
 ```
 
 
+\newpage
+
+## 1-mode tables
+
+- `table_1mode_pubu.RDS`
+- `table_1mode_privu.RDS`
+- `table_1mode_privc.RDS`
+
+Notes:
+
+- Each .RDS stores a list containing a counts matrix (`onemode_df`) and percent matrix (`onemode_pct_df`)
+- Some observations for the public university matrix and its corresponding 1-mode plot above
+  - U of Alabama has a lot more visits to private HS than the rest and is in its own cluster as seen from plot
+  - U of S.Carolina and CU Boulder are in a cluster together, and if we look at each of their columns in the pct matrix, they do have the most in common w/ each other (besides Alabama)
+  - UNL, UC Riverside, and Stony Brook actually have very little commonly visited HS, but ended up being in the same cluster as seen from the plot. They do have the fewest number of private HS visits, so less likely to have visits in common w/ other univs. As seen from the plot, their vertices are located very far apart from each other and have no direct edges connecting them.
+
+\newpage
+
+\newgeometry{top=0.5cm, left=0in, right=0cm, bottom=0.5cm}
+
+\begin{landscape}
+
+
+```{r}
+table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
+
+kable(table_1mode_pubu$onemode_df, caption = 'Public universities count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(c(14, 16), width = '6em')
+
+kable(table_1mode_pubu$onemode_pct_df, caption = 'Public universities percent matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(c(14, 16), width = '6em')
+
+
+
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+
+kable(table_1mode_privu$onemode_df, caption = 'Private universities count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+
+kable(table_1mode_privu$onemode_pct_df, caption = 'Private universities percent matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+
+
+
+table_1mode_privc <- readRDS(file = file.path(tables_dir, 'table_1mode_privc.RDS'))
+
+kable(table_1mode_privc$onemode_df, caption = 'Private colleges count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(11, width = '6em')
+
+kable(table_1mode_privc$onemode_pct_df, caption = 'Private colleges percent matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(11, width = '6em')
+```
+
+\end{landscape}
