@@ -303,9 +303,14 @@ We answer research question 3 by, first, analyzing overlap in the recruiting net
 
 ### Public university network
 
-Tables \@ref(tab:pubu-count-matrix) and \@ref(tab:pubu-percent-matrix) provides a tabular representation of the extent to which public universities visited overlapping sets of private high schools. Table \@ref(tab:pubu-count-matrix) shows, for each pair of public universities (e.g., University of Alabama and University of South Caroline,  the number of high schools that were visited by both universities. For example, column 1 shows that of the X different private high schools visited by the University of Alabama, the University of California also visited X of these high schools. Table \@ref(tab:pubu-percent-matrix) shows overlap in high schools visited in terms of percent rather than count. For example, of the X private high schools visited by CU Boulder, the University of Alabama visited X% of these high schools and the University of South Carolina visited X% of these high schools.
+Tables \@ref(tab:pubu-count-matrix) and \@ref(tab:pubu-percent-matrix) provides a tabular representation of the extent to which public universities visited overlapping sets of private high schools. Table \@ref(tab:pubu-count-matrix) shows, for each pair of public universities (e.g., University of Alabama and University of South Caroline,  the number of high schools that were visited by both universities. For example, column 1 shows that of the X different private high schools visited by the University of Alabama, the University of California also visited X of these high schools. Table \@ref(tab:pubu-percent-matrix) shows overlap in high schools visited in terms of percent rather than count. For example, of the X private high schools visited by CU Boulder, the University of Alabama visited X% of these high schools and the University of South Carolina visited X% of these high schools. 
 
 INSERT TABLE \@ref(tab:pubu-count-matrix) AND TABLE \@ref(tab:pubu-percent-matrix) ABOUT HERE
+
+The University of Alabama -- and to a lesser extent the University of South Carolina and CU-Boulder -- is omnipresent in the private high schools visited by the other public research universities in our sample, except the University of Nebraska-Lincoln. For the remaining universities, Figure \@ref(tab:pubu-percent-matrix) suggests several clusters of universities. For example, UMass-Amherst, Suny Stonybrook and Rutgers tend to visit many of the same high schools, as do University of Arkansas and the University of Kansas.
+
+
+
 
 ADD PARAGRAPH THAT SUBSTANTIVELY INTERPRETS BIG PICTURE FINDINGS FROM THESE TABLES.
 
@@ -315,28 +320,16 @@ table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS')
 table_1mode_pubu %>% glimpse()
 ```
 
+INSERT TABLE \@ref(fig:plot-1mode-pubu) ABOUT HERE
 
-
-DESCRIBE HOW TO READ TABLE AND WHAT THE RESULTS SHOW
-
-
-
-
-INSERT TABLE X ABOUT HERE
-
-Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a dotted line -- if both universities visit at least one high school in common. 
-
-
-For our one-mode public 
-
-We address RQ3 by graphing the recruiting network and by identifying "clusters" of universities that have similar recruiting networks. First, network graphs show vertices (e.g., universities) as circles, with vertices that share many connections located close together and vertices that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph. In addition to network graphs, network scholarship often uses cluster analysis methodologies to identify vertices that share common structure, based purely on patterns of network ties.
-
-
-Network graphs show vertices as nodes and edges as lines connecting two nodes. Conceptually, we think of nodes as repelling one another and edges as pulling nodes together. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Nodes that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, while nodes that are relatively disconnected are located at the periphery of the graph.  In the analyses below, we graph the one-mode college network, using relative proximity of nodes to convey whether a pair colleges have a similar network structure.
-
-We also address research question 3 by using cluster analysis to identify colleges/universities that share common network structure. Many social network analyses utilize data-driven "community detection" algorithms to categorize vertices into a small number of groups (or cluster) based purely on patterns of network ties. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We performed hierarchical cluster analysis to allocate colleges and universities into clusters based on their private high schools visits
+Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of a solid line between universities indicates the number of high schools both universities visited. Finally, the shape of each university vertex is determined by cluster analysis, which we specified to allocate each university to one of four groups, based purely on network patterns.
 
 INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
+
+Figure \@ref(fig:plot-1mode-pubu) shows three universities in the cneter of the recruiting network, the University of Alabama -- a cluster unto itesf -- and the University of South Carolina and CU-Boulder.  By contrast, the University of Nebraska-Lincoln, UC-Riverside, and SUNY-Stonybrook are on the periphery of the network. These three universities are members of the same community cluster, despite not visiting any high schools in common. Between this most peripheral and the most central of universities, lies a cluster of 9 universities, consisting largely of universities that enoll relatively few out-of-state students but are actively seeking more.
+
+
+
 
 
 
