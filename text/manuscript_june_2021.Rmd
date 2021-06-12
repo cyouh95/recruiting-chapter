@@ -322,7 +322,11 @@ table_1mode_pubu %>% glimpse()
 
 INSERT TABLE \@ref(fig:plot-1mode-pubu) ABOUT HERE
 
-Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of a solid line between universities indicates the number of high schools both universities visited. Finally, the shape of each university vertex is determined by cluster analysis, which we specified to allocate each university to one of four groups, based purely on network patterns.
+Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of a solid line between universities indicates the number of high schools both universities visited. Conceptually, we think of nodes as repelling one another and edges as pulling nodes together. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Nodes that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, while nodes that are relatively disconnected are located at the periphery of the graph.  
+
+Finally, the shape of each university vertex is determined by cluster analysis, which we specified to allocate each university to one of four groups, based purely on network patterns.
+
+In the analyses below, we graph the one-mode college network, using relative proximity of nodes to convey whether a pair colleges have a similar network structure
 
 INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
 
@@ -340,6 +344,7 @@ INSERT TABLE \@ref(tab:privu-percent-matrix) ABOUT HERE
 
 INSERT FIGURE \@ref(fig:plot-1mode-privu) ABOUT HERE
 
+NOTE THAT MARQUETTE IS PERIPHERAL DESPITE MAKING A LARGE NUMBER OF VISITS, SUGGESTING THAT THEY VISIT A DIFFERENT SET OF HIGH SCHOOLS THAN MOST UNIVERSITIES
 
 ### Public and private university network
 
