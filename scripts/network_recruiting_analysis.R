@@ -619,9 +619,20 @@ save_plot(plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 6, 
 ## TABLE OF MATRIX OF NUMBER OF PRIVATE HIGH SCHOOLS VISITED IN COMMON
 ## ---------------------------
 
-create_1mode_table <- function(onemode_network) {
+privhs_events_unique <- privhs_events %>%
+  left_join(univ_info %>% select(univ_id, univ_abbrev, classification), by = 'univ_id') %>% 
+  group_by(classification, univ_id, univ_abbrev) %>% 
+  summarise(count = n_distinct(school_id)) %>% 
+  arrange(classification, desc(count))
+
+create_1mode_table <- function(onemode_network, univ_type) {
   
-  vertex_attr(graph=onemode_network, name='name') <- str_c(vertex_attr(graph=onemode_network, name='school_name'), ' (N=', vertex_attr(graph=onemode_network, name='privhs_visits_tot'), ')')
+  privhs_events_unique_df <- privhs_events_unique %>% filter(classification == univ_type)
+  
+  # Get N = number of unique private HS visited by each univ (order univ same way as igraph)
+  num_unique_privhs_visited <- privhs_events_unique_df[match(vertex_attr(graph=onemode_network, name='name'), privhs_events_unique_df$univ_id), ]$count
+
+  vertex_attr(graph=onemode_network, name='name') <- str_c(vertex_attr(graph=onemode_network, name='school_name'), ' (N=', num_unique_privhs_visited, ')')
 
   onemode_matrix <- as_adjacency_matrix(
     graph = onemode_network,
@@ -632,10 +643,18 @@ create_1mode_table <- function(onemode_network) {
   )
   
   # Sort by number of visits
-  univs_order_by_privhs_visits_tot <- (igraph::as_data_frame(onemode_network, 'vertices') %>% arrange(desc(privhs_visits_tot)))$name
-  onemode_df <- as.data.frame(onemode_matrix[univs_order_by_privhs_visits_tot, univs_order_by_privhs_visits_tot])
+  g_df <- igraph::as_data_frame(onemode_network, 'vertices')
+  univs_order_by_privhs <- g_df[match(privhs_events_unique_df$univ_abbrev, g_df$school_name),]$name 
+  onemode_df <- as.data.frame(onemode_matrix[univs_order_by_privhs, univs_order_by_privhs])
   
-  rownames(onemode_df) <- (igraph::as_data_frame(onemode_network, 'vertices') %>% arrange(desc(privhs_visits_tot)))$school_name
+  rownames(onemode_df) <- privhs_events_unique_df$univ_abbrev
+  
+  for(i in seq_along(onemode_df)) {
+    total_visits <- as.numeric(str_extract(names(onemode_df)[[i]], '\\d+'))
+    
+    # Replace self count from 0 to N = number of unique private HS visited
+    onemode_df[[i]][[i]] <- total_visits
+  }
   
   onemode_pct_df <- onemode_df
   
@@ -651,18 +670,28 @@ create_1mode_table <- function(onemode_network) {
 
 
 # Public univs
-table_1mode_pubu <- create_1mode_table(g_1mode_pubu_psi)
+table_1mode_pubu <- create_1mode_table(g_1mode_pubu_psi, 'public_research')
 saveRDS(table_1mode_pubu, file = './assets/tables/table_1mode_pubu.RDS')
 
 View(table_1mode_pubu$onemode_df)  # count matrix
 View(table_1mode_pubu$onemode_pct_df)  # pct matrix
 
+# Checks (edges *are* actually unique private HS visited in common)
+(privhs_events %>% filter(univ_id == '100751'))$school_id %>% length()  # U of Alabama has 1039 private HS visits total (non-unique)
+(privhs_events %>% filter(univ_id == '100751'))$school_id %>% unique() %>% length()  # Visits are to 759 unique private HS (unique)
+
+(privhs_events %>% filter(univ_id == '218663'))$school_id %>% length()  # U of S.Carolina has 498 private HS visits total (non-unique)
+(privhs_events %>% filter(univ_id == '218663'))$school_id %>% unique() %>% length()  # Visits are to 396 unique private HS (unique)
+
+intersect((privhs_events %>% filter(univ_id == '100751'))$school_id, (privhs_events %>% filter(univ_id == '218663'))$school_id) %>% length()  # 284 private HS are the same between them (unique)
+intersect(unique((privhs_events %>% filter(univ_id == '100751'))$school_id), unique((privhs_events %>% filter(univ_id == '218663'))$school_id)) %>% length()  # Same as above
+
 # Private univs
-table_1mode_privu <- create_1mode_table(g_1mode_privu_psi)
+table_1mode_privu <- create_1mode_table(g_1mode_privu_psi, 'private_national')
 saveRDS(table_1mode_privu, file = './assets/tables/table_1mode_privu.RDS')
 
 # Private colleges
-table_1mode_privc <- create_1mode_table(g_1mode_privc_psi)
+table_1mode_privc <- create_1mode_table(g_1mode_privc_psi, 'private_libarts')
 saveRDS(table_1mode_privc, file = './assets/tables/table_1mode_privc.RDS')
 
 

@@ -220,15 +220,15 @@ table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS')
 
 kable(table_1mode_pubu$onemode_df, caption = 'Public universities count matrix') %>%
   kable_styling(latex_options = 'scale_down') %>%
-  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(c(1, 14), width = '8.5em') %>% 
   column_spec(2:13, width = '7em') %>% 
-  column_spec(c(14, 16), width = '6em')
+  column_spec(c(15, 16), width = '6em')
 
 kable(table_1mode_pubu$onemode_pct_df, caption = 'Public universities percent matrix') %>%
   kable_styling(latex_options = 'scale_down') %>%
-  column_spec(c(1, 15), width = '8.5em') %>% 
+  column_spec(c(1, 14), width = '8.5em') %>% 
   column_spec(2:13, width = '7em') %>% 
-  column_spec(c(14, 16), width = '6em')
+  column_spec(c(15, 16), width = '6em')
 
 
 
@@ -236,14 +236,14 @@ table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS
 
 kable(table_1mode_privu$onemode_df, caption = 'Private universities count matrix') %>%
   kable_styling(latex_options = 'scale_down') %>%
-  column_spec(1, width = '8.5em') %>%
-  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(1, 14, 15), width = '8.5em') %>%
+  column_spec(2:11, width = '7em') %>% 
   column_spec(c(4:6, 10, 12, 13), width = '6em')
 
 kable(table_1mode_privu$onemode_pct_df, caption = 'Private universities percent matrix') %>%
   kable_styling(latex_options = 'scale_down') %>%
-  column_spec(1, width = '8.5em') %>%
-  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(1, 14, 15), width = '8.5em') %>%
+  column_spec(2:11, width = '7em') %>% 
   column_spec(c(4:6, 10, 12, 13), width = '6em')
 
 
