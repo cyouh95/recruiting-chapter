@@ -33,7 +33,16 @@ univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', st
 
 # Public HS data from CCD
 pubhs_data_1718 <- readRDS('./data/ccd_1718.RDS')
-pubhs_data_1415 <- read.csv('./data/meta_high_school_public.csv', header = TRUE, na.strings = c('', 'NA', 'NULL'), stringsAsFactors = FALSE, colClasses = c('ncessch' = 'character'))  # original set used for merging
+pubhs_data_1415 <- read.csv('./data/meta_high_school_public.csv', header = TRUE, na.strings = c('', 'NA', 'NULL'), stringsAsFactors = FALSE, colClasses = c('ncessch' = 'character')) %>%  # original set used for merging
+  mutate(  # total_students = wh + am + as + hi + bl + hp + tr (each is sum of 9-12 grades)
+    pct_amerindian = am / total_students * 100,
+    pct_asian = as / total_students * 100,
+    pct_black = bl / total_students * 100,
+    pct_hispanic = hi / total_students * 100,
+    pct_nativehawaii = hp / total_students * 100,
+    pct_tworaces = tr / total_students * 100,
+    pct_white = wh / total_students * 100
+  )
 
 # Private HS data from PSS
 privhs_data_1718 <- readRDS('./data/pss_1718.RDS')
@@ -93,7 +102,7 @@ events_data <- events_data %>% filter(!(pid %in% c(34938, 44224, 33941, 25637)),
 table(events_data$event_type, useNA = 'always')
 
 
-# Clean up events data (drop visits to HS not meeting criteria - 45533 to 41054 obs)
+# Clean up events data (drop visits to HS not meeting criteria - 45533 to 44660 obs)
 events_df <- events_data %>% 
   select(univ_id, univ_state, event_type, school_id, event_state, event_loc)
 
@@ -137,14 +146,14 @@ ccd_missing_ncessch <- setdiff(events_df$school_id[events_df$event_type == 'pub_
 ccd_meet_criteria_1718 <- pubhs_data_1718 %>%
   filter(g_12_offered == 'Yes', g12 >= 10, virtual %in% c('NOTVIRTUAL', 'SUPPVIRTUAL'), fipst < 60, updated_status %in% c('1', '3', '8')) %>% 
   mutate(year = '1718') %>% 
-  select(year, ncessch, state_code, g12)
+  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white)
 
 # Verify no unmerged ccd id
 setdiff(ccd_missing_ncessch, pubhs_data_1415$ncessch)
 ccd_meet_criteria_1415 <- pubhs_data_1415 %>%
   filter(g12offered == 1, g12 >= 10, virtual == 0, state_fips_code < 60, updated_status %in% c(1, 3, 8)) %>% 
   mutate(year = '1415') %>% 
-  select(year, ncessch, state_code, g12)
+  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white)
 
 # Universe of public HS meeting criteria (20809 obs)
 pubhs_data <- ccd_meet_criteria_1718 %>%
@@ -157,6 +166,22 @@ pubhs_data %>% group_by(year) %>% count()  # 20756 from 2017-18, 53 from 2014-15
 events_df <- events_df %>% filter(event_type != 'pub_hs' | school_id %in% pubhs_data$ncessch)
 table(events_df$event_type, useNA = 'always')
 
+# Add race categorical variables to public HS data
+pubhs_data <- pubhs_data %>% mutate(
+  pct_white_cat = case_when(
+    pct_white < 50 ~ 'c1_lt50',
+    pct_white < 75 ~ 'c2_50to75',
+    pct_white < 85 ~ 'c3_75to85',
+    pct_white >= 85 ~ 'c4_85+'
+  ),
+  pct_blacklatinxnative = pct_black + pct_hispanic + pct_amerindian + pct_nativehawaii,
+  pct_blacklatinxnative_cat = case_when(
+    pct_blacklatinxnative < 10 ~ 'c1_lt10',
+    pct_blacklatinxnative < 20 ~ 'c2_10to20',
+    pct_blacklatinxnative < 50 ~ 'c3_20to50',
+    pct_blacklatinxnative >= 50 ~ 'c4_50+'
+  )
+)
 
 # Save dataframes
 saveRDS(pubhs_data, file = str_c('./data/pubhs_universe.RDS'))

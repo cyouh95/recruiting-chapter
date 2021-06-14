@@ -133,23 +133,77 @@ for (i in names(ccd_membership)) {
 
 # Pivot table (33369 obs.)
 ccd_membership_by_grade <- ccd_membership %>%
-  filter(grade %in% c('Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Grade 13'), total_indicator == 'Subtotal 4 - By Grade') %>%  # filter by 'Category Set A - By Race/Ethnicity; Sex; Grade' if want to further break down by race
+  filter(grade %in% c('Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Grade 13'), total_indicator == 'Subtotal 4 - By Grade') %>%
   select(ncessch, grade, student_count) %>%
-  mutate(grade = recode(grade,
-                        'Grade 9' = 'g09',
-                        'Grade 10' = 'g10',
-                        'Grade 11' = 'g11',
-                        'Grade 12' = 'g12',
-                        'Grade 13' = 'g13')
-         ) %>% 
+  mutate(
+    grade = recode(grade,
+                   'Grade 9' = 'g09',
+                   'Grade 10' = 'g10',
+                   'Grade 11' = 'g11',
+                   'Grade 12' = 'g12',
+                   'Grade 13' = 'g13')
+    ) %>% 
   pivot_wider(names_from = grade, values_from = student_count) %>%
   rowwise() %>% 
   mutate(total_students = sum(g09, g10, g11, g12, g13, na.rm = T))
 
+# Pivot table (33369 obs.)
+ccd_membership_by_race <- ccd_membership %>%
+  filter(grade %in% c('Grade 9', 'Grade 10', 'Grade 11', 'Grade 12', 'Grade 13'), total_indicator == 'Category Set A - By Race/Ethnicity; Sex; Grade') %>%
+  mutate(
+    grade = recode(grade,
+                   'Grade 9' = 'g09',
+                   'Grade 10' = 'g10',
+                   'Grade 11' = 'g11',
+                   'Grade 12' = 'g12',
+                   'Grade 13' = 'g13'),
+    race_ethnicity = recode(race_ethnicity,
+                            'American Indian or Alaska Native' = 'amerindian',
+                            'Asian' = 'asian',
+                            'Black or African American' = 'black',
+                            'Hispanic/Latino' = 'hispanic',
+                            'Native Hawaiian or Other Pacific Islander' = 'nativehawaii',
+                            'Not Specified' = 'unknown',
+                            'Two or more races' = 'tworaces',
+                            'White' = 'white'),
+    grade_race = str_c(grade, race_ethnicity, sep = '_')
+  ) %>% 
+  group_by(ncessch, grade_race) %>% 
+  summarise(count = sum(student_count, na.rm = T)) %>% 
+  pivot_wider(names_from = grade_race, values_from = count) %>%
+  rowwise() %>% 
+  mutate(
+    total_amerindian = sum(g09_amerindian, g10_amerindian, g11_amerindian, g12_amerindian, g13_amerindian, na.rm = T),
+    total_asian = sum(g09_asian, g10_asian, g11_asian, g12_asian, g13_asian, na.rm = T),
+    total_black = sum(g09_black, g10_black, g11_black, g12_black, g13_black, na.rm = T),
+    total_hispanic = sum(g09_hispanic, g10_hispanic, g11_hispanic, g12_hispanic, g13_hispanic, na.rm = T),
+    total_nativehawaii = sum(g09_nativehawaii, g10_nativehawaii, g11_nativehawaii, g12_nativehawaii, g13_nativehawaii, na.rm = T),
+    total_tworaces = sum(g09_tworaces, g10_tworaces, g11_tworaces, g12_tworaces, g13_tworaces, na.rm = T),
+    total_unknown = sum(g09_unknown, g10_unknown, g11_unknown, g12_unknown, g13_unknown, na.rm = T),
+    total_white = sum(g09_white, g10_white, g11_white, g12_white, g13_white, na.rm = T),
+    sum_students = sum(total_amerindian, total_asian, total_black, total_hispanic, total_nativehawaii, total_tworaces, total_unknown, total_white, na.rm = T),
+    total_students = if_else(sum_students == 0, NA_integer_, sum_students),
+    pct_amerindian = total_amerindian / total_students * 100,
+    pct_asian = total_asian / total_students * 100,
+    pct_black = total_black / total_students * 100,
+    pct_hispanic = total_hispanic / total_students * 100,
+    pct_nativehawaii = total_nativehawaii / total_students * 100,
+    pct_tworaces = total_tworaces / total_students * 100,
+    pct_unknown = total_unknown / total_students * 100,
+    pct_white = total_white / total_students * 100
+  )
+
+# Total should be the same
+ccd_membership_by_grade %>% full_join(ccd_membership_by_race, by = 'ncessch') %>% filter(total_students.x != total_students.y) %>% nrow()
+
+# Combine by grade and by race
+ccd_membership_by_grade_race <- ccd_membership_by_grade %>% 
+  full_join(ccd_membership_by_race %>% select(-sum_students, -total_students), by = 'ncessch')
+
 
 # Join tables
 ccd <- left_join(ccd_directory, ccd_characteristics, by = 'ncessch') %>% 
-  left_join(ccd_membership_by_grade, by = 'ncessch')
+  left_join(ccd_membership_by_grade_race, by = 'ncessch')
 
 # Rename variables
 ccd <- ccd %>% rename(state_code = 'st')
