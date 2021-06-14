@@ -277,21 +277,19 @@ A similar pattend emerged for the public research universities in our sample; mo
 
 Figure \@ref(fig:enroll-pubu-privu) shows the 12th grade enrollment of visited private high schools. Compared to the universe of private high schools, the universities in our sample tended to visit schools that enrolled more 12th graders. Generally, the findings were pretty similar across universities public and private universities; for must universities, more than half of private school visits were to schools that enrolled at least 100 12th graders. However, public universities tended to visit a slightly larger share of high schools with fewer than 50 12th graders and private universities tended to visit a higher share of high schools with 12th grade enrollment of 50-100.
 
-INSERT FIGURES \@ref(fig:enroll-pubu-privu) AND \@ref(fig:enroll-pubu-privu) [the one for public high schools] ABOUT HERE
+INSERT FIGURES \@ref(fig:enroll-pubu-privu) AND \@ref(fig:enroll-pubu-privhs-pubhs) ABOUT HERE
 
-Figure X shows the 12th grade enrollment of visited private high schools to the 12th grade enrollment of visited public high schools for the public research universities in our sample. DISCUSS RESULTS; MAIN TAKEAWAY IS THAT, COMPARED TO THE PUBLICH HIGH SCHOOLS THEY VISIT, PUBLIC UNIVERSITIES SEEM TO BE WILLING TO VISIT PRIVATE SCHOOLS THAT ENROLL FAR FEWER 12TH GRADERS.
-
-
-
+Figure \@ref(fig:enroll-pubu-privhs-pubhs) shows the 12th grade enrollment of visited private high schools to the 12th grade enrollment of visited public high schools for the public research universities in our sample. DISCUSS RESULTS; MAIN TAKEAWAY IS THAT, COMPARED TO THE PUBLICH HIGH SCHOOLS THEY VISIT, PUBLIC UNIVERSITIES SEEM TO BE WILLING TO VISIT PRIVATE SCHOOLS THAT ENROLL FAR FEWER 12TH GRADERS.
 
 Figure \@ref(fig:race-pubu-privu) shows the percentage of 12th graders who identify as Black, Latinx, or Native at visited private high schools. Consistent with @RN4504, most private high schools enroll relatively few students from historically underrepresented race/ethnicity groups. For about 70% [CRYSTAL - CHECK THIS] of schools in the universe of private high schools (top row of Figure \@ref(fig:race-pubu-privu)), Black/Latinx/Native students comprise less than 20% of enrolled students. Therefore, even if universities visited schools with racial composition on par with the universe of private high schools, most visited schools would enroll relatively few Black/Latinx/Native students. Figure \@ref(fig:race-pubu-privu) shows that for most universities in our sample, the set of visited private high schools enrolled *fewer* Black/Latinx/Native students than the universe of private high schools. For public universities, exceptions to this finding were were UC-San Diego, UC-Riverside, and -- to a lesser extent -- SUNY Stony Brook. For private universities, Marquette was the only exception to this finding.
 
-Several studies suggest that universities -- particularly elite private universities -- pursue racial diversity by recruiting non-white students who attend predominantly white private high schools [e.g., @RN4495]. Additionally, scholarship that engages with enrollment in private schools by Black students suggests that many high-income Black families began sending their children to elite, predominantly white private schools once these schools were willing to enroll Black students [@RN4724]. Therefore, universities may visit predominantly white private high schools in search of non-white students. Once concern about this practice is that non-white students at elite private schools may be in high demand by many universities, but similarly achieving non-white students at predominantly non-white public schools might be ignored.
-
 INSERT FIGURE \@ref(fig:race-pubu-privu) ABOUT HERE
 
-Figure X compares the racial composition of private high schools visited by public research universities to the racial composition of public high schools visited by these universities. [TAKEAWAY: the private high schools visited are much less racially diverse that the public high schools they visit, so recruiting aggresively from private schools may shift the racial composition of public research universities away from black/latinx/native]
+Several studies suggest that universities -- particularly elite private universities -- pursue racial diversity by recruiting non-white students who attend predominantly white private high schools [e.g., @RN4495]. Additionally, scholarship that engages with enrollment in private schools by Black students suggests that many high-income Black families began sending their children to elite, predominantly white private schools once these schools were willing to enroll Black students [@RN4724]. Therefore, universities may visit predominantly white private high schools in search of non-white students. Once concern about this practice is that non-white students at elite private schools may be in high demand by many universities, but similarly achieving non-white students at predominantly non-white public schools might be ignored.
 
+INSERT FIGURE \@ref(fig:race-pubu-privhs-pubhs) ABOUT HERE
+
+Figure \@ref(fig:race-pubu-privhs-pubhs) compares the racial composition of private high schools visited by public research universities to the racial composition of public high schools visited by these universities. [TAKEAWAY: the private high schools visited are much less racially diverse that the public high schools they visit, so recruiting aggresively from private schools may shift the racial composition of public research universities away from black/latinx/native]
 
 ## Research question 3: overlapping network structure
 
@@ -303,50 +301,92 @@ We answer research question 3 by, first, analyzing overlap in the recruiting net
 
 ### Public university network
 
-Tables \@ref(tab:pubu-count-matrix) and \@ref(tab:pubu-percent-matrix) provides a tabular representation of the extent to which public universities visited overlapping sets of private high schools. Table \@ref(tab:pubu-count-matrix) shows, for each pair of public universities (e.g., University of Alabama and University of South Caroline,  the number of high schools that were visited by both universities. For example, column 1 shows that of the X different private high schools visited by the University of Alabama, the University of California also visited X of these high schools. Table \@ref(tab:pubu-percent-matrix) shows overlap in high schools visited in terms of percent rather than count. For example, of the X private high schools visited by CU Boulder, the University of Alabama visited X% of these high schools and the University of South Carolina visited X% of these high schools. 
+Tables \@ref(tab:pubu-count-matrix) and \@ref(tab:pubu-percent-matrix) provides a tabular representation of the extent to which public universities visited overlapping sets of private high schools. Table \@ref(tab:pubu-count-matrix) shows -- for each pair of public universities -- the number of high schools that were visited by both universities. For example, column 1 shows that of the 759 different private high schools that the University of Alabama visited, the University of South Carolina visited 284 of these schools and CU-Boulder visited 210 of these schools. Table \@ref(tab:pubu-percent-matrix) shows overlap in high schools visited in terms of percent rather than count. For example, Column 2 shows that of the 396 different private high schools visited by the University of South Carolina, the University of Alabama visited 71.7% of these high schools and CU-Boulder visited 39.1% of these high schools.
 
 INSERT TABLE \@ref(tab:pubu-count-matrix) AND TABLE \@ref(tab:pubu-percent-matrix) ABOUT HERE
 
-The University of Alabama -- and to a lesser extent the University of South Carolina and CU-Boulder -- is omnipresent in the private high schools visited by the other public research universities in our sample, except the University of Nebraska-Lincoln. For the remaining universities, Figure \@ref(tab:pubu-percent-matrix) suggests several clusters of universities. For example, UMass-Amherst, Suny Stonybrook and Rutgers tend to visit many of the same high schools, as do University of Arkansas and the University of Kansas.
+One finding from Table \@ref(tab:pubu-percent-matrix) is that the University of Alabama is is omnipresent in the set of private high schools visited by most other public research universities in the sample, particularly universities located in the South. For the remaining universities, Figure \@ref(tab:pubu-percent-matrix) suggests several clusters of universities. For example, UMass-Amherst, Suny Stonybrook and Rutgers tend to visit many of the same high schools, as do University of Arkansas and the University of Kansas.
 
-
-
-
-ADD PARAGRAPH THAT SUBSTANTIVELY INTERPRETS BIG PICTURE FINDINGS FROM THESE TABLES.
 
 
 ```{r, eval = FALSE, include = FALSE}
 table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
-table_1mode_pubu %>% glimpse()
+table_1mode_pubu$onemode_pct_df %>% glimpse()
+table_1mode_pubu$onemode_pct_df
+
+table_1mode_pubu$onemode_pct_df %>% filter(row.names(table_1mode_pubu$onemode_pct_df) %in% c('CU Boulder'))
+
+table_1mode_pubu$onemode_pct_df %>% attributes()
+
+table_1mode_pubu$onemode_pct_df %>% select(`U of Alabama (N=759)`) %>% str()
+table_1mode_pubu$onemode_pct_df %>% select(`U of Alabama (N=759)`) %>% attributes()
 ```
 
-INSERT TABLE \@ref(fig:plot-1mode-pubu) ABOUT HERE
-
-Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Generally -- whether graphing one-mode or two-mode networks -- network graphs show vertices as circles and edges as lines connecting pairs of vertices. In our one-mode public university network, each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of a solid line between universities indicates the number of high schools both universities visited. Conceptually, we think of nodes as repelling one another and edges as pulling nodes together. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Nodes that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, while nodes that are relatively disconnected are located at the periphery of the graph.  
-
-Finally, the shape of each university vertex is determined by cluster analysis, which we specified to allocate each university to one of four groups, based purely on network patterns.
-
-In the analyses below, we graph the one-mode college network, using relative proximity of nodes to convey whether a pair colleges have a similar network structure
+Network graphs are useful for showing which universities have similar private high school recruiting newtworks. Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Whether graphing one-mode or two-mode networks, network graphs show vertices as circles and edges as lines connecting pairs of vertices. In Figure \@ref(fig:plot-1mode-pubu),each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of the line between two universities indicates the number of high schools both universities visited, as identified in Tables \@ref(tab:pubu-count-matrix). Conceptually, we think of vertices as repelling one another and edges as pulling vertices together [@RN4725]. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Vertices that are highly connected -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, vertices nodes that are relatively disconnected are located at the periphery of the graph.
 
 INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
 
-Figure \@ref(fig:plot-1mode-pubu) shows three universities in the cneter of the recruiting network, the University of Alabama -- a cluster unto itesf -- and the University of South Carolina and CU-Boulder.  By contrast, the University of Nebraska-Lincoln, UC-Riverside, and SUNY-Stonybrook are on the periphery of the network. These three universities are members of the same community cluster, despite not visiting any high schools in common. Between this most peripheral and the most central of universities, lies a cluster of 9 universities, consisting largely of universities that enoll relatively few out-of-state students but are actively seeking more.
+Figure \@ref(fig:plot-1mode-pubu) shows the University of Alabama, University of South Carolina, and CU-Boulder at the center of the recruiting network. The University of Nebraska-Lincoln, SUNY Stony Brook and UC-Riverside are located on the periphery, and the remaining universities are in-between. Universities that share many direct (i.e., visit many of the same schools) or indirect edges tend to be located close together, for example University of Kansas and University of Arkansas, University of Geogia and UC-Berkeley. 
 
+To better answer research question 3, we augment the network graphs by using cluster analysis to identify universities that share common network structure. Social network. Referred to as "community detection" in the literature, social network methodologists have developed many alternative algorithms to categorized vertices into a small number of groups (or clusters) based purely on patterns of network ties [@RN4725]. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We performed hierarchical cluster analysis to allocate universities into clusters, directing the algorithm to identify four groups. 
 
-
-
-
-
+The shape of each university vertex in Figure \@ref(fig:plot-1mode-pubu) is determined by this cluster analysis. These clusters are largely consistent with physical layout of vertices in Figure \@ref(fig:plot-1mode-pubu).  The University of Alabama is a cluster unto itself. The University of South Carolina and CU-Boulder form a cluster. The third cluster consists of nine universities (Arkansas, Kansas, Cincinnati, San Diego, Rutgers, Amherst, Pitt, Berkeley, and Georgia). Finally, the fourth cluster -- Nebraska-Lincoln, UC-Riverside, and SUNY-Stony Brook -- consists of universities that are all peripheral to the network but do not visit any high schools in common.
 
 ### Private university network
+
+Table \@ref(tab:privu-percent-matrix) and Figure \@ref(fig:plot-1mode-privu) show overlap in private high schools visited by the selective private universities in our sample. The networks of private universities tend to have more overlap than the network of public research universities (above). This is demonstrated tabularly by the higher percentages in Table \@ref(tab:privu-percent-matrix) compared to Table \@ref(tab:pubu-percent-matrix) and graphically by the thicker lines connecting universities in Figure \@ref(fig:plot-1mode-privu) compared to Figure \@ref(fig:plot-1mode-pubu).  
 
 INSERT TABLE \@ref(tab:privu-percent-matrix) ABOUT HERE
 
 INSERT FIGURE \@ref(fig:plot-1mode-privu) ABOUT HERE
 
-NOTE THAT MARQUETTE IS PERIPHERAL DESPITE MAKING A LARGE NUMBER OF VISITS, SUGGESTING THAT THEY VISIT A DIFFERENT SET OF HIGH SCHOOLS THAN MOST UNIVERSITIES
+
+The three most central universities in Figure \@ref(fig:plot-1mode-privu) are the universities which visited the greatest number of different private high schools, identified in parentheses: Notre Dame (625), Villanova (563), and SMU (550). Visually, the second tier of centrality includes TCU (435), Tulane (430), Northwestern (377), and Boston College (339). These results are fairly consistent with the four clusters identified by cluster analysis, in which Notre Dame and SMU are both clusters unto themselves, and Villanova is part of the third cluster which also includes Northwestern, Boston College, Tulane, and TCU.
+
+With respect to the periphery of the network -- Baylor (237), Stevens Institute (160), Marquette (331), and Case Western (228) --  Baylor visits a higher number of conservative Chrisitan high schools than any other university (see Figure \@ref(fig:religion-pubu-privu)). It is notable that Marquette is in the periphery despite visiting a higher number of schools than more centrally located universities (e.g., Emory), suggesting that Marquette visits many schools that are visited by few other private universities in our sample.
+
+The universities located close to one another in Figure \@ref(fig:plot-1mode-privu) tend to share relgious affiliation and/or be located in the same geographic region. For example, the majority of Catholic universities are located close to one another and the majority of Midwest universities are located close to one another. Interestingly, two of the three Christian universities -- TCU and SMU -- are located closer much closer to the Catholic universities Notre Dame and Northwestern than they are to Baylor, suggesting that Baylor visits a different set of conservative Christian high schools than TCU and SMU.
 
 ### Public and private university network
+
+Figure \@ref(fig:plot-1mode-u) shows overlap in private high schools visited amongst all 29 private and public universities in the sample, with the cluster analysis algorithm specified to identify five groups. 
+
+Two clusters -- consisting of 10 universities -- emerge as the most central. The first cluster, consisting of four universities (with number of unique private high schools visited in parentheses), is the University of Alabama (759), Notre Dame (625), Villanova (563), and SMU (550). These four universities visited more private high schools than all other universities in our sample. [COMMENT ON NUMBER OF SCHOOLS IN COMMON]. With respect to the characteristics of private high schools visited, these universities made a relatively large share of visits at Catholic schools, at schools in the South (less so for Notre Dame), and at low-ranked schools (less so for SMU). 
+
+The second most central cluster, consisting of six universities, is the University of South Carolina (396), Northwestern (377), TCU (435), Tulane (430), CU-Boulder (362), and Boston College (339). With respect to characteristics of private high schools visited, these universities made a relatively large share of visits at schools in the South (less so for Boston College), and a large share of visits to Catholic and nonsectarian schools (except many visits to Christian schools by TCU), and tended to visit higher private schools than universities in the first cluster. 
+
+An important substantive takeaway is that the most central universities in the network consist of a mix of private (seven universities) and public (three universities). When we restrict the cluster analysis to identify four groups (not shown) rather than five groups, these 10 universities become one group. Thus, with respect to which private high schools they visit, the seven private universities in this group seem to have more in common with the three public universities in the group than the do with other private universities in our sample. Similarly, the three public universities in the group seem to have more in common with the seven private universities than they do with other public universities in our sample. 
+
+The third cluster consists of 5 private universities -- Emory(), Case Western (), Tufts, University of Denver, Marquette (X) -- and 2 public universities -- UMass Amherst () and University of Georgia (). By contrast, the fourth cluster consists of consists of 7 public universities -- UC-Berkeley, UC San Diego, University of Pittsburgh, Rutgers, University of Cincinnati, University of Kansas, and University of Arkansas -- and 2 private universities -- Baylor () and Stevens Institute of Technology (). While the third cluster contains more private universities than public and the fourth cluster contains more public universities than private, it is interesting that clusters did not emerge based soley on private/public. The only cluster that does not contain both public and private unviersities is the cluster five -- -- which consists of universities visit relatively few private high schools a
+
+
+BIG PICTURE TAKEWAY: WITH EXCEPTION OF MOST PERIPHERAL CLUSTER, ALL THE CLUSTERS CONTAIN BOTH PUBLIC AND PRIVATE UNIVERSTIES
+
+- for majority of clusters, cluster includes both public and private universities, suggesting a great deal of overlap across public and private universities in terms of which private high schools they target. 
+
+
+ Northwestern (377), TCU (435), Tulane (430), Boston College (339)
+ 
+ Notre Dame (625), Villanova (563), and SMU (550). Visually, the second tier of centrality includes TCU (435), Tulane (430), Northwestern (377), and Boston College (339). 
+ 
+ 
+Big picture findings:
+
+- most central clusters
+  - if k = 5 clusters, two most central clusters: 
+    - University of Alabama, Notre Dame, Villanova, and SMU
+    - University of South Carolina, Northwestern, TCU, Tulane, CU-Boulder, and Boston College.
+  - if K= 4 clusters
+    - U. Alabama, Notre Dame, Villanova, SMU, U South Carilona, Northwestern, TCU, Tulane, CU-Boulder, Boston College
+
+  - 
+most central in graph:
+
+- Bama, Notre Dame
+
+
+, directing the algorithm to identify four groups. 
+
 
 
 INSERT FIGURE \@ref(fig:plot-1mode-u-k5) ABOUT HERE
@@ -569,15 +609,30 @@ include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
 
 \newpage
 
+
 ```{r enroll-pubu-privu, echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools"}
 include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
 ```
 
+\newpage
 
+```{r enroll-pubu-privhs-pubhs, echo = FALSE, fig.cap = "12th grade enrollment of visited private high schools vs. public high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privhs_pubhs.pdf'))
+
+```
+
+\newpage
 
 ```{r race-pubu-privu, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
 include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
 ```
+
+\newpage
+
+```{r race-pubu-privhs-pubhs, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools vs. public high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
+```
+
 
 
 

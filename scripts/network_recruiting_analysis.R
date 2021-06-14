@@ -569,6 +569,8 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
 # Usage
 plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
 plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4)
+
+plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
 plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
 
 # Private univs
