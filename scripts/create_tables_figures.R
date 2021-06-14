@@ -134,7 +134,7 @@ save_plot(plot_event_count(univ_private_libarts, in_lim = 250, out_lim = 900), '
 ## NUMBER OF PUBLIC VS PRIVATE HS VISITS
 ## --------------------------------------
 
-plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
+plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
   sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
   sub_events_count$univ_abbrev <- factor(sub_events_count$univ_abbrev, levels = rev(univ_sample))
   
@@ -145,16 +145,18 @@ plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
     pivot_wider(names_from = event_type, values_from = count) %>% 
     mutate(
       tot_hs = priv_hs + pub_hs,
-      pct_priv = round(priv_hs / tot_hs * 100, 1),
-      label_text = str_c(tot_hs, ' (', pct_priv, '% priv)')
+      pct_priv = round(priv_hs / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_priv, '% priv')
     )
   
   sub_events_outofstate_pct <- sub_events_outofstate %>%
     pivot_wider(names_from = event_type, values_from = count) %>% 
     mutate(
       tot_hs = priv_hs + pub_hs,
-      pct_priv = round(priv_hs / tot_hs * 100, 1),
-      label_text = str_c(tot_hs, ' (', pct_priv, '% priv)')
+      pct_priv = round(priv_hs / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_priv, '% priv')
     )
   
   ggplot() +
@@ -164,7 +166,10 @@ plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
              position = 'stack', 
              width = 0.35) +
     geom_text(data = sub_events_instate_pct,
-              aes(x = univ_abbrev, y = tot_hs, label = label_text),
+              aes(x = univ_abbrev, y = in_lim, label = str_c('In-state (N=', label_text_cnt, ')')),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_events_instate_pct,
+              aes(x = univ_abbrev, y = tot_hs + 5, label = label_text_pct),
               hjust = 0, size = 2.5) +
     geom_bar(data = sub_events_outofstate, 
              mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_type), 
@@ -172,7 +177,10 @@ plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
              position = 'stack', 
              width = 0.35) +
     geom_text(data = sub_events_outofstate_pct,
-              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs, label = label_text),
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = in_lim, label = str_c('Out-of-state (N=', label_text_cnt, ')')),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_events_outofstate_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs + 5, label = label_text_pct),
               hjust = 0, size = 2.5) +
     theme(
       panel.background = element_blank(),
@@ -181,14 +189,14 @@ plot_hs_count <- function(univ_sample, out_lim = 0, vjust = 1.5) {
       axis.ticks = element_blank()
     ) +
     xlab('') + ylab('') + 
-    expand_limits(y = c(0, out_lim)) +
+    expand_limits(y = c(in_lim, out_lim)) +
     coord_flip()
 }
 
 
-save_plot(plot_hs_count(univ_public_research, out_lim = 4000, vjust = 1.2), 'events_hs_count_pubu.pdf')
-save_plot(plot_hs_count(univ_private_national, out_lim = 1300), 'events_hs_count_privu.pdf')
-save_plot(plot_hs_count(univ_private_libarts, out_lim = 900, vjust = 1.6), 'events_hs_count_privc.pdf')
+save_plot(plot_hs_count(univ_public_research, in_lim = -1400, out_lim = 3650, vjust = 1.2), 'events_hs_count_pubu.pdf')
+save_plot(plot_hs_count(univ_private_national, in_lim = -500, out_lim = 1200), 'events_hs_count_privu.pdf')
+save_plot(plot_hs_count(univ_private_libarts, in_lim = -300, out_lim = 850, vjust = 1.6), 'events_hs_count_privc.pdf')
 
 
 ## ------------------------------------------
