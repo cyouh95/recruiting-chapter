@@ -165,6 +165,18 @@ include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu_privc.pdf')
 include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu_privc.pdf'))
 ```
 
+\newpage
+
+## Characteristics of visited private HS vs. public HS
+
+- `ego_network_enroll_pubu_privhs_pubhs.pdf`
+- `ego_network_race_pubu_privhs_pubhs.pdf`
+
+```{r}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privhs_pubhs.pdf'))
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
+```
+
 
 \newpage
 
@@ -203,6 +215,7 @@ include_graphics(file.path(figures_dir, 'plot_1mode_all_k6.pdf'))
 Notes:
 
 - Each .RDS stores a list containing a counts matrix (`onemode_df`) and percent matrix (`onemode_pct_df`)
+- The numbers in matrix and the N=X count on top are for unique HS (not re-counting multiple visits to same HS)
 - Some observations for the public university matrix and its corresponding 1-mode plot above
   - U of Alabama has a lot more visits to private HS than the rest and is in its own cluster as seen from plot
   - U of S.Carolina and CU Boulder are in a cluster together, and if we look at each of their columns in the pct matrix, they do have the most in common w/ each other (besides Alabama)

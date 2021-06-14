@@ -45,8 +45,10 @@ univ_public_research <- (univ_sample_df %>% filter(classification == 'public_res
 univ_private_national <- (univ_sample_df %>% filter(classification == 'private_national'))$univ_abbrev
 univ_private_libarts <- (univ_sample_df %>% filter(classification == 'private_libarts'))$univ_abbrev
 
-pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
 events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+
+pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+pubhs_visited_df <- pubhs_universe_df %>% filter(ncessch %in% events_df$school_id)
 
 privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
 privhs_visited_df <- readRDS(file.path(data_dir, 'privhs_visited.RDS'))
@@ -248,7 +250,70 @@ for (i in 1:nrow(univ_sample_df)) {
 ## CHARACTERISTICS OF PRIVATE HS VISITED BY UNIVERSITIES
 ## ------------------------------------------------------
 
-plot_characteristic <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
+# Ego tables for private HS visits currently show % for unique private HS (does not recount multiple visits to same HS)
+# View(events_df %>% filter(event_type == 'priv_hs', univ_id == '152080') %>% left_join(privhs_universe_df, by = 'school_id') %>% group_by(region) %>% summarise(count = n_distinct(school_id)) %>% mutate(pct = count / sum(count)))
+
+plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
+  
+  sub_df_visited <- pubhs_visited_df %>% group_by(get(var_name)) %>% 
+    summarize(`Public HS, 1+ visit` = n()) %>% 
+    pivot_longer(cols = 'Public HS, 1+ visit',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_visited) <- c('key', 'univ_name', 'value')
+  
+  sub_df_universe <- pubhs_universe_df %>% group_by(get(var_name)) %>% 
+    summarize(`Public HS, universe` = n()) %>% 
+    pivot_longer(cols = 'Public HS, universe',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_universe) <- c('key', 'univ_name', 'value')
+  
+  sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
+    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
+  
+  sub_df_univs <- events_df %>%
+    filter(event_type == 'pub_hs') %>%
+    right_join(sub_ego_df %>% select(univ_id, univ_name), by = 'univ_id') %>% 
+    left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')) %>%
+    group_by(get(var_name), univ_name) %>%
+    summarise(count = n_distinct(school_id))
+  names(sub_df_univs) <- c('key', 'univ_name', 'value')
+  
+  sub_df <- bind_rows(sub_df_universe, sub_df_visited, sub_df_univs) %>% filter(!is.na(key))
+  
+  # sort univs first by characteristic if region or religion, then by ranking
+  if (plot_type %in% c('region', 'religion')) {
+    univ_order <- (sub_ego_df[order(match(sub_ego_df[[str_c('univ_', plot_type)]], characteristic), sub_ego_df$univ_rank), ])$univ_name
+  } else {
+    univ_order <- (sub_ego_df[order(sub_ego_df$univ_rank), ])$univ_name
+  }
+  
+  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Public HS, universe', 'Public HS, 1+ visit', univ_order)))
+  sub_df$key <- factor(sub_df$key, levels = characteristic)
+  
+  ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
+    ggtitle('Title') +
+    xlab('') + ylab('') +
+    labs(fill = label) +
+    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          text = element_text(size = 8),
+          plot.title = element_text(color = 'white')) +
+    coord_flip()
+}
+
+plot_characteristic_privhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
   
   sub_df_visited <- privhs_visited_df %>% group_by(get(var_name)) %>% 
     summarize(`Private HS, 1+ visit` = n()) %>% 
@@ -310,9 +375,9 @@ plot_characteristic <- function(plot_type, var_name, label, characteristic, labe
 plot_types <- c('region', 'religion', 'race', 'rank', 'enroll')
 
 for (i in seq_along(plot_types)) {
-  a <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]])
-  b <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'univ')
-  c <- plot_characteristic(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'lib arts')
+  a <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]])
+  b <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'univ')
+  c <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'lib arts')
   
   # pubu + privu + privc
   pdf(file.path(figures_dir, str_c('ego_network_', plot_types[[i]], '_pubu_privu_privc.pdf')))
@@ -327,5 +392,20 @@ for (i in seq_along(plot_types)) {
   dev.off()
 }
 
+# pubu to pubhs + privhs (enroll)
+a <- plot_characteristic_privhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys)
+b <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys)
 
+pdf(file.path(figures_dir, str_c('ego_network_enroll_pubu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()
 
+# pubu to pubhs + privhs (race)
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
+
+pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()

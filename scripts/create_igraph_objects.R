@@ -166,7 +166,7 @@ pubhs_data %>% group_by(year) %>% count()  # 20756 from 2017-18, 53 from 2014-15
 events_df <- events_df %>% filter(event_type != 'pub_hs' | school_id %in% pubhs_data$ncessch)
 table(events_df$event_type, useNA = 'always')
 
-# Add race categorical variables to public HS data
+# Add race & enroll categorical variables to public HS data
 pubhs_data <- pubhs_data %>% mutate(
   pct_white_cat = case_when(
     pct_white < 50 ~ 'c1_lt50',
@@ -180,6 +180,18 @@ pubhs_data <- pubhs_data %>% mutate(
     pct_blacklatinxnative < 20 ~ 'c2_10to20',
     pct_blacklatinxnative < 50 ~ 'c3_20to50',
     pct_blacklatinxnative >= 50 ~ 'c4_50+'
+  ),
+  enroll_cat1 = case_when(
+    g12<50  ~ 'c1_lt50',
+    g12>=50 & g12<100  ~ 'c2_50to100',
+    g12>=100 & g12<150  ~ 'c3_100to150',
+    g12>=150  ~ 'c4_gt150'
+  ),
+  enroll_cat2 = case_when(
+    g12<100  ~ 'c1_lt100',
+    g12>=100 & g12<150  ~ 'c2_100to150',
+    g12>=150 & g12<200  ~ 'c3_150to200',
+    g12>=200  ~ 'c4_gt200'
   )
 )
 
