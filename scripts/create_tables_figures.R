@@ -140,6 +140,73 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
   sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
   sub_events_count$univ_abbrev <- factor(sub_events_count$univ_abbrev, levels = rev(univ_sample))
   
+  sub_events_privhs <- subset(sub_events_count, event_type == 'priv_hs')
+  sub_events_pubhs <- subset(sub_events_count, event_type == 'pub_hs')
+  
+  sub_events_privhs_pct <- sub_events_privhs %>%
+    pivot_wider(names_from = event_loc, values_from = count) %>% 
+    mutate(
+      tot_hs = instate + outofstate,
+      pct_outofstate = round(outofstate / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_outofstate, '% outofstate')
+    )
+  
+  sub_events_pubhs_pct <- sub_events_pubhs %>%
+    pivot_wider(names_from = event_loc, values_from = count) %>% 
+    mutate(
+      tot_hs = instate + outofstate,
+      pct_outofstate = round(outofstate / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_outofstate, '% outofstate')
+    )
+  
+  ggplot() +
+    geom_bar(data = sub_events_privhs, 
+             mapping = aes(x = univ_abbrev, y = count, fill = event_loc), 
+             stat = 'identity', 
+             position = 'stack', 
+             width = 0.35) +
+    geom_text(data = sub_events_privhs_pct,
+              aes(x = univ_abbrev, y = in_lim, label = str_c('Private HS (N=', label_text_cnt, ')')),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_events_privhs_pct,
+              aes(x = univ_abbrev, y = tot_hs + 5, label = label_text_pct),
+              hjust = 0, size = 2.5) +
+    geom_bar(data = sub_events_pubhs, 
+             mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_loc), 
+             stat = 'identity', 
+             position = 'stack', 
+             width = 0.35) +
+    geom_text(data = sub_events_pubhs_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = in_lim, label = str_c('Public HS (N=', label_text_cnt, ')')),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_events_pubhs_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs + 5, label = label_text_pct),
+              hjust = 0, size = 2.5) +
+    theme(
+      panel.background = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(vjust = vjust),
+      axis.ticks = element_blank()
+    ) +
+    xlab('') + ylab('') + 
+    expand_limits(y = c(in_lim, out_lim)) +
+    coord_flip()
+}
+
+
+save_plot(plot_hs_count(univ_public_research, in_lim = -1050, out_lim = 3100, vjust = 1.2), 'events_hs_count_pubu.pdf')
+save_plot(plot_hs_count(univ_private_national, in_lim = -300, out_lim = 900), 'events_hs_count_privu.pdf')
+save_plot(plot_hs_count(univ_private_libarts, in_lim = -200, out_lim = 600, vjust = 1.6), 'events_hs_count_privc.pdf')
+
+
+
+# OLD VERSION
+plot_hs_count_by_loc <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
+  sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
+  sub_events_count$univ_abbrev <- factor(sub_events_count$univ_abbrev, levels = rev(univ_sample))
+  
   sub_events_instate <- subset(sub_events_count, event_loc == 'instate' & event_type %in% c('pub_hs', 'priv_hs'))
   sub_events_outofstate <- subset(sub_events_count, event_loc == 'outofstate' & event_type %in% c('pub_hs', 'priv_hs'))
   
@@ -196,9 +263,9 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
 }
 
 
-save_plot(plot_hs_count(univ_public_research, in_lim = -1400, out_lim = 3650, vjust = 1.2), 'events_hs_count_pubu.pdf')
-save_plot(plot_hs_count(univ_private_national, in_lim = -500, out_lim = 1200), 'events_hs_count_privu.pdf')
-save_plot(plot_hs_count(univ_private_libarts, in_lim = -300, out_lim = 850, vjust = 1.6), 'events_hs_count_privc.pdf')
+# save_plot(plot_hs_count_by_loc(univ_public_research, in_lim = -1400, out_lim = 3650, vjust = 1.2), 'events_hs_count_pubu.pdf')
+# save_plot(plot_hs_count_by_loc(univ_private_national, in_lim = -500, out_lim = 1200), 'events_hs_count_privu.pdf')
+# save_plot(plot_hs_count_by_loc(univ_private_libarts, in_lim = -300, out_lim = 850, vjust = 1.6), 'events_hs_count_privc.pdf')
 
 
 ## ------------------------------------------
