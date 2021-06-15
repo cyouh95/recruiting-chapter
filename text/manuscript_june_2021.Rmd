@@ -308,6 +308,46 @@ INSERT TABLE \@ref(tab:pubu-count-matrix) AND TABLE \@ref(tab:pubu-percent-matri
 One finding from Table \@ref(tab:pubu-percent-matrix) is that the University of Alabama is is omnipresent in the set of private high schools visited by most other public research universities in the sample, particularly universities located in the South. For the remaining universities, Figure \@ref(tab:pubu-percent-matrix) suggests several clusters of universities. For example, UMass-Amherst, Suny Stonybrook and Rutgers tend to visit many of the same high schools, as do University of Arkansas and the University of Kansas.
 
 
+Network graphs are useful for showing which universities have similar private high school recruiting newtworks. Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Whether graphing one-mode or two-mode networks, network graphs show vertices as circles and edges as lines connecting pairs of vertices. In Figure \@ref(fig:plot-1mode-pubu),each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of the line between two universities indicates the number of high schools both universities visited, as identified in Tables \@ref(tab:pubu-count-matrix). Conceptually, we think of vertices as repelling one another and edges as pulling vertices together [@RN4725]. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Vertices that are highly connected -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, vertices nodes that are relatively disconnected are located at the periphery of the graph.
+
+INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
+
+Figure \@ref(fig:plot-1mode-pubu) shows the University of Alabama, University of South Carolina, and CU-Boulder at the center of the recruiting network. The University of Nebraska-Lincoln, SUNY Stony Brook and UC-Riverside are located on the periphery, and the remaining universities are in-between. Universities that share many direct (i.e., visit many of the same schools) or indirect edges tend to be located close together, for example University of Kansas and University of Arkansas. 
+
+To better answer research question 3, we augment the network graphs by using cluster analysis methods -- referred to as "community detection" in the network analysis literature -- to identify groups of universities that share common network structure. Broadly speaking, the goal of commmunity detection is to identify "subsets of vertices that demonstrate a ‘cohesiveness’ with respect to the underlying relational patterns" [@RN4725, p. 59], where a "cohesive subset" means a "subset of vertices that (i) are well connected among themselves, and at the same time (ii) are relatively well separated from the remaining vertices"  [@RN4725, p. 59].  In particular, we utilize that "cluster fast and greedy" approach developed by @RN4725, which is a variation of hierarchical cluster analysis that starts with a large number of groups and adds individual vertices to a group when doing so contributes to a cohesive subset.
+
+In Figure \@ref(fig:plot-1mode-pubu), the shape of each university vertex is based on implementing this cluster fast and greedy approach with the specification that the algorithm identify four groups.  The largest group consists of eight universities (U. Alabama, U. Arkanasas, U. Kansas, Nebraska-Lincoln, U. Georgia, U. South Carolina, CU-Boulder, U. Cincinnati). With the exception of CU-Boulder, these universities were located in the South and the Midwest. Most of these universities made a relatively high share of visits in the South. The next largest cluster -- UMass Amherst, University of Pittsburgh, Rutgers, and SUNY Stony Brook -- consisted of universities that were mostly located in the Northeast and visited a large share of high schools in the Northeast. UC-Berkeley and UC-San Diego formed a two-university cluster and UC-Riverside -- which visited fewer private schools than any other public university -- was a cluster unto itself.
+
+
+
+
+### Private university network
+
+Table \@ref(tab:privu-percent-matrix) and Figure \@ref(fig:plot-1mode-privu) show overlap in private high schools visited by the selective private universities in our sample. The networks of private universities tend to have more overlap than the network of public research universities (above). This is demonstrated tabularly by the higher percentages in Table \@ref(tab:privu-percent-matrix) compared to Table \@ref(tab:pubu-percent-matrix) and graphically by the thicker lines connecting universities in Figure \@ref(fig:plot-1mode-privu) compared to Figure \@ref(fig:plot-1mode-pubu).  
+
+INSERT TABLE \@ref(tab:privu-percent-matrix) ABOUT HERE
+
+INSERT FIGURE \@ref(fig:plot-1mode-privu) ABOUT HERE
+
+Whereas applying cluster analysis to public universities (Figure \@ref(fig:plot-1mode-pubu)) yielded three clusters that contained multiple universities, the application of cluster analysis to private universities (Figure \@ref(fig:plot-1mode-privu)) yielded a single cluster that contained 11 universities and three clusters that contained one university each. As suggested above, a likely explanation for this difference is that the majority of private universities had substantial overlap in the sets of private high schools visited whereas public universities tended to have substanital overlap with some public universities but not others.
+
+Visually, the most central universities in Figure \@ref(fig:plot-1mode-privu) tended to be universities that visited a large number of schools (number of unique private high schools visited in parentheses): Villanova (563), SMU (550), Notre Dame (625), Northwestern (377), Tulane (430), Boston College (339). The periphery of the network included Baylor (237), Stevens Institute (160), Marquette (331), and Case Western (228). Baylor visited a higher number of conservative Chrisitan high schools than any other university (see Figure \@ref(fig:religion-pubu-privu)). It is notable that Marquette is in the periphery despite visiting a higher number of schools than more centrally located universities (e.g., Emory), suggesting that Marquette visits many schools that are visited by few other private universities in our sample.
+
+The universities located close to one another in Figure \@ref(fig:plot-1mode-privu) tend to share relgious affiliation and/or be located in the same geographic region. For example, the majority of Catholic universities are located close to one another and the majority of Midwest universities are located close to one another. Interestingly, two of the three Christian universities -- TCU and SMU -- are located closer much closer to the Catholic universities Notre Dame and Northwestern than they are to Baylor, suggesting that Baylor visits a different set of conservative Christian high schools than TCU and SMU.
+
+
+
+### Public and private university network
+
+Figure \@ref(fig:plot-1mode-u) shows overlap in private high schools visited amongst all 29 private and public universities in the sample. We discuss centrality, clusters, and proximity of vertices to one another.
+
+Universities located near the center of Figure \@ref(fig:plot-1mode-u) tended to be universities that visited a large number of high schools (number of unique private high schools visited in parentheses), for example, University of Alabama (759), Notre Dame (625), Villanova (563), SMU (550), TCU (435), Tulane (430), Northwestern (377), University of South Carolina (396) and CU-Boulder (362), and Boston College (339). Notably, while the majority of universities located near the center of Figure are private, three are public.
+
+The allocation of universities to clusters appears to be correlated with the characteristics -- university characteristics and/or characteristics of the private schools they visit -- of geographic location, religious affiliation, and academic reputation, but less so to institutional control (public vs. private).  For example, the cluster of 10 universities -- including the University of Alabama, TCU, SMU, Baylor, and the University of South Carolina -- largely consists of universities in the South, and includes both private Christian universities and public universities that visited a relatively large share of Christian high schools. Second, the cluster of 13 universities -- including Notre Dame, Northwestern, Tulane, CU-Boulder, UC-Berkeley -- largely consists of universities more highly ranked universities, universities located in the Midwest or West, and Catholic universities. Third, the five university cluster -- Rutgers, Stevens Institute of Technology, UMass Amherst, University of Pittsburgh -- consists of universities with strong ties to the Northeast.
+
+Proximity of vertices to one another also appeared to be more connected to religious affiliation, geoggraphic location, and academic reputation. Universities with a cmmon religious affiliation (e.g., Notre Dame, Villanova, Marquette, Boston College) tend to be close to one another. However, the University of Alabama, which visited a high share of Catholic schools and Christian schools is simultaneously close to catholic universities and to the Christian universities TCU and SMU. Similarly, the University of South Carolina, which visited a relatively high share of Christian schools, is close to TCU and SMU. CU-Boulder, Emory, and Northwestern -- three universities that differ from one another with respect to geographic location, religious affiliation, and institutional control -- are located close to one another in Figure \@ref(fig:plot-1mode-u) and are similar to one another with respect to the geographic location (Figure \@ref(fig:region-pubu-privu)), religious affiliation (Figure \@ref(fig:religion-pubu-privu)), and academic reputation (Figure \@ref(fig:rank-pubu-privu)) of the private high schools they visit.
+
+These analyses of the private and public university network provide the most direct assessment of research question 3.  With respect to centrality, the identification of clusters, and the proximity of vertices, we find substantial overlap in the sets of private schools visited by public universities and private universities. This overlap does not suggest uniformity across public and private universities. Rather, there exist several groups of public and private universities -- which can be defined by cluster analysis or more loosely by proximity -- that have more in common with one another than they do with other universities of the same institutional control.
 
 ```{r, eval = FALSE, include = FALSE}
 table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
@@ -321,75 +361,6 @@ table_1mode_pubu$onemode_pct_df %>% attributes()
 table_1mode_pubu$onemode_pct_df %>% select(`U of Alabama (N=759)`) %>% str()
 table_1mode_pubu$onemode_pct_df %>% select(`U of Alabama (N=759)`) %>% attributes()
 ```
-
-Network graphs are useful for showing which universities have similar private high school recruiting newtworks. Figure \@ref(fig:plot-1mode-pubu) graphs the one-mode public university network. Whether graphing one-mode or two-mode networks, network graphs show vertices as circles and edges as lines connecting pairs of vertices. In Figure \@ref(fig:plot-1mode-pubu),each circle represents a public university and two universities share an edge -- represented by a solid line -- if both universities visit at least one high school in common. The width of the line between two universities indicates the number of high schools both universities visited, as identified in Tables \@ref(tab:pubu-count-matrix). Conceptually, we think of vertices as repelling one another and edges as pulling vertices together [@RN4725]. Therefore, nodes that share few connections are located apart and nodes that share many connections are located close together. Vertices that are highly connected -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph, vertices nodes that are relatively disconnected are located at the periphery of the graph.
-
-INSERT FIGURE \@ref(fig:plot-1mode-pubu) ABOUT HERE
-
-Figure \@ref(fig:plot-1mode-pubu) shows the University of Alabama, University of South Carolina, and CU-Boulder at the center of the recruiting network. The University of Nebraska-Lincoln, SUNY Stony Brook and UC-Riverside are located on the periphery, and the remaining universities are in-between. Universities that share many direct (i.e., visit many of the same schools) or indirect edges tend to be located close together, for example University of Kansas and University of Arkansas, University of Geogia and UC-Berkeley. 
-
-To better answer research question 3, we augment the network graphs by using cluster analysis to identify universities that share common network structure. Social network. Referred to as "community detection" in the literature, social network methodologists have developed many alternative algorithms to categorized vertices into a small number of groups (or clusters) based purely on patterns of network ties [@RN4725]. Generally, groups are chosen to maximize the number of within-group ties while minimizing ties between members of different groups. We performed hierarchical cluster analysis to allocate universities into clusters, directing the algorithm to identify four groups. 
-
-The shape of each university vertex in Figure \@ref(fig:plot-1mode-pubu) is determined by this cluster analysis. These clusters are largely consistent with physical layout of vertices in Figure \@ref(fig:plot-1mode-pubu).  The University of Alabama is a cluster unto itself. The University of South Carolina and CU-Boulder form a cluster. The third cluster consists of nine universities (Arkansas, Kansas, Cincinnati, San Diego, Rutgers, Amherst, Pitt, Berkeley, and Georgia). Finally, the fourth cluster -- Nebraska-Lincoln, UC-Riverside, and SUNY-Stony Brook -- consists of universities that are all peripheral to the network but do not visit any high schools in common.
-
-### Private university network
-
-Table \@ref(tab:privu-percent-matrix) and Figure \@ref(fig:plot-1mode-privu) show overlap in private high schools visited by the selective private universities in our sample. The networks of private universities tend to have more overlap than the network of public research universities (above). This is demonstrated tabularly by the higher percentages in Table \@ref(tab:privu-percent-matrix) compared to Table \@ref(tab:pubu-percent-matrix) and graphically by the thicker lines connecting universities in Figure \@ref(fig:plot-1mode-privu) compared to Figure \@ref(fig:plot-1mode-pubu).  
-
-INSERT TABLE \@ref(tab:privu-percent-matrix) ABOUT HERE
-
-INSERT FIGURE \@ref(fig:plot-1mode-privu) ABOUT HERE
-
-
-The three most central universities in Figure \@ref(fig:plot-1mode-privu) are the universities which visited the greatest number of different private high schools, identified in parentheses: Notre Dame (625), Villanova (563), and SMU (550). Visually, the second tier of centrality includes TCU (435), Tulane (430), Northwestern (377), and Boston College (339). These results are fairly consistent with the four clusters identified by cluster analysis, in which Notre Dame and SMU are both clusters unto themselves, and Villanova is part of the third cluster which also includes Northwestern, Boston College, Tulane, and TCU.
-
-With respect to the periphery of the network -- Baylor (237), Stevens Institute (160), Marquette (331), and Case Western (228) --  Baylor visits a higher number of conservative Chrisitan high schools than any other university (see Figure \@ref(fig:religion-pubu-privu)). It is notable that Marquette is in the periphery despite visiting a higher number of schools than more centrally located universities (e.g., Emory), suggesting that Marquette visits many schools that are visited by few other private universities in our sample.
-
-The universities located close to one another in Figure \@ref(fig:plot-1mode-privu) tend to share relgious affiliation and/or be located in the same geographic region. For example, the majority of Catholic universities are located close to one another and the majority of Midwest universities are located close to one another. Interestingly, two of the three Christian universities -- TCU and SMU -- are located closer much closer to the Catholic universities Notre Dame and Northwestern than they are to Baylor, suggesting that Baylor visits a different set of conservative Christian high schools than TCU and SMU.
-
-### Public and private university network
-
-Figure \@ref(fig:plot-1mode-u) shows overlap in private high schools visited amongst all 29 private and public universities in the sample, with the cluster analysis algorithm specified to identify five groups. 
-
-Two clusters -- consisting of 10 universities -- emerge as the most central. The first cluster, consisting of four universities (with number of unique private high schools visited in parentheses), is the University of Alabama (759), Notre Dame (625), Villanova (563), and SMU (550). These four universities visited more private high schools than all other universities in our sample. [COMMENT ON NUMBER OF SCHOOLS IN COMMON]. With respect to the characteristics of private high schools visited, these universities made a relatively large share of visits at Catholic schools, at schools in the South (less so for Notre Dame), and at low-ranked schools (less so for SMU). 
-
-The second most central cluster, consisting of six universities, is the University of South Carolina (396), Northwestern (377), TCU (435), Tulane (430), CU-Boulder (362), and Boston College (339). With respect to characteristics of private high schools visited, these universities made a relatively large share of visits at schools in the South (less so for Boston College), and a large share of visits to Catholic and nonsectarian schools (except many visits to Christian schools by TCU), and tended to visit higher private schools than universities in the first cluster. 
-
-An important substantive takeaway is that the most central universities in the network consist of a mix of private (seven universities) and public (three universities). When we restrict the cluster analysis to identify four groups (not shown) rather than five groups, these 10 universities become one group. Thus, with respect to which private high schools they visit, the seven private universities in this group seem to have more in common with the three public universities in the group than the do with other private universities in our sample. Similarly, the three public universities in the group seem to have more in common with the seven private universities than they do with other public universities in our sample. 
-
-The third cluster consists of 5 private universities -- Emory(), Case Western (), Tufts, University of Denver, Marquette (X) -- and 2 public universities -- UMass Amherst () and University of Georgia (). By contrast, the fourth cluster consists of consists of 7 public universities -- UC-Berkeley, UC San Diego, University of Pittsburgh, Rutgers, University of Cincinnati, University of Kansas, and University of Arkansas -- and 2 private universities -- Baylor () and Stevens Institute of Technology (). While the third cluster contains more private universities than public and the fourth cluster contains more public universities than private, it is interesting that clusters did not emerge based soley on private/public. The only cluster that does not contain both public and private unviersities is the cluster five -- -- which consists of universities visit relatively few private high schools a
-
-
-BIG PICTURE TAKEWAY: WITH EXCEPTION OF MOST PERIPHERAL CLUSTER, ALL THE CLUSTERS CONTAIN BOTH PUBLIC AND PRIVATE UNIVERSTIES
-
-- for majority of clusters, cluster includes both public and private universities, suggesting a great deal of overlap across public and private universities in terms of which private high schools they target. 
-
-
- Northwestern (377), TCU (435), Tulane (430), Boston College (339)
- 
- Notre Dame (625), Villanova (563), and SMU (550). Visually, the second tier of centrality includes TCU (435), Tulane (430), Northwestern (377), and Boston College (339). 
- 
- 
-Big picture findings:
-
-- most central clusters
-  - if k = 5 clusters, two most central clusters: 
-    - University of Alabama, Notre Dame, Villanova, and SMU
-    - University of South Carolina, Northwestern, TCU, Tulane, CU-Boulder, and Boston College.
-  - if K= 4 clusters
-    - U. Alabama, Notre Dame, Villanova, SMU, U South Carilona, Northwestern, TCU, Tulane, CU-Boulder, Boston College
-
-  - 
-most central in graph:
-
-- Bama, Notre Dame
-
-
-, directing the algorithm to identify four groups. 
-
-
-
-INSERT FIGURE \@ref(fig:plot-1mode-u-k5) ABOUT HERE
 
 
 ```{r, eval = FALSE, include = FALSE}
@@ -644,8 +615,8 @@ knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
 knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
 ```
 
-```{r plot-1mode-u-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster, five clusters"}
-knitr::include_graphics('./../assets/figures/plot_1mode_u_k5.pdf')
+```{r plot-1mode-u-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
 ```
 
 
@@ -659,6 +630,4 @@ include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
 ```{r events-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, selective private universities"}
 include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
 ```
-
-
 

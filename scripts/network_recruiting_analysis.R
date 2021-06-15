@@ -296,7 +296,7 @@ create_hclust <- function(twomode_network, mode, dist_method = 'euclidean', hclu
 create_hclust(twomode_network = g_2mode, mode = 'psi', k = 4, plot_tree = TRUE)
 create_hclust(twomode_network = g_2mode, mode = 'psi', k = 4) %>% table()
 
-
+create_hclust(twomode_network = g_2mode_pubu, mode = 'psi', k = 4, plot_tree = TRUE)
 # FUNCTION: create_fast_greedy(twomode_network, mode, <no>, <steps>, <plot_tree>)
   # twomode_network: 2-mode object
   # mode: cluster HS or univs (hs, psi)
@@ -566,32 +566,50 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
   )
 }
 
-# Usage
-plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
-plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4)
+#### Usage
+  # privu
+    plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4)
+    plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'fast', no = 4)
+    plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'fast', no = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
+    plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 6, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink'))
+    
+  # public
+    plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4)
+    plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'fast', no = 4)
 
+  # u
+    plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
+    plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 4)
+    plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
+    plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 6, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink'))
+    plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 7, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink','tan'))
+    
 plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
 plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral'))
 
+plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 6, colors = c('lightblue', 'green', 'violet', 'yellow','coral','pink'))
+
+
+
 # Private univs
-save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'hclust', k = 4),
+save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'fast', no = 4),
           plot_name = 'plot_1mode_privu.pdf')
 
 # private colleges
 
-save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'hclust', k = 4),
+save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'fast', no = 4),
           plot_name = 'plot_1mode_privc.pdf')
 
 # Public univs
-save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'hclust', k = 4),
+save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'fast', no = 4),
           plot_name = 'plot_1mode_pubu.pdf')
 
 
 # private and public universities
-save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 4),
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 4),
           plot_name = 'plot_1mode_u.pdf')
 
-save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
           plot_name = 'plot_1mode_u_k5.pdf')
 
 # Private and public universities; out-of-state visits only for public universities
