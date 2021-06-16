@@ -336,6 +336,13 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
                  values_to = 'value')
   names(sub_df_universe) <- c('key', 'univ_name', 'value')
   
+  sub_df_universe_weighed <- pubhs_universe_df %>% group_by(get(var_name)) %>% 
+    summarize(`Public HS, universe (wt)` = sum(g12, na.rm = T)) %>% 
+    pivot_longer(cols = 'Public HS, universe (wt)',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_universe_weighed) <- c('key', 'univ_name', 'value')
+  
   sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
     mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
   
@@ -347,7 +354,7 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
     summarise(count = n_distinct(school_id))
   names(sub_df_univs) <- c('key', 'univ_name', 'value')
   
-  sub_df <- bind_rows(sub_df_universe, sub_df_visited, sub_df_univs) %>% filter(!is.na(key))
+  sub_df <- bind_rows(sub_df_universe, sub_df_universe_weighed, sub_df_univs) %>% filter(!is.na(key))
   
   # sort univs first by characteristic if region or religion, then by ranking
   if (plot_type %in% c('region', 'religion')) {
@@ -356,7 +363,7 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
     univ_order <- (sub_ego_df[order(sub_ego_df$univ_rank), ])$univ_name
   }
   
-  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Public HS, universe', 'Public HS, 1+ visit', univ_order)))
+  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Public HS, universe', 'Public HS, universe (wt)', univ_order)))
   sub_df$key <- factor(sub_df$key, levels = characteristic)
   
   ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
@@ -396,6 +403,13 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
                  values_to = 'value')
   names(sub_df_universe) <- c('key', 'univ_name', 'value')
   
+  sub_df_universe_weighed <- privhs_universe_df %>% group_by(get(var_name)) %>% 
+    summarize(`Private HS, universe (wt)` = sum(enroll, na.rm = T)) %>% 
+    pivot_longer(cols = 'Private HS, universe (wt)',
+                 names_to = 'universe',
+                 values_to = 'value')
+  names(sub_df_universe_weighed) <- c('key', 'univ_name', 'value')
+  
   sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
     mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
   
@@ -405,7 +419,7 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
     mutate(value = parse_number(value)) %>% 
     select(key, univ_name, value)
   
-  sub_df <- bind_rows(sub_df_universe, sub_df_visited, sub_df_univs) %>% filter(!is.na(key))
+  sub_df <- bind_rows(sub_df_universe, sub_df_universe_weighed, sub_df_univs) %>% filter(!is.na(key))
   
   # sort univs first by characteristic if region or religion, then by ranking
   if (plot_type %in% c('region', 'religion')) {
@@ -414,7 +428,7 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
     univ_order <- (sub_ego_df[order(sub_ego_df$univ_rank), ])$univ_name
   }
   
-  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Private HS, universe', 'Private HS, 1+ visit', univ_order)))
+  sub_df$univ_name <- factor(sub_df$univ_name, levels = rev(c('Private HS, universe', 'Private HS, universe (wt)', univ_order)))
   sub_df$key <- factor(sub_df$key, levels = characteristic)
   
   ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
