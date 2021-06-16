@@ -245,11 +245,9 @@ For selective private universities, the number of visits to private high schools
 The relative scale of visits to private high schools -- defined as private high school visits as a percentage of all high school visits -- also tended to be substantially higher at selective private universities than at public research universities.  Across all selective private universities in our sample, `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)`% of high school visits were to private high schools, compared to `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs')) %>% count() %>% as.numeric())*100, digits=1)`% for public research universities. However, the relative emphasis on private high schools was a bit closer for out-of-state visits; across all selective private universities, `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)`% out-of-state high school visits were to private schools, compared to `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs'),univ_state != event_state) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research', event_type %in% c('priv_hs','pub_hs'),univ_state != event_state) %>% count() %>% as.numeric())*100, digits=1)`% for public research universities.
 
 
-Although selective private universities tend to emphasize visits to private high schools more than public research universities, both groups visited private high schools at a much higher rate than public high schools. 
+Although selective private universities tend to emphasize visits to private high schools more than public research universities, both groups visited private high schools at a much higher rate than public high schools. Figure \@ref(fig:actual-proportional-pubu) (public universities) and Figure \@ref(fig:actual-proportional-privu) (private universities) show the actual number of private school visits compared to the hypothetical number of private school visits if each public and private high school in the nation had an equal probability of receiving a visit. Figure \@ref(fig:actual-proportional-pubu) shows the actual number of private school visits exceeded the proportional number of private school visits for 13 of the 15 public research universities in our sample, the exceptions being UC-Riverside and SUNY Stony Brook. For UC-Berkeley, private school visits represented X% of all high school visits but would have represented Y% had UC-Berkeley visited public and private schools at the same rate. For the University of Georgia, which represented the extreme for public universities, private school visits represented X% of all high school visits but would have represented Y% had the university visited public and private schools at the same rate. Figure \@ref(fig:actual-proportional-privu) shows that this disparity between actual versus proportional visits was much greater for private universities than public universities. Catholic universities made the most disproportionate number of private high school visits. For Notre Dame, private school visits represented X% of actual visits high school visits but would have represented Y% of proportional visits.
 
-- DISCUSS TABLE COMPARING ACTUAL TO PROPORTIONAL VISITS; main point is that while private universities visit private high schools at a higher rate than public research universities, both groups visit private high schools at a higher rate than they do public high schools; note the exceptions to this statement and note that public research universities that are closer to the behavior of private universities (e.g., university of Georgia)
-
-
+INSERT FIGURE \@ref(fig:actual-proportional-pubu) AND FIGURE \@ref(fig:actual-proportional-privu) ABOUT HERE
 
 
 ## Research question 2: characteristics of visited schools
@@ -430,6 +428,32 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pub
 events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric()
 ```
 
+# Discussion
+
+## Summary
+
+This chapter analyzes recruiting visits to private high schools, which were made during the 2017 calendar year, for a convenience sample of 15 public research universities and 14 private universities ranked in the top 100 of US News National Universities. Our goal was to learn about public research universities, by analyzing their behavior and comparing their behavior to that of selective private universities.
+
+Research question 1 asks about the scale of visits to private high schools. All private universities in our sample made a disproportionate number of visits to private high schools (Figure X) and, for about half of these universities, visits to private high schools represented about 50% or more of all high school visits. For most public research universities in our sample, the scale and relative scale -- as a percentage of all HS visits -- of visits to private high schools was smaller than that of most selective private universities. However, X of the 15 public universities visited a disproportionate number of private high schools (Figure X) and that vast majority of these private school visits were to out-of-state private schools. Additionally, several public research universities -- University of Alabama, CU-Boulder, University of South Caroline -- visited private high schools at a scale that exceeded most private universities. Moreover, X of 
+
+Research question 2 asks about the characteristics of visited private high schools. We analyzed geographic region, religious affiliation, high school rank, 12th grade enrollment, and racial composition. Bot public and private universities in our sample tended to make disproportionate number of visits in their home geographic region, with highly ranked universities making more visits to schools in other regions. The majority of universities -- even those located outside the south --  visited a large number of private schools located in the south. Unsurprisingly, sectarian private universities made a large share of visits to private high schools of a similar religious affiliation. Given that public universities are nonsectarian organizations, a surprising finding is that the majority of public universities in our sample made a large share of visits to Catholic or Christian private schools.
+
+With the exception of UC-Berkeley and UC-San Diego, the academic rating of private schools visited by public universities was lower than the rating of those visited by most private universities. This finding is largely explained by our analysis sample, which included public research universities regardless of rank but only included private universities ranked as a top 100 National University by US News. Nevertheless, the large number of visits to low-rated private schools by public universities, combined with the fact that that the overwhelming majority of these visits were to out-of-state schools, is consistent with the idea that many public flagship universities visit private schools primarily in search of full-pay students rather than academic superstars.
+
+Across the universe of private high schools, most schools enroll relatively few students who identify as Black, Latinx, or Native. For the public and private universities in our sample, the set of visited private schools enrolled fewer Black, Latinx, and Native students than the national universe of private schools. By contrast, the public high schools visited by public universities tended to enroll a much higher share students who identify as Black, Latinx, or Native.
+
+Research question 3 asks about overlap in the private school recruiting networks of public and private universities. Within the sample of public universities, we observed substantial overlap and variation in recruiting networks. For example, the recruiting networks of the the University of Arkansas and the University of Kansas share substantial overlap and are very different from the recruiting networks of UMass Amherst and Rutgers, which share substantial overlap with one another. Across the entire sample of public and private universities, we also observed substantial overlap and variation in recruiting networks. Whether we are categorizing universities by cluster analysis or by proximity on the network graph, we observe several different subsets of universities. Each of these subsets is associated with a different approach to private school visits and -- with the exception of a couple outliers like UC-Riverside and SUNY Stony Brook -- each of these subsets contains both public and private universities.
+
+## Privatization of Public Research Universities
+
+These findings contribute new insights about the privatization of public research universities. A weakness of the scholarly literature on privatization is that few studies compare public and private universities with respect to a behavior that is associated with private universities. 
+
+We conceptualize recruiting visits to private schools as a behavior that is consistent with the social reproduction orientation of selective private universities and contrary to the historic social mobility mission associated with public research universties. In making large-scale visits to out-of-state private high schools, we argue that public research universities are mimicking the behavior selective private universities in order to compete for students that have been traditionally targeted by private universities. Our rationale for this statement is that selective private universities have been recruiting heavily from private schools for a long time [CITE]. By contrast, the pursuit of out-of-state students is a relatively new phenomenon for most public research universities.
+
+Although our analyses cannot yield insight about the extent to the population of public research universities are visiting private schools (because we have a convenience sample rather than a random sample), we can make statements about variation in how public universities in our sample went about visiting private schools. At one end of the spectrum -- represented by UC-Riverside and SUNY Stony Brook -- some public research universities are not engaging in recruiting visits to private schools. For those public universities that make a substantial number of private school visits, we see substantial variation in the scale of visits and the characteristics of schools they target. Similarly, we see variation in the scale and characteristics of private schools visited by private universities. Several different groups emerge, with each group associated with a different broad approach to private schools and each group containing some mix of public and private universities.
+
+Therefore, when making decisions about scale of private school visits and which schools to visit, public research universities seem to be mimicking the behavior of particular kinds of private universities.  For examle BAMA AND NOTRE DAME
+
 # References
 
 <div id="refs"></div>
@@ -559,6 +583,18 @@ include_graphics(file.path(figures_dir, 'events_hs_count_privu.pdf'))
 ```
 
 \newpage
+
+```{r actual-proportional-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Actual versus proportional number of private school visits, public research universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_pubu.pdf'))
+```
+
+\clearpage
+
+```{r actual-proportional-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Actual versus proportional number of private school visits, private universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privu.pdf'))
+```
+
+\clearpage
 
 ```{r region-pubu-privu, echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
 include_graphics(file.path(figures_dir, 'ego_network_region_pubu_privu.pdf'))
