@@ -300,7 +300,7 @@ plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust
     uid <- (univ_sample_df %>% filter(univ_abbrev == uab))$univ_id
     ust <- (univ_sample_df %>% filter(univ_abbrev == uab))$state_code
     
-    visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
+    visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id
     visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
     universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
     
@@ -308,7 +308,7 @@ plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust
     visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
     universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
     
-    visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
+    visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id
     visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
     universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
     
@@ -401,9 +401,9 @@ plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust
 }
 
 
-save_plot(plot_actual_proportional(univ_public_research, in_lim = -500, out_lim = 2800), 'events_hs_actual_proportional_pubu.pdf')
-save_plot(plot_actual_proportional(univ_private_national, in_lim = -200, out_lim = 1100), 'events_hs_actual_proportional_privu.pdf')
-save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim = 850), 'events_hs_actual_proportional_privc.pdf')
+save_plot(plot_actual_proportional(univ_public_research, in_lim = -700, out_lim = 3800), 'events_hs_actual_proportional_pubu.pdf')
+save_plot(plot_actual_proportional(univ_private_national, in_lim = -300, out_lim = 1300), 'events_hs_actual_proportional_privu.pdf')
+save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim = 900), 'events_hs_actual_proportional_privc.pdf')
 
 
 ## ------------------------------------------------------

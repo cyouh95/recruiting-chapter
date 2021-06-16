@@ -103,7 +103,6 @@ include_graphics(file.path(figures_dir, 'events_hs_count_privc.pdf'))
 ## Actual vs. proportional visited HS
 
 - Below shows actual/proportional numbers for all vs. out-of-state HS visited
-- Numbers differ from above plots because above shows event counts (some HS can be visited multiple times) whereas below numbers count each HS once (no matter how many times they're visited)
 - % private is generally higher for out-of-state. If we include all HS (both in and out) the % actual private is usually lowered, as seen below
 - The plots are for all HS visits (not just out-of-state)
   - `events_hs_actual_proportional_pubu.pdf`
@@ -117,7 +116,7 @@ for (i in 1:nrow(univ_sample_df)) {
   uid <- univ_sample_df[[i, 'univ_id']]
   ust <- univ_sample_df[[i, 'state_code']]
   
-  visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
+  visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id
   visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
   universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
   
@@ -125,7 +124,7 @@ for (i in 1:nrow(univ_sample_df)) {
   visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
   universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
   
-  visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
+  visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id
   visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
   universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
   
