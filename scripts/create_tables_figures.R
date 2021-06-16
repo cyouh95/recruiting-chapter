@@ -276,41 +276,134 @@ table(events_df$univ_id)
 pubhs_universe_df %>% nrow()
 privhs_universe_df %>% nrow()
 
-for (i in 1:nrow(univ_sample_df)) {
-  print(univ_sample_df[[i, 'univ_abbrev']])
-  uid <- univ_sample_df[[i, 'univ_id']]
-  ust <- univ_sample_df[[i, 'state_code']]
+
+plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
   
-  visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
-  visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
-  universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
+  sub_df_actual <- data.frame(
+    univ_abbrev = character(),
+    event_type = character(),
+    count = numeric(0),
+    stringsAsFactors=FALSE
+  )
   
-  visited_pub_state_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$state_code %>% unique()
-  visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
-  universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
+  sub_df_proportional <- data.frame(
+    univ_abbrev = character(),
+    event_type = character(),
+    count = numeric(0),
+    stringsAsFactors=FALSE
+  )
   
-  visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
-  visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
-  universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
+  i <- 1
   
-  visited_priv_state_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$state_code %>% unique()
-  visited_priv_hs_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$school_id %>% unique()
-  universe_priv_hs_out <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state_out))$school_id %>% unique()
+  for (uab in univ_sample) {
+    print(uab)
+    uid <- (univ_sample_df %>% filter(univ_abbrev == uab))$univ_id
+    ust <- (univ_sample_df %>% filter(univ_abbrev == uab))$state_code
+    
+    visited_pub_hs <- (events_df %>% filter(univ_id == uid, event_type == 'pub_hs'))$school_id %>% unique()
+    visited_pub_state <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs))$state_code %>% unique()
+    universe_pub_hs <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state))$ncessch %>% unique()
+    
+    visited_pub_state_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$state_code %>% unique()
+    visited_pub_hs_out <- (pubhs_universe_df %>% filter(ncessch %in% visited_pub_hs, state_code != ust))$ncessch %>% unique()
+    universe_pub_hs_out <- (pubhs_universe_df %>% filter(state_code %in% visited_pub_state_out))$ncessch %>% unique()
+    
+    visited_priv_hs <- (events_df %>% filter(univ_id == uid, event_type == 'priv_hs'))$school_id %>% unique()
+    visited_priv_state <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs))$state_code %>% unique()
+    universe_priv_hs <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state))$school_id %>% unique()
+    
+    visited_priv_state_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$state_code %>% unique()
+    visited_priv_hs_out <- (privhs_universe_df %>% filter(school_id %in% visited_priv_hs, state_code != ust))$school_id %>% unique()
+    universe_priv_hs_out <- (privhs_universe_df %>% filter(state_code %in% visited_priv_state_out))$school_id %>% unique()
+    
+    visited_hs <- c(visited_pub_hs, visited_priv_hs)
+    visited_hs_out <- c(visited_pub_hs_out, visited_priv_hs_out)
+    
+    universe_hs <- c(universe_pub_hs, universe_priv_hs)
+    universe_hs_out <- c(universe_pub_hs_out, universe_priv_hs_out)
+    
+    sub_df_actual[i, ] <- c(uab, 'priv_hs', length(visited_priv_hs))
+    sub_df_actual[i + 1, ] <- c(uab, 'pub_hs', length(visited_pub_hs))
+    
+    sub_df_proportional[i, ] <- c(uab, 'priv_hs', length(universe_priv_hs) / length(universe_hs) * length(visited_hs))
+    sub_df_proportional[i + 1, ] <- c(uab, 'pub_hs', length(universe_pub_hs) / length(universe_hs) * length(visited_hs))
+    
+    i <- i + 2
+    
+    # writeLines(str_c('Total HS visited (unique): ', length(visited_hs)))
+    # writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs) / length(visited_hs) * 100, 1)))
+    # writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs) / length(universe_hs) * 100, 1)))
+    
+    # writeLines(str_c('Total out-of-state HS visited (unique): ', length(visited_hs_out)))
+    # writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs_out) / length(visited_hs_out) * 100, 1)))
+    # writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs_out) / length(universe_hs_out) * 100, 1)))
+  }
   
-  visited_hs <- c(visited_pub_hs, visited_priv_hs)
-  visited_hs_out <- c(visited_pub_hs_out, visited_priv_hs_out)
+  sub_df_actual$count <- as.numeric(sub_df_actual$count)
+  sub_df_proportional$count <- as.numeric(sub_df_proportional$count)
   
-  universe_hs <- c(universe_pub_hs, universe_priv_hs)
-  universe_hs_out <- c(universe_pub_hs_out, universe_priv_hs_out)
+  sub_df_actual$univ_abbrev <- factor(sub_df_actual$univ_abbrev, levels = rev(univ_sample))
+  sub_df_proportional$univ_abbrev <- factor(sub_df_proportional$univ_abbrev, levels = rev(univ_sample))
   
-  writeLines(str_c('Total HS visited (unique): ', length(visited_hs)))
-  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs) / length(visited_hs) * 100, 1)))
-  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs) / length(universe_hs) * 100, 1)))
+  sub_df_actual_pct <- sub_df_actual %>%
+    pivot_wider(names_from = event_type, values_from = count) %>% 
+    mutate(
+      tot_hs = priv_hs + pub_hs,
+      pct_priv = round(priv_hs / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_priv, '%')
+    )
   
-  writeLines(str_c('Total out-of-state HS visited (unique): ', length(visited_hs_out)))
-  writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs_out) / length(visited_hs_out) * 100, 1)))
-  writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs_out) / length(universe_hs_out) * 100, 1)))
+  sub_df_proportional_pct <- sub_df_proportional %>%
+    pivot_wider(names_from = event_type, values_from = count) %>% 
+    mutate(
+      tot_hs = priv_hs + pub_hs,
+      pct_priv = round(priv_hs / tot_hs * 100),
+      label_text_cnt = tot_hs,
+      label_text_pct = str_c(pct_priv, '%')
+    )
+  
+  ggplot() +
+    geom_bar(data = sub_df_actual, 
+             mapping = aes(x = univ_abbrev, y = count, fill = event_type), 
+             stat = 'identity', 
+             position = position_stack(reverse = T), 
+             width = 0.35) +
+    geom_text(data = sub_df_actual_pct,
+              aes(x = univ_abbrev, y = in_lim, label = 'Actual'),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_df_actual_pct,
+              aes(x = univ_abbrev, y = priv_hs + 5, label = label_text_pct),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_df_actual_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.2, y = tot_hs + 5, label = str_c('N=', label_text_cnt)),
+              hjust = 0, size = 2.5) +
+    geom_bar(data = sub_df_proportional, 
+             mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_type), 
+             stat = 'identity', 
+             position = position_stack(reverse = T), 
+             width = 0.35) +
+    geom_text(data = sub_df_proportional_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = in_lim, label = 'Proportional'),
+              hjust = 0, size = 2.5) +
+    geom_text(data = sub_df_proportional_pct,
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = priv_hs + 5, label = label_text_pct),
+              hjust = 0, size = 2.5) +
+    theme(
+      panel.background = element_blank(),
+      axis.text.x = element_blank(),
+      axis.text.y = element_text(vjust = vjust),
+      axis.ticks = element_blank()
+    ) +
+    xlab('') + ylab('') + 
+    expand_limits(y = c(in_lim, out_lim)) +
+    coord_flip()
 }
+
+
+save_plot(plot_actual_proportional(univ_public_research, in_lim = -500, out_lim = 2800), 'events_hs_actual_proportional_pubu.pdf')
+save_plot(plot_actual_proportional(univ_private_national, in_lim = -200, out_lim = 1100), 'events_hs_actual_proportional_privu.pdf')
+save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim = 850), 'events_hs_actual_proportional_privc.pdf')
 
 
 ## ------------------------------------------------------

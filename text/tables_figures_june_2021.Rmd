@@ -105,6 +105,10 @@ include_graphics(file.path(figures_dir, 'events_hs_count_privc.pdf'))
 - Below shows actual/proportional numbers for all vs. out-of-state HS visited
 - Numbers differ from above plots because above shows event counts (some HS can be visited multiple times) whereas below numbers count each HS once (no matter how many times they're visited)
 - % private is generally higher for out-of-state. If we include all HS (both in and out) the % actual private is usually lowered, as seen below
+- The plots are for all HS visits (not just out-of-state)
+  - `events_hs_actual_proportional_pubu.pdf`
+  - `events_hs_actual_proportional_privu.pdf`
+  - `events_hs_actual_proportional_privc.pdf`
 
 
 ```{r}
@@ -143,6 +147,10 @@ for (i in 1:nrow(univ_sample_df)) {
   writeLines(str_c('  % private HS (actual): ', round(length(visited_priv_hs_out) / length(visited_hs_out) * 100, 1)))
   writeLines(str_c('  % private HS (proportional): ', round(length(universe_priv_hs_out) / length(universe_hs_out) * 100, 1)))
 }
+
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_pubu.pdf'))
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privu.pdf'))
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privc.pdf'))
 ```
 
 \newpage
