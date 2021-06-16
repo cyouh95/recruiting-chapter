@@ -643,11 +643,11 @@ privhs_events_unique <- privhs_events %>%
   left_join(univ_info %>% select(univ_id, univ_abbrev, classification), by = 'univ_id') %>% 
   group_by(classification, univ_id, univ_abbrev) %>% 
   summarise(count = n_distinct(school_id)) %>% 
-  arrange(classification, desc(count))
+  arrange(desc(count))
 
 create_1mode_table <- function(onemode_network, univ_type) {
   
-  privhs_events_unique_df <- privhs_events_unique %>% filter(classification == univ_type)
+  privhs_events_unique_df <- privhs_events_unique %>% filter(classification %in% univ_type)
   
   # Get N = number of unique private HS visited by each univ (order univ same way as igraph)
   num_unique_privhs_visited <- privhs_events_unique_df[match(vertex_attr(graph=onemode_network, name='name'), privhs_events_unique_df$univ_id), ]$count
@@ -713,6 +713,19 @@ saveRDS(table_1mode_privu, file = './assets/tables/table_1mode_privu.RDS')
 # Private colleges
 table_1mode_privc <- create_1mode_table(g_1mode_privc_psi, 'private_libarts')
 saveRDS(table_1mode_privc, file = './assets/tables/table_1mode_privc.RDS')
+
+# Public and private universities
+table_1mode_u <- create_1mode_table(g_1mode_u_psi, c('public_research', 'private_national'))
+
+intersect((privhs_events %>% filter(univ_id == '100751'))$school_id, (privhs_events %>% filter(univ_id == '152080'))$school_id) %>% length()  # 326 private HS are the same between U of Alabama & Notre Dame (unique)
+
+clusters_u <- create_fast_greedy(twomode_network = g_2mode_u, mode = 'psi', no = 4, plot_tree = F)
+get_cluster <- Vectorize(function(u) clusters_u[[u]])
+
+clusters_df <- univ_info %>% filter(classification != 'private_libarts') %>% select(univ_abbrev, classification, univ_id) %>% mutate(cluster = get_cluster(univ_id)) %>% arrange(cluster)
+table_1mode_u$clusters_df <- clusters_df
+
+saveRDS(table_1mode_u, file = './assets/tables/table_1mode_u.RDS')
 
 
 ## ------------------------------
