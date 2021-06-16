@@ -413,7 +413,7 @@ save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim 
 # Ego tables for private HS visits currently show % for unique private HS (does not recount multiple visits to same HS)
 # View(events_df %>% filter(event_type == 'priv_hs', univ_id == '152080') %>% left_join(privhs_universe_df, by = 'school_id') %>% group_by(region) %>% summarise(count = n_distinct(school_id)) %>% mutate(pct = count / sum(count)))
 
-plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
+plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ', loc = c('instate', 'outofstate')) {
   
   sub_df_visited <- pubhs_visited_df %>% group_by(get(var_name)) %>% 
     summarize(`Public HS, 1+ visit` = n()) %>% 
@@ -440,7 +440,7 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
     mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
   
   sub_df_univs <- events_df %>%
-    filter(event_type == 'pub_hs') %>%
+    filter(event_type == 'pub_hs', event_loc %in% loc) %>%
     right_join(sub_ego_df %>% select(univ_id, univ_name), by = 'univ_id') %>% 
     left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')) %>%
     group_by(get(var_name), univ_name) %>%
@@ -575,6 +575,16 @@ par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
 grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
 
+# pubu to pubhs (separated by instate/outofstate) + privhs (enroll)
+a <- plot_characteristic_privhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys)
+b <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'instate')
+c <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'outofstate')
+
+pdf(file.path(figures_dir, str_c('ego_network_enroll_pubu_privhs_pubhs_by_loc.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, c, nrow = 3, ncol = 1)
+dev.off()
+
 # pubu to pubhs + privhs (race)
 a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
 b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
@@ -582,4 +592,14 @@ b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_k
 pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
 grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()
+
+# pubu to pubhs (separated by instate/outofstate) + privhs (race)
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'instate')
+c <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'outofstate')
+
+pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs_by_loc.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, c, nrow = 3, ncol = 1)
 dev.off()
