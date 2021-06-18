@@ -15,7 +15,7 @@ header-includes:
       - \usepackage{geometry}
       - \usepackage{floatrow}
       - \usepackage{setspace}
-      - \doublespacing
+      #- \doublespacing
       - \floatsetup{capposition=top}
 fontsize: 11pt
 ---
@@ -233,7 +233,7 @@ Research question 1 asks, how does the scale of visits to private high schools b
 Appendix Figures \@ref(fig:events-count-pubu) and \@ref(fig:events-count-privu) show the number of visits by "type" (public high school, private high school, community college, other), respectively, for public research universities and selective private universities. On average, the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample conducted `r round((events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()), digits = 0)` off-campus recruiting events in 2017, ranging from a low of `r events_df %>% filter(univ_id == '139959') %>% count() %>% as.numeric()` for the University of Georgia to a high of `r events_df %>% filter(univ_id == '100751') %>% count() %>% as.numeric()` for the University of Alabama. By contrast, the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample conducted an average of `r round((events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()), digits = 0)` events, ranging from a low of `r events_df %>% filter(univ_id == '186867') %>% count() %>% as.numeric()` by Stevens Institute of Technology (located in Hoboken, NJ) to a high of `r events_df %>% filter(univ_id == '239105') %>% count() %>% as.numeric()` to Marquette University (located in Milwaukee, WI).  Across all public research universities, `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())*100, digits=1)`% of visits were to a public or private high school, whereas for selective private universities `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())*100, digits=1)`% of all visits were to a public or private high school. The lower percentage for public research universities is because many public research universities made a substantial number of visits to community colleges whereas private universities did not.
 
 
-Figures \@ref(fig:events-hs-count-pubu) and \@ref(fig:events-hs-count-privu) show the number of visits to private high schools and public high schools for for public research universities (Figure \@ref(fig:events-hs-count-pubu)) and selective private universities (Figure \@ref(fig:events-hs-count-privu)), with separate bars for in-state and out-of-state visits. Only three of the 15 public research Universities -- UC-Berkeley, UC-San Diego, and UC-Riverside -- made more in-state than out-of-state high school visits. Notably, the University of California voluntarily adopted a nonresident enrollment cap in 2017, following pressure from state legislators who had issued a bill to cap nonresident enrollment. Of the 14 selective private universities in our sample, only Baylor University (Waco, TX) made more in-state than out-of-state high school visits.
+[CRYSTAL - REVISE TEXT IN THIS PARAGRAPH AND MAYBE THE NEXT TO REFLECT CHANGES WE MADE TO THIS FIGURE] Figures \@ref(fig:events-hs-count-pubu) and \@ref(fig:events-hs-count-privu) show the number of visits to private high schools and public high schools for public research universities (Figure \@ref(fig:events-hs-count-pubu)) and selective private universities (Figure \@ref(fig:events-hs-count-privu)), with separate bars for in-state and out-of-state visits. Only three of the 15 public research Universities -- UC-Berkeley, UC-San Diego, and UC-Riverside -- made more in-state than out-of-state high school visits. Notably, the University of California voluntarily adopted a nonresident enrollment cap in 2017, following pressure from state legislators who had issued a bill to cap nonresident enrollment. Of the 14 selective private universities in our sample, only Baylor University (Waco, TX) made more in-state than out-of-state high school visits.
 
 INSERT FIGURE \@ref(fig:events-hs-count-pubu) AND FIGURE \@ref(fig:events-hs-count-privu) ABOUT HERE
 
@@ -337,15 +337,28 @@ The universities located close to one another in Figure \@ref(fig:plot-1mode-pri
 
 ### Public and private university network
 
-Figure \@ref(fig:plot-1mode-u) shows overlap in private high schools visited amongst all 29 private and public universities in the sample. We discuss centrality, clusters, and proximity of vertices to one another.
+Figure \@ref(fig:plot-1mode-u) shows overlap in private high schools visited amongst all 29 private and public universities in the sample. 
 
-Universities located near the center of Figure \@ref(fig:plot-1mode-u) tended to be universities that visited a large number of high schools (number of unique private high schools visited in parentheses), for example, University of Alabama (759), Notre Dame (625), Villanova (563), SMU (550), TCU (435), Tulane (430), Northwestern (377), University of South Carolina (396) and CU-Boulder (362), and Boston College (339). Notably, while the majority of universities located near the center of Figure are private, three are public.
+The allocation of universities to clusters appears to be correlated with the characteristics -- university characteristics and characteristics of the schools they visit -- of geographic location, religious affiliation, academic reputation, and also institutional control. The cluster of 10 universities -- including the University of Alabama, TCU, SMU, Baylor, and the University of South Carolina -- largely consists of universities in the South, and includes both private Christian universities and public universities that visited a relatively large share of Christian high schools. Second, the cluster of 13 universities -- including Notre Dame, Northwestern, Tulane, CU-Boulder, UC-Berkeley -- largely consists of universities more highly ranked universities, universities located in the Midwest or West, and Catholic universities. Third, the five university cluster -- Rutgers, Stevens Institute of Technology, UMass Amherst, University of Pittsburgh -- largely consists of public universities with with strong ties to the Northeast.
 
-The allocation of universities to clusters appears to be correlated with the characteristics -- university characteristics and/or characteristics of the private schools they visit -- of geographic location, religious affiliation, and academic reputation, but less so to institutional control (public vs. private).  For example, the cluster of 10 universities -- including the University of Alabama, TCU, SMU, Baylor, and the University of South Carolina -- largely consists of universities in the South, and includes both private Christian universities and public universities that visited a relatively large share of Christian high schools. Second, the cluster of 13 universities -- including Notre Dame, Northwestern, Tulane, CU-Boulder, UC-Berkeley -- largely consists of universities more highly ranked universities, universities located in the Midwest or West, and Catholic universities. Third, the five university cluster -- Rutgers, Stevens Institute of Technology, UMass Amherst, University of Pittsburgh -- consists of universities with strong ties to the Northeast.
+INSERT FIGURE \@ref(fig:plot-1mode-u) ABOUT HERE
 
-Proximity of vertices to one another also appeared to be more connected to religious affiliation, geoggraphic location, and academic reputation. Universities with a cmmon religious affiliation (e.g., Notre Dame, Villanova, Marquette, Boston College) tend to be close to one another. However, the University of Alabama, which visited a high share of Catholic schools and Christian schools is simultaneously close to catholic universities and to the Christian universities TCU and SMU. Similarly, the University of South Carolina, which visited a relatively high share of Christian schools, is close to TCU and SMU. CU-Boulder, Emory, and Northwestern -- three universities that differ from one another with respect to geographic location, religious affiliation, and institutional control -- are located close to one another in Figure \@ref(fig:plot-1mode-u) and are similar to one another with respect to the geographic location (Figure \@ref(fig:region-pubu-privu)), religious affiliation (Figure \@ref(fig:religion-pubu-privu)), and academic reputation (Figure \@ref(fig:rank-pubu-privu)) of the private high schools they visit.
+<!-- 
 
-These analyses of the private and public university network provide the most direct assessment of research question 3.  With respect to centrality, the identification of clusters, and the proximity of vertices, we find substantial overlap in the sets of private schools visited by public universities and private universities. This overlap does not suggest uniformity across public and private universities. Rather, there exist several groups of public and private universities -- which can be defined by cluster analysis or more loosely by proximity -- that have more in common with one another than they do with other universities of the same institutional control.
+Tables \@ref(tab:u-cluster1-percent-matrix), \@ref(tab:u-cluster2-percent-matrix), and \@ref(tab:u-cluster3-percent-matrix) show overlap in the percent of private high schools 
+INSERT TABLE \@ref(tab:u-cluster1-percent-matrix) TABLE \@ref(tab:u-cluster2-percent-matrix) AND TABLE \@ref(tab:u-cluster3-percent-matrix) ABOUT HERE
+-->
+
+
+Universities located near the center of Figure \@ref(fig:plot-1mode-u) do not all belong to the same cluster and, more broadly, universities located close to one another do not all belong to the same cluster. Universities located near the center of Figure \@ref(fig:plot-1mode-u) tended to be universities with the highest degree centrality -- i.e., that visited most schools visited. The top nine universities in terms of degree centrality are (number of unique private high schools visited in parentheses) University of Alabama (759), Notre Dame (625), Villanova (563), SMU (550), TCU (435), Tulane (430), Northwestern (377), University of South Carolina (396), and CU-Boulder (362). Notably, while the majority of universities located near the center of Figure are private, three are public. 
+
+Proximity of vertices to one another in Figure \@ref(fig:plot-1mode-u) appeared to be more connected to religious affiliation, geoggraphic location, and academic reputation. Universities with a common religious affiliation (e.g., Notre Dame, Villanova, Marquette, Boston College) tend to be close to one another. However, the University of Alabama, which visited a high share of Catholic schools and Christian schools is simultaneously close to catholic universities and to the Christian universities TCU and SMU. Similarly, the University of South Carolina, which visited a relatively high share of Christian schools, is close to TCU and SMU. CU-Boulder, Emory, and Northwestern -- three universities that differ from one another with respect to geographic location, religious affiliation, and institutional control -- are located close to one another in Figure \@ref(fig:plot-1mode-u). These three universities are similar to one another with respect to the geographic location (Figure \@ref(fig:region-pubu-privu)), religious affiliation (Figure \@ref(fig:religion-pubu-privu)), and academic reputation (Figure \@ref(fig:rank-pubu-privu)) of the private high schools they visit.
+
+Finally, Table \@ref(tab:privu-percent-visited-by-pubu-matrix) shows, for each private university, the percent of schools that were also visited by each public university. This table shows the extent to which public universities were competing at private schools targeted by private universities. For example, of the 625 private schools visited by Notre Dame, the University of Alabama visited 52.5% of these schools. Similarly, CU-Boulder visited 46.4 of the 435 schools that TCU visited and 42.4% of the 377 schools that Northwestern visited. The University of Arkansas competed heavily at schools visited by Baylor, Rutgers and UMass Amherst competed heavily at schools visited by Stevens Institute of Technology, while UC Berkeley competed at schools visited by Northwestern, Tufts, and Emory. 
+
+INSERT TABLE \@ref(tab:privu-percent-visited-by-pubu-matrix) ABOUT HERE
+
+These analyses of the private and public university network provide the most direct assessment of research question 3. Considering the identification of clusters, centrality, and proximity of vertices, we find substantial overlap in the sets of private schools visited by public universities and private universities. This overlap does not suggest uniformity across public and private universities. Rather, there exist several groups of public and private universities -- which can be defined by cluster analysis or more loosely by proximity -- that have more in common with one another than they do with other universities of the same institutional control.
 
 ```{r, eval = FALSE, include = FALSE}
 table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
@@ -442,17 +455,24 @@ With the exception of UC-Berkeley and UC-San Diego, the academic rating of priva
 
 Across the universe of private high schools, most schools enroll relatively few students who identify as Black, Latinx, or Native. For the public and private universities in our sample, the set of visited private schools enrolled fewer Black, Latinx, and Native students than the national universe of private schools. By contrast, the public high schools visited by public universities tended to enroll a much higher share students who identify as Black, Latinx, or Native.
 
-Research question 3 asks about overlap in the private school recruiting networks of public and private universities. Within the sample of public universities, we observed substantial overlap and variation in recruiting networks. For example, the recruiting networks of the the University of Arkansas and the University of Kansas share substantial overlap and are very different from the recruiting networks of UMass Amherst and Rutgers, which share substantial overlap with one another. Across the entire sample of public and private universities, we also observed substantial overlap and variation in recruiting networks. Whether we are categorizing universities by cluster analysis or by proximity on the network graph, we observe several different subsets of universities. Each of these subsets is associated with a different approach to private school visits and -- with the exception of a couple outliers like UC-Riverside and SUNY Stony Brook -- each of these subsets contains both public and private universities.
+Research question 3 asks about overlap in the private school recruiting networks of public and private universities. Within the sample of public universities, we observed substantial overlap and variation in recruiting networks. For example, the recruiting networks of the the University of Arkansas and the University of Kansas share substantial overlap and are very different from the recruiting networks of UMass Amherst and Rutgers, which share substantial overlap with one another. Across the entire sample of public and private universities, we also observed substantial overlap and variation in recruiting networks. Whether we are categorizing universities by cluster analysis or by proximity on the network graph, we observe several different subsets of universities. Each of these subsets is associated with a different approach to private school visits and -- with the exception of a few universities like UC-Riverside and SUNY Stony Brook -- each of these subsets contained both public and private universities.
 
 ## Privatization of Public Research Universities
 
-These findings contribute new insights about the privatization of public research universities. A weakness of the scholarly literature on privatization is that few studies compare public and private universities with respect to a behavior that is associated with private universities. 
+These findings contribute new insights about the privatization of public research universities. A weakness of the scholarly literature on privatization is that few studies compare public and private universities with respect to a behavior that is associated with private universities [@RN4543]. We conceptualize recruiting visits to private schools as a behavior that is consistent with the social reproduction orientation of selective private universities and contrary to the historic social mobility mission associated with public research universties. Although we cannot make statements about the population of public research universities (ours is a convenience sample rather than a random sample), we can describe variation in how the public universities in our sample went about visiting private schools. 
 
-We conceptualize recruiting visits to private schools as a behavior that is consistent with the social reproduction orientation of selective private universities and contrary to the historic social mobility mission associated with public research universties. In making large-scale visits to out-of-state private high schools, we argue that public research universities are mimicking the behavior selective private universities in order to compete for students that have been traditionally targeted by private universities. Our rationale for this statement is that selective private universities have been recruiting heavily from private schools for a long time [CITE]. By contrast, the pursuit of out-of-state students is a relatively new phenomenon for most public research universities.
+At one end of the continuum lie public research universities that do not play the game, for example UC-Riverside and SUNY Stony Brook, visiting private schools at a lower rate than public schools (Figure \@ref(fig:actual-proportional-pubu)). For public universities that visited a substantial number of private schools, we observe substantial variation in the scale of visits and the characteristics of schools they target. While all private universities in our sample visited private schools at a much higher rate than public schools, we also see substantial variation amongst private universities in the scale and characteristics of private school visits. Amongst the network of public and private universities, Figure \@ref(fig:plot-1mode-u) shows that three clusters emerge -- each containing some mix of public and private universities. The universities within a cluster some overlap in the kinds of schools visited (e.g., TCU and University of South Carilina), but also share substantial overlap with particular universities in different clusters (e.g., Tufts and University of Pittsburgh).
 
-Although our analyses cannot yield insight about the extent to the population of public research universities are visiting private schools (because we have a convenience sample rather than a random sample), we can make statements about variation in how public universities in our sample went about visiting private schools. At one end of the spectrum -- represented by UC-Riverside and SUNY Stony Brook -- some public research universities are not engaging in recruiting visits to private schools. For those public universities that make a substantial number of private school visits, we see substantial variation in the scale of visits and the characteristics of schools they target. Similarly, we see variation in the scale and characteristics of private schools visited by private universities. Several different groups emerge, with each group associated with a different broad approach to private schools and each group containing some mix of public and private universities.
+In making large-scale visits to out-of-state private high schools, we argue that public research universities are mimicking the behavior selective private universities in order to compete for students that have been traditionally targeted by private universities. Our rationale for this statement is that selective private universities have been recruiting heavily from private schools for a long time [@RN4642; @RN1565; @RN4407]. By contrast, the pursuit of out-of-state students is a relatively new phenomenon for most public research universities. 
 
-Therefore, when making decisions about scale of private school visits and which schools to visit, public research universities seem to be mimicking the behavior of particular kinds of private universities.  For examle BAMA AND NOTRE DAME
+When making decisions about which private schools to visit, public research universities seem to be mimicking the behavior of particular private universities rather than mimicking the behavior of private universities writ large. Several public universities seem to be competing directly for students targeted by a particular private university. For example, UC-Berkeley visited 27.9% of the schools visited by Northwestern, 28.9% of the schools visited by Tufts, and 27.8% of the schools visited by Emory. We reason UC-Berkeley is competing directly for students because all four universities are in the same broad echelon of prestige. Other potential examples of direct competition include the University of Georgia targeting schools visited by Emory, SMU, TCU, and Tulane, or the University of Arkansas targeting schools visited by Baylor.
+
+However, public universities that made the greatest number of private school visits seemed to be targeting lower-achieving students at private schools targeted by particular private universities. For example, the University of Alabama visited 52.2% of the 625 private schools that Notre Dame visited, with most of the overlap at Catholic schools. Given the differences in academic prestige between, the University of Alabama may not be competing for the same students as Notre Dame. Instead, they found a niche by targeting Catholic school students of a similar economic echelon, who have lower academic achievement, and want to attend a football powerhouse. Additionally, CU-Boulder visited 42.4% of schools visited by Northwestern, which could be interpreted as CU-Boulder competing for lower-achieving students of a similar economic and cultural echelon at the schools targeted by Northwestern. Similarly, the University of South Carolina competes heavily at schools targeted by Emory, SMU, TCU, and Tulane.
+
+Finally, all public universities that visited a substantial number of private schools tended to visit schools that enrolled few Black, Latinx, or Native students. This finding is substantially driven by the fact that the national universe of private schools tend to enroll a much lower share of Black, Latinx, or Native students than the universe of public schools. However, the the set of schools visited by the public universities in our sample enrolled fewer Black, Latinx, and Native students than the universe of private schools. Although we do not have data on household income, it is likely that the majority of students are wealthy at the private schools visited by public universities in our sample.
+
+Therefore, while public universities playing the private school game differ in terms of the set of school they target, they all seem to be targeting schools that enroll mostly affluent students and few students who identify as Black, Latinx, or Native. To the extent that these recruiting efforts yield dividends in terms of incoming freshmen, playing the private school game is likely to change the enrollment composition of public research universities in ways that run contrary to racial and socioeconomic diversity.
+
 
 # References
 
@@ -510,6 +530,10 @@ kable(univ_sample %>% arrange(desc(classification), rank), caption = "Characteri
 
 \clearpage
 
+
+\begin{landscape}
+
+
 ```{r pubu-count-matrix}
 table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
 
@@ -556,6 +580,51 @@ kable(table_1mode_privu$onemode_pct_df, caption = 'One-mode private university p
 
 ```
 
+\clearpage
+
+```{r u-cluster1-percent-matrix, include=FALSE}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
+
+
+#kable(table_1mode_u$clusters_df[order(match(table_1mode_u$clusters_df$univ_abbrev, rownames(table_1mode_u$onemode_df))), ], caption = 'Clusters for public and private universities')
+
+cluster_1 <- c(1, 4, 5, 7, 16, 18, 19, 24, 25, 28)
+cluster_2 <- c(2, 3, 6, 8, 9, 10, 11, 12, 14, 15, 20, 22, 23)
+cluster_3 <- c(13, 17, 21, 26, 27)
+cluster_4 <- 29
+
+kable(table_1mode_u$onemode_pct_df[cluster_1, cluster_1], caption = 'Public and private universities percent matrix (cluster 1)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r u-cluster2-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[cluster_2, cluster_2], caption = 'Public and private universities percent matrix (cluster 2)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r u-cluster3-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[cluster_3, cluster_3], caption = 'Public and private universities percent matrix (cluster 3)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r u-top-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[c(1,2,3,4,5,6,7,8,9),c(1,2,3,4,5,6,7,8,9)], caption = 'Public and private universities, highest degree centrality') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r privu-percent-visited-by-pubu-matrix}
+kable(table_1mode_u$onemode_pct_df[c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29),c(2,3,4,5,6,8,10,11,12,14,15,19,20,26)], caption = 'For private universities, the percent of high schools visited by public universities') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  #column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+```
+
+\end{landscape}
+
+\restoregeometry
+
 <!-- FIGURES -->
 
 \clearpage
@@ -569,7 +638,6 @@ knitr::include_graphics('./../assets/images/enrollment_funnel.png')
 
 \newpage
 
-\newgeometry{top=1in, left=0cm, right=0cm, bottom=0cm}
 
 
 ```{r events-hs-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits to public and private high schools by public research universities"}
@@ -651,7 +719,7 @@ knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
 knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
 ```
 
-```{r plot-1mode-u-k5, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
 knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
 ```
 
