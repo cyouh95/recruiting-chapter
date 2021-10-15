@@ -1,5 +1,5 @@
 ---
-title: "Recruiting Chapter"
+title: "The Private School Network: Recruiting Visits to Private High Schools by Public and Private Universities"
 author: 
   - Ozan Jaquette
   - Crystal Han
