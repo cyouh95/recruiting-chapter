@@ -203,7 +203,7 @@ ccd_membership_by_grade_race <- ccd_membership_by_grade %>%
 
 
 # Read in lat/lng data (102337 obs. of 24 variables)
-geo_data <- read_excel(file.path(data_dir, 'EDGE_GEOCODE_PUBLICSCH_1718.xlsx'), col_types = 'text')
+geo_data <- read_excel(file.path(data_dir, 'EDGE_GEOCODE_PUBLICSCH_1718.xlsx'))
 
 geo_data <- geo_data %>% 
   select(NCESSCH, LAT, LON) %>% 
