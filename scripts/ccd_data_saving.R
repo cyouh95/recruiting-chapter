@@ -1,5 +1,6 @@
 library(tidyverse)
 library(labelled)
+library(readxl)
 
 
 data_dir <- file.path('.', 'data')
@@ -201,8 +202,21 @@ ccd_membership_by_grade_race <- ccd_membership_by_grade %>%
   full_join(ccd_membership_by_race %>% select(-sum_students, -total_students), by = 'ncessch')
 
 
+# Read in lat/lng data (102337 obs. of 24 variables)
+geo_data <- read_excel(file.path(data_dir, 'EDGE_GEOCODE_PUBLICSCH_1718.xlsx'), col_types = 'text')
+
+geo_data <- geo_data %>% 
+  select(NCESSCH, LAT, LON) %>% 
+  dplyr::rename(
+    'ncessch' = 'NCESSCH',
+    'latitude' = 'LAT',
+    'longitude' = 'LON'
+  )
+
+
 # Join tables
-ccd <- left_join(ccd_directory, ccd_characteristics, by = 'ncessch') %>% 
+ccd <- left_join(ccd_directory, geo_data, by = 'ncessch') %>% 
+  left_join(ccd_characteristics, by = 'ncessch') %>% 
   left_join(ccd_membership_by_grade_race, by = 'ncessch')
 
 # Rename variables
