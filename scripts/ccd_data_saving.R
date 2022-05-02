@@ -117,7 +117,7 @@ ccd_characteristics <- ccd_characteristics %>%
   select(ncessch, setdiff(names(ccd_characteristics), names(ccd_directory)))
 
 
-# Read in characteristics data and dictionary (12112911 obs. of 18 variables)
+# Read in membership data and dictionary (12112911 obs. of 18 variables)
 ccd_membership <- read.csv(file.path(data_dir, 'ccd_membership_1718.csv'), header = TRUE, na.strings = c('', 'NA'), stringsAsFactors = F,  colClasses = c('FIPST' = 'character', 'LEAID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character'))
 ccd_membership_dictionary <- read.csv(file.path(data_dir, 'ccd_membership_dictionary_1718.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
 
