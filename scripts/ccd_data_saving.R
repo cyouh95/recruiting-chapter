@@ -1,5 +1,6 @@
 library(tidyverse)
 library(labelled)
+library(readxl)
 
 
 data_dir <- file.path('.', 'data')
@@ -116,7 +117,7 @@ ccd_characteristics <- ccd_characteristics %>%
   select(ncessch, setdiff(names(ccd_characteristics), names(ccd_directory)))
 
 
-# Read in characteristics data and dictionary (12112911 obs. of 18 variables)
+# Read in membership data and dictionary (12112911 obs. of 18 variables)
 ccd_membership <- read.csv(file.path(data_dir, 'ccd_membership_1718.csv'), header = TRUE, na.strings = c('', 'NA'), stringsAsFactors = F,  colClasses = c('FIPST' = 'character', 'LEAID' = 'character', 'NCESSCH' = 'character', 'SCHID' = 'character', 'STATE_AGENCY_NO' = 'character', 'UNION' = 'character'))
 ccd_membership_dictionary <- read.csv(file.path(data_dir, 'ccd_membership_dictionary_1718.csv'), header = TRUE, na.strings=c('', 'NA'), stringsAsFactors = F)
 
@@ -201,8 +202,21 @@ ccd_membership_by_grade_race <- ccd_membership_by_grade %>%
   full_join(ccd_membership_by_race %>% select(-sum_students, -total_students), by = 'ncessch')
 
 
+# Read in lat/lng data (102337 obs. of 24 variables)
+geo_data <- read_excel(file.path(data_dir, 'EDGE_GEOCODE_PUBLICSCH_1718.xlsx'))
+
+geo_data <- geo_data %>% 
+  select(NCESSCH, LAT, LON) %>% 
+  dplyr::rename(
+    'ncessch' = 'NCESSCH',
+    'latitude' = 'LAT',
+    'longitude' = 'LON'
+  )
+
+
 # Join tables
-ccd <- left_join(ccd_directory, ccd_characteristics, by = 'ncessch') %>% 
+ccd <- left_join(ccd_directory, geo_data, by = 'ncessch') %>% 
+  left_join(ccd_characteristics, by = 'ncessch') %>% 
   left_join(ccd_membership_by_grade_race, by = 'ncessch')
 
 # Rename variables
