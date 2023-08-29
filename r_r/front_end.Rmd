@@ -1,0 +1,101 @@
+---
+title: "The Private School Network: Recruiting Visits to Private High Schools by Public and Private Universities"
+#author: 
+#  - Ozan Jaquette
+#  - Crystal Han
+#  - Irma Castañeda
+bibliography: ./../other/burd_recruiting_chapter.bib
+output: 
+  bookdown::pdf_document2:
+    toc: FALSE
+    pandoc_args: !expr rmdfiltr::add_wordcount_filter(rmdfiltr::add_citeproc_filter(args = NULL))
+csl: ./../other/apa.csl
+urlcolor: blue
+header-includes:
+      - \usepackage{pdflscape}
+      - \usepackage{geometry}
+      - \usepackage{floatrow}
+      - \usepackage{setspace}
+      #- \doublespacing
+      - \floatsetup{capposition=top}
+fontsize: 12pt
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(bookdown)
+
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_pdf.pdf
+library(kableExtra)
+library(tidyverse)
+library(gridExtra)
+library(scales)
+
+knitr::opts_chunk$set(echo = F, message = F)
+
+knitr::knit_hooks$set(inline = function(x) {   if(!is.numeric(x)){     x   }else{    prettyNum(round(x,2), big.mark=",")    } })
+
+data_dir <- file.path('..', 'data')
+tables_dir <- file.path('..', 'assets', 'tables')
+figures_dir <- file.path('..', 'assets', 'figures')
+
+univ_sample_df <- readRDS(file.path(data_dir, 'univ_sample.RDS')) %>%
+  arrange(desc(classification), rank)
+events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+
+pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+
+ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>% 
+  mutate(
+    univ_region = str_split(characteristics, '\\|', simplify = T)[,1],
+    univ_religion = str_split(characteristics, '\\|', simplify = T)[,2],
+    univ_race = round(as.numeric(str_split(characteristics, '\\|', simplify = T)[,3]), 1),
+    univ_rank = as.numeric(str_split(characteristics, '\\|', simplify = T)[,4]),
+    univ_enroll = format(as.numeric(str_split(characteristics, '\\|', simplify = T)[,5]), big.mark = ',')
+  )
+```
+
+\setstretch{1.5}
+
+
+ABSTRACT
+
+Few empirical analyses of privatization compare public and private universities on a behavior associated with private universities. This manuscript analyzes off-campus recruiting visits to private high schools, which were made in 2017 by a convenience sample of 15 public research universities and 14 selective, private universities. Sociological scholarship on the relationship between high schools and universities conceives of off-campus recruiting visits as an indicator of a social relation. Therefore, we utilize social network concepts and methods to compare the recruiting networks of public and private universities. With respect to scale (research question 1), most public research universities in our sample made a disproportionate number of visits to private (out-of-state) high schools, though not as many as private universities. With respect to characteristics of visited schools (RQ2), both public and private universities tended to visit predominantly white schools in their home geographic region and the South. Public universities tended to visit lower ranked private high schools than private universities. Surprisingly, several public research universities visited sectarian private high schools at a rate similar to sectarian private universities. With respect to overlap (RQ3), descriptive statistics and community detection methods revealed substantial overlap in the recruiting networks of public and private universities.
+
+
+\newpage
+
+# Introduction
+
+BLAH BLAH BLAH
+
+# Literature Review
+
+## Scholarship on Nonresident Enrollment
+
+We situate this study vis-a-vis scholarship on nonresident enrollment at public research universities, which lies within the broader literature on "privatization" [CITE]. Against the backdrop of many states disinvesting in higher education, the privatization literature examines the ways that public universities start behaving like private universities by emphasizing revenue generation and the pursuit of prestige in research and enrollment management behaviors. The so-called "iron triangle" of enrollment management states that universities pursue the three broad enrollment goals of access, academic profile, and revenue generation [CITE]. "Because resources are scarce, the imagery of the iron triangle suggests that the pursuit of one enrollment goal may involve tradeoffs with other goals. Scholarship on privatization expressed concern that the public research universities were emphasizing tuition revenue and rankings and deemphasizing access for state residents.
+
+@RN3753 draw from resource dependence theory to conceptualize the relationship between state appropriations and nonresident enrollment. Organizations are dependent on external resources that are important for organizational survival/stability and cannot be easily replaced. Public universities depend on state appropriations but these funds became increasingly uncertain in the 1980s and 1990s [@RN2271]. Resource dependence theory states that one response to resource decline or uncertainty is to seek alternative, substitute resources [CITE]. Tuition revenue is a potential substitute for state appropriations. Most states cap resident tuition price, but not nonresident tuition price. Therefore, @RN3753 argued that public universities have a financial incentive to grow nonresident enrollment in response to declines in state appropriations. Analyzing panel data from 2002-03 to 2012-13, @RN3753 found that a 10% decline in state appropriations was associated with a 2.7% increase in nonresident enrollment at all public universities and a 5.0% increase in nonresident enrollment at research-extensive universities.
+
+Other studies of nonresident enrollment examine university enrollment composition. Using data from NPSAS 2011-12, @RN3685 show that compared to resident students at public research universities, nonresident students generate higher net tuition revenue, are more affluent, are less likely to be Pell recipients and are less likely to be Black or LatinX. Institution-level panel models reveal that growth in the share of nonresident students was associated with a decline in the share of Pell recipients and a decline in the share of Black and LatinX students. @RN4290 examine whether growth in the number of nonresident students causes resident enrollment to decline. They find that nonresident enrollment "crowds out" resident enrollment at prestigious public research universities, but not at less prestigious public research universities.
+
+How did public research universities go about attracting all these nonresident students. One mechanism is financial aid. @RN2535 shows that nonresident students are less sensitive to sticker price than resident students. Because nonresident prospects may be considering several options -- in-state, out-of-state, public, private -- they are sensitive to the generosity of institutional aid offers [CITE]. For example, @RN3762 analyze the effect of a University of Iowa institutional merit aid program for nonresident admits that offered higher awards for admits with higher academic achievement. Regression discontinuity analyses found that the program increased the probability of enrollment, particularly for high achieving students. These results suggest that high-achieving nonresident students face many good opportunities and require substantial institutional aid to be convinced to enroll. 
+
+Earlier in the "enrollment funnel," universities utilize marketing and recruiting interventions to attract nonresident applicants. One widely utilized intervention is off-campus recruiting visits by admissions counselors to local high schools. @RN3519 found that colleges value this visits as a means of meeting prospective students and maintaining relationships with guidance counselors at feeder schools. @RN4758 analyzed off-campus recruiting visits by 15 public research universities, finding that 12 of these universities made more visits to out-of-state
+high schools than in-state high schools. These out-of-state visits focused on public schools in affluent, predominantly white communities. Although @RN4758 focused on visits to public high schools, they noted a surprising number of visits to out-of-state private high schools. However, we know little about this private school visits, for example, which sorts of schools are they visiting and at what scale.
+
+## Scholarship on Linkages Between Private Schools and Colleges
+
+A separate thread of scholarship analyzes linkages between private schools and colleges. Nationwide, dddd
+
+TEXT YOU WROTE ABOUT MURNANE AND REARDON
+In particular, Murnane & Reardon (2018) used data from several national surveys to analyze long-term trends in private school enrollment by family income. The percentage of American (elementary school) students attending private school declined from 15% in the With respect to family income, the private school enrollment rate of high-income families (around 17%) and low-income families (around 4%) remained stable over time, but the enrollment rate for middle-income families declined from 12% in 1968 to 6% in 2013. These declines were substantially driven by declines in the number of students attending Catholic
+schools, which represented 89% of private school enrollment in 1965 and 42% of enrollment in 2013. Private school enrollment rates are higher for families located in urban areas than those in suburban areas. With respect to race, in 2013, 11% of white students attended private school compared to 5% of Black students, and 3% of Hispanic students. However, for high income families, rates of private school enrollment do not differ substantially across race. In the South, there has been a long-term increase in private school enrollment, driven
+by growing enrollment in Christian private schools by middle-income families and growing enrollment in nonsectarian private schools by high-income families.
+mid-1960s to 10% in the mid-1970s, and declined gradually from 11% in 1999 to 9% in 2015.
+
+
+- I think good to say that private schools make up about 9% of k-12 (or is it primary) enrollment
+The majority of research 
