@@ -69,7 +69,35 @@ Few empirical analyses of privatization compare public and private universities 
 
 # Introduction
 
-BLAH BLAH BLAH
+PX-PX: vignette of visits to a private high school.
+
+Theories of organizational behavior suggest that university recruiting behaviors -- those that require significant resource expenditure -- are indicators of organizational enrollment priorities. Large, complex organizations consist of several "technical levels" responsible for processing inputs and producing outputs and "managerial levels" responsible for directing the technical level and tending to demands from the external environment [@RN531; @RN959]. The technical level cannot pursue multiple goals efficiently. Thus, organizations respond to external pressue to pursue multiple, competing goals goals by symbolically adopting some goals and substantively adopting others [@RN513]. Under symbolic adoption, organizations adopt policies and structures that send signals to external constituents but do not affect resource allocation in the technical level. Under substantive adoption, organizations direct resources in the technical level towards achieving the goal. Off-campus recruiting visits by admissions officers to local high schools and college fairs was the top-ranked recruiting expenditure item for both public and private universities, according to @RN4664. Therefore, analyses of which schools a university visits -- and which schools they ignore -- can yield insights about university enrollment goals.
+
+@RN4758 analyzed recruiting visits to public high schools made by 15 public research universities in 2017. the authors found that 12 of the 15 universities made more visits to out-of-state schools than in-state schools. These out-of-state visits focused on affluent, predominantly white public schools. Set against the scholarship about declining state appropriations and growing nonresident enrollment [@RN3753; @RN3685], these results suggest that many public research universities prioritize enrollment from wealthy out-of-state students who can afford to pay nonresident tuition price. 
+
+A multidisciplinary literature on social stratification has analyzed relationship between private high schools and universities [CITE]. This research observes strong linkages -- and flows of students -- between private high schools and selective private universities [CITE]. To date, scholarship on nonresident enrollment by public universities has progressed in isolation from scholarship on linkages between private schools and private universities. We argue that these two stories are connected because public research universities are increasingly targeting out-of-state private schools, which have historically been the domain of selective private universities.
+
+<!-- 
+This study compares recruiting visits to private high schools by public research universities and recruiting visits to private high schools by selective private universities. 
+We argue that recruiting visits are an indicator of enrollment goals -- the university wants to enroll some students from the school, the school wants some students to enroll at the university. 
+-->
+This study analyzes recruiting visits to private high schools made in the 2017 calendar year by a sample of 15 public research universities and 14 selective private universities. @RN3519 finds that travel to local high schools is vital for maintaining relationships with guidance counselors at "feeder schools." We conceptualize recruiting visits as an indication the university and the school have a social relationship. This conceptualization motivates the use of social network methods, which analyze networks defined by "network ties" (i.e., visits) between actors (universities and schools). Comparing the recruiting networks of public researc universities and selective private universities yields novel insights about competition for students at schools that enroll affluent, "full-pay" students. Analyses are informed by three research questions:
+
+1. How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?
+1. How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
+1. To what extent do public research universities and selective private universities visit overlapping sets of private high schools?
+
+Both private and public universities in our sample made a disproportionate number of visits to private high schools. For public research universities, visited private schools were much more likely to be out-of-state than visited public schools. Although universities visited a large number of private schools in their home region, most universities also visited a large number of private schools in the South. Private schools that received visits were predominantly white. Although partially a function of our analysis sample, public universities tended to visit lower ranked private high schools than private universities. Surprisingly, several public universities visited sectarian private high schools at a rate similar to sectarian private universities. Network analyses revealed substantial overlap in the recruiting networks of public and private research universities.
+
+This manuscript is practically important because it provides insight about which schools universities view as "feeder schools" and -- to a limited extent -- the characteristics of students they want to enroll. Prior research finds that university recruiting efforts affect the enrollment decisions of students [CITE]. In turn, the composition of enrolled students affects the campus culture experienced by students.  Scholarship and the popular press reports that underrepresented minority students and low-income students at public flagship universities feel isolated amidst affluent, predominantly white student bodies. Racial and socioeconomic isolation negatively affects student development outcomes for isolated students and for the entire student body [CITE]. State policymakers and institutional leaders should recognize that the enrollment composition at public research universities is not the consequence of exogenous student demand, but rather the consequence of recruiting efforts that seek to grow nonresident enrollment by systematically targeting affluent, predominantly white public high schools [@RN4758] and affluent, predominantly white private high schools.
+[NOTE: THESE IMPLICATIONS HAVE TO DO ABOUT TARGETING PRIVATE SCHOOLS BUT NOT TARGETING SAME SET OF SCHOOLS TARGETED BY SELECTIVE PRIVATE UNIVERSITIES]
+
+
+
+[PUT THIS IN THE DISCUSSION SECTION] Finally When both private and public universities are targeting private schools, competition for these students is likely to increase. This could be an explanation for why many private universities are struggling to meet enrollment goals
+
+
+student bodies that predonominantly affluent, white student bodies. 
 
 # Literature Review
 
