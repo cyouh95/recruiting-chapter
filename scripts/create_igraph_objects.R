@@ -230,6 +230,8 @@ privhs_df <- privhs_data %>% left_join(dplyr::union(
   ) %>%
   mutate(type = 'priv hs', control = 'private')
 
+# Save dataframes
+saveRDS(privhs_df, file = str_c('./data/privhs_universe.RDS'))
 
 # All NA/unmerged Niche data were checked and manually added if available. There are 33 known true NA's
 table((privhs_df %>% filter(ncessch %in% privhs_events$school_id))$overall_niche_letter_grade, useNA = 'always')
