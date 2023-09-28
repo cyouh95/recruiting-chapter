@@ -82,9 +82,16 @@ print_visits <- function(pss_id) {
   print_visits(pss_id = '01294971')
   
 
-# A tibble: 18 × 12
-   univ_name         school_id school_name             event_date religion enroll ranking ranking_numeric pct_white pct_black pct_hispanic pct_asian
-   <chr>             <chr>     <chr>                   <chr>      <chr>     <int> <chr>             <int>     <dbl>     <dbl>        <dbl>     <dbl>
- 
- 
+#01932509 01932509                           ST CECILIA ACADEMY      NASHVILLE         TN  south     catholic             20.077220        A              NA     15 0.4148753       16
+  print_visits(pss_id = '01932509')
+  
+#02163165 02163165                        FRANKLIN ROAD ACADEMY      NASHVILLE         TN  south    christian             10.405405        A              NA     13 0.4007475       15
+  print_visits(pss_id = '02163165')
+  
+#01296141 01296141                          THE ENSWORTH SCHOOL      NASHVILLE         TN  south nonsectarian             21.043324       A+             468     12 0.3983488       14
+  print_visits(pss_id = '01296141')
+  
+#A9106269 A9106269                  CHRIST PRESBYTERIAN ACADEMY      NASHVILLE         TN  south    christian              3.839590        A              NA     12 0.3928353       13
+ print_visits(pss_id = 'A9106269')
+  
  
