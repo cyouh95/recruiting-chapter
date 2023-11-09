@@ -1,0 +1,191 @@
+---
+#title: "Response to Editors and Reviewers"
+#author: "ozan"
+date: "`r Sys.Date()`"
+output: pdf_document
+bibliography: ./../other/burd_recruiting_chapter.bib
+csl: ./../other/apa.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+XXXX X, 2023
+
+Dear Editors,
+
+We thank the Reviewers and the Editor for excellent, thoughtful, and detailed feedback. While the analyses have changed only modestly, the front end of the paper has changed tremendously, literally rewritten from scratch. I begin this letter by discussing the big changes in the manuscript, which I hope address many of the big concerns from Reviewer 2. Next, I address remaining reviewer concerns one by one.
+
+# Big Changes to the Manuscript.
+
+The original manuscript compared off-campus recruiting visits to private high schools by public research universities and selective private universities with the goal of contributing to scholarship on "privatization." The scholarly hook was that previous research stated that public universities were behaving more like private universities but empirical research had not compared public and private universities on a behavior associated with private universities. To set this hook, we made the strong argument that the historic mission of public universities is social mobility and the historic mission of selective private universities is social reproduction. Off-campus recruiting visits to private high schools is a behavior associated with the social production mission of selective private universities. Therefore, comparing public research and selective private universities on this behavior gives insight about the extent to which public research universities are behaving like private universities.
+
+Reviewer 2 very helpfully pointed out several core flaws with assumptions, practical motivations, scholarly contribution, and practical significance of the manuscript. I view these flaws as distinct yet interconnected. First, Reviewer 2 found the assumptions about "mission" -- public research universities serve social mobility mission while selective private universities serve social reproduction -- to be overly simplistic generalizations that assume a homogeneous mission across very different organizations. Moreover, Reviewer 2 found the assumption that private universities serve the mission of social reproduction to be somewhat off-putting and dismissive. Second, in contrast to the emphasis on an idealized mission, Reviewer 2 encouraged the manuscript to consider a more practical reason for why public research universities would target private high schools, particularly around targeting high-paying students that generate substantial revenue. Third, with respect to scholarly contribution, Reviewer 2 questioned why comparing public and private universities on a behavior associated with private universities makes an important contribution to the privatization literature. We must admit that we agree with this concern. The "privatization" literature has been in decline for more than a decade. So it is not important to contribute to a literature that is no longer relevant. Fourth, Reviewer 2 is concerned that the original manuscript did not clearly state the practical implications of the findings.
+
+We agree with all four of these core concerns by Reviewer 2. We sought to develop a revised manuscript that addressed all of these concerns. We concluded that targeted changes to particular parts of the front-end might address some but not all of these concerns. Therefore, we decided to completely destroy the original front end and create a new one. When the dust settled, we were happy to find that the original research questions -- and therefore the original analyses -- remained salient to the new front end.
+
+We explain the structure of the revised manuscript, by drawing from the *Setting the Hook* article by @RN3515, which is my favorite article on the craft of scholarship. They write that "One hook involves using a provocative quotation or vignette to engage the reader in the intriguing and practical nature of their topic" (p. XX). Our revised introduction begins with a vignette describing off-campus recruiting visits to Harpeth Hall, a predominantly white "non-sectarian private school for girls located in the affluent Green Hills neighborhood of Nashville, Tennessee" (p. X). The vignette then moves to the nearby University School of Nashville, which is highly ranked nationally, and receives visits from the more elite private colleges and universities in our sample, but few public universities in our sample. Finally, nearby Father Ryan High School and Christ Presbyterian Academy are lower ranked, are overwhelmingly white and receive visits from few selective private universities in our sample but do receive visits from a substantial share of public research universities in our sample. This introduction relies on data collected for the study, previews some of the core findings, and we hope it "engage(s) the reader in the intriguing and practical nature of the topic" as @RN3515 say.
+
+The revised literature review hopefully sets up a scholarly contribution while also doing a better job of describing the practical motivation for visits to private high schools by public universities. Following @RN3515, our literature review takes the approach of "entering two different conversations and bridging them" with the goal of making a contribution to each conversations while also showing that these two disparate conversations are both parts of a larger story. We first review scholarship on nonresident enrollment by public research universities. Reviewing this scholarship -- which we briefly preview in the introduction -- addresses a core concern from Reviewer 2 by identifying a strong practical motivation for public research universities to target out-of-state private school students (they tend to be affluent and can afford high prices and therefore generate desired tuition revenue). We also show that previous research about recruiting by public research universities has not investigated visits to private high schools. 
+
+Second, we review scholarship on linkages between private schools and private universities, we show that prior literature finds a strong relationship between private school attendance and college access and college selectivity. We also present descriptive statistics, which show a strong relationship between private school attendance and attending a selective private college or university. Whereas recent work from economists shows that private school applicants receive higher non-academic ratings than public school applicants [@RN4935], qualitative scholarship by sociologists highlights the importance of social relationships between private schools and selective private universities [@RN4407; @RN3519]. These social relationships are substantially maintained through face-to-face interactions between college admissions officers and high school guidance counselors. These interactions occur during off-campus recruiting visits, motivating the use of social network analyses. Although prior research highlights the importance of social networks between private schools and private universities, they haven't analyzed the social networks that emerge from off-campus visit patterns. Furthermore, we argue that scholarship by sociologists tends to focus on the relationship between elite private schools and elite universities, so we know less about the social networks of private universities that are selective but not elite.
+
+We develop a "bridging" scholarly contribution by stating the these two literatures have been isolated from one another, but they are both parts of a broader story about the changing nature of school segregation and the competition for affluent students. As public universities seek affluent out-of-state students, they are attracted to out-of-state private schools. In doing so, public research universities are encroaching on what had primarily been the territory of private universities. Therefore, analyses of visits to private schools explore the extent to which public and private universities are competing for students at similar or distinct sets of schools, revealing insights about the competition for affluent students. Additionally, prior research shows that private school enrollment is whiter than public schools, that private school students have become more affluent in recent decades, and that private school enrollment has grown in the South as a consequence of "white flight" to private schools. "Thus, in recruiting from private schools, universities may be targeting student bodies that are more affluent and racially homogeneous than public schools. We investigate the characteristics – including geographic region and racial composition – of private schools being targeted by university admissions officers because these characteristics have downstream implications for the racial composition of university campuses"
+
+
+
+Finally, we have revised the practical significance and implications to address concerns raised by Reviewer 2. 
+
+
+[WRITE THIS TEXT AFTER YOU REVISE THE DISCUSSION SECTION]
+
+
+# Response to Reviewer 2
+
+## Introduction and Overall Framing
+
+
+> **Reviewer concern**. This paper examines the recruiting behaviors of a sample of public and private institutions in the U.S. This paper employs a unique dataset and uses descriptive techniques that are not commonly used in higher education literature. The paper is well-written and makes an interesting contribution to the literature. I do have a few suggestions, which I lay out below. Chiefly, as written, this paper lacks some practical grounding. The authors set up the paper by arguing that public and private institutions serve two different missions- one serves social reproduction and the other serves social mobility. They then argue that these priorities drive recruiting practices. While this is a useful way to frame behavior, I think the paper would benefit from an additional discussion about the practical benefits of recruiting students from private schools, especially for public institutions. One place to start is to consider how private and public-school students pay for college. Do private school students generate more revenue for the institution? This same feedback applies to the summary/conclusion section. While the authors do a good job talking through their findings, they did not discuss the implications of their findings for research, practice, or policy. As such, I left feeling like this paper had some interesting findings, but could not name any clear ways in which this paper makes a contribution to educators or education research. That being said, I do not think my ask is insurmountable by any means, therefore I recommend a revise and resubmit.
+
+**Author response**: We wholeheartedly agree with these concern by Reviewer 2 and we are grateful to Reviewer 2 for raising these issues! As discussed above, the revised manuscript addresses these concerns about the practical benefits of recruiting students from private schools. We have also improved the discussion of implications for research and practice [REVISE AFTER YOU REWRITE THE DISCUSSION SECTION]
+
+
+> **Reviewer concern**. I'm a bit off put by your blanket statement that private institutions prioritize social reproduction while public institutions prioritize social mobility. I understand that you're using this as a framework to set up your study, but some additional language qualifying these remarks would improve your argument. I can think of many examples where private institutions serve social mobility and where public institutions serve social reproduction. For example, we know that private institutions in many states are a vital path to a college degree for low-income students, as they can more easily discount the cost of attendance. Conversely, public institutions in some states do not give any aid to undocumented students. It might help to just note that we cannot fully capture colleges' priorities or sort them into these two buckets just based on their status as public or private, but that this framework is used to conceptualize behavior.
+
+**Author response**: We agree with this reviewer concern. As discussed above, we have removed these statements from the revised manuscript.
+
+> **Reviewer concern**. Your argument that the recruiting behavior of colleges at private secondary schools is an indicator of the social reproduction mission could use some strengthening. As school voucher programs become more common, it's possible that, by recruiting at private secondary schools, IHEs are reaching those who are high achieving, but less affluent. Is there any data that tracks the prevalence of voucher use in your sample over time? Do you have any descriptive data on the secondary schools in your sample that could speak to this? If not, it might be worth naming school vouchers as a recent(ish) trend and heading off concerns like mine.
+
+**Author response**: We agree with this concern by Reviewer 2. Now that we have eliminated the "social reproduction" framing, the concern becomes less of an issue. Unfortunately, we do not know of data that speaks to the prevalence of voucher use at private high schools. That said, the revised literature review substantively cites the work of @RN4504, who find that private school enrollment by middle-income families has declined dramatically over the past three decades and this decline has been driven substantially by the decline in middle-income families enrolling at Catholic schools. Compared to three decades ago, the contemporary student population of private school students contains a higher proportion of affluent families. 
+
+> **Reviewer concern**. I have some reservations about this sentence: "By contrast, for public research universities, visits to private high schools - particularly out-of-state schools - are antithetical to the mission of social mobility for high-achieving, low-income state residents." (p. 3). Is it really the mission of public universities to serve high-achieving, low-income state residents? The emphasis on high-achieving, low-income students is where I take issue. I'd argue the mission is more generally to educate state residents and keep them within the borders of the state regardless of ability or SES.
+
+**Author response**: We agree with his concern. The revised manuscript removes the idea that the mission of public universities is social mobility. As such, we no longer make the strong statement that the historic mission targets low-income state residents as the primary focus.
+
+> **Reviewer concern**. I think what's missing in the introduction is a conversation about the practical advantages of recruiting students from private institutions from the university's perspective irrespective of "mission." Outside of reproducing or generating social mobility for its' patrons/stakeholders, why might an institution want to recruit from private secondary schools? I imagine that IHEs might want to do so because students who attend private secondary schools would be less likely to require need-based aid from the institution. Resource dependency theory would suggest that if recruiting high-paying students is critical to keeping the lights on, then institutions will try to get as many of these students in the door as possible. I think the conversation around the mission of the institutions is important; however, right now the grounding for the study feels very high-level and lacking some practical considerations.
+
+**Author response**: We wholeheartedly agree with Reviewer 2 here. The previous manuscript's focus on some universally held historic "mission" for public vs. private universities was simultaneously simplistic and distracting. The revised manuscript focuses motivates the analysis based on the more practical idea that universities target private schools because these schools tend to enroll affluent students, who have greater ability to pay high tuition prices without substantial need-based aid.
+
+
+> **Reviewer concern**. Similarly, I find myself craving some context around the broader implications for this study in the introduction. I think you start to get to this in your conversation around social reproduction, but it would help draw the reader in if you could lay out what the findings of this study could mean for policy and practice.]
+
+**Author response**: REVISE THIS RESPONSE AFTER YOU HAVE WRITTEN THE DISCUSSION SECTION AND REVISED THE INTRODUCTION.
+
+> **Reviewer concern**. "The "Chetty" data on parental income by college show that the overwhelming majority of students at selective private institutions have parental income in the top quintile (Burd, 2017; Chetty, Friedman, Saez, Turner, & Yagan, 2020)." P. 3 Instead of saying "Chetty" data, can you be more descriptive here? This sentence assumes a lot of prior knowledge for the reader. "Data linking IRS records to …."
+
+**Author response**: We agree with this recommendation. With that said, the revised paper no longer substantively references this data source.
+
+## Section 2 [background and lit review]
+ 
+> **Reviewer concern**. Is there any literature about the impacts of COVID on recruitment strategies? In particular, are in-person site visits to secondary schools more or less common than they were prior to 2020? Has there been any investment in virtual recruiting, such as zoom calls to schools? This kind of information will help enrich our understanding of the landscape of recruitment laid out in section 2.1.
+
+**Author response**: The original manuscript had a level-1 section entitled "What do we know about off-campus recruiting?", which reviews market research about off-campus recruiting and published scholarship By contrast, the revised manuscript has a broader literature review section that reviews scholarshp from two literatures -- (1) nonresident enrollment by public universities and (2) linkages between private schools and private universities -- and bridges these two literatures. Therefore, this recommendation from Reviewer 2 is less relevant to the revised literature review structure. 
+
+[REVISE THIS TEXT AFTER YOU REVISE THE DISCUSSION SECTION]
+Nevertheless, the question Reviewer 2 asks is very important; if off-campus recruiting visits became less prevalent following Covid, then the analyses do yield relevant insights about contemporary/future recruiting behavior by public research universities and selective private universities. 
+
+In the revised manuscript, the discussion section substantively describes information about off-campus recruiting events following Covid. In short, off-campus recruiting events are back and are viewed as vital to recruiting efforts. We put this text in the discussion section rather than the literature review because it complements text about recommendations for practice and this text fits lesss well with the revised literature review structure.
+
+TEXT TEXT TEXT This recommendation is very relevant for the original manuscript, but a bit less relevant for the revised manuscript in that the previous lit review of "what do we know about off-campus recruiting" has been replaced by a much broader literature review which focuses on X, Y, Z. With that being said, the reviewer asks a good question here. We refer [IN FOOTNOTE?] the readers to REPORT X, Y, Z FROM RUFFALO NOEL LEVITZ WHICH SAYS BLAH BLAH BLAH. FROM EAB COUNSELOR REPORT Q16, "HOW DO YOU PREFER TO RECEIVE INFORMATION FROM COLLEGES"; FOR BOTH PUBLIC AND PRIVATE SCHOOLS, "HIGH SCHOOL VISITS BY COLLEGE REPRESENTATIVES" WERE THE HIGHEST RATED CHANNEL, ESPECIALLY FOR PRIVATE SCHOOL COUNSELORS. ALSO, VIRTUAL COUNSELOR EVENTS WERE QUITE LOW RATED. IMPLICATION, IN THE PURSUIT OF TRADITIONAL COLLEGE STUDENTS, THIS IS STILL A HAND-TO-HAND BUSINESS. ALSO THERE IS A BIT IN THE MARKETING RECRUITING PRACTICES FOR UNDERGRAD STUDENTS BY RUFFALO. 
+
+Cost of recruiting undergraduates report, 2022. Travel was 5th for publics. second for privates. Travel was top area of increased expenditure for publics and second top area of increase for privates, suggesting that they were going to increase travel following return from Covid. 
+
+## Section 3 (social network analysis concepts) 
+
+> **Reviewer concern**. It may help the reader understand network analysis concepts if the authors include some visualizations attached to their examples in the beginning of the section. This is especially true when the authors discuss the networks related to this study.
+
+INCLUDE PICTURE OF EGO NETWORK? HAVE TO KEEP THIS PARSIMONIOUS BECAUSE OF PAGE LENGTH CONCERNS
+
+> **Reviewer concern**. The authors rarely cite materials when explaining network analysis. Some citations would be helpful for those unfamiliar with the technique.
+
+**Author response**: The revised discussion of social network concepts and analysis now includes relevant citations. 
+
+> **Reviewer concern**. On page 15, you lay out the different private school characteristics that are the focus of this study. I also wonder if the authors thought about looking at recruiting at private secondary schools in states neighboring the college in addition to the region analysis. I imagine that public institutions would have quite the incentive to recruit out-of-state students, as they are revenue generators for the institution. These institutions may target folks from surrounding states because a) it's cheaper to send a recruiter to a neighboring state rather than one in another region b) because the college likely has more name recognition in neighboring states than states in another region and c) if we believe that the purpose of public colleges' is to strengthen the state's economy by keeping highly educated workers in the state, it might follow that graduating students from neighboring states may be more likely to work in the college's state than graduating students who are much
+further from home.
+
+**Author response**: We agree with the point the Reviewer is making here and for all the reasons that Reviewer 1 lists. We experimented with doing an additional analysis of visits to neighboring states. However, we ultimately decided to not include this analysis in the revised manuscript. The two reasons are (1) the neighboring state analysis doesn't quite get at the underlying relationship between geographic proximity and recruiting visits/student demand and (2) the manuscript is already long so we decided to avoid including analyses that don't quite work.
+
+The reason the neighboring state analysis doesn't quite work is exemplified by the University of Nebraska Lincoln (UNL). Nebraska does not share a border with Illinois but a huge proportion of their high school recruiting visits -- public and private -- are in Chicago. The same is true for the University of Arkanas and visits to Georgia (Atlanta), CU-Boulder and California and CU-Boulder and Chicago, and UC-Berkeley and visits to Washington (Seattle). To a huge degree, recruiting visits occur in major metropolitan areas, so the analysis you recommend bears fruit for universities in states that neighbor a state with a major metopolitan area (e.g., University of Alabama and Georgia, or University of Pittsburgh and New York). 
+
+We considered an alternative to your analysis that focuses on visits to metropolitan areas within some distance (e.g., 500 miles) from the University. But this analysis is also not clean because distances seem to be greater in the West (e.g., Denver to Los Angeles) than the east coast (e.g., Amherst MA to NYC). For these reasons, we opted to exclude those analyses even though we do agree with the basic logic the Reviewer lays out.
+
+## Section 4 (data and methods)
+
+> **Reviewer concern**. Can you walk us through why you used two different sources to choose colleges (Carnegie for publics and USNWR for privates)? If we want to examine samples of public and private colleges that are similar, wouldn't it make sense to use one classification method to pick schools? You get at this a little bit later, but I'd still like to know your logic.
+
+**Author response**: The revised Data and Sample section states that "The rationale for different criteria for inclusion across different university types is because these criteria reflected the interests of a foundation that funded the data collection." We agree with Reviewer 1 that making comparisons between public and private universities would be more appropriate if we used the same classification method to define the data collection sample for all universities. The revised manuscript now includes a Limitations subsection that describes this limitation and its consequences.
+
+
+> **Reviewer concern**. What are the drawbacks of a convenience sample? The authors do a great job breaking down network analysis techniques, so I want to ensure that they aren't assuming knowledge elsewhere.
+
+**Author response**: This is an excellent suggestion by Reviewer 1. The new Limitations section in the revised manuscript discusses the drawbacks of a convenience sample.
+
+> **Reviewer concern**. How are you certain that the colleges in your final sample posted all of the recruiting events they hosted/took part in? Did you double-check with admissions offices?
+
+**Author response**: We added text to the Data and Sample section to address this concern. For public research universities, we double checked with the admissions offices and issued formal public records requests if the university did not provide data.
+
+> **Reviewer concern**. I would love to know what software/packages you used to scrape websites? This would be helpful for others who would like to build off your work.
+
+**Author response**: The revised manuscript now states that we used Python to scrape admissions websites [CRYSTAL -- ADD WHICH PACKAGES WE USED]. Additionally, in case this is helpful to readers, the revised manuscript states that all analyses were conducted using *R* and network analyses were conducted using the *igraph* package. As an aside, we could have done the web-scraping in *R* too.
+
+> **Reviewer concern**. I'd also like to know how the universities in your final sample compare the universities that were in your original sample. Of course, you aren't making any causal claims in your paper, but I do wonder where you think the reader should tread lightly when extrapolating the results to other institutions. In other words, is there anything special about your sample when compared to other colleges that may be driving the patters you're seeing?
+
+ADD APPENDIX TABLE ABOUT THIS.
+
+## Section 5 (results)
+
+The results are well-organized and clear
+
+**Author response**: Thank you! The results have been revised moderately to reflect analysis of recruiting in neighboring state and to reflect questions from Reviewer 1 (ADD/MODIFY TEXT ONCE YOU HAVE MADE THIS CHANGE)
+
+## Section 6 (discussion)
+
+> **Reviewer concern**. The authors state that "a weakness of the scholarly literature on privatization is that few studies compare public and private universities with respect to a behavior that is associated with private universities." Can the authors elaborate on why this weakness is important? In other words, help us understand why this gap in the literature deserves to be interrogated?
+
+**Author response**: We agree with Reviewer 2 implied concern here that just because the privatization research did not address this topic, it is not clear that conducting this analysis makes a significant scholarly contribution because the privatization literature is less relevant than it was 10 years ago. 
+
+STATE THE SCHOLARLY CONTRIBUTION THE PRESENT ARTICLE DOES MAKE.
+
+- TO THE NONRES LITERATURE/COMPARE THESE RESULTS TO RESULTS FROM AERJ ARTICLE. SAY THE CONTRIBUTION
+- TO THE PRIVATE SCHOOL TO PRIVATE UNIVERSITY LINKAGES, SHOW WHAT ARE THE ORGS THAT UNIVERSITIES ESTABLISH TIES TO (E.G., ALONG RELIGIOUS LINES)
+- WHAT IS THE BRIDGING CONTRIBUTION. 
+
+
+> **Reviewer concern**. The authors do a good job of summarizing their findings, but I'm, again, wanting a conversation about the implications of these findings for practice and future research. What do these findings mean for students? For admissions professionals? What are your thoughts on avenues for future research?
+
+**Author response**: ADD TEXT 
+
+> **Reviewer concern**. Why do you think public universities are "playing the private school game?" This connects back to earlier suggestions about fleshing out the practical reasons why public institutions are targeting private schools students.
+
+**Author response**: We agree with this concern. As described in the beginning of the letter, the revised manuscript is motivated by the idea that visiting private schools is motivated by the desire to find households that can pay high tuition prices without requiring substantial need-based institutional aid [NOTE TO SELF: NEED TO MAKE THIS RATIONALE MORE CLEAR FOR PRIVATE UNIVERSITIES].
+
+# Response to Reviewer 1
+
+> **Reviewer concern**. 1. It appears that the author has written a separate paper focusing on off-campus recruiting visits made by public research universities to public high schools. To enable a comprehensive comparison of off-campus recruiting behaviors between public and private universities, it is necessary to consider visits to both public and private high schools. At the very least, it would be beneficial to compare the findings of the earlier study with the results presented in this manuscript to identify any notable differences or similarities.
+
+**Author response**: We agree with this suggestion. The revised literature review substantively reviews prior research we conducted about visits to public high schools by public research universities. The revised discussion section compares the results from this study to the previous study [REVISE ONCE YOU REVISE THE DISCUSSION SECTION]. WE FIND BLAH BLAH BLAH
+
+> **Reviewer concern**. 2. The manuscript could benefit from some reduction in length without compromising its quality. For example, in section 2.2, instead of providing extensive descriptions of various studies, the author could reorient the focus of this section to highlight the specific contributions of these studies to the present research. Additionally, combining sections 3 and 4 and providing a concise description of the social network analysis in the Data and Methods section would enhance the overall readability and coherence of the paper.
+
+**Author response**: We agree with these suggestions. The revised literature review avoids extensive discussion of any one publication. The revised literature review is focused on situating the contribution vis-a-vis two literatures, which we attempt to review efficiently in a way that highlights the contribution to each of these literatures and also the bridging contribution. 
+
+Additionally, we follow Reviewer 1's recommendation of removing the level-1 section "Social Network Analysis Concepts" text, and allocating this text to relevant sub-sections of the revised "Methods" section. This change reduces redundancy in text, helps to reduce word count, and results in a structure that we hope is easier for readers to digest. The revised organization of the level-1 Methods section is as follows: Data and sample; Constructing social networks; Analyses (which are described separately by research question)
+
+
+> **Reviewer concern**. 3. The results section currently includes overly detailed and occasionally irrelevant information, making it challenging for readers to grasp the overall patterns and implications. In sections 5.3.1 and 5.3.2, the purpose of conducting network analysis within public and private universities is unclear. It is important to provide a clear rationale for analyzing these specific institutional types and explain how it contributes to understanding the differences in recruiting strategies. Additionally, some results seem specific to the sample of universities under study, and it would be valuable to provide broader insights into the disparities between public and private institutions.
+
+WHAT REVIEWER IS ASKING: 
+
+- REMOVE ANALYSIS OF Figure 15: One-mode network for public institutions, colored by cluster TO THE APPENDIX
+- REMOVE ANALYSIS OF Figure 16: One-mode network for private universities, colored by cluster TO THE APPENDIX
+- REMOVE EXTENSIVE DISCUSSION OF INDIVIDUAL UNIVERSITIES; 
+
+> **Reviewer concern**. 4. The analysis conducted in section 5.3.3—which is central to this study—does not provide a clear indication of the differences or similarities between public and private institutions in terms of their recruiting strategies. However, the finding that certain groups of public and private universities have more in common with each other than with other universities of the same control suggests the possibility of confounding factors such as geographic proximity, rankings, etc. Incorporating an analysis of these confounding factors would strengthen the study and likely require additional data analysis.
+
+SEEMS TO WANT ADDITIONAL ANALYSES TO ENGAGE W/ RQ3. I'M NOT SURE WHAT TO ADD HERE. COME BACK TO LATER.
+
+
+> **Reviewer concern**. 5. The cross-sectional nature of the data limits the ability to draw conclusions about the direction of change in recruiting strategies between public and private institutions. This is especially significant given the convenient sample of institutions used in this study. These limitations should be discussed.
+
+ADD LIMITATIONS SECTION. STATE LIMITATIONS OF CROSS-SECTIONAL NATURE OF DATA COLLECTION

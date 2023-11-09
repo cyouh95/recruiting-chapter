@@ -1,0 +1,229 @@
+---
+#title: "The Private School Network: Recruiting Visits to Private High Schools by Public and Private Universities"
+#author: 
+#  - Ozan Jaquette
+#  - Crystal Han
+#  - Irma Castañeda
+bibliography: ./../other/burd_recruiting_chapter.bib
+output: 
+  bookdown::pdf_document2:
+  #bookdown::word_document2:
+    toc: FALSE
+    pandoc_args: !expr rmdfiltr::add_wordcount_filter(rmdfiltr::add_citeproc_filter(args = NULL))
+csl: ./../other/apa.csl
+urlcolor: blue
+always_allow_html: true
+header-includes:
+      - \usepackage{pdflscape}
+      - \usepackage{geometry}
+      - \usepackage{floatrow}
+      - \usepackage{setspace}
+      #- \doublespacing
+      - \floatsetup{capposition=top}
+fontsize: 12pt
+---
+
+
+```{r setup, include=FALSE}
+library(knitr)
+library(bookdown)
+
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_pdf.pdf
+library(kableExtra)
+library(tidyverse)
+library(gridExtra)
+library(scales)
+
+knitr::opts_chunk$set(echo = F, message = F)
+
+knitr::knit_hooks$set(inline = function(x) {   if(!is.numeric(x)){     x   }else{    prettyNum(round(x,2), big.mark=",")    } })
+
+data_dir <- file.path('..', 'data')
+tables_dir <- file.path('..', 'assets', 'tables')
+figures_dir <- file.path('..', 'assets', 'figures')
+
+univ_sample_df <- readRDS(file.path(data_dir, 'univ_sample.RDS')) %>%
+  arrange(desc(classification), rank)
+events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+
+pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+
+ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>% 
+  mutate(
+    univ_region = str_split(characteristics, '\\|', simplify = T)[,1],
+    univ_religion = str_split(characteristics, '\\|', simplify = T)[,2],
+    univ_race = round(as.numeric(str_split(characteristics, '\\|', simplify = T)[,3]), 1),
+    univ_rank = as.numeric(str_split(characteristics, '\\|', simplify = T)[,4]),
+    univ_enroll = format(as.numeric(str_split(characteristics, '\\|', simplify = T)[,5]), big.mark = ',')
+  )
+```
+
+**The Private School Network: Recruiting Visits to Private High Schools by Public and Private Universities**
+
+
+\medskip
+
+*During the 2017 calendar year, we tracked off-campus recruiting visits made by 14 selective private universities, 12 selective private liberal arts colleges, and 15 public research universities. We are still trying to figure out what happened.*
+\medskip
+
+
+<!-- 
+Harpeth Hall is a non-sectarian private school for girls located in the affluent Green Hills neighborhood of Nashville, Tennessee. Harpeth is an "A+" school ranked 337 in the nation according to Niche. Founded in 1951, the racial composition of Harpeth reflects broader regional patterns, where “efforts by the courts to desegregate public schools in the South resulted in white flight to private schools” [@RN4504, p. 14]. In Fall 2017, about 85% of Harpeth students were white and less than 5% were Black or Latinx.
+-->
+**INTRODUCTION AND RESEARCH QUESTIONS**. Harpeth Hall is a non-sectarian private school for girls in Nashville, ranked 337 in the nation according to Niche private school rankings. From September 6th through October 17th, Harpeth received recruiting visits from 11 private universities in our sample (Northwestern, Boston College, Tufts, Villanova, Case Western Reserve, University of Denver, Emory, Tulane, Baylor, Texas Christian University), and three private liberal arts colleges (Harvey Mudd, Scrips, and Sewanee). Previous scholarship observes strong connections between private schools and selective private universities [@RN3519; @RN4407]. However, Harpeth also received visits from six out-of-state public research universities, the University of Cincinnati, University of South Carolina, the University of Alabama, University of Arkansas, University of Georgia, and CU Boulder. 
+
+Drawing from theories of organizational behavior [@RN531; @RN959; @RN531], recruiting behaviors that require significant expenditure are indicators of university enrollment priorities. According to @RN4664, off-campus recruiting visits were the top-ranked recruiting expenditure item for both public and private universities. 
+
+
+This study analyzes off-campus recruiting visits to private high schools from a convenience sample of 14 selective private universities and 15 public research universities. Recruiting visits indicate a social relationship, motivating social network analyses of network ties (visits) between actors (universities and schools). Analyses are informed by three research questions:
+<!-- 
+
+-->
+
+1. How does the scale of visits to private schools by public research universities compare to the scale of visits to private schools by selective private universities?
+1. How do the characteristics of private schools visited by public research universities compare to the characteristics of private schools visited by selective private universities?
+1. To what extent do public and private universities visit overlapping sets of private schools?
+
+Policy debates about college access are largely uninformed about recruiting.
+This proposal speaks to the conference theme by informing researchers and policymakers how recruiting practice occurs "in the wild" within the college access ecosystem.
+
+**LITERATURE REVIEW**. We bridge two disconnected literatures: (1) nonresident enrollment at public universities; and (2) linkages between private schools and private universities.
+
+
+Public research universities responded to declines in state appropriations by growing enrollment from nonresident students [@RN3753] and international students [@bound_international], who pay higher prices than residents. @RN3685 show that growth in the share of nonresident students is associated with declines in the share of Pell recipients and Black and LatinX students. Universities visit high schools to attract applicants and maintain relations with counselors. @RN4758 analyzed off-campus recruiting visits to public high schools by public research universities. Most universities made more visits to out-of-state high schools than in-state high schools. These out-of-state visits focused on affluent, predominantly white schools.
+
+Scholarship from sociology and economics finds that private school attendance positively affects college access and college selectivity [@RN4614;@RN4625; @RN4599; @RN4936; @RN4938]. Descriptive statistics from the high school freshman class of 2009 indicate that 5.0% of public high school students attended a public university ranked in the top 100 by USNWR and 1.9% attended a top 100 private university (Author calculations based on HSLS). Of private school students, 10.9% attended a top 100 public university and 16.8% attended a top 100 private university. Of nonsectarian private school students, 11.3% attended a top 100 public university and 39.8% attended a top 100 private university. 
+
+@RN4935 find that students from elite private schools are overrepresented at elite universities because private school applicants receive higher ratings on non-academic components (e.g., extracurricular activities, teacher and guidance counselor recommendations). By contrast, scholarship from sociology highlights the mechanism of social relationships between private school guidance counselors and college admissions officers (e.g., making a phone call on behalf of an applicant) [@RN4407; @RN4647; @RN3519; @RN4640].
+
+Although the literature on (1) nonresident enrollment and (2) the literature on linkages between private schools developed in isolation, they are both part of a broader story about the competition for affluent students. Historically, private schools were the domain of selective private universities. However, public research universities have an incentive to visit out-of-state private schools to find "full-pay" nonresident students. By analyzing the network of recruiting visits, we show whether public research universities and selective private universities are competing for students at similar sets of private schools.
+<!-- 
+ We also examine the characteristics of visited schools, which have implications for university enrollment composition.
+-->
+
+**METHODS**. We collected off-campus recruiting visit data in 2017 by web-scraping events from university admissions websites. The analysis sample for this study consists of 15 public research-extensive universities and 14 private universities ranked in the top 100 of US News National University rankings. We also incorporated secondary data from IPEDS, the American Community Survey, NCES Common Core of Data (public schools), and the Niche Best Private High Schools ranking. 
+
+Off-campus recruiting visits are the network tie that defines a two-mode social network between universities (mode 1) and private schools (mode 2). We construct the two-mode network and transform the two-mode network into several one-mode network objects. To answer research questions, we analyze these objects using simple descriptive statistics and cluster analysis methods, as shown below.
+
+**RESULTS**. Results for RQ1 (scale of private school visits) are shown in Figures \@ref(fig:events-hs-count-pubu), \@ref(fig:events-hs-count-privu), \@ref(fig:actual-proportional-pubu), and \@ref(fig:actual-proportional-privu). Results for RQ2 (characteristics of visited private schools) are shown in Figures \@ref(fig:region-pubu-privu), \@ref(fig:religion-pubu-privu), \@ref(fig:rank-pubu-privu), \@ref(fig:race-pubu-privu), and \@ref(fig:race-pubu-privhs-pubhs). Results for RQ3 (overlap in visited schools) are shown in Table \@ref(tab:privu-percent-visited-by-pubu-matrix) and in Figure \@ref(fig:plot-1mode-u), which shows the one-mode public university network with universities categorized into groups based on "community detection" cluster analysis methods.
+
+**SIGNIFICANCE**. Universities in our sample made a disproportionate number of visits to private schools. Most public universities in our sample -- even those not in the South -- made a large share of visits to the South. Visited private schools tend to be much whiter than visited public schools. We infer that university recruiting behavior disproportionately targets students at racially homogeneous high schools. 
+
+
+\newpage
+
+# References
+
+
+<div id="refs"></div>
+
+
+ 
+\newpage
+
+\clearpage
+
+
+\begin{landscape}
+
+
+```{r u-cluster1-percent-matrix, include=FALSE}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
+
+
+#kable(table_1mode_u$clusters_df[order(match(table_1mode_u$clusters_df$univ_abbrev, rownames(table_1mode_u$onemode_df))), ], caption = 'Clusters for public and private universities')
+
+cluster_1 <- c(1, 4, 5, 7, 16, 18, 19, 24, 25, 28)
+cluster_2 <- c(2, 3, 6, 8, 9, 10, 11, 12, 14, 15, 20, 22, 23)
+cluster_3 <- c(13, 17, 21, 26, 27)
+cluster_4 <- 29
+
+kable(table_1mode_u$onemode_pct_df[cluster_1, cluster_1], caption = 'Public and private universities percent matrix (cluster 1)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r privu-percent-visited-by-pubu-matrix}
+rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
+
+kable(table_1mode_u$onemode_pct_df[c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29),c(2,3,4,5,6,8,10,11,12,14,15,19,20,26)], caption = 'For private universities, the percent of high schools visited by public universities') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  #column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em') %>% 
+  column_spec(14:15, width = '8.5em')
+```
+
+\end{landscape}
+
+\restoregeometry
+
+
+\clearpage
+
+\newpage
+
+
+
+```{r events-hs-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits to public and private high schools by public research universities"}
+include_graphics(file.path(figures_dir, 'events_hs_count_pubu.pdf'))
+```
+
+\newpage
+
+```{r events-hs-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits to public and private high schools by selective private universities"}
+include_graphics(file.path(figures_dir, 'events_hs_count_privu.pdf'))
+```
+
+\newpage
+
+```{r actual-proportional-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Actual versus proportional number of private school visits, public research universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_pubu.pdf'))
+```
+
+\clearpage
+
+```{r actual-proportional-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Actual versus proportional number of private school visits, selective private universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privu.pdf'))
+```
+
+\clearpage
+
+```{r region-pubu-privu, echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_region_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r religion-pubu-privu, echo = FALSE, fig.cap = "Religious affiliation of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_religion_pubu_privu.pdf'))
+```
+
+\newpage
+
+
+```{r rank-pubu-privu, echo = FALSE, fig.cap = "High school ranking of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r race-pubu-privu, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r race-pubu-privhs-pubhs, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools vs. public high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
+```
+
+
+```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
+```
+
+
+
+

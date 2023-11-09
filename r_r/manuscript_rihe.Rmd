@@ -16,8 +16,15 @@ header-includes:
       - \usepackage{geometry}
       - \usepackage{floatrow}
       - \usepackage{setspace}
+      - \usepackage{fancyhdr}
+      - \usepackage{titlesec}
       #- \doublespacing
       - \floatsetup{capposition=top}
+      - \newcommand{\beginsupplement}{
+      - \setcounter{table}{0}  
+      - \renewcommand{\thetable}{S\arabic{table}} 
+      - \setcounter{figure}{0} 
+      - \renewcommand{\thefigure}{S\arabic{figure}}}
 fontsize: 12pt
 ---
 
@@ -60,227 +67,166 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
 \setstretch{1.5}
 
 
-ABSTRACT
-
-Few empirical analyses of privatization compare public and private universities on a behavior associated with private universities. This manuscript analyzes off-campus recruiting visits to private high schools, which were made in 2017 by a convenience sample of 15 public research universities and 14 selective, private universities. Sociological scholarship on the relationship between high schools and universities conceives of off-campus recruiting visits as an indicator of a social relation. Therefore, we utilize social network concepts and methods to compare the recruiting networks of public and private universities. With respect to scale (research question 1), most public research universities in our sample made a disproportionate number of visits to private (out-of-state) high schools, though not as many as private universities. With respect to characteristics of visited schools (RQ2), both public and private universities tended to visit predominantly white schools in their home geographic region and the South. Public universities tended to visit lower ranked private high schools than private universities. Surprisingly, several public research universities visited sectarian private high schools at a rate similar to sectarian private universities. With respect to overlap (RQ3), descriptive statistics and community detection methods revealed substantial overlap in the recruiting networks of public and private universities.
-
-
-\newpage
-
 # Introduction
 
-In the early twenty-first century, "privatization" received substantial attention from scholars of higher education [e.g., @RN921; @RN2101; @RN1118; @RN1577; @RN2111]. @RN4543 argue that scholarship on privatization waned because of a lack of conceptual and empirical clarity. One strand of scholarship conceptualizes privatization as a process whereby declines in government funding cause public institutions to grow alternative revenue sources. Public research universities responded, for example, by pursuing research commercialization and nonresident tuition revenue, and donative resources [e.g., @RN3753; @RN2101; @RN1644]. A second strand within the privatization literature conceptualizes privatization as a process whereby public institutions become more similar -- in terms of characteristics or behavior -- to for-profit or private non-profit organizations [@RN4543]. A weakness of this literature is that few empirical studies analyze public institutions on a behavior associated with private institutions. Moreover, few studies directly compare public and private institutions on the same behavioral dimension.
+*During the 2017 calendar year, we tracked off-campus recruiting visits made by 14 selective private universities, 12 selective private liberal arts colleges, and 15 public research universities.^[NAME THE UNIVERSITIES] We are still trying to figure out what happened.*
+\bigskip
 
-We argue that scholarship on recruiting behavior can shed light on the extent to which public universities are engaging in behaviors associated with private universities. Admissions counselors from colleges and universities visit local high schools in order to meet prospective students and maintain relationships with guidance counselors at feeder schools [@RN3519]. @RN4758 analyzed off-campus recruiting visits made in 2017 by 15 public research universities, finding that 12 of these universities made more visits to *out-of-state* high schools than *in-state* high schools. These out-of-state visits focused on public schools in affluent, predominantly white communities. Whereas @RN4758 primarily analyzed visits to public high schools, this chapter focuses on visits to private high schools. More specifically, we investigate how visits to private high schools by public research universities compare to visits to private high schools by selective private universities.
+Autumn is college recruiting visit season at Harpeth Hall, a non-sectarian private school for girls located in the affluent Green Hills neighborhood of Nashville, Tennessee. Founded in 1951, Harpeth is an "A+" school ranked 337 in the nation according to the 2020 *Best Private High Schools in America* by Niche. Enrollment patterns at Nashville-area private schools reflect broader regional patterns, whereby “efforts by the courts to desegregate public schools in the South resulted in White flight to private schools” [@RN4504, p. 14]. In Fall 2017, about 85% of Harpeth students were white and less than 5% were Black or Latinx (Author calculations). 
 
-Our focus on recruiting visits to private high schools is motivated by seminal scholarship within the sociology of education. Sociologist Max Weber is credited for the insight that education has a "dual character," on one hand, serving *social mobility* by redistributing access to privileged positions and, on the other, serving *social reproduction* by granting privileged families disproportionate access to the educational institutions that confer pathways to privileged positions [@RN2377; @RN1133].
+From September 6th through October 17th, Harpeth received recruiting visits from 11 private universitiesin our sample (Northwestern, Boston College, Tufts, Villanova, Case Western Reserve, University of Denvor, Emory, Tulane, Baylor, Texas Christian University), and three private liberal arts colleges (Harvey Mudd, Scrips, and Sewanee). Previous scholarship observes strong connections between private schools and selective private universities [@RN3519; @RN4407]. However, Harpeth also received visits from six out-of-state public research universities, the University of Cincinatti, University of South Carolina, the University of Alabama, University of Arkansas, University of Georgia, and CU Boulder.
 
-The mission of selective private colleges and universities is more squarely associated with social reproduction rather than social mobility. Historically, these institutions depend on patronage from philanthropic interests -- in connection with business and religious interests -- and on wealthy households who provide tuition revenue and donations [@RN4517]. In turn, selective private institutions contribute to social reproduction by providing access to their patrons. The "Chetty" data on parental income by college show that the overwhelming majority of students at selective private institutions have parental income in the top quintile [@RN4722; @RN4723]. A significant caveat is that religiously affiliated universities may prioritize enrollment opportunities for students of the same faith regardless of wealth, but even here the mission is to benefit families from a particular cultural status group [@RN4517].
+The nonsectarian University School of Nashville was founded in 1975 and is located next door to Vanderbilt University. It is an "A+" school, ranked 127th in the nation, and is more racially diverse than Harpeth (64% white, 11.5% Black, 3.5% Latinx, 10.0% Asian). From September 11th 2017 through October 18th, the University School received visits from nearly the same set of 11 private universities that visited Harpeth (Notre Dame visited and Baylor did not) and five liberal arts colleges (including Williams and Middlebury), but only two public research universities from our sample (University of Cincinatti, CU Boulder). 
 
-The traditional, albeit mythologized, public good mission of public research universities is tied to social mobility and development of the state [@RN2269; @RN921]. Public research universities are designated the unique responsibility of educating the future civic, professional, and business leaders of the state. Quoting 19th century University of Michigan President James Angell, these institutions contribute to social mobility by providing "an uncommon education for the common man" [as cited in @RN3608, p. 279] who could not afford tuition at elite private institutions. 
+Father Ryan High School is a Catholic school founded in 1925. Father Ryan is predominantly white (86%, 7% Black or Latinx) and received an "A" grade from Niche, meaning it is not ranked in the top 1,000 US private schools. In fall 2017, Father Ryan received visits from nine of the 14 private universities in our sample (including all the Catholic universities) and the same six public universities that visited Harpeth Hall, including two visits by the University of Alabama. Meanwhile, Christ Presbyterian Academy -- also not ranked in the top 1,000 private schools -- received visits from five private universities in our sample (including the three Christian universities Baylor, Texas Christian University, and Southern Methodist University). It also received visits from the University of Cincinatti, the University of South Carolina, the University of Alabama, University of Arkansas, and CU Boulder. Christ Presbyterian Academy was founded in 1985 and 94% of its students are white.
 
-We argue that the recruiting behavior of colleges and universities is an indicator of organizational enrollment priorities and, in turn, the extent to which enrollment priorities serve social mobility or social reproduction. Recruiting visits to private high schools are consistent with the social reproduction mission of selective private universities, regardless of whether the university is targeting a particular high school because of its academic reputation, religious affiliation, or the affluence of its student body. By contrast, for public research universities, visits to private high schools -- particularly out-of-state schools -- are antithetical to the mission of social mobility for high-achieving, low-income state residents.
+Theories of organizational behavior suggest that university recruiting behaviors -- those that require significant expenditure -- are indicators of organizational enrollment priorities. Large, public-facing organizations are beset by multiple, competing pressures from the external environment, but organizations have difficulty pursuing multiple goals [@RN531; @RN959]. Thus, organizations respond by symbolically adopting some goals and substantively adopting others [@RN513]. Under symbolic adoption, organizations adopt policies and structures that send signals to external constituents but do not substantively affect resource allocation inside the the "technical level" of the organization.^[Contingency theory states that organizations consist of "technical levels" responsible for processing inputs and producing outputs and "managerial levels" responsible for directing the technical level and tending to demands from the external environment [@RN531]. The technical level achieves effectiveness by focusing on a small, stable set of goals.] Under substantive adoption, organizations direct resources in the technical level towards achieving the goal. Off-campus recruiting visits to local high schools and college fairs was the top-ranked recruiting expenditure item for both public and private universities, according to @RN4664. Therefore, analyses of which schools a university visits -- and which schools they ignore -- can yield insights about university enrollment goals.
 
-This manuscript compares public research universities to selective private universities on the dimension of recruiting visits to private high schools, a behavior associated with the social reproduction orientation of selective private universities. Our primary goal is to learn about public research universities, using the behavior of private universities as a benchmark to develop more thoughtful insights about public research universities. We analyze recruiting visits made in the 2017 calendar year by a sample of 15 public research universities and 14 selective private universities. 
-<!-- and 12 selective private liberal arts colleges. -->
+@RN4758 analyzed recruiting visits to public high schools made by 15 public research universities in 2017. the authors found that 12 of the 15 universities made more visits to out-of-state schools than in-state schools. These out-of-state visits focused on affluent, predominantly white public schools. Set against the scholarship about declining state appropriations and growing nonresident enrollment [@RN3753; @RN3685], these results suggest that many public research universities prioritize enrollment from wealthy out-of-state students who can afford to pay nonresident tuition price. 
 
-<!--
-Note: The data for this book chapter will be slightly different due to using 2017-18 CCD data plus modified criteria (no longer excluding HS w/ certain school types) - but % is still similar
+Within scholarship on social mobility and social stratification, a multidisciplinary literature analyzes the relationship between private school and college [CITE]. This research observes strong links -- and student flows -- between private high schools and selective private universities [CITE]. To date, scholarship on nonresident enrollment by public universities has progressed in isolation from scholarship on links between between private school and college. We argue that these two stories have become connected because public research universities increasingly target out-of-state private schools, schools that have been the domain of selective private universities.
 
-UC Berkeley: 171 (42%) of 404 out-of-state HS visits are to private schools
-CU Boulder: 381 (38%) of 1008 out-of-state HS visits are to private schools
+<!-- 
+This study compares recruiting visits to private high schools by public research universities and recruiting visits to private high schools by selective private universities. 
+We argue that recruiting visits are an indicator of enrollment goals -- the university wants to enroll some students from the school, the school wants some students to enroll at the university. 
 -->
 
-Little is known about recruiting at private high schools by public universities. Therefore, we conduct descriptive analyses that seek to identify basic patterns and relationships. Because a recruiting visit to the same private high school is an indicator of a relationship between two actors, we also utilize social network methods in order to compare the recruiting networks of public universities to those of private universities. Analyses are informed by the following three research questions:
+This study analyzes recruiting visits to private high schools made in the 2017 calendar year by a sample of 15 public research universities and 14 selective private universities.  <!-- @RN3519 finds that travel to local high schools is vital for maintaining relationships with guidance counselors at "feeder schools."--> We conceptualize recruiting visits as an indication the university and the school have a social relationship. This conceptualization motivates the use of social network methods, which analyze networks defined by "network ties" (i.e., visits) between actors (universities and schools). Comparing the recruiting networks of public research universities and selective private universities yields novel insights about the competition for affluent, "full-pay" students. Analyses are informed by three research questions:
 
 1. How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?
-1. How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
+    - ALTERNATIVE: How does the scale of visits to private high schools vary for the public research universities and selective private universities in our sample?
 1. To what extent do public research universities and selective private universities visit overlapping sets of private high schools?
-
-The remainder of the manuscript is organized as follows. First, we situate off-campus recruiting visits within the broader process of recruiting students and we review scholarship on the relationship between high schools and universities, focusing on scholarship from sociology. This literature motivates off-campus recruiting visits as an indicator of a social relation. Second, we introduce concepts from social network analysis and motivate empirical research questions. Third, we describe data and methods. Fourth, we present results. Finally, we discuss implications for scholarship.
-
-
-<!-- SHORT PARAGRAPH GIVING OUTLINE OF CHAPTER -->
-
-<!--  ORIGINAL INTRODUCTION
-
-
-Prior to the pandemic, admissions counselors from colleges and universities traveled to local high schools each year in order to meet prospective students and maintain relationships with guidance counselors at feeder schools [@RN3519]. @RN4758 analyzed off-campus recruiting visits made in 2017 by 15 public research universities. Surprisingly, 12 of the 15 universities made more visits to *out-of-state* high schools than *in-state* high schools. These out-of-state visits focused on public schools in affluent, predominantly white communities. Additionally, most public research universities in our sample made a disproportionate number of visits to out-of-state private high schools. For the University of California-Berkeley, for example, 155 (43%) of the 360 out-of-state high school visits were to private high schools. For the University of Colorado-Boulder, 321 (36%) of the 901 out-of-state high school visits were to private high schools.
-
-Whereas @RN4758 primarily analyzed visits to public high schools, this chapter focuses on visits to private high schools. More specifically, we investigate how visits to private high schools by public research universities compare to visits to private high schools by selective private universities.
-
-## Social mobility, social reproduction, and privatization
-
-The sociologist Max Weber is credited for the insight that education has a "dual character," on one hand, serving *social mobility* by redistributing access to privileged positions and, on the other, serving *social reproduction* by granting privileged families disproportionate access to the educational institutions that confer pathways to privileged positions [@RN2377].
-
-The mission of selective private colleges and universities is more squarely associated with social reproduction rather than social mobility. Historically, these institutions depend on patronage from philanthropic interests -- in connection with business and religious interests -- and on wealthy households who provide tuition revenue and donations [@RN4517]. In turn, selective private institutions contribute to social reproduction by providing access to their patrons. The "Chetty" data on parental income by college show that the overwhelming majority of students at selective private institutions have parental income in the top quintile [@RN4722; @RN4723]. A significant caveat is that religiously affiliated universities may prioritize enrollment opportunities for students of the same faith regardless of wealth, but even here the mission is to benefit families from a particular cultural status group. 
-
-The traditional, albeit mythologized, public good mission of public research universities is tied to social mobility and development of the state [@RN2269; @RN921]. Public research universities are designated the unique responsibility of educating the future civic, professional, and business leaders of the state. Quoting 19th century University of Michigan President James Angell, these institutions contribute to social mobility by providing "an uncommon education for the common man" [as cited in @RN3608, p. 279] who could not afford tuition at elite private institutions. 
-
-We argue that the recruiting behavior of colleges and universities is an indicator of organizational enrollment priorities and, in turn, the extent to which enrollment priorities serve social mobility or social reproduction. Recruiting visits to private high schools are consistent with the social reproduction mission of selective private universities, regardless of whether the university is targeting a particular high school because of its academic reputation, religious affiliation, or the affluence of its student body. By contrast, for public research universities, visits to private high schools -- particularly out-of-state schools -- are antithetical to the mission of social mobility for high-achieving, low-income state residents.
-
-Analyses of recruiting visits to private high schools can contribute novel insights about the "privatization" of public research universities. Within the scholarly literature on privatization, one strand of scholarship conceptualizes privatization as a process whereby declines in government funding cause public institutions to grow alternative revenue sources, particularly revenue from tuition and research commercialization [@RN4543; @RN2101]. Of relevance to this chapter, public research universities responded to declines in state appropriations by growing enrollment from nonresident students [@RN3753], who typically pay two- to three-times more than resident students. A second strand within the privatization literature conceptualizes privatization as a process whereby public institutions become more similar -- in terms of characteristics or behavior -- to for-profit or private non-profit organizations [@RN4543]. A weakness of this literature is that few empirical studies analyze public institutions on a behavior associated with private institutions. [FURTHER, FEW STUDIES COMPARE THE BEHAVIOR OF PUBLIC UNIVERSITIES TO THAT OF PRIVATE UNIVERSITIES ON THAT BEHAVIOR.]
-
-Therefore, this chapter compares public research universities to selective private universities on the dimension of recruiting visits to private high schools, a behavior associated with the social reproduction orientation of selective private universities. Our primary goal is to learn about public research universities, using the behavior of private universities as a benchmark to develop more thoughtful insights about public research universities.  We analyze recruiting visits made in the 2017 calendar year by a sample of 15 public research universities and 14 selective private universities. 
-
-Because little is known about recruiting at private high schools by public universities, we conduct descriptive analyses that seek to identify basic patterns and relationships. Because a recruiting visit to the same private high school is an indicator of a relationship between two actors, we also utilize social network methods in order to compare the recruiting networks of public universities to those of private universities. Analyses are informed by the following three research questions:
-
-1. How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?
 1. How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?
-1. To what extent do public research universities and selective private universities visit overlapping sets of private high schools?
-
--->
-
-# What do we know about off-campus recruiting visits
-
-This section provides context for our analyses.  First, we situate off-campus recruiting within the broader set of marketing and recruiting interventions in higher education and review what market research says about off-campus recruiting. Second, we review empirical scholarship from sociology that considers off-campus recruiting, emphasizing scholarship that considers the relational aspects of recruiting visits and scholarship that considers private high schools.
-
-## Situating off-campus recruiting within enrollment management
-
-The "enrollment funnel" -- depicted in Figure \@ref(fig:em-funnel) -- is a conceptual heuristic that identifies stages in the student recruitment process (prospects, inquiries, applicants, accepted applicants, and enrolled students). "Prospects" are "all the potential students you would want to attract to your institution" [@RN4322]. "Inquiries" are prospects that contact the institution, including those who respond to a solicitation and those who reach out on their own. The enrollment management industry uses the enrollment funnel to inform marketing and recruiting interventions that target specific stages. Most scholarship on enrollment management focuses on the final stages of the enrollment funnel, specifically which applicants are admitted and the use of financial aid "leveraging" to convert admits to enrollees [e.g., @RN3536; @RN3544; @RN3523; @RN4131; @RN2241; @RN3564; @RN1948]. By contrast, the enrollment management industry expends substantial resources on marketing/recruiting activities that target earlier stages of the enrollment funnel [@RN4664]. <!--[SHOULD WE TRY TO ADD SOME CONCRETE NUMBERS ON $ SPENDING AT PARTICULAR UNIVERSITIES?]-->
-
-INSERT FIGURE \@ref(fig:em-funnel) ABOUT HERE
-
-Institutions identify undergraduate "prospects" by purchasing "student lists" -- containing contact, demographic, and academic achievement information -- from College Board, ACT, and other vendors. Universities control which prospects are contained within a list by filtering on criteria such as zip code, test scores, and high school GPA. Once prospects and inquiries are identified, they are targeted with remote and face-to-face recruiting interventions designed to solicit applications and deepen engagement. Remote recruiting interventions include postcards, brochures, emails, text messages, and targeted social media. Face-to-face recruiting interventions include on-campus visits by prospects and off-campus recruiting visits by admissions representatives to high schools, community colleges, college fairs, etc. Institutions utilize advertising (traditional and digital) and social media to solicit inquiries and to create positive "buzz" amongst prospects [@RN4411]<!--[CITE OTHER]-->. Given the rise in "stealth applicants" who do not inquire before applying (Dupaul & Harris, 2012), advertising and social media enables universities to tell their story to prospects who do not wish to be contacted. 
-
-What do we know about off-campus recruiting from previous research? As is true for most aspects of enrollment management, much of what we know about off-campus recruiting comes from consulting firms (e.g., Ruffalo-Noel Levitz, EAB), professional associations (e.g., NACAC), and from practitioner-oriented publications. Market research describes off-campus recruiting visits as a means of identifying prospects and deepening engagement with prospects already being targeted through mail/email [@RN4323; @RN4402; @RN4664]. 
-
-@RN4402 documents the self-reported efficacy of marketing/recruiting interventions. For the median private 4-yr institution, off-campus visits were the second highest source of inquiries (after student list purchases), accounting for 17% of inquiries. Off-campus visits were tied with student list purchases as the highest source of enrollees, accounting for 18% of enrollees. For the median public institution, off-campus visits accounted for 19% of inquiries (second only to student list purchases) and accounted for 16% of enrollees (ranked third after stealth applicants and on-campus visits).
-
-With respect to expenditure, Table \@ref(tab:ug-recruit-budget), reproduced from @RN4664, shows the percentage of undergraduate recruitment budget allocated to different marketing and recruiting activities.^[Table drawn directly from @RN4664 Figure 9, which is based on a convenience sample of 45 four-year non-profit institutions and 21 four-year public institutions.] The average public university spent 16% of its recruiting budget on off-campus recruiting visits, compared to 12% of its budget on purchasing student lists and 17% of its budget on "prospective student communications" (e.g., mail, email, text, social media) targeting prospects and inquiries. An emergent trend over the past decade -- partially a response to public universities seeking nonresident students -- has been the growth of "regional recruiters" who target specific metropolitan areas in the US and abroad [@RN4021]. These regional recruiters may be college/university employees or they may be independent contractors who live in the metropolitan area they recruit.
-
-<!-- QUESTIONS ABOUT THE RNL 2020 COST OF RECRUITING AN UNDERGRADUATE STUDENT REPORT, FIGURE 9
-
-What does "recruitment publications" include?
-what does "prospective student communications" include?
-what does "event" include? can I assume this is on-campus events only cuz "travel" is a separate category?
-what does "web services and digital advertising" include? Does this include social media?
--->
-
-## Empirical scholarship from sociology
 
 
-<!-- 
+Both private and public universities in our sample made a disproportionate number of visits to private high schools. For public research universities, visited private schools were much more likely to be out-of-state than visited public schools. Although universities visited a large number of private schools in their home region, most universities also visited a large number of private schools in the South. Private schools that received visits were predominantly white. Although partially a function of our analysis sample, public universities tended to visit lower ranked private high schools than private universities. Surprisingly, several public universities visited sectarian private high schools at a rate similar to sectarian private universities. Network analyses revealed substantial overlap in the recruiting networks of public and private research universities.
 
-A sociological case-study literature develops helpful insights about the mechanisms and functions of off-campus recruiting visits [CITE].
-
--->
-
-Empirical academic scholarship on off-campus recruiting is mostly limited to a modest number of sociological case studies, which typically analyze off-campus recruiting as part of a broader analysis of enrollment management [e.g., @RN4538; @RN4324; @RN3519; @RN4520; @RN4407]. @RN4324 analyzes visits from the perspective of students at two racially and socioeconomically diverse public high schools. @RN4324 found that high school visits -- including college fairs, instant decision events, and small-group representative visits -- influenced where students applied and where they enrolled. This finding was strongest for first-generation students and underrepresented students of color, who often reported that "school counselors had low expectations for them and were too quick to suggest that they attend community college" (p. XXX). This trust vacuum created an opportunity for colleges because these students were drawn to colleges that connected with them and made them feel wanted. For example, @RN4324 describes a high-achieving, first-generation, African American student who was admitted by a highly selective liberal arts college but chose to attend a less selective college that "seemed to want him more" (p. XXX). By contrast, affluent students with college-educated parents were less taken by such overtures and more concerned with college prestige. 
-
-
-@RN3519, in an ethnography of the admissions office at a selective private liberal arts college, highlights the relational function of off-campus recruiting visits. Stevens [-@RN3519, p. 54] states that "the College's reputation and the quality of its applicant pool are dependent upon its connections with high schools nationwide." Therefore, during the autumn "travel season," admissions officers visit selected high schools across the country "to spread word of the institution and maintain relationships with guidance counselors" (p. 53-54). The College tended to visit the same "feeder" schools year after year because recruiting depends on long-term relationships with high schools. The high schools they visited tend to be affluent schools -- in particular, private schools -- that enroll high-achieving students who can afford tuition and have the resources and motivation to host a successful visit. Whereas @RN4402 highlights the effect of recruiting visits on inquiries and enrollees, findings from @RN3519 suggest that the College may have valued recruiting visits primarily as a means of maintaining relationships with guidance counselors. From this perspective, recruiting visits may affect outcomes such as inquiries, applications, and matriculation through their effect on high school guidance counselors. The logic is that a guidance counselor who views a college favorably will steer students to the college.
+This manuscript is practically important because it provides insight about which schools universities view as "feeder schools" and -- to a limited extent -- the characteristics of students they want to enroll. Prior research finds that university recruiting efforts affect the enrollment decisions of students [CITE]. In turn, the composition of enrolled students affects the campus culture experienced by students.  Scholarship and the popular press reports that underrepresented minority students and low-income students at public flagship universities feel isolated amidst affluent, predominantly white student bodies. Racial and socioeconomic isolation negatively affects student development outcomes for isolated students and for the entire student body [CITE]. State policymakers and institutional leaders should recognize that the enrollment composition at public research universities is not the consequence of exogenous student demand, but rather the consequence of recruiting efforts that seek to grow nonresident enrollment by systematically targeting affluent, predominantly white public high schools [@RN4758] and affluent, predominantly white private high schools.
+[NOTE: THESE IMPLICATIONS HAVE TO DO ABOUT TARGETING PRIVATE SCHOOLS BUT NOT TARGETING SAME SET OF SCHOOLS TARGETED BY SELECTIVE PRIVATE UNIVERSITIES]
 
 
 
-<!-- 
-
-@RN3519 and Khan [-@RN4321;-@RN4407] are centrally important to our study because they analyze relationships between college admissions counselors and high school guidance counselors. 
-
--->
-
-Although not about recruiting visits per se, Khan [-@RN4321;-@RN4407] is centrally important for our study because he lays out a conceptual explanation of why colleges and private high schools develop relationships with one another (i.e., what is each trying to obtain from the other). @RN4321 analyzed recruiting from the perspective of an elite private boarding school in order to understand "how such schools continue to get comparatively under-qualified students into top colleges and universities" (p. 98). The answer begins by considering the goals of colleges, which are represented by admissions officers, and the goals of private high schools, which are represented by guidance counselors. Colleges want high-achieving students who can pay tuition and donate. They want low acceptance and high yield rates, which are important for rankings. Colleges also want a class composed of "interesting characters" whose curricular and extracurricular strengths meet the needs of important campus constituents (e.g., academic majors, the athletic department, clubs, etc.). Elite private high schools want to send _all_ students to the best college possible. Here, high school guidance counselors face "the pressure of making sure their school seems worth it – that \ldots paying some $40,000+, really does aid students in the college process" [@RN4321, p. 105]. 
-
-The challenge faced by high school counselors at elite private schools is that "some of these students are slightly better than others. These students will likely get into more than one school -- but they can only attend one. And this will lower the chances of your 'second-best' students getting into top schools" [@RN4407, pp. 173-174]. "Luckily," Khan [-@RN4321, p. 105] writes, "the problem for elite boarding schools matches up quite nicely with the problem faced by elite colleges." That is, although college admissions officers receive applications from many outstanding students,
-
-> These outstanding students will also be  outstanding to Princeton, Yale, Stanford, and everywhere else. How do you know the ones you pick will attend your school? You can't quite trust applicants, as they are all likely to tell you how much they want to go to your school. And if students you accept go somewhere else, there's not much you can do. But you can get better information -- information you want -- from their high school. And you can reward that school for good information and sanction it for bad information [@RN4407, p. 173].
-
-<!-- 
-
- And you can reward that school for good information and sanction it for bad information [@RN4407, p. 173].
-
--->
-
-This desire by colleges for trustworthy information about applicant intentions creates an opportunity for high school counselors to advocate on behalf of their students. This opportunity depends on guidance counselors having personal relationships with university admissions offices and on having small enough caseloads to advocate for each student individually. 
-
-To explain how high school counselors capitalize on this opportunity, @RN4407 describes two hypothetical students -- Susan and Billy -- who both apply to Harvard and Yale. Susan is a shoo-in at both universities, but wants to attend Harvard. Billy has a weaker academic record than most Ivy League students, but has strong extracurricular activities. The guidance counselor tells Harvard that Susan wants to attend Harvard. Next, he informs Yale that Susan will choose Harvard, but Billy loves Yale and has great "character" and extracurricular activities. In the end, Harvard rejects Billy and accepts Susan, thereby, decreasing acceptance rate and increasing yield. Yale rejects Susan and accepts Billy, thereby, also decreasing acceptance rate and increasing yield.
-
-The horsetrading described by @RN4407 depends on a relationship where the college can trust statements made by the high school counselor and vice-versa. This relationship is the product of repeated interactions over many years. A high school that makes false statements about applicant intentions faces consequences. The college "might stop taking these telephone calls and ignore the information provided. They may even start accepting fewer students from the school, thinking it is less than an honest place" [@RN4321, p. 106]. Because the college and the high school are mutually dependent, however, both "have an incentive to continue with a strong, honest relationship" [@RN4321, p. 106]. Although, such horsetrading may be less pervasive now than it was in prior decades and may be less common at non-elite private schools. Additionally, college admissions officers from public universities likely have less authority to engage in these tacit negotiations because admissions criteria at public universities face greater public scrutiny than admissions criteria at private colleges and universities.
-
-### Visits as an indicator of a social relation
-
-@RN3519 and Khan [-@RN4321;-@RN4407] suggest that strong relationships are mutually important for the college and for the private high school. Strong relationships enable colleges and schools to negotiate and send trustworthy information to one another. Without a strong relationship, it is unlikely that a college admissions counselor will "take the call" of a high school guidance counselor [@RN4321; @RN4407]. Even in the absence of the horsetrading described by @RN4407, relationships enable the college admissions counselor and the high school guidance counselor to tell one another "their story" and relay that story to constituents [@RN3519]. The college admissions counselor explains why the college/university is a "special place" that high school students should want to attend [@RN3519]. The guidance counselor explains why the high school is a special place, that even students with lower grades have outstanding extracurricular strengths that will benefit the college [@RN4321].
+[PUT THIS IN THE DISCUSSION SECTION] Finally When both private and public universities are targeting private schools, competition for these students is likely to increase. This could be an explanation for why many private universities are struggling to meet enrollment goals
 
 
-The presence of a recruiting visit between a college and a private high school is an indicator that the college and the high school have a relationship. From an empirical perspective, @RN3519 finds that off-campus recruiting visits are important for the maintenance of strong relationships between a college and a high school. From a logical perspective, we argue that, first, the fact that the college made the effort to visit suggests that the college wants to enroll students from the high school. Second, the fact that the high school hosted the visit suggests that the high school likely views the college as a desirable destination for some of its students. Third, the presence of the recruiting visit suggests the probability of additional interactions (e.g., phone calls).
+student bodies that predonominantly affluent, white student bodies. 
 
-Conceptualizing a recruiting visit as an indicator of a relationship between a college and a high school motivates the use of social network methods, which analyze the network defined by "network ties" (i.e., visits) between actors (colleges and high schools). Prior research has not used social network methods to analyze recruiting visits from colleges to high schools. Analyzing the network of recruiting visits to high schools enables us to investigate the extent to which public research universities are visiting similar sets of private high schools as private colleges and universities, and also the extent to which they are visiting the same private high schools. In turn, we hope these analyses yield novel insights to scholarship on the privatization of public higher education.
+# Literature Review
 
-
-# Social network analysis concepts
-
-Having conceptualized a recruiting visit as an indicator of a social relation, this section introduces basic concepts from social network analysis and motivates the research questions that guide empirical analyses.
-
-A social network consists of a set of actors -- referred to as "vertices" -- and the connections -- referred to as "network ties" or "edges" between these actors. "One-mode" networks consist of vertices of a "type." For example, the social network of Facebook consists of users (vertices) who are connected to one another via friendship ties (edges). Similarly, the social network of Twitter consists of handles (vertices) who are connected to one another by following or being followed.
-
-Whereas "one-mode" networks consist of vertices of the same "type" (e.g., in a publication network, each vertex is an author), "two-mode" networks consist of vertices associated with one type of actor/entity having connections to vertices of another type. For example, an actor-movie network consists of actors (mode 1) who appear in movies (mode 2), and an actor shares an edge with a movie if the actor appears in the movie. The most commonly analyzed two-mode network in social networks literature is a corporate board-director network  [e.g., @RN4663]. These networks consist of directors (mode 1) and organizational boards (mode 2), and a particular director shares an edge with a particular organizational board if they sit on that board. Similarly, our recruiting visit data form a two-mode network, consisting of private high schools (mode 1) and colleges (mode 2). An off-campus recruiting visit from a college/university to a private high school is the "edge" that connects two particular vertices. In this network, edges can only occur between vertices of a different type; that is, a college can visit a high school, but colleges cannot visit other colleges and high schools cannot receive visits from other high schools.
-
-To reduce complexity, two-mode network graphs are often analyzed as one-mode networks [@RN2457;@RN4663]. Our two-mode college-school network can be transformed into a one-mode college network in which each vertex is a college/university and two colleges share an edge if both colleges visited at least one high school in common. The *weight* of an edge indicates the number of high schools that both colleges visited. For example, if there are 200 private high schools that received a visit from both Notre Dame and Villanova, the weight of the edge between Notre Dame and Villanova is 200. 
-
-## RQ1: Degree centrality
-
-<!-- 
-In social network analysis, *centrality* is a notion of how important or prominent or "in the middle of things"
-*centrality* refers to the importance or prominence of an actor/vertex in a social network [CITE].
--->
+## Nonresident Enrollment at Public Universities
 
 
-In social network analysis, *centrality* refers to the importance or prominence or "being in the middle of things" of an actor/vertex in a social network.<!--[CITE]--> Many alternative measures of centrality have been developed. All measures agree that centrality is an actor/vertex-level construct (e.g., each college in our network will have a centrality value, regardless of which centrality measure we use). However, different measures of centrality are based on different theoretical conceptualizations -- for example, being directly connected to the most actors versus being the intermediary between otherwise disconnected actors -- and are operationalized using different mathematical algorithms.
+We stiuate this study vis-a-vis scholarship on enrollment management behavior by public research universities and particularly the pursuit of affluent nonresident students, a population also targeted by selective private universities. The so-called "iron triangle" of enrollment management states that universities pursue the broad enrollment goals of access, academic profile, and revenue generation [@RN3524; @RN2772]. Because resources are scarce, the imagery of the iron triangle suggests that the pursuit of one enrollment goal may involve trade-offs with other goals. @RN2772[p. 221] state that “most enrollment management policies\ldots do not advance all three objectives; instead they lead to gains in some areas and declines in others.” Scholarship argues that selective private universities prioritize academic profile and revenue generation, with funds generated from tuition and donation feeding the arms race for prestige [@RN3522; @RN1549; @RN3519]. Historically, public research universities prioritize enrollment of high-performing state residents, often with an emphasis on social mobility for students who cannot afford private universities [@RN3608]. However, scholarship on privatization argues the public research universities increasingly emphasizing tuition revenue and rankings and de-emphasize access for state residents [@RN1577; @RN1118].
 
-The simplest measure of centrality, *degree centrality* measures the number of edges directly connected to a vertex. For each college in our two-mode network, degree centrality is simply the number of different private high schools visited by the college. For each high school in our network, degree centrality is the number of colleges in our network that visited the high school. Social network theory conceptualizes degree centrality as a measure of "local" centrality, capturing the number of direct connections for each actor/vertex. For our empirical context, we conceive of degree centrality as a measure of scale of the number of private high schools a college visits and, equivalently, the number of private high schools we observe having a social relation with each college. Given that we conceptualize visits to private high schools as a behavior consistent with the social reproduction orientation of selective private colleges/universities, we are interested in comparing how scale differs between public and private colleges/universities. This interest motivates research question 1, "How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?" We answer this research question by comparing degree centrality across universities.
+
+<!-- PREVIOUS PARAGRAPH
+We situate this study vis-a-vis scholarship on nonresident enrollment at public research universities, which lies within the broader literature on "privatization" [CITE]. Against the backdrop of many states disinvesting in higher education, the privatization literature examines the ways that public universities start behaving like private universities by emphasizing revenue generation and the pursuit of prestige in research and enrollment management behaviors. The so-called "iron triangle" of enrollment management states that universities pursue the three broad enrollment goals of access, academic profile, and revenue generation [CITE]. "Because resources are scarce, the imagery of the iron triangle suggests that the pursuit of one enrollment goal may involve tradeoffs with other goals. Scholarship on privatization expressed concern that the public research universities were emphasizing tuition revenue and rankings and deemphasizing access for state residents.-->
+
+
+@RN3753 draw from resource dependence theory to conceptualize the relationship between state appropriations and nonresident enrollment. Organizations are dependent on external resources that are important for organizational survival/stability and cannot be easily replaced. Public universities depend on state appropriations but these funds became increasingly uncertain in the 1980s and 1990s [@RN2271]. Resource dependence theory states that one response to resource decline or uncertainty is to seek alternative, substitute resources [CITE]. Tuition revenue is a potential substitute for state appropriations. Most states cap resident tuition price, but not nonresident tuition price. Therefore, @RN3753 argued that public universities have a financial incentive to grow nonresident enrollment in response to declines in state appropriations. Analyzing panel data from 2002-03 to 2012-13, @RN3753 found that a 10% decline in state appropriations was associated with a 2.7% increase in nonresident enrollment at all public universities and a 5.0% increase in nonresident enrollment at research-extensive universities.
+
+Other studies of nonresident enrollment examine university enrollment composition. Using data from NPSAS 2011-12, @RN3685 show that compared to resident students at public research universities, nonresident students generate higher net tuition revenue, are more affluent, are less likely to be Pell recipients and are less likely to be Black or LatinX. Institution-level panel models reveal that growth in the share of nonresident students was associated with a decline in the share of Pell recipients and a decline in the share of Black and LatinX students. @RN4290 examine whether growth in the number of nonresident students causes resident enrollment to decline. They find that nonresident enrollment "crowds out" resident enrollment at prestigious public research universities, but not at less prestigious public research universities.
+
+How did public research universities go about attracting all these nonresident students? One mechanism is financial aid, a lever to increase applications and affect matriculation decisions. Many public research universities have developed institutional aid policies for nonresident admits, typically offering larger awards for higher achieving students [@RN3762; @RN2287; @RN1791].<!--@RN2535 shows that nonresident students are less sensitive to sticker price than resident students. Because nonresident prospects may be considering several options -- in-state, out-of-state, public, private -- they are sensitive to the generosity of institutional aid offers [CITE]. For example, @RN3762 analyze the effect of a University of Iowa institutional merit aid program for nonresident admits that offered higher awards for admits with higher academic achievement. Regression discontinuity analyses found that the program increased the probability of enrollment, particularly for high achieving students. These results suggest that high-achieving nonresident students face many good opportunities and require substantial institutional aid to be convinced to enroll. -->
+
+Earlier in the "enrollment funnel," universities utilize marketing and recruiting interventions to attract nonresident applicants. One widely utilized intervention is off-campus recruiting visits by admissions counselors to local high schools. @RN4758 analyzed off-campus recruiting visits to public high schools by 15 public research universities. Recruiting visits to in-state high schools tended exhibit modest racial and socioeconomic bias. However, 12 of the 15 universities made more visits to out-of-state high schools than in-state high schools. These out-of-state visits focused on public schools in affluent, predominantly white communities. @RN4934 conducted geo-spatial analyses of out-of-state recruiting visits to Los Angeles and Dallas by four public research universities. She found that universities engage in "recruitment redlining -- the circuitous avoidance of predominantly Black and Latinx communities along recruiting visit paths" (p. X).  Although @RN4758 and @RN4934 focused on visits to public high schools, prior research has not considered visits to private schools by public research universities. For example, what is the scale of these visits and what are the characteristics of visited schools?
+
+## Linkages Between Private Schools and Private Universities
+
+
+Separate from scholarship on nonresident enrollment at public universities, scholarship from economics and sociology analyzes linkages between private schools and colleges.
+
+@RN4504<!-- use data from several national surveys to --> set the stage by describing long-term trends in private school enrollment. The percentage of American (elementary school) students attending private school declined from 15% in the mid-1960s to 10% in the mid-1970s, and declined gradually from 11% in 1999 to 9% in 2015. The private school enrollment rate for high-income families and for low-income families has remained relatively stable over time at about 17% and 4%, respectively. The enrollment rate for middle-income families declined from 12% in 1968 to 6% in 2013. This decline was driven by shrinking Catholic school enrollment, which represented 89% of private school enrollment in 1965 and 42% of enrollment in 2013. Moreover, contemporary Catholic school students tend to be more affluent compared to prior decades. There has been a long-term increase in private school enrollment in the South, with middle-income families increasingly attending Christian schools and high-income families increasingly attending nonsectarian schools. With respect to race, 11% of white students attended private school in 2013, compared to 5% of Black students, and 3% of Hispanic students.
+<!-- Private school enrollment rates are higher for families located in urban areas than those in suburban areas.
+ However, for high income families, rates of private school enrollment do not differ substantially across race. -->
+
+A robust empirical literature<!-- from sociology and economics  --> finds that attending private school positively affects college access and college selectivity [e.g.,] [@RN4642; @RN4596; @RN4634; @RN4599]. Scholarship from the 1980s and 1990s focused on the effects of attending Catholic school [@RN4937; @RN786; @RN4936; @RN4938]. More recent scholarship tends to find that attending a nonsectarian private school has larger effects on college access than attending a Catholic school [@RN4935; @RN4614;@RN4625]. 
+
+The High School Longitudinal Survey of 2009 (HSLS) tracks the postsecondary destinations of students who were in ninth grade in 2009. Simple descriptive statistics are eye-opening (Author calculations).^[Analyses consist students who met the following conditions: completed the 2012 follow-up survey; obtained high school transcript data; and completed the 2016 followup survey. The survey weight variable used was W4W1W2W3STU. After weighting, these 14,020 (unweighted) students represent a population of 3.93 million U.S. ninth graders in 2009. Data on college rankings come from the 2020 U.S. News \& World Report *Best Colleges*. Data on high school control come from the HSLS school file and from the Private School Survey.] About 93% of students attended a public high school and 7% attended a private high school, including 3.6% attending a Catholic school, 1.6% attending a nonsectarian school, and 1.8% attending a Christian school. Of public high school students, 5.0% attending a public university ranked in the top 100 by US News and World Report (USNWR) and 1.9% attended a private university ranked in the top 100. Of private high school students, 10.9% attended a top 100 public university and 16.8% attended a top 100 private university. For Catholic school students, 12.8% attended a top 100 public university and 11.7% attended a top 100 private university, while for Christian schools these percentages were 8.2% and 8.2%, respectively. However, for nonsectarian private school students, 11.3% attended a top 100 public university and 39.8 percent attended a top 100 private university. Focusing on the institutional composition of private universities in USNWR top 100, 39.8% attended a private high school (compared to 7% of all high school students who attended a private high school) and 21.2% attended a nonsectarian private high school (compared to 1.6% of all high school students who attended a nonsectarian private high school).
+
+Scholarship has been particularly interested in the relationship between attending a prestigious private school and attending an ultra selective university [@RN4647; @RN4643; @RN4647; @RN4589]. @RN4935 acquired unprecedented data -- application files and admissions decisions linked to income tax records  -- to investigate why high income families are over-represented at "Ivy Plus" colleges. Conditioning on SAT and ACT scores, applications from high-income families (top 1%) received the same academic rating as applications from lower-income families. However, applications from high-income families received higher non-academic ratings (extracurricular activities, leadership traits) then applications from lower-income families. In turn, the higher non-academic ratings for high-income applicants was driven by the fact that these students tended to attend elite private high schools that devote substantial resources to teacher recommendations and guidance counselor letters.
+
+Scholarship from sociology has examined organizational connections that catalyze the flow of students between private schools and selective private colleges [@RN4640; @RN4407; @RN4321; @RN3519]. @RN3519 provides an ethnography of the admissions office at a selective private liberal arts college. The College is sensitive about its position in U.S. News Rankings and enrollment priorities tend to focus on academic profile and revenue generation. @RN3519 highlights the relational function of off-campus recruiting visits, stating that "the College's reputation and the quality of its applicant pool are dependent upon its connections with high schools nationwide" (p. 54) Therefore, during the autumn "travel season," admissions officers visit selected high schools across the country "to spread word of the institution and maintain relationships with guidance counselors" (p. 53-54) because counselors who view a college favorably will steer students to that college. The College tended to visit the same "feeder" schools year after year because recruiting depends on long-term relationships with high schools. The high schools they visited tend to be affluent schools -- in particular, private schools -- that possess the resources to host a successful visit and enroll high-achieving students who can afford tuition. 
+<!-- Whereas @RN4402 highlights the effect of recruiting visits on inquiries and enrollees, findings from @RN3519 suggest that the College may have valued recruiting visits primarily as a means of maintaining relationships with guidance counselors. From this perspective, recruiting visits may affect outcomes such as inquiries, applications, and matriculation through their effect on high school guidance counselors. -->
+
+@RN4321 analyzed recruiting from the perspective of an elite private boarding school in order to understand "how such schools continue to get comparatively under-qualified students into top colleges and universities" (p. 98). Guidance counselors at these schools capitalize on the fact that selective colleges are concerned about their acceptance and yield rates. Therefore, admissions offices value credible information about which applicants will accept or decline an admissions offer. This desire for intelligence creates an opportunity for high school counselors to advocate on behalf of their students. Guidance counselors tell admissions counselors which highly-sought-after applicants are likely to decline an offer, while lobbying for an applicant who has relatively weak academic credentials but is sure to matriculate and has "character" and extracurricular activities the university values. @RN4321 states that such horsetrading depends on guidance counselors having sufficiently small caseloads to advocate for each student individually and on having personal relationships with university admissions officers. While @RN3519 and @RN4321 highlight the importance of social networks between private schools and private universities, prior research has not analyzed the social networks that emerge from off-campus visits.
+
+Additionally, scholarship on linkages between private high schools and private universities focuses on elite high schools and ultra selective universities [@RN1565; @RN4647; @RN4935; @RN4321]. With the exception of the single-institution ethnography by @RN3519, we know less about linkages between private schools and private universities that are selective but not elite. These merely-selective universities are self-conscious about their reputation, and have fewer resources and weaker student demand compared to Ivy Plus universities. Analyses of off-campus recruiting visits provides novel insights about the schools and student populations these institutions target.
+
+## Synthesis
+
+We argue that a recruiting visit from a university to a private high school is an indicator of a social relationship. Empirically, @RN3519 finds that off-campus recruiting visits are important for the maintenance of strong relationships between a college and a high school. Logically, the fact that the college made the effort to visit suggests that the college wants to enroll students from the high school. Similarly, the fact that the high school hosted the visit suggests that the high school likely views the college as a desirable destination for some of its students. Moreover, the presence of the recruiting visit suggests the probability of additional interactions (e.g., phone calls) between the organizations. For example, @RN4895 reports that "calling after visits" was the most effective strategy for high school guidance counselor outreach for both private universities and public universities. Conceptualizing a recruiting visit as an indicator of a relationship between a college and a high school motivates the use of social network methods, which analyze the network defined by "network ties" (i.e., visits) between actors (universities and schools).
+
+Although the literature on nonresident enrollment developed in isolation from the literature on private school to private university linkages, both phenomena are part of a broader story about the changing nature of school segregation and the competition for affluent, traditional college students. Drawing from resource dependence theory, as public research universities become more reliant, they have a financial incentive to target out-of-state private schools, which tend to enroll affluent students that can pay high tuition prices. While selective universities have long relied on enrollment from private schools [@RN3519; @RN4640], the pursuit of out-of-state private school students by public research universities is a recent phenomenon and thus an encroachment on the historic territory of selective private universities and in-state flagships. Speaking about this competition, an enrollment management consultant said, "'Everybody wants to go to the magic island of full pay students, but it’s rapidly shrinking real estate'" [@RN4911]. By analyzing the network of recruiting visits, we show whether public research universities and selective private universities are competing for students at similar ets of private schools. This may be direct competition for the same student or vying to be the second choice for students who are rejected by their top choice.
+
+Private schools tend to be whiter and more racially segregated than public schools [CITE]. Over the past three decades, middle-income enrollment at Catholic schools has declined and private school students have become more affluent. In the South, private school enrollment has grown as a consequence of "white flight" from public schools facing desegregation orders [@RN4504]. Thus, in recruiting from private schools, universities may be targeting student bodies that are more affluent and racially homogeneous than public schools. We investigate the characteristics -- including geographic region and racial composition -- of private schools being targeted by university admissions officers because these characteristics have downstream implications for the racial composition of university campuses.
+
+# Methods
+
+# Data and sample
+
+This manuscript draws from a broader project in which we collected data about off-campus recruiting visits made during the 2017 calendar year by a convenience sample of colleges and universities. For universities in our data collection sample, we investigated their admissions website for pages that posted their upcoming off-campus recruiting visits. For institutions that posted such pages, we scraped the pages once per week throughout 2017. Web-scraping was conducted using the Python programming language [STATE WHICH PACKAGE? AND/OR SHOW LINK TO A SAMPLE SCRIPT?]. Many universities in our data collection sample only posted certain kinds of events (e.g., hotel receptions and national college fairs) but not others (e.g., day-time visits to high schools). These institutions were excluded from the analysis sample. 
+
+For public universities in our analysis sample, we assessed data quality of the web-scraped data by asking the enrollment/admissions office for these data. If a university denied or ignored our request, we issued a formal public records request. Of the 15 public universities analyzed in this study, we received requested data from 11 universities. For these 11 universities, web-scraped data was very similar to publicly requested data. For universities that sent us data, the analyses below use “requested” rather than “scraped” data because requested “requested” data tended to have more events. Broad patterns were similar across requested data versus scraped data, and results based on scraped data are available on request. @RN4758 describe data quality checks in greater detail.
+
+The data collection sample for the broader project consisted of: all public research-extensive universities as defined by the 2000 Carnegie Classification (N=102), and all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58), and all private colleges in the top 50 of U.S. News and World Report Liberal Arts Colleges rankings (N=47). The rationale for different criteria for inclusion across different university types is because these criteria reflected the interest of a foundation that funded the data collection. This article excludes private liberal arts colleges because having a third institutional type would substantially increase article length. The final analysis sample for this article consists of 15 public research universities and 14 private research universities that we believed posted all varieties of off-campus recruiting events on their admissions website. For these universities, we analyze recruiting visits to private high schools that meet the following criteria: enrolls at least 10 12th grade students, is not primarily a virtual school, and is located in the 50 U.S. states, the District of Columbia, or land regulated by the Bureau of Indian Affairs is included in our analysis.
+
+Our analysis sample of universities should be considered a convenience sample. Table \@ref(tab:sample-characteristics) shows selected characteristics for the universities in our analysis sample. Appendix Table X [CRYSTAL ADD] shows how our sample of universities compares to the populations they were drawn from. [ONE SENTENCE ABOUT REPRESENTATIVENESS COMPARED TO POPULATION]
+
+INSERT TABLE \@ref(tab:sample-characteristics) ABOUT HERE
+
+Analyses utilized several secondary data sources. The data on university characteristics come from the 2017 Integrated Postsecondary Education Data System (IPEDS) and 2020 Best Colleges ranking by U.S. News & World Report. For the high schools in our analysis, we use secondary data from the 2017-18 NCES Common Core of Data (CCD) for public high schools, and the 2017-18 NCES Private School Universe Survey (PSS) and 2020 Best Private High Schools ranking by Niche for private high schools.^[For both public and private high schools, we also used NCES data from previous years when the 2017-18 data was not available for a small amount of schools.] 
+
+## Constructing Social Networks 
+
+A social network consists of a set of actors -- referred to as "vertices" -- and the connections -- referred to as "network ties" or "edges" between these actors. "One-mode" networks consist of vertices of a "type." For example, the social network of Facebook consists of users (vertices) who are connected to one another via friendship ties (edges). Similarly, the social network of Twitter consists of handles (vertices) who are connected to one another by following or being followed. 
+
+**Two-mode networks**. "Two-mode" networks consist of vertices associated with one type of actor/entity having connections to vertices of another type of actor/entity [@RN2457]. For example, an actor-movie network -- for example, the so-called "Six Degrees of Kevin Bacon" -- consists of actors (mode 1) who appear in movies (mode 2), and an actor shares an edge with a movie if the actor appears in the movie. The most commonly analyzed two-mode network in social networks literature is a corporate board-director network  [e.g., @RN4663]. These networks consist of directors (mode 1) and organizational boards (mode 2), and a particular director shares an edge with a particular organizational board if they sit on that board. 
+
+Data about off-campus recruiting visits from universities to high schools form a two-mode network. The vertices are private high schools (mode 1) and universities (mode 2), and an edge is defined as an off-campus recruiting visit made between the two. High school $i$ shares an edge with university $j$ if high school $i$ receives at least one visit from university $j$. Visits can only occur between a school-university pair (not a school-school pair or a university-university pair). This (weighted) network can be represented as a school-by-university matrix (e.g., a $500 \times 40$ matrix if our network contains 500 high schools and 40 universities) in which matrix cell $a_{i,j}$ identifies the number of visits  high school $i$ received from university $j$.  REFER TO APPENDIX FIGURE THAT SHOWS ENTIRE 2-MODE NETWORK [CRYSTAL ADD FIGURE USING function plot_2mode_graph from network_recruiting_analysis.R]
+
+**Transforming two-mode to one-mode**. To reduce complexity, two-mode network graphs are often analyzed as one-mode networks [@RN2457;@RN4663]. Our two-mode university-school network can be transformed into a one-mode university network in which each vertex is a university. Universities $i$ and $j$ share an edge if both universities visit at least one high school in common. Cell $a_{i,j}$ of the university-by-university matrix $A$ indicates the number of high schools that both universities visited. Cell $a_{i,j}$ is referred to as the *weight* of the edge between university $i$ and university $j$. For example, if there are 200 private high schools that received a visit from both Notre Dame (university $i$) and Villanova (university $j$), the weight of the edge between Notre Dame and Villanova is 200 ($a_{i,j}=200$). Following this approach we created a one-mode university matrix.
+
+We also created a one-mode high school network in which each vertex is a private high school. Private high schools $i$ and $j$ share an edge if at least one university visits both high schools. Cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of universities that visited both school $i$ and school $j$.
+
+## Analyses
+
+Analyses consist of simple descriptive statistics and descriptive social network analyses. All analyses were conducted using *R* and network analyses were conducted using the *igraph* package.
+
+**RQ1: Degree centrality**. In social network analysis, *centrality* refers to the importance or prominence or "being in the middle of things" of an actor/vertex in a social network [@RN4725].<!--[CITE]--> Many alternative measures of centrality have been developed. All measures agree that centrality is an actor/vertex-level construct (e.g., each college in our network will have a centrality value, regardless of which centrality measure we use). However, different measures of centrality are based on different theoretical conceptualizations -- for example, being directly connected to the most actors versus being the intermediary between otherwise disconnected actors -- and are operationalized using different mathematical algorithms.
+
+The simplest measure of centrality, *degree centrality* measures the number of edges directly connected to a vertex. Social network theory conceptualizes degree centrality as a measure of "local" centrality, capturing the number of direct connections for each actor/vertex. For each university in our two-mode network, degree centrality is simply the number of different private high schools visited by the college. For each high school in our network, degree centrality is the number of colleges in our network that visited the high school. For our empirical context, we conceive of degree centrality as a measure of scale of the number of private high schools a college visits and, equivalently, the number of private high schools we observe having a social relation with each college. 
+
+Research question 1 states, "How does the scale of visits to private high schools vary for the public research universities and selective private universities in our sample?" We answer this research question by comparing degree centrality across universities, both within university type (public vs. private) and between university type. In order to discern the relative emphasis on private schools by each university, we also compare the number of recruiting visits to private schools to the number of visits to public schools.
 
 <!-- 
 Social network theory conceptualizes degree centrality as a measure of "local" centrality; it captures the number of direct connections but it does not capture the extent to which an actor/vertex is indirectly connected to others or whether an actor is connected to highly-connected others. 
 -->
 
-Degree is a limited measure of centrality in that it only identifies direct connections. By contrast, *k-path centrality* measures the extent to which an actor/vertex is indirectly connected to others, *betweenness centrality* measures the extent to which a vertex is an intermediary between otherwise disconnected groups of actors, and *eigenvector centrality* measures the extent to which a vertex is connected to highly-connected others. Betweenness centrality tends to be relevant for empirical contexts (e.g., which manager gets credit for an idea) where an actor who occupies a position between groups can benefit by being a broker of information/ideas [@RN975]. By contrast, this chapter is more concerned with whether a particular college tends to have indirect connections with some colleges but not others, and what is the subset of high schools this group of colleges tends to visit. Research question 3, motivated below, explores these ideas.
+Degree is a limited measure of centrality in that it only identifies direct connections. By contrast, *k-path centrality* measures the extent to which an actor/vertex is indirectly connected to others, *betweenness centrality* measures the extent to which a vertex is an intermediary between otherwise disconnected groups of actors, and *eigenvector centrality* measures the extent to which a vertex is connected to highly-connected others [@RN4725]. Betweenness centrality tends to be relevant for empirical contexts (e.g., which manager gets credit for an idea) where an actor who occupies a position between groups can benefit by being a broker of information/ideas [@RN975; @RN4648]. By contrast, this chapter is more concerned with whether a particular college tends to have indirect connections with some colleges but not others, and what is the subset of high schools this group of colleges tends to visit. Research question 2, motivated below, explores these ideas.
 
 
-## RQ2: Ego networks and homophily
+**RQ2: Network similarity and community detection**. We are interested in similarities and differences in the recruiting networks of the public research universities and selective private universities in our sample. This interest motivates research question 3, "to what extent do public research universities and private universities visit overlapping sets of private high schools?"
 
-Because the data structure of networks is complicated, a useful first step is to analyze "ego networks" rather than the entire social network. An "ego" is a single "focal" node (e.g., The University of Notre Dame). An ego network consists "of a focal node ('ego') and the nodes to whom ego is directly connected to (these are called 'alters') plus the ties, if any, among the alters" (p. XXX)<!-- [from http://www.analytictech.com/networks/egonet.htm#:~:text=Ego%20networks%20consist%20of%20a,form%20The%20human%20social%20network ]-->. For example, the University of Notre Dame ego network consists of all private high schools that received at least one visit from Notre Dame. Additionally, for each high school visited by Notre Dame, the ego network may include all colleges/universities in our sample that also visited the high school. This chapter analyzes recruiting visits to private high schools by 41 colleges and universities, which we can think of as 41 ego networks.
+Following prior scholarship on two-mode networks [@RN4677; @RN4725], we address RQ3 by simultaneously graphing the one-mode university network and categorizing universities into distinct communities that have similar recruiting networks. In the resulting graph, vertices (universities) that share many connections are located close together and vertices that are "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph. Additionally, cluster analysis is used to identify vertices that share common structure, based purely on patterns of network ties, and vertices are assigned colors based on membership in a particular group.
+
+**RQ3: Ego networks and homophily**. Because the data structure of networks is complicated, it is often illuminating to analyze "ego networks" rather than the entire social network. An "ego" is a single "focal" node (e.g., The University of Notre Dame). An ego network consists "of a focal node ('ego') and the nodes to whom ego is directly connected to (these are called 'alters') plus the ties, if any, among the alters" [@RN4953]. An ego network of order 1 consists of the alters that are directly tied to the ego. The order 1 ego network for the University of Notre Dame consists of all private high schools that received at least one visit from Notre Dame. The order 2 ego network consists of all private schools that visited Notre Dame and all universities that visited the private high schools visited by Notre Dame. Figure \@ref(fig:nd-religion) shows the order 2 ego network for Notre Dame, with vertices colored by religious affiliation. Universities that are closer to Notre Dame visit more private high schools in common. [CRYSTAL - FIX ND GRAPH PLEASE]
+
+INSERT FIGURE \@ref(fig:nd-religion)
+
+Research question 3 asks, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by private universities?" To answer this question, we can think of the 15 public research universities and 14 selective private universities, which we can think of as 29 ego networks. 
 
 A common finding in social networks research is that actors are more likely to form connections with actors who are similar to them [@RN1722]. Said differently, ego networks are biased towards "homophily" rather than "heterophily." Homophily is the idea that two vertices are more likely to be connected if they have similar characteristics (e.g., two people are more likely to be friends on Facebook if they have similar political ideologies). Heterophily, the opposite of homophily, is when pairs of connected vertices have different characteristics from one another. 
 
-In our analyses of recruiting visits from colleges to private high schools, we are interested in the existence of homophily versus heterophily for two reasons. First, prior scholarship suggests that private colleges and private high schools are more likely to have a relationship when they share common ideologies or view themselves as belonging to the same echelon [@RN3519; @RN4321;@RN4407]. Second, with respect to our substantive interest in the behavior of public research universities, the characteristics of visited private high schools have consequences for subsequent enrollment compositions of public research universities. Therefore, we are interested in whether universities tend to visit high schools that are similar to them on certain characteristics. Additionally, we are interested in whether public research universities favor high schools with certain characteristics, independent of homophily. These interests motivate research question 2, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by private universities?" 
+In our analyses of recruiting visits from colleges to private high schools, we are interested in the existence of homophily versus heterophily for two reasons. First, prior scholarship suggests that private colleges and private high schools are more likely to have a relationship when they share common ideologies or view themselves as belonging to the same echelon [@RN3519; @RN4321;@RN4407]. Second, similar to the colloquialism 'you are what you eat,' the characteristics of visited private high schools have subsequent consequences for the the enrollment composition of universities.
 
-Decisions about which private school characteristics to analyze were informed by prior research [e.g., @RN4724; @RN4504; @RN4321; @RN3519; @RN4588]. In particular, @RN4504 used data from several national surveys to analyze long-term trends in private school enrollment by family income. The percentage of American (elementary school) students attending private school declined from 15% in the mid-1960s to 10% in the mid-1970s, and declined gradually from 11% in 1999 to 9% in 2015. With respect to family income, the private school enrollment rate of high-income families (around 17%) and low-income families (around 4%) remained stable over time, but the enrollment rate for middle-income families declined from 12% in 1968 to 6% in 2013.  These declines were substantially driven by declines in the number of students attending Catholic schools, which represented 89% of private school enrollment in 1965 and 42% of enrollment in 2013. Private school enrollment rates are higher for families located in urban areas than those in suburban areas. With respect to race, in 2013, 11% of white students attended private school compared to 5% of Black students, and 3% of Hispanic students. However, for high income families, rates of private school enrollment do not differ substantially across race. In the South, there has been a long-term increase in private school enrollment, driven by growing enrollment in Christian private schools by middle-income families and growing enrollment in nonsectarian private schools by high-income families.
+Our analyses focus on the following private school characteristics: geographic region, religious affiliation, academic reputation, racial composition, and enrollment size. Decisions about which private school characteristics to analyze were informed by logical argument and by prior research [e.g., @RN4724; @RN4504; @RN4321; @RN3519; @RN4588]. We analyze geographic region because, for most colleges and universities, enrollment demand is likely to be stronger at high schools in the same geographic region, but nationally prestigious colleges and universities may experience high demand throughout the country. We analyze religious affiliation because private colleges are more likely to have a relationship with private high schools with a similar religious affiliation. Although public universities are formally secular, we are interested in whether particular public universities tend to target religiously affiliated private high schools. We analyze academic reputation based on the idea that more highly ranked colleges are likely to target highly ranked private high schools. Racial composition is of substantive interest because the racial composition of visited high schools has consequences for the racial composition of colleges and universities. We would also like to analyze tuition price and household income, but these data are not available for private high schools.
 
+## Limitations
 
-Based on these findings and logical argument (and also data limitations), our analyses focus on the following private school characteristics: geographic region, religious affiliation, academic reputation, racial composition, and enrollment size. We analyze geographic region because, for most colleges and universities, enrollment demand is likely to be stronger at high schools in the same geographic region, but nationally prestigious colleges and universities may experience high demand throughout the country. We analyze religious affiliation because private colleges are more likely to have a relationship with private high schools with a similar religious affiliation. Although public universities are formally secular, we are interested in whether particular public universities tend to target religiously affiliated private high schools. We analyze academic reputation based on the idea that more highly ranked colleges are likely to target highly ranked private high schools. Racial composition is of substantive interest because the racial composition of visited high schools has consequences for the racial composition of colleges and universities. Given our interests in social reproduction versus social mobility, we would also analyze tuition price and household income, but these data are not available for private high schools.
+This article faces several limitations. First, our data collection sample consisted of public research-extensive universities as defined by the 2000 Carnegie Classification (N=102) and all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58). Making comparisons between public and private universities would be more appropriate if we used the same classification method to define the data collection sample for all universities. The process we used to define the data collection sample yielded a sample of public research universities with lower USNWR rankings than the analysis sample of selective private universities. However, the columns in Table \@ref(tab:sample-characteristics) for 25th and 75th percentile SAT score of enrolled freshmen suggest that private universities ranked lower than 75 have test score ranges that are fairly similar to public research universities not ranked in the top 100.
 
-
-## RQ3: Network similarity and community detection
-
-This chapter conceptualizes recruiting visits to private high schools as a behavior consistent with the social reproduction orientation of selective private colleges and universities. We are interested in how similar the recruiting networks of public research universities are to those of private colleges and universities, thereby motivating research question 3, "To what extent do public research universities and private universities visit overlapping sets of private high schools?"
-
-We address RQ3 by graphing the recruiting network and by identifying "clusters" of universities that have similar recruiting networks. First, network graphs show vertices (e.g., universities) as circles, with vertices that share many connections located close together and vertices that are very "central" -- many direct and indirect connections to other nodes in the network -- are located near the center of the graph. In addition to network graphs, network scholarship often uses cluster analysis methodologies to identify vertices that share common structure, based purely on patterns of network ties.
-
-
-# Data and methods
-
-
-Our broader project collected data on off-campus recruiting visits made by a convenience sample of colleges and universities during the 2017 calendar year. The data collection sample comes from two different lists of postsecondary institutions: all public research-extensive universities as defined by the 2000 Carnegie Classification (N=102), and all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=58). <!-- and all private colleges in the top 50 of U.S. News and World Report Liberal Arts Colleges rankings (N=47).-->For each of these institutions, we investigated their admissions website for pages that posted their upcoming off-campus recruiting visits. For institutions that posted such pages, we scraped the pages once per week throughout 2017. Many colleges and universities only posted certain kinds of events (e.g., hotel receptions and national college fairs) but not others (e.g., day-time visits fto high schools). These institutions are excluded from the analyses. Our final analysis sample consists of 15 public research universities and 14 private research universities. <!--12 private liberal arts colleges [MAYBE ADD TABLE/FIGURE OR APPENDIX TABLE/FIGURE ON CHARACTERISTICS OF INSTITUTIONS IN OUR SAMPLE?]-->
-
-INSERT TABLE \@ref(tab:sample-characteristics) ABOUT HERE
-
-Table \@ref(tab:sample-characteristics) shows selected characteristics for the universities in our analysis sample. Given that we collected recruiting data for private universities ranked in the top 100 of U.S. News and World Report, one concern is whether it makes sense to compare public research universities not ranked in the top 100 to private universities ranked in the top 100. However, the columns in Table \@ref(tab:sample-characteristics) for 25th and 75th percentile SAT score of enrolled freshmen suggest that private universities ranked lower than 75 have test score ranges that are fairly similar to public research universities not ranked in the top 100. The five public research universities ranked 124 or below have score ranges that are modestly lower, particularly the University of Nebraska-Lincoln, but remain comparable to private universities ranked 75 to 100. One exception is that Stevens Institute of Technology (rank 80) has substantially higher test scores. 
-
-The data on university characteristics come from the 2017 Integrated Postsecondary Education Data System (IPEDS) and 2020 Best Colleges ranking by U.S. News & World Report. For the high schools in our analysis, we use secondary data from the 2017-18 NCES Common Core of Data (CCD) for public high schools, and the 2017-18 NCES Private School Universe Survey (PSS) and 2020 Best Private High Schools ranking by Niche for private high schools.^[For both public and private high schools, we also used NCES data from previous years when the 2017-18 data was not available for a small amount of schools.] Only high schools that enroll at least 10 12th grade students, is not primarily a virtual school, and is located in the 50 U.S. states, the District of Columbia, or land regulated by the Bureau of Indian Affairs is included in our analysis.
-
-## Social network methods
-
-Analyses consist of simple descriptive statistics and descriptive social network analyses.
-
-A social network consists of a set of actors -- referred to as "vertices" -- and the connections -- referred to as "network ties" or "edges" between these actors. "One-mode" networks consist of vertices of a "type." For example, the social network of Facebook consists of users (vertices) who are connected to one another via friendship ties (edges). "Two-mode" networks consist of vertices associated with one type of actor/entity having connections to vertices of another type. Data on recruiting visits by universities to high schools yields a two-mode network, in which an edge -- a recruiting visit -- occurs between a high school (mode 1) and a university (mode 2).
-
-**Constructing two-mode network**. We describe construction of social network data with reference to "corporate board-director" networks -- the most commonly analyzed two-mode network -- which consist of directors (mode 1) who serve on organizational boards (mode 2). In our school-university two-mode network, the vertices are private high schools (mode 1) and universities (mode 2), and an edge is defined as an off-campus recruiting visit made between the two (e.g., high school $i$ shares an edge with university $j$ if high school $i$ receives at least one visit from university $j$). Visits can only occur between a school-university pair (not a school-school pair or a university-university pair). This (weighted) network can be represented as a school-by-university matrix (e.g., a $500 \times 40$ matrix if our network contains 500 high schools and 40 universities) in which matrix cell $a_{i,j}$ identifies the number of visits  high school $i$ received from university $j$. <!--[SHOW AN EXCERPT OF THE TWO MODE ADJACENY MATRIX, LIKE 4 BY 3 OR SOMETHING] [DEFINE WEIGHTED VS. UNWEIGHTED SOMEWHERE]-->
-
-**Transforming two-mode network to one-mode networks**. Two-mode networks are often analyzed as one-mode networks [@RN2457]. @RN4663 states that "overlapping groups such as boards of directors form a two-mode membership network in which one can conceive of directors as nodes [vertices] connected by a tie of common board membership, or boards as nodes connected by a tie of one or more shared directors" (p. XXX). Thus, a two-mode board-director network can be transformed into two one-mode networks. A weighted one-mode director network can be created as follows: create a director-by-director matrix (e.g., a $100 \times 100$ matrix if there are 100 directors in the network); two directors share an edge if they serve together on a board; matrix cell $a_{i,j}$ identifies the number of boards that include both director $i$ and director $j$ (e.g., $a_{i,j}=0$ if directors $i$ and $j$ do not serve on any of the same boards and $a_{i,j}=3$ if directors $i$ and $j$ serve on three boards together). Similarly, a one-mode board network is created based on a board-by-board matrix in which two boards share an edge if a director sits on both boards and matrix cell $a_{i,j}$ identifies the number of directors that serve on both board $i$ and board $j$. 
-
-Following this approach, we create a one-mode high school network in which two private high schools share an edge if they both receive a visit by the same university. Cell $s_{i,j}$ of the school-by-school matrix $S$ indicates the number of universities that visited both school $i$ and school $j$<!-- [SHOW EXCERPT OF ONE-MODE SCHOOL BY SCHOOL MATRIX, LIKE 3 BY 3 OR SOMETHING]-->. Similarly, we create a one-mode university network in which two universities share an edge if both universities visited the same high school. Cell $c_{i,j}$ of the university-by-university matrix $C$ indicates the number of private high schools that received at least one visit from both university $i$ and university $j$. 
-
-The social network analyses presented in this chapter -- particularly for research question 3 -- are primarily based on analysis of one-mode university networks. We created separate one-mode university networks for: public universities; private universities; both public and private universities.
+A related limitation is that analysis sample consists of the subset of universities from the data collection sample that we believe posted all off-campus recruiting visits on their admissions website. This process for defining the analysis sample raises two concerns. First, including universities based on the completeness of recruiting events on their admissions website may yield an analysis sample that conducts more off-campus recruiting visits than the majority of the sample. Second -- and more broadly -- because our analysis sample is a convenience sample rather than a random sample, we cannot make inferences about the underlying populations of interest. This is an external validity concern. That said, we conceive of our research design as an exploratory comparative case study rather than a Large-N research design [@RN4116; @RN4011]. From this perspective, we identify important variation in recruiting behavior but we cannot make strong claims about the prevalence of observed behaviors in the population. 
 
 
 # Results
@@ -290,7 +236,7 @@ The social network analyses presented in this chapter -- particularly for resear
 Research question 1 asks, "How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?" This question can be answered by counting the number of visits to private high schools, which is equivalent to calculating the degree centrality for each university. In addition to scale, we are also interested in the relative scale of visits to private high schools. That is, the number of visits to private high schools as a proportion of all off-campus recruiting visits, or as a proportion of all recruiting visits to high schools.  
 
 
-Figures \@ref(fig:events-count-pubu) and \@ref(fig:events-count-privu) show the number of visits by "type" (public high school, private high school, community college, other) for public research universities and selective private universities, respectively. On average, the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample conducted `r round((events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()), digits = 0)` off-campus recruiting events in 2017, ranging from a low of `r events_df %>% filter(univ_id == '139959') %>% count() %>% as.numeric()` for the University of Georgia to a high of `r events_df %>% filter(univ_id == '100751') %>% count() %>% as.numeric()` for the University of Alabama. By contrast, the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample conducted an average of `r round((events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()), digits = 0)` events, ranging from a low of `r events_df %>% filter(univ_id == '186867') %>% count() %>% as.numeric()` by Stevens Institute of Technology (located in Hoboken, NJ) to a high of `r events_df %>% filter(univ_id == '239105') %>% count() %>% as.numeric()` by Marquette University (located in Milwaukee, WI).  Across all public research universities, `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())*100, digits=1)`% of visits were to a public or private high school, whereas for selective private universities `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())*100, digits=1)`% of all visits were to a public or private high school. The lower percentage for public research universities is because many public research universities made a substantial number of visits to community colleges whereas private universities did not.
+Appendix Figures \@ref(fig:events-count-pubu) and \@ref(fig:events-count-privu) show the number of visits by "type" (public high school, private high school, community college, other) for public research universities and selective private universities, respectively. On average, the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample conducted `r round((events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()), digits = 0)` off-campus recruiting events in 2017, ranging from a low of `r events_df %>% filter(univ_id == '139959') %>% count() %>% as.numeric()` for the University of Georgia to a high of `r events_df %>% filter(univ_id == '100751') %>% count() %>% as.numeric()` for the University of Alabama. By contrast, the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample conducted an average of `r round((events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())/(univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()), digits = 0)` events, ranging from a low of `r events_df %>% filter(univ_id == '186867') %>% count() %>% as.numeric()` by Stevens Institute of Technology (located in Hoboken, NJ) to a high of `r events_df %>% filter(univ_id == '239105') %>% count() %>% as.numeric()` by Marquette University (located in Milwaukee, WI).  Across all public research universities, `r round((events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric())*100, digits=1)`% of visits were to a public or private high school, whereas for selective private universities `r round((events_df %>% filter(classification == 'private_national', event_type %in% c('pub_hs','priv_hs')) %>% count() %>% as.numeric())/(events_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric())*100, digits=1)`% of all visits were to a public or private high school. The lower percentage for public research universities is because many public research universities made a substantial number of visits to community colleges whereas private universities did not.
 
 Figures \@ref(fig:events-hs-count-pubu) and \@ref(fig:events-hs-count-privu) address RQ1 directly by showing the number of visits to private high schools and public high schools for public research universities (Figure \@ref(fig:events-hs-count-pubu)) and selective private universities (Figure \@ref(fig:events-hs-count-privu)), with each bar shaded by percent in-state versus out-of-state visits. Only three of the 15 public research universities -- UC-Berkeley, UC-San Diego, and UC-Riverside -- made more in-state than out-of-state total high school visits. Notably, the University of California voluntarily adopted a nonresident enrollment cap in 2017, following pressure from state legislators who had issued a bill to cap nonresident enrollment. Of the 14 selective private universities in our sample, only Baylor University (Waco, TX) made more in-state than out-of-state total high school visits.
 
@@ -307,46 +253,6 @@ The relative scale of visits to private high schools -- defined as private high 
 Even though selective private universities tend to emphasize visits to private high schools more than public research universities, both groups visited private high schools at a much higher rate than public high schools. Figure \@ref(fig:actual-proportional-pubu) (public universities) and Figure \@ref(fig:actual-proportional-privu) (private universities) show the actual number of private school visits made compared to the hypothetical number of private school visits if each public and private high school in the nation had an equal probability of receiving a visit.^[When calculating the hypothetical, proportional number of visits for each university, we only consider high schools in states that received at least one visit to a public or private high school from that university. Our rationale for this decision is that it is unhelpful to include schools in states that the university ignored entirely.] Figure \@ref(fig:actual-proportional-pubu) shows that the actual number of private school visits exceeded the proportional number of private school visits for 13 of the 15 public research universities in our sample, the exceptions being UC-Riverside and SUNY Stony Brook. For UC-Berkeley, private school visits represented 27% of all high school visits but would have represented 19% had UC-Berkeley visited public and private schools at the same rate. For the University of Georgia, which represented the extreme for public universities, private school visits represented 37% of all high school visits but would have represented 19% had the university visited public and private schools at the same rate. Figure \@ref(fig:actual-proportional-privu) shows that this disparity between actual versus proportional visits was much greater for private universities than public universities. Catholic universities made the most disproportionate number of private high school visits. For Notre Dame, private school visits represented 63% of actual high school visits but would have represented 18% of proportional visits.
 
 INSERT FIGURE \@ref(fig:actual-proportional-pubu) AND FIGURE \@ref(fig:actual-proportional-privu) ABOUT HERE
-
-
-## RQ2: Characteristics of visited schools
-
-
-Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-pubu-privhs-pubhs) address research question 2, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?"
-
-Figure \@ref(fig:region-pubu-privu) shows the geographic region -- Northeast, Midwest, South, and West -- of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). Scholarship on the relationship between geographic proximity and student demand tends to find that nationally prestigious universities enjoy strong demand across the nation, while less prestigious universities rely primarily on demand from students located nearby [e.g., @RN2133]. The visit patterns for private universities are consistent with this finding; less prestigious universities tended to focus on private high schools in their home region, while more prestigious universities tended to visit many private high schools outside their home region.  Similarly, scholarship on student demand for out-of-state public universities finds that most public universities rely on demand from out-of-state students living in nearby states [@RN2536; @RN2535; @RN2546]. Most public research universities in our sample visited a disproportionate number of private high schools in their home geographic region. UC-Berkeley and CU Boulder -- universities with strong national brand recognition -- visited a large number of private high schools outside their home region. 
-
-INSERT FIGURE \@ref(fig:region-pubu-privu) ABOUT HERE
-
-In the universe of all private high schools (top row of Figure \@ref(fig:region-pubu-privu)), there are more schools located in the South than any other geographic region, consistent with the finding from @RN4504 about the long-term growth in private school enrollment in the South. Universities not located in the South tended to visit more private high schools in the South than any other region, except their home region. This finding emerged for both the public universities and private universities in our sample.
-
-Figure \@ref(fig:religion-pubu-privu) shows the religious affiliation -- Catholic, Christian, Nonsectarian, and Other -- of visited private high schools. The results for selective private universities (bottom panel) follow our expectations: Nonsectarian universities tended to visit a higher proportion of nonsectarian private high schools; Catholic universities visited a higher proportion of Catholic high schools; and Christian universities tended to visit a relatively higher share of Christian high schools. 
-
-INSERT FIGURE \@ref(fig:religion-pubu-privu) ABOUT HERE
-
-Results for public research universities (top panel) are more interesting. Despite being nonsectarian, the majority of public research universities visited a high share of religiously affiliated private high schools, particularly Catholic schools. Surprisingly, Catholic schools represented at least 40% of private high school visits for `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'public') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample. By contrast, Catholic schools represented at least 40% of visits for only `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'private') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample (the four Catholic universities and also Texas Christian University and Stevens Institute of Technology). For public research universities, the emphasis on visiting Catholic and Christian high schools rather than nonsectarian private high schools tended to be stronger at less prestigious institutions. 
-
-Figure \@ref(fig:rank-pubu-privu) shows the academic reputation -- defined by the Niche private high school ranking -- of visited private high schools. For the private universities in our sample, we see the predictable pattern that more highly ranked universities tend to visit a higher share of private high schools that are ranked in the top 200 nationally or are rated "A+" whereas less prestigious universities visited a higher share of private high schools rated "A" or "A- or below." Notre Dame University is a notable exception to this pattern. A potential explanation is that Notre Dame has developed a strategy of targeting the very top students at relatively less-prestigious Catholic high schools, believing that these students will choose Notre Dame because of its status as the preeminent Catholic University.
-
-INSERT FIGURE \@ref(fig:rank-pubu-privu) ABOUT HERE
-
-A similar pattern emerged for the public research universities in our sample; more highly ranked universities tended to visit a higher share of highly rated private high schools than lower ranked universities. In comparison to the private universities in our sample, the public universities in our sample tended to visit a higher share of private high schools that were not highly rated. To a great extent, this finding is merely a consequence of our sampling strategy; we attempted to collect recruiting visit data from all public research universities but we only collected recruiting visit data from private universities ranked in the top 100 of U.S. News and World Report. That said, the finding that public research universities visited a large share of low-rated private high schools is consistent with the idea that many public research universities visit private high schools in search of full-pay students rather than academic superstars.
-
-Figure \@ref(fig:enroll-pubu-privu) shows the 12th grade enrollment of visited private high schools. Compared to the universe of private high schools, the universities in our sample tended to visit schools that enrolled more 12th graders. Generally, the findings were pretty similar across public and private universities; for most universities, more than half of private school visits were to schools that enrolled at least 100 12th graders. However, public universities tended to visit a slightly larger share of high schools with fewer than 50 12th graders and private universities tended to visit a higher share of high schools with 12th grade enrollment of 50-100.
-
-INSERT FIGURES \@ref(fig:enroll-pubu-privu) AND \@ref(fig:enroll-pubu-privhs-pubhs) ABOUT HERE
-
-Figure \@ref(fig:enroll-pubu-privhs-pubhs) shows the 12th grade enrollment of visited private high schools as well as the 12th grade enrollment of visited public high schools for the public research universities in our sample. As seen, a large majority of public high school visits for all 15 universities were to schools with more than 150 12th graders enrolled (bottom panel). By contrast, most of the visited private schools tended to have fewer than 150 12th graders enrolled. Although this is somewhat to be expected, as public high schools tend to be larger in size than private schools (top rows of Figure \@ref(fig:enroll-pubu-privhs-pubhs)), there still appears to be a disproportionate amount of smaller private high schools visited compared to smaller public high schools. This suggests that the public universities in our sample were willing to take the time to visit private schools, even when they enroll far fewer 12th graders.
-
-Figure \@ref(fig:race-pubu-privu) shows the percentage of 12th graders who identify as Black, Latinx, or Native at visited private high schools. Consistent with @RN4504, most private high schools enroll relatively few students from historically underrepresented race/ethnicity groups. For over 65%<!--0.6632124--> of schools in the universe of private high schools (top row of Figure \@ref(fig:race-pubu-privu)), Black/Latinx/Native students comprise less than 20% of enrolled students. Therefore, even if universities visited schools with racial composition on par with the universe of private high schools, most visited schools would have relatively few Black/Latinx/Native students enrolled. Figure \@ref(fig:race-pubu-privu) shows that for most universities in our sample, the set of visited private high schools enrolled *fewer* Black/Latinx/Native students than the universe of private high schools. For public universities, exceptions to this finding were UC-San Diego, UC-Riverside, and -- to a lesser extent -- SUNY Stony Brook. For private universities, Marquette was the only exception to this finding.
-
-INSERT FIGURE \@ref(fig:race-pubu-privu) ABOUT HERE
-
-Several studies suggest that universities -- particularly elite private universities -- pursue racial diversity by recruiting non-white students who attend predominantly white private high schools [e.g., @RN4495]. Additionally, scholarship that engages with enrollment in private schools by Black students suggests that many high-income Black families began sending their children to elite, predominantly white private schools once these schools were willing to enroll Black students [@RN4724]. Therefore, universities may visit predominantly white private high schools in search of non-white students. One concern about this practice is that non-white students at elite private schools may be in high demand by many universities, but similarly achieving non-white students at predominantly non-white public schools might be ignored.
-
-INSERT FIGURE \@ref(fig:race-pubu-privhs-pubhs) ABOUT HERE
-
-Figure \@ref(fig:race-pubu-privhs-pubhs) compares the racial composition of private high schools visited by public research universities to the racial composition of public high schools visited by these universities. Looking at the universe of high schools (top rows of Figure \@ref(fig:race-pubu-privhs-pubhs)), we see that public high schools tend to be more racially diverse than private schools. This is reflected in the racial composition of visited schools as well, where the set of visited public high schools generally enroll more Black/Latinx/Native students than the visited private schools for the public research universities in our sample. Unfortunately though, a majority of these public universities tended to visit private high schools at a higher rate than public high schools, as seen earlier in Figure \@ref(fig:actual-proportional-pubu). This disproportionate emphasis on private school visits may shift the racial composition of public universities away from Black/Latinx/Native students.
 
 ## RQ3: Overlapping network structure
 
@@ -500,6 +406,47 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pub
 events_df %>% filter(classification == 'public_research', event_type %in% c('pub_hs')) %>% count() %>% as.numeric()
 ```
 
+## RQ3: Characteristics of visited schools
+
+
+Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-pubu-privhs-pubhs) address research question 3, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?"
+
+Figure \@ref(fig:region-pubu-privu) shows the geographic region -- Northeast, Midwest, South, and West -- of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). Scholarship on the relationship between geographic proximity and student demand tends to find that nationally prestigious universities enjoy strong demand across the nation, while less prestigious universities rely primarily on demand from students located nearby [e.g., @RN2133]. The visit patterns for private universities are consistent with this finding; less prestigious universities tended to focus on private high schools in their home region, while more prestigious universities tended to visit many private high schools outside their home region.  Similarly, scholarship on student demand for out-of-state public universities finds that most public universities rely on demand from out-of-state students living in nearby states [@RN2536; @RN2535; @RN2546]. Most public research universities in our sample visited a disproportionate number of private high schools in their home geographic region. UC-Berkeley and CU Boulder -- universities with strong national brand recognition -- visited a large number of private high schools outside their home region. 
+
+INSERT FIGURE \@ref(fig:region-pubu-privu) ABOUT HERE
+
+In the universe of all private high schools (top row of Figure \@ref(fig:region-pubu-privu)), there are more schools located in the South than any other geographic region, consistent with the finding from @RN4504 about the long-term growth in private school enrollment in the South. Universities not located in the South tended to visit more private high schools in the South than any other region, except their home region. This finding emerged for both the public universities and private universities in our sample.
+
+Figure \@ref(fig:religion-pubu-privu) shows the religious affiliation -- Catholic, Christian, Nonsectarian, and Other -- of visited private high schools. The results for selective private universities (bottom panel) follow our expectations: Nonsectarian universities tended to visit a higher proportion of nonsectarian private high schools; Catholic universities visited a higher proportion of Catholic high schools; and Christian universities tended to visit a relatively higher share of Christian high schools. 
+
+INSERT FIGURE \@ref(fig:religion-pubu-privu) ABOUT HERE
+
+Results for public research universities (top panel) are more interesting. Despite being nonsectarian, the majority of public research universities visited a high share of religiously affiliated private high schools, particularly Catholic schools. Surprisingly, Catholic schools represented at least 40% of private high school visits for `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'public') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'public_research') %>% count() %>% as.numeric()` public research universities in our sample. By contrast, Catholic schools represented at least 40% of visits for only `r ego_df %>% mutate(catholic2= as.numeric(str_replace(catholic,'%',''))) %>% filter(type == 'univ', catholic2>=40, control == 'private') %>% count() %>% as.numeric()` of the `r univ_sample_df %>% filter(classification == 'private_national') %>% count() %>% as.numeric()` selective private universities in our sample (the four Catholic universities and also Texas Christian University and Stevens Institute of Technology). For public research universities, the emphasis on visiting Catholic and Christian high schools rather than nonsectarian private high schools tended to be stronger at less prestigious institutions. 
+
+Figure \@ref(fig:rank-pubu-privu) shows the academic reputation -- defined by the Niche private high school ranking -- of visited private high schools. For the private universities in our sample, we see the predictable pattern that more highly ranked universities tend to visit a higher share of private high schools that are ranked in the top 200 nationally or are rated "A+" whereas less prestigious universities visited a higher share of private high schools rated "A" or "A- or below." Notre Dame University is a notable exception to this pattern. A potential explanation is that Notre Dame has developed a strategy of targeting the very top students at relatively less-prestigious Catholic high schools, believing that these students will choose Notre Dame because of its status as the preeminent Catholic University.
+
+INSERT FIGURE \@ref(fig:rank-pubu-privu) ABOUT HERE
+
+A similar pattern emerged for the public research universities in our sample; more highly ranked universities tended to visit a higher share of highly rated private high schools than lower ranked universities. In comparison to the private universities in our sample, the public universities in our sample tended to visit a higher share of private high schools that were not highly rated. To a great extent, this finding is merely a consequence of our sampling strategy; we attempted to collect recruiting visit data from all public research universities but we only collected recruiting visit data from private universities ranked in the top 100 of U.S. News and World Report. That said, the finding that public research universities visited a large share of low-rated private high schools is consistent with the idea that many public research universities visit private high schools in search of full-pay students rather than academic superstars.
+
+Figure \@ref(fig:enroll-pubu-privu) shows the 12th grade enrollment of visited private high schools. Compared to the universe of private high schools, the universities in our sample tended to visit schools that enrolled more 12th graders. Generally, the findings were pretty similar across public and private universities; for most universities, more than half of private school visits were to schools that enrolled at least 100 12th graders. However, public universities tended to visit a slightly larger share of high schools with fewer than 50 12th graders and private universities tended to visit a higher share of high schools with 12th grade enrollment of 50-100.
+
+INSERT FIGURES \@ref(fig:enroll-pubu-privu) AND \@ref(fig:enroll-pubu-privhs-pubhs) ABOUT HERE
+
+Figure \@ref(fig:enroll-pubu-privhs-pubhs) shows the 12th grade enrollment of visited private high schools as well as the 12th grade enrollment of visited public high schools for the public research universities in our sample. As seen, a large majority of public high school visits for all 15 universities were to schools with more than 150 12th graders enrolled (bottom panel). By contrast, most of the visited private schools tended to have fewer than 150 12th graders enrolled. Although this is somewhat to be expected, as public high schools tend to be larger in size than private schools (top rows of Figure \@ref(fig:enroll-pubu-privhs-pubhs)), there still appears to be a disproportionate amount of smaller private high schools visited compared to smaller public high schools. This suggests that the public universities in our sample were willing to take the time to visit private schools, even when they enroll far fewer 12th graders.
+
+Figure \@ref(fig:race-pubu-privu) shows the percentage of 12th graders who identify as Black, Latinx, or Native at visited private high schools. Consistent with @RN4504, most private high schools enroll relatively few students from historically underrepresented race/ethnicity groups. For over 65%<!--0.6632124--> of schools in the universe of private high schools (top row of Figure \@ref(fig:race-pubu-privu)), Black/Latinx/Native students comprise less than 20% of enrolled students. Therefore, even if universities visited schools with racial composition on par with the universe of private high schools, most visited schools would have relatively few Black/Latinx/Native students enrolled. Figure \@ref(fig:race-pubu-privu) shows that for most universities in our sample, the set of visited private high schools enrolled *fewer* Black/Latinx/Native students than the universe of private high schools. For public universities, exceptions to this finding were UC-San Diego, UC-Riverside, and -- to a lesser extent -- SUNY Stony Brook. For private universities, Marquette was the only exception to this finding.
+
+INSERT FIGURE \@ref(fig:race-pubu-privu) ABOUT HERE
+
+Several studies suggest that universities -- particularly elite private universities -- pursue racial diversity by recruiting non-white students who attend predominantly white private high schools [e.g., @RN4495]. Additionally, scholarship that engages with enrollment in private schools by Black students suggests that many high-income Black families began sending their children to elite, predominantly white private schools once these schools were willing to enroll Black students [@RN4724]. Therefore, universities may visit predominantly white private high schools in search of non-white students. One concern about this practice is that non-white students at elite private schools may be in high demand by many universities, but similarly achieving non-white students at predominantly non-white public schools might be ignored.
+
+INSERT FIGURE \@ref(fig:race-pubu-privhs-pubhs) ABOUT HERE
+
+Figure \@ref(fig:race-pubu-privhs-pubhs) compares the racial composition of private high schools visited by public research universities to the racial composition of public high schools visited by these universities. Looking at the universe of high schools (top rows of Figure \@ref(fig:race-pubu-privhs-pubhs)), we see that public high schools tend to be more racially diverse than private schools. This is reflected in the racial composition of visited schools as well, where the set of visited public high schools generally enroll more Black/Latinx/Native students than the visited private schools for the public research universities in our sample. Unfortunately though, a majority of these public universities tended to visit private high schools at a higher rate than public high schools, as seen earlier in Figure \@ref(fig:actual-proportional-pubu). This disproportionate emphasis on private school visits may shift the racial composition of public universities away from Black/Latinx/Native students.
+
+
+
 # Discussion
 
 ## Summary
@@ -548,9 +495,9 @@ All authors declare that they have no conflicts of interest.
 
 <!-- TABLES -->
 
-\newpage
 
-```{r ug-recruit-budget, echo=FALSE}
+
+```{r ug-recruit-budget, echo=FALSE, eval = FALSE, include = FALSE}
 pct_budget <- data.frame(
   activity = c("Travel","Student search (purchased lists)","Prospective student communications","Events","Recruitment publications","Web services and digital advertising","Traditional advertising","International recruitment","Transfer recruitment","Other"),
   private = c(17,14,13,12,11,11,6,5,4,8),
@@ -568,6 +515,7 @@ kable(
 #  <div id="refs"></div>
 ```
 
+\newpage
 \clearpage
 
 
@@ -585,23 +533,17 @@ kable(univ_sample %>% arrange(desc(classification), rank), caption = "Characteri
 
 \begin{landscape}
 
+```{r pubu-percent-matrix}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
 
-```{r pubu-count-matrix}
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+
 table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
-
 rownames(table_1mode_pubu$onemode_df) <- colnames(table_1mode_pubu$onemode_df)
 
-kable(table_1mode_pubu$onemode_df, caption = 'One-mode public university count matrix') %>%
-  kable_styling(latex_options = 'scale_down') %>%
-  column_spec(c(1), width = '13em') %>% 
-  column_spec(c(14), width = '8.5em') %>% 
-  column_spec(2:13, width = '7em') %>% 
-  column_spec(c(7, 9, 15, 16), width = '6em')
-```
-
-
-```{r pubu-percent-matrix}
 rownames(table_1mode_pubu$onemode_pct_df) <- colnames(table_1mode_pubu$onemode_pct_df)
+
+
 
 kable(table_1mode_pubu$onemode_pct_df, caption = 'One-mode public university percent matrix') %>%
   kable_styling(latex_options = 'scale_down') %>%
@@ -612,23 +554,7 @@ kable(table_1mode_pubu$onemode_pct_df, caption = 'One-mode public university per
 
 ```
 
-\clearpage
-
-```{r privu-count-matrix, eval=FALSE, include=FALSE}
-
-table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
-
-kable(table_1mode_privu$onemode_df, caption = 'Private universities count matrix') %>%
-  kable_styling(latex_options = 'scale_down') %>%
-  column_spec(1, width = '8.5em') %>%
-  column_spec(2:15, width = '7em') %>% 
-  column_spec(c(4:6, 10, 12, 13), width = '6em')
-```
-
-
 ```{r privu-percent-matrix}
-
-table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
 
 rownames(table_1mode_privu$onemode_pct_df) <- colnames(table_1mode_privu$onemode_pct_df)
 
@@ -642,37 +568,6 @@ kable(table_1mode_privu$onemode_pct_df, caption = 'One-mode private university p
 ```
 
 \clearpage
-
-```{r u-cluster1-percent-matrix, include=FALSE}
-table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
-
-
-#kable(table_1mode_u$clusters_df[order(match(table_1mode_u$clusters_df$univ_abbrev, rownames(table_1mode_u$onemode_df))), ], caption = 'Clusters for public and private universities')
-
-cluster_1 <- c(1, 4, 5, 7, 16, 18, 19, 24, 25, 28)
-cluster_2 <- c(2, 3, 6, 8, 9, 10, 11, 12, 14, 15, 20, 22, 23)
-cluster_3 <- c(13, 17, 21, 26, 27)
-cluster_4 <- 29
-
-kable(table_1mode_u$onemode_pct_df[cluster_1, cluster_1], caption = 'Public and private universities percent matrix (cluster 1)') %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
-```{r u-cluster2-percent-matrix, eval=FALSE}
-kable(table_1mode_u$onemode_pct_df[cluster_2, cluster_2], caption = 'Public and private universities percent matrix (cluster 2)') %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
-```{r u-cluster3-percent-matrix, eval=FALSE}
-kable(table_1mode_u$onemode_pct_df[cluster_3, cluster_3], caption = 'Public and private universities percent matrix (cluster 3)') %>%
-  kable_styling(latex_options = 'scale_down')
-```
-
-
-```{r u-top-percent-matrix, eval=FALSE}
-kable(table_1mode_u$onemode_pct_df[c(1,2,3,4,5,6,7,8,9),c(1,2,3,4,5,6,7,8,9)], caption = 'Public and private universities, highest degree centrality') %>%
-  kable_styling(latex_options = 'scale_down')
-```
 
 ```{r privu-percent-visited-by-pubu-matrix}
 rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
@@ -691,24 +586,20 @@ kable(table_1mode_u$onemode_pct_df[c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29),
 
 <!-- FIGURES -->
 
-\clearpage
 
-```{r em-funnel, echo = FALSE, fig.align = 'center', fig.cap = "The enrollment funnel", out.width = "70%"}
+
+```{r em-funnel, echo = FALSE, fig.align = 'center', fig.cap = "The enrollment funnel", out.width = "70%", include = FALSE, eval = FALSE}
 knitr::include_graphics('./../assets/images/enrollment_funnel.png')
 #![The enrollment funnel](assets/images/enrollment_funnel.png)
 ```
 
+\clearpage
 \newpage
 
-```{r events-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, public research universities"}
-include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
+```{r nd-religion, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Order 2 ego network of University of Notre Dame, vertices colored by religion"}
+include_graphics(file.path(figures_dir, 'nd_religtion.pdf'))
 ```
 
-\newpage
-
-```{r events-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, selective private universities"}
-include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
-```
 
 \newpage
 
@@ -736,6 +627,13 @@ include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_pubu.pdf'
 include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privu.pdf'))
 ```
 
+\newpage
+
+
+```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
+```
+
 \clearpage
 
 ```{r region-pubu-privu, echo = FALSE, fig.cap = "Geographic region of visited private high schools"}
@@ -756,6 +654,106 @@ include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
 ```
 
 
+```{r race-pubu-privu, echo = FALSE, eval = FALSE, include = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r race-pubu-privhs-pubhs, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools vs. visited private high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
+```
+
+\newpage
+
+```{r race-privu-privhs-pubhs, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools vs. visited private high schools, selective private universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_privu_privhs_pubhs.pdf'))
+```
+
+
+
+\newpage
+\clearpage
+
+# Supplemental Online Appendix
+
+
+
+\pagenumbering{gobble}
+\pagenumbering{arabic}
+\renewcommand*{\thepage}{A\arabic{page}}
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+
+\beginsupplement
+
+```{r pubu-count-matrix}
+
+kable(table_1mode_pubu$onemode_df, caption = 'One-mode public university count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(c(1), width = '13em') %>% 
+  column_spec(c(14), width = '8.5em') %>% 
+  column_spec(2:13, width = '7em') %>% 
+  column_spec(c(7, 9, 15, 16), width = '6em')
+```
+
+
+```{r privu-count-matrix}
+
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+
+kable(table_1mode_privu$onemode_df, caption = 'One-mode private universities count matrix') %>%
+  kable_styling(latex_options = 'scale_down') %>%
+  column_spec(1, width = '8.5em') %>%
+  column_spec(2:15, width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em')
+```
+
+
+
+
+\clearpage
+
+
+
+```{r u-cluster2-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[cluster_2, cluster_2], caption = 'Public and private universities percent matrix (cluster 2)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+```{r u-cluster3-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[cluster_3, cluster_3], caption = 'Public and private universities percent matrix (cluster 3)') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+
+```{r u-top-percent-matrix, eval=FALSE}
+kable(table_1mode_u$onemode_pct_df[c(1,2,3,4,5,6,7,8,9),c(1,2,3,4,5,6,7,8,9)], caption = 'Public and private universities, highest degree centrality') %>%
+  kable_styling(latex_options = 'scale_down')
+```
+
+\newpage
+
+```{r events-count-pubu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, public research universities"}
+include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
+```
+
+\newpage
+
+```{r events-count-privu, echo = FALSE, fig.align = 'left', out.width = "125%", fig.cap = "Number of visits by type and in-state vs. out-of-state, selective private universities"}
+include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
+```
+
+\newpage
+
+```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
+```
+
+```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private universities, colored by cluster"}
+knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
+```
+
 \newpage
 
 
@@ -769,34 +767,4 @@ include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
 include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privhs_pubhs.pdf'))
 
 ```
-
-\newpage
-
-```{r race-pubu-privu, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools"}
-include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privu.pdf'))
-```
-
-\newpage
-
-```{r race-pubu-privhs-pubhs, echo = FALSE, fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited private high schools vs. public high schools, public research universities"}
-include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
-```
-
-
-
-
-```{r plot-1mode-pubu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public institutions, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_pubu.pdf')
-```
-
-```{r plot-1mode-privu, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for private universities, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_privu.pdf')
-```
-
-```{r plot-1mode-u, fig.align = 'center', echo = FALSE, out.width = "100%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
-knitr::include_graphics('./../assets/figures/plot_1mode_u.pdf')
-```
-
-
-
 

@@ -214,6 +214,13 @@ plot_ego_graph(egos_psi_privu, '160755', graph_order = 1)
 plot_ego_graph(egos_psi_privu, '160755', graph_order = 2)
 plot_ego_graph(egos_psi_privu, '160755', graph_order = 'both')
 
+# Notre Dame 152080
+
+save_plot(
+  plot_ego_graph(egos_psi_u, '152080', characteristic = 'religion', values = religion_values, keys = religion_keys, 
+                 title = religion_title, graph_order = 'both', margin = -.3),
+  plot_name = 'nd_religtion.pdf')
+
 # Characteristics
 plot_ego_graph(egos_psi_privu, '160755', characteristic = 'region', values = region_values, keys = region_keys, title = region_title, graph_order = 1)
 plot_ego_graph(egos_psi_privu, '160755', characteristic = 'region', values = region_values, keys = region_keys, title = region_title, graph_order = 2)
@@ -439,9 +446,16 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
 }
 
 # Usage
-plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys)
+
+
+
+plot_2mode_graph(g_2mode_u, c_analysis = 'region', values = region_values, keys = region_keys, margin = -.8)
+plot_2mode_graph(g_2mode_u, c_analysis = 'region', values = region_values, keys = region_keys, layout = layout_with_fr, margin = -.7)
+plot_2mode_graph(g_2mode_u, c_analysis = 'region', values = region_values, keys = region_keys, layout = layout_with_kk, margin = -.6)
+
 plot_2mode_graph(g_2mode_privu, c_analysis = 'hclust', k = 4)
 plot_2mode_graph(g_2mode_pubu, c_analysis = 'fast', steps = 11, colors = c('red', 'orange', 'yellow', 'green', 'blue', 'purple'))
+
 
 # public and private universities
 
