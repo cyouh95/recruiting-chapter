@@ -184,7 +184,12 @@ WHAT REVIEWER IS ASKING:
 > **Reviewer concern**. 4. The analysis conducted in section 5.3.3—which is central to this study—does not provide a clear indication of the differences or similarities between public and private institutions in terms of their recruiting strategies. However, the finding that certain groups of public and private universities have more in common with each other than with other universities of the same control suggests the possibility of confounding factors such as geographic proximity, rankings, etc. Incorporating an analysis of these confounding factors would strengthen the study and likely require additional data analysis.
 
 SEEMS TO WANT ADDITIONAL ANALYSES TO ENGAGE W/ RQ3. I'M NOT SURE WHAT TO ADD HERE. COME BACK TO LATER.
+SOLUTION: SAY THAT WE THINK THE AUTHOR IS MAKING A GOOD POINT. INCLUDE THIS POINT AS A LIMITATION. AND AN AREA WHERE FUTURE RESEARCH SHOULD PROBE. SAY THAT IF THE REVIEWER IS DEAD SET ON SOME ADDITIONAL ANALYSES, I WILL MAKE THIS HAPPEN.
 
+POTENTIAL ANALYSIS YOU THOUGHT THROUGH
+
+- WHAT ARE THE CHARACTERISTICS OF PRIVATE SCHOOLS VISITED BY PUBLIC UNIVERSITIES BUT NOT BY PRIVATE UNIVERSITIES 
+- REGRESSION ANALYSES; SEPARATE REGRESSION FOR EACH UNIVERSITY
 
 > **Reviewer concern**. 5. The cross-sectional nature of the data limits the ability to draw conclusions about the direction of change in recruiting strategies between public and private institutions. This is especially significant given the convenient sample of institutions used in this study. These limitations should be discussed.
 
