@@ -62,6 +62,8 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
     univ_enroll = format(as.numeric(str_split(characteristics, '\\|', simplify = T)[,5]), big.mark = ',')
   )
 
+color_palette <- c('#d1b38e', '#8eb9d1', '#b48ed1', '#afd18e')
+
 
 ## -------------------
 ## SAVE PLOT FUNCTION
@@ -98,24 +100,35 @@ events_count <- events_df %>%
   )) %>%
   select(univ_abbrev, event_loc, event_type) %>% 
   group_by(univ_abbrev, event_loc, event_type) %>% 
-  summarise(count = n())
+  summarise(count = n()) %>% 
+  ungroup()
 
 # View(events_count[order(match(events_count$univ_abbrev, univ_sample_df$univ_abbrev)), ])
 
 events_count$event_type <- factor(events_count$event_type, levels = c('pub_hs', 'priv_hs', 'cc', 'other'))
 events_count$univ_abbrev <- factor(events_count$univ_abbrev, levels = rev(univ_sample_df$univ_abbrev))
 
-plot_event_count <- function(univ_sample, in_lim = 0, out_lim = 0, hjust = 0.1) {
-  sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
+plot_event_count <- function(univ_sample, in_lim = 0, out_lim = 0, hjust = 0.1, text_offset = 15) {
+  sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample) %>% 
+    mutate(
+      event_type = recode_factor(
+        event_type,
+        'pub_hs' = 'Public HS',
+        'priv_hs' = 'Private HS',
+        'cc' = 'Community College',
+        'other' = 'Other'
+      )
+    )
   
   ggplot(sub_events_count, aes(univ_abbrev)) +
     geom_bar(data = subset(sub_events_count, event_loc == 'instate'), aes(y = -count, fill = event_type), stat = 'identity', position = position_stack(reverse = T), width = 0.5) +
     geom_bar(data = subset(sub_events_count, event_loc == 'outofstate'), aes(y = count, fill = event_type), stat = 'identity', position = position_stack(reverse = T), width = 0.5) +
     geom_hline(yintercept = 0, colour = 'grey90', linetype = 'dotted') +
-    geom_text(data = subset(sub_events_count, event_loc == 'instate'), aes(y = -count, label = format(abs(stat(y)), big.mark = ',')), stat = 'summary', fun = sum, hjust = 1.2, size = 3) +
-    geom_text(data = subset(sub_events_count, event_loc == 'outofstate'), aes(y = count, label = format(abs(stat(y)), big.mark = ',')), stat = 'summary', fun = sum, hjust = 0, size = 3) +
+    geom_text(data = subset(sub_events_count, event_loc == 'instate'), aes(y = -count, label = format(abs(stat(y)), big.mark = ',')), stat = 'summary', fun = sum, hjust = 1, nudge_y = -text_offset, size = 3) +
+    geom_text(data = subset(sub_events_count, event_loc == 'outofstate'), aes(y = count, label = ifelse(abs(stat(y)) >= 1000, format(abs(stat(y)), big.mark = ','), str_pad(abs(stat(y)), 4, 'right'))), stat = 'summary', fun = sum, hjust = 0, nudge_y = text_offset, size = 3) +
     xlab('') + ylab('') + 
     expand_limits(y = c(-in_lim, out_lim)) +
+    scale_fill_manual(values = color_palette, name = 'Event type') +
     theme(
       panel.background = element_blank(),
       axis.text.x = element_blank(),
@@ -127,16 +140,16 @@ plot_event_count <- function(univ_sample, in_lim = 0, out_lim = 0, hjust = 0.1) 
 }
 
 
-save_plot(plot_event_count(univ_public_research, in_lim = 1500, out_lim = 4300, hjust = 0.17), 'events_count_pubu.pdf')
+save_plot(plot_event_count(univ_public_research, in_lim = 1500, out_lim = 4340, hjust = 0.17, text_offset = 40), 'events_count_pubu.pdf')
 save_plot(plot_event_count(univ_private_national, in_lim = 600, out_lim = 1350, hjust = 0.23), 'events_count_privu.pdf')
-save_plot(plot_event_count(univ_private_libarts, in_lim = 250, out_lim = 900), 'events_count_privc.pdf')
+save_plot(plot_event_count(univ_private_libarts, in_lim = 250, out_lim = 900, text_offset = 10), 'events_count_privc.pdf')
 
 
 ## --------------------------------------
 ## NUMBER OF PUBLIC VS PRIVATE HS VISITS
 ## --------------------------------------
 
-plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
+plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5, text_offset = 10) {
   sub_events_count <- events_count %>% filter(univ_abbrev %in% univ_sample)
   sub_events_count$univ_abbrev <- factor(sub_events_count$univ_abbrev, levels = rev(univ_sample))
   
@@ -149,7 +162,7 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
       tot_hs = instate + outofstate,
       pct_outofstate = round(outofstate / tot_hs * 100),
       label_text_cnt = tot_hs,
-      label_text_pct = str_c(pct_outofstate, '% outofstate')
+      label_text_pct = str_c(pct_outofstate, '% out-of-state')
     )
   
   sub_events_pubhs_pct <- sub_events_pubhs %>%
@@ -158,11 +171,23 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
       tot_hs = instate + outofstate,
       pct_outofstate = round(outofstate / tot_hs * 100),
       label_text_cnt = tot_hs,
-      label_text_pct = str_c(pct_outofstate, '% outofstate')
+      label_text_pct = str_c(pct_outofstate, '% out-of-state')
     )
   
+  sub_events_privhs <- sub_events_privhs %>% mutate(event_loc = recode(
+    event_loc,
+    'instate' = 'In-state',
+    'outofstate' = 'Out-of-state'
+  ))
+  
+  sub_events_pubhs <- sub_events_pubhs %>% mutate(event_loc = recode(
+    event_loc,
+    'instate' = 'In-state',
+    'outofstate' = 'Out-of-state'
+  ))
+  
   ggplot() +
-    geom_bar(data = sub_events_privhs, 
+    geom_bar(data = sub_events_privhs,
              mapping = aes(x = univ_abbrev, y = count, fill = event_loc), 
              stat = 'identity', 
              position = 'stack', 
@@ -171,9 +196,9 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
               aes(x = univ_abbrev, y = in_lim, label = str_c('Private HS (N=', label_text_cnt, ')')),
               hjust = 0, size = 2.5) +
     geom_text(data = sub_events_privhs_pct,
-              aes(x = univ_abbrev, y = tot_hs + 5, label = label_text_pct),
+              aes(x = univ_abbrev, y = tot_hs + text_offset, label = label_text_pct),
               hjust = 0, size = 2.5) +
-    geom_bar(data = sub_events_pubhs, 
+    geom_bar(data = sub_events_pubhs,
              mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_loc), 
              stat = 'identity', 
              position = 'stack', 
@@ -182,8 +207,9 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
               aes(x = as.numeric(univ_abbrev) - 0.4, y = in_lim, label = str_c('Public HS (N=', label_text_cnt, ')')),
               hjust = 0, size = 2.5) +
     geom_text(data = sub_events_pubhs_pct,
-              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs + 5, label = label_text_pct),
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = tot_hs + text_offset, label = label_text_pct),
               hjust = 0, size = 2.5) +
+    scale_fill_manual(values = color_palette, name = 'Event location') +
     theme(
       panel.background = element_blank(),
       axis.text.x = element_blank(),
@@ -196,9 +222,9 @@ plot_hs_count <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
 }
 
 
-save_plot(plot_hs_count(univ_public_research, in_lim = -1050, out_lim = 3100, vjust = 1.2), 'events_hs_count_pubu.pdf')
-save_plot(plot_hs_count(univ_private_national, in_lim = -300, out_lim = 900), 'events_hs_count_privu.pdf')
-save_plot(plot_hs_count(univ_private_libarts, in_lim = -200, out_lim = 600, vjust = 1.6), 'events_hs_count_privc.pdf')
+save_plot(plot_hs_count(univ_public_research, in_lim = -1050, out_lim = 3300, vjust = 1.2, text_offset = 20), 'events_hs_count_pubu.pdf')
+save_plot(plot_hs_count(univ_private_national, in_lim = -300, out_lim = 930, text_offset = 6), 'events_hs_count_privu.pdf')
+save_plot(plot_hs_count(univ_private_libarts, in_lim = -200, out_lim = 630, vjust = 1.6, text_offset = 4), 'events_hs_count_privc.pdf')
 
 
 
@@ -277,7 +303,7 @@ pubhs_universe_df %>% nrow()
 privhs_universe_df %>% nrow()
 
 
-plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5) {
+plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust = 1.5, text_offset = 5) {
   
   sub_df_actual <- data.frame(
     univ_abbrev = character(),
@@ -363,32 +389,45 @@ plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust
       label_text_pct = str_c(pct_priv, '%')
     )
   
+  sub_df_actual <- sub_df_actual %>% mutate(event_type = recode_factor(
+    event_type,
+    'pub_hs' = 'Public HS',
+    'priv_hs' = 'Private HS'
+  ))
+  
+  sub_df_proportional <- sub_df_proportional %>% mutate(event_type = recode_factor(
+    event_type,
+    'pub_hs' = 'Public HS',
+    'priv_hs' = 'Private HS'
+  ))
+  
   ggplot() +
     geom_bar(data = sub_df_actual, 
              mapping = aes(x = univ_abbrev, y = count, fill = event_type), 
              stat = 'identity', 
-             position = position_stack(reverse = T), 
+             position = position_stack(reverse = F), 
              width = 0.35) +
     geom_text(data = sub_df_actual_pct,
               aes(x = univ_abbrev, y = in_lim, label = 'Actual'),
               hjust = 0, size = 2.5) +
     geom_text(data = sub_df_actual_pct,
-              aes(x = univ_abbrev, y = priv_hs + 5, label = label_text_pct),
+              aes(x = univ_abbrev, y = priv_hs + text_offset, label = label_text_pct),
               hjust = 0, size = 2.5) +
     geom_text(data = sub_df_actual_pct,
-              aes(x = as.numeric(univ_abbrev) - 0.2, y = tot_hs + 5, label = str_c('N=', label_text_cnt)),
+              aes(x = as.numeric(univ_abbrev) - 0.2, y = tot_hs + text_offset, label = str_c('N=', label_text_cnt)),
               hjust = 0, size = 2.5) +
     geom_bar(data = sub_df_proportional, 
              mapping = aes(x = as.numeric(univ_abbrev) - 0.4, y = count, fill = event_type), 
              stat = 'identity', 
-             position = position_stack(reverse = T), 
+             position = position_stack(reverse = F), 
              width = 0.35) +
     geom_text(data = sub_df_proportional_pct,
               aes(x = as.numeric(univ_abbrev) - 0.4, y = in_lim, label = 'Proportional'),
               hjust = 0, size = 2.5) +
     geom_text(data = sub_df_proportional_pct,
-              aes(x = as.numeric(univ_abbrev) - 0.4, y = priv_hs + 5, label = label_text_pct),
+              aes(x = as.numeric(univ_abbrev) - 0.4, y = priv_hs + text_offset, label = label_text_pct),
               hjust = 0, size = 2.5) +
+    scale_fill_manual(values = color_palette, name = 'School type') +
     theme(
       panel.background = element_blank(),
       axis.text.x = element_blank(),
@@ -401,7 +440,7 @@ plot_actual_proportional <- function(univ_sample, in_lim = 0, out_lim = 0, vjust
 }
 
 
-save_plot(plot_actual_proportional(univ_public_research, in_lim = -700, out_lim = 3800), 'events_hs_actual_proportional_pubu.pdf')
+save_plot(plot_actual_proportional(univ_public_research, in_lim = -700, out_lim = 3850, text_offset = 15), 'events_hs_actual_proportional_pubu.pdf')
 save_plot(plot_actual_proportional(univ_private_national, in_lim = -300, out_lim = 1300), 'events_hs_actual_proportional_privu.pdf')
 save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim = 900), 'events_hs_actual_proportional_privc.pdf')
 
@@ -412,6 +451,17 @@ save_plot(plot_actual_proportional(univ_private_libarts, in_lim = -200, out_lim 
 
 # Ego tables for private HS visits currently show % for unique private HS (does not recount multiple visits to same HS)
 # View(events_df %>% filter(event_type == 'priv_hs', univ_id == '152080') %>% left_join(privhs_universe_df, by = 'school_id') %>% group_by(region) %>% summarise(count = n_distinct(school_id)) %>% mutate(pct = count / sum(count)))
+
+unique_visited_schools <- events_df %>% 
+  distinct() %>% 
+  group_by(univ_id, univ_abbrev, event_type) %>% 
+  summarise(count = n()) %>% 
+  ungroup() %>% 
+  pivot_wider(
+    names_from = 'event_type',
+    values_from = 'count',
+    values_fill = 0
+  )
 
 plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ', loc = c('instate', 'outofstate')) {
   
@@ -437,7 +487,8 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
   names(sub_df_universe_weighed) <- c('key', 'univ_name', 'value')
   
   sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
-    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
+    left_join(unique_visited_schools %>% select(univ_id, pub_hs), by = 'univ_id') %>% 
+    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ') [N=', format(pub_hs, big.mark = ','), ']'))
   
   sub_df_univs <- events_df %>%
     filter(event_type == 'pub_hs', event_loc %in% loc) %>%
@@ -461,10 +512,9 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
   
   ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
     geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
-    ggtitle('Title') +
     xlab('') + ylab('') +
     labs(fill = label) +
-    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+    scale_fill_manual(labels = label_text, values = color_palette) +
     scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
     theme(legend.position = 'top',
@@ -504,7 +554,8 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
   names(sub_df_universe_weighed) <- c('key', 'univ_name', 'value')
   
   sub_ego_df <- ego_df %>% filter(control == !!control, type == !!type) %>% 
-    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ')'))
+    left_join(unique_visited_schools %>% select(univ_id, priv_hs), by = 'univ_id') %>% 
+    mutate(univ_name = str_c(univ_name, ' (', get(str_c('univ_', plot_type)), ') [N=', format(priv_hs, big.mark = ','), ']'))
   
   sub_df_univs <- sub_ego_df %>% 
     select(univ_name, all_of(characteristic)) %>%
@@ -526,10 +577,9 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
   
   ggplot(sub_df, aes(fill = key, y = value, x = univ_name)) + 
     geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
-    ggtitle('Title') +
     xlab('') + ylab('') +
     labs(fill = label) +
-    scale_fill_manual(labels = label_text, values = c('#F8766D', '#7CAE00', '#00BFC4', '#C77CFF')) +
+    scale_fill_manual(labels = label_text, values = color_palette) +
     scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
     theme(legend.position = 'top',
@@ -551,13 +601,13 @@ plot_types <- c('region', 'religion', 'race', 'rank', 'enroll')
 for (i in seq_along(plot_types)) {
   a <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]])
   b <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'univ')
-  c <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'lib arts')
+  # c <- plot_characteristic_privhs(plot_types[[i]], var_names[[i]], var_labels[[i]], var_values[[i]], var_keys[[i]], control = 'private', type = 'lib arts')
   
   # pubu + privu + privc
-  pdf(file.path(figures_dir, str_c('ego_network_', plot_types[[i]], '_pubu_privu_privc.pdf')))
-  par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
-  grid.arrange(a, b, c, nrow = 3, ncol = 1)
-  dev.off()
+  # pdf(file.path(figures_dir, str_c('ego_network_', plot_types[[i]], '_pubu_privu_privc.pdf')))
+  # par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+  # grid.arrange(a, b, c, nrow = 3, ncol = 1)
+  # dev.off()
   
   # pubu + privu
   pdf(file.path(figures_dir, str_c('ego_network_', plot_types[[i]], '_pubu_privu.pdf')))
@@ -576,14 +626,14 @@ grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
 
 # pubu to pubhs (separated by instate/outofstate) + privhs (enroll)
-a <- plot_characteristic_privhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys)
-b <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'instate')
-c <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'outofstate')
-
-pdf(file.path(figures_dir, str_c('ego_network_enroll_pubu_privhs_pubhs_by_loc.pdf')))
-par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
-grid.arrange(a, b, c, nrow = 3, ncol = 1)
-dev.off()
+# a <- plot_characteristic_privhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys)
+# b <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'instate')
+# c <- plot_characteristic_pubhs('enroll', enroll_var, enroll_title, enroll_values, enroll_keys, loc = 'outofstate')
+# 
+# pdf(file.path(figures_dir, str_c('ego_network_enroll_pubu_privhs_pubhs_by_loc.pdf')))
+# par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+# grid.arrange(a, b, c, nrow = 3, ncol = 1)
+# dev.off()
 
 # pubu to pubhs + privhs (race)
 a <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
@@ -607,11 +657,11 @@ dev.off()
 
 
 # pubu to pubhs (separated by instate/outofstate) + privhs (race)
-a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
-b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'instate')
-c <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'outofstate')
-
-pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs_by_loc.pdf')))
-par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
-grid.arrange(a, b, c, nrow = 3, ncol = 1)
-dev.off()
+# a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
+# b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'instate')
+# c <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, loc = 'outofstate')
+# 
+# pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs_by_loc.pdf')))
+# par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+# grid.arrange(a, b, c, nrow = 3, ncol = 1)
+# dev.off()

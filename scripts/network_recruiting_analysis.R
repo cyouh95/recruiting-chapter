@@ -94,7 +94,7 @@ enroll_title <- '12th grade enrollment'
 
 save_plot <- function(graph_object, plot_name, paper = 'a4r', mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0)) {
   
-  pdf(str_c('./assets/figures/', plot_name), paper = paper)
+  pdf(str_c('./assets/figures/', plot_name), paper = paper, width = 1600, height = 1200)
   par(mfrow = c(1, 1))
   par(mar = mar + 0.1, mai = mai)
   
@@ -121,7 +121,7 @@ save_plot <- function(graph_object, plot_name, paper = 'a4r', mar = c(0, 0, 0, 0
 
 # RETURNS: ego plot of the specified univ
 
-plot_ego_graph <- function(ego_networks, univ_id, characteristic = NULL, values = NULL, keys = NULL, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), title = as.character(univ_df[univ_df$school_id == univ_id, 'school_name']), graph_order = 'both', margin = 0.0) {
+plot_ego_graph <- function(ego_networks, univ_id, characteristic = NULL, values = NULL, keys = NULL, colors = c('lightblue', 'lightgreen', 'violet', 'yellow'), title = as.character(univ_df[univ_df$school_id == univ_id, 'school_name']), graph_order = 'both', margin = 0.0, offset_univs = c()) {
 
   network <- ego_networks[[univ_id]]
   
@@ -181,6 +181,10 @@ plot_ego_graph <- function(ego_networks, univ_id, characteristic = NULL, values 
     # vertex attributes
     vertex.shape = 'circle',
     vertex.label = if_else(V(network)$type, V(network)$school_name, ''),
+    vertex.label.cex = if_else(V(network)$name == univ_id, 1.2, 0.8),
+    vertex.label.color = if_else(V(network)$name == univ_id, 'black', adjustcolor('black', 0.6)),
+    vertex.label.dist = if_else(V(network)$name %in% offset_univs, 0.5, 0),
+    # vertex.label.degree = 0,  # default is -pi/4 (i.e., -45 deg)
     vertex.color = vertex_color,
     vertex.size = vertex_size,
     vertex.frame.color = 'lightgray',
@@ -189,18 +193,19 @@ plot_ego_graph <- function(ego_networks, univ_id, characteristic = NULL, values 
     edge.lty = edge_lty,
     edge.width = edge_width,
     layout = graph_layout,  
-    main = str_to_title(title),
+    # main = str_to_title(title),
     margin = margin
   )  
 
   # Legend
   if (!is.null(characteristic)) {
     legend(
-      x = 0.8,
-      y = 0.0,
+      x = 'bottomright',
       legend = keys,
       fill = colors,
-      bty = 'n'
+      bty = 'n',
+      title = str_to_title(title),
+      title.adj = 0.15
     )
   }
 }
@@ -218,8 +223,8 @@ plot_ego_graph(egos_psi_privu, '160755', graph_order = 'both')
 
 save_plot(
   plot_ego_graph(egos_psi_u, '152080', characteristic = 'religion', values = religion_values, keys = religion_keys, 
-                 title = religion_title, graph_order = 'both', margin = -.3),
-  plot_name = 'nd_religtion.pdf')
+                 title = religion_title, graph_order = 'both', margin = -0.1, offset_univs = c('160755')),
+  plot_name = 'nd_religion.pdf')
 
 # Characteristics
 plot_ego_graph(egos_psi_privu, '160755', characteristic = 'region', values = region_values, keys = region_keys, title = region_title, graph_order = 1)
@@ -564,6 +569,8 @@ plot_1mode_graph <- function(twomode_network, mode, c_analysis, k = NULL, h = NU
   plot(
     x = network, 
     vertex.label = vertex_label,
+    vertex.label.cex = 0.8,
+    vertex.label.color = adjustcolor('black', 0.8),
     vertex.color = vertex_color,
     vertex.frame.color = 'lightgray',
     vertex.shape = 'circle',
@@ -606,7 +613,7 @@ plot_1mode_graph(g_2mode, mode = 'psi', c_analysis = 'hclust', k = 6, colors = c
 
 
 # Private univs
-save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'fast', no = 4),
+save_plot(plot_1mode_graph(g_2mode_privu, mode = 'psi', c_analysis = 'fast', no = 4, margin = -0.05),
           plot_name = 'plot_1mode_privu.pdf')
 
 # private colleges
@@ -615,12 +622,12 @@ save_plot(plot_1mode_graph(g_2mode_privc, mode = 'psi', c_analysis = 'fast', no 
           plot_name = 'plot_1mode_privc.pdf')
 
 # Public univs
-save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'fast', no = 4),
+save_plot(plot_1mode_graph(g_2mode_pubu, mode = 'psi', c_analysis = 'fast', no = 4, margin = -0.05),
           plot_name = 'plot_1mode_pubu.pdf')
 
 
 # private and public universities
-save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 4),
+save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 4, margin = -0.05),
           plot_name = 'plot_1mode_u.pdf')
 
 save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'fast', no = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),

@@ -1,0 +1,345 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+header-includes:
+      - \newcommand{\beginsupplement}{
+      - \setcounter{table}{0}  
+      - \renewcommand{\thetable}{S\arabic{table}} 
+      - \setcounter{figure}{0} 
+      - \renewcommand{\thefigure}{S\arabic{figure}}}
+---
+
+\pagenumbering{gobble}
+\begin{landscape}
+
+```{r setup, include=FALSE}
+library(knitr)
+library(bookdown)
+
+# https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_pdf.pdf
+library(kableExtra)
+library(tidyverse)
+library(gridExtra)
+library(scales)
+
+knitr::opts_chunk$set(echo = F, message = F)
+
+data_dir <- file.path('..', 'data')
+tables_dir <- file.path('..', 'assets', 'tables')
+figures_dir <- file.path('..', 'assets', 'figures')
+
+univ_sample_df <- readRDS(file.path(data_dir, 'univ_sample.RDS')) %>%
+  arrange(desc(classification), rank)
+# events_df <- readRDS(file.path(data_dir, 'events_data.RDS'))
+# 
+# pubhs_universe_df <- readRDS(file.path(data_dir, 'pubhs_universe.RDS'))
+# privhs_universe_df <- readRDS(file.path(data_dir, 'privhs_universe.RDS'))
+
+# ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>% 
+#   mutate(
+#     univ_region = str_split(characteristics, '\\|', simplify = T)[,1],
+#     univ_religion = str_split(characteristics, '\\|', simplify = T)[,2],
+#     univ_race = round(as.numeric(str_split(characteristics, '\\|', simplify = T)[,3]), 1),
+#     univ_rank = as.numeric(str_split(characteristics, '\\|', simplify = T)[,4]),
+#     univ_enroll = format(as.numeric(str_split(characteristics, '\\|', simplify = T)[,5]), big.mark = ',')
+#   )
+```
+
+```{r sample-characteristics}
+univ_sample <- univ_sample_df %>% 
+  filter(classification != 'private_libarts') %>% 
+  select(classification, univ_abbrev, rank, satactcomp25, satactcomp75, tfuginst, tfugoutst, ugftptfreshtot, freshoutstpct, pgrnt_p, pctfreshwh, pctfreshbl, pctfreshap, pctfreshhi, pctfreshal) %>% 
+  mutate(
+    classification = recode(
+      classification,
+      'public_research' = 'Public Research',
+      'private_national' = 'Private National'
+    ),
+    satactcomp25 = format(round(satactcomp25), big.mark = ',', trim = T),
+    satactcomp75 = format(round(satactcomp75), big.mark = ',', trim = T),
+    tfuginst = str_c('\\$', format(round(tfuginst), big.mark = ',', trim = T)),
+    tfugoutst = str_c('\\$', format(round(tfugoutst), big.mark = ',', trim = T)),
+    ugftptfreshtot = format(round(ugftptfreshtot), big.mark = ',', trim = T),
+    freshoutstpct = str_c(format(round(freshoutstpct * 100, 1), nsmall = 1), '\\%'),
+    pgrnt_p = str_c(format(round(pgrnt_p, 1), nsmall = 1), '\\%'),
+    pctfreshwh = str_c(format(round(pctfreshwh, 1), nsmall = 1), '\\%'),
+    pctfreshbl = str_c(format(round(pctfreshbl, 1), nsmall = 1), '\\%'),
+    pctfreshap = str_c(format(round(pctfreshap, 1), nsmall = 1), '\\%'),
+    pctfreshhi = str_c(format(round(pctfreshhi, 1), nsmall = 1), '\\%'),
+    pctfreshal = str_c(format(round(pctfreshal, 1), nsmall = 1), '\\%')
+  ) %>% 
+  arrange(desc(classification), rank)
+
+names(univ_sample) <- c('Classification', 'University', 'Rank', '25th Percentile SAT/ACT Composite Score', '75th Percentile SAT/ACT Composite Score', 'In-State Tuition + Fees', 'Out-of-State Tuition + Fees', 'Total Enrolled Freshmen', 'Percent Out-of-State Freshmen', 'Percent Pell Recipients', 'Percent White Freshmen', 'Percent Black Freshmen', 'Percent Asian Freshmen', 'Percent Hispanic Freshmen', 'Percent International Freshmen')
+
+kable(univ_sample, caption = "Characteristics of universities in analysis sample", booktabs = T, escape = F, align = 'c') %>%
+  collapse_rows(columns = 1, latex_hline = 'major', valign = 'middle') %>%
+  column_spec(c(2), width = '4.5cm', latex_valign = 'm') %>% 
+  column_spec(c(3), width = '1.8cm', latex_valign = 'm') %>% 
+  column_spec(c(4, 5), width = '3.8cm', latex_valign = 'm') %>% 
+  column_spec(c(6, 8, 10:14), width = '2.4cm', latex_valign = 'm') %>% 
+  column_spec(c(7), width = '2.7cm', latex_valign = 'm') %>% 
+  column_spec(c(9, 15), width = '3cm', latex_valign = 'm') %>% 
+  kable_styling(font_size = 13, latex_options = c('scale_down', 'hold_position'))
+```
+
+\clearpage
+
+```{r sample-population-characteristics}
+# Source: https://docs.google.com/spreadsheets/d/1e8lnU2YhJVigEYR55tc0pijsm52WKaEua8MNaYXTtM4
+# Also in methodology: https://emraresearch.org/methodology
+
+# 49 public research
+pop_pubu <- c('151351', '171100', '180461', '188030', '199193', '147703', '204857', '207388', '214777', '186380', '149222', '196088', '196097', '204796', '100751', '197036', '164155', '104179', '106397', '110635', '110644', '110653', '110662', '110671', '110680', '201885', '126614', '129020', '139959', '141574', '225511', '142285', '155317', '161253', '163286', '166629', '170976', '181464', '187985', '199120', '215293', '217484', '218663', '230764', '234076', '236948', '230728', '234030', '172644')
+
+# 49 private national
+pop_privu <- c('194824', '139658', '190150', '223232', '212054', '193900', '166027', '144050', '130794', '243744', '166683', '198419', '215062', '162928', '182670', '110404', '147767', '217156', '190415', '227757', '152080', '186131', '221999', '131496', '164988', '160755', '213543', '135726', '216597', '228246', '191241', '186867', '131159', '228875', '239105', '127060', '122436', '207971', '179159', '168148', '164924', '195030', '179867', '201645', '197708', '199847', '211440', '121150', '123961')
+
+sample_pubu <- (univ_sample_df %>% filter(classification == 'public_research'))$univ_id
+sample_privu <- (univ_sample_df %>% filter(classification == 'private_national'))$univ_id
+
+univ_pop <- read.csv(file.path(data_dir, 'ipeds_data.csv'), header = TRUE, na.strings = c('', 'NULL', 'NA'), stringsAsFactors = FALSE, colClasses = c('unitid' = 'character')) %>% as_tibble() %>%
+  filter(endyear == 2017, unitid %in% c(pop_pubu, pop_privu, sample_pubu, sample_privu)) %>% 
+  select(unitid, satactcomp25, satactcomp75, tfuginst, tfugoutst, ugftptfreshtot, freshoutstpct, pgrnt_n, cohortsfaef, ugftptfreshwhmf, ugftptfreshblmf, ugftptfreshapmf, ugftptfreshhimf, ugftptfreshalmf, ugftptfreshmrmf, ugftptfreshnamf, ugftptfreshunmf, ugftptfreshasmf, ugftptfreshnhmf) %>% 
+  mutate(
+    pgrnt_p = pgrnt_n / cohortsfaef * 100,
+    pctfreshwh = ugftptfreshwhmf / ugftptfreshtot * 100,
+    pctfreshbl = ugftptfreshblmf / ugftptfreshtot * 100,
+    pctfreshap = ugftptfreshapmf / ugftptfreshtot * 100,  # ap = as + nh
+    pctfreshhi = ugftptfreshhimf / ugftptfreshtot * 100,
+    pctfreshal = ugftptfreshalmf / ugftptfreshtot * 100,
+    pctfreshmr = ugftptfreshmrmf / ugftptfreshtot * 100,
+    pctfreshna = ugftptfreshnamf / ugftptfreshtot * 100,
+    pctfreshun = ugftptfreshunmf / ugftptfreshtot * 100,
+    pctfreshas = ugftptfreshasmf / ugftptfreshtot * 100,
+    pctfreshnh = ugftptfreshnhmf / ugftptfreshtot * 100
+  ) %>% 
+  select(unitid, satactcomp25, satactcomp75, tfuginst, tfugoutst, ugftptfreshtot, freshoutstpct, pgrnt_p, pctfreshwh, pctfreshbl, pctfreshap, pctfreshhi, pctfreshal)
+
+format_data <- function(univ_ids) {
+  apply(univ_pop %>% filter(unitid %in% univ_ids) %>% select(-unitid), 2, function(x) quantile(x, probs = c(0.25, 0.5, 0.75), na.rm = T)) %>% 
+    as.data.frame() %>% 
+    mutate(
+      satactcomp25 = format(round(satactcomp25), big.mark = ',', trim = T),
+      satactcomp75 = format(round(satactcomp75), big.mark = ',', trim = T),
+      tfuginst = str_c('\\$', format(round(tfuginst), big.mark = ',', trim = T)),
+      tfugoutst = str_c('\\$', format(round(tfugoutst), big.mark = ',', trim = T)),
+      ugftptfreshtot = format(round(ugftptfreshtot), big.mark = ',', trim = T),
+      freshoutstpct = str_c(format(round(freshoutstpct * 100, 1), nsmall = 1), '\\%'),
+      pgrnt_p = str_c(format(round(pgrnt_p, 1), nsmall = 1), '\\%'),
+      pctfreshwh = str_c(format(round(pctfreshwh, 1), nsmall = 1), '\\%'),
+      pctfreshbl = str_c(format(round(pctfreshbl, 1), nsmall = 1), '\\%'),
+      pctfreshap = str_c(format(round(pctfreshap, 1), nsmall = 1), '\\%'),
+      pctfreshhi = str_c(format(round(pctfreshhi, 1), nsmall = 1), '\\%'),
+      pctfreshal = str_c(format(round(pctfreshal, 1), nsmall = 1), '\\%')
+    ) %>% 
+    t()
+}
+
+univ_pop_df <- cbind(
+  format_data(sample_pubu),
+  format_data(pop_pubu),
+  format_data(sample_privu),
+  format_data(pop_privu)
+)
+rownames(univ_pop_df) <- c('25th Percentile SAT/ACT Composite Score', '75th Percentile SAT/ACT Composite Score', 'In-State Tuition + Fees', 'Out-of-State Tuition + Fees', 'Total Enrolled Freshmen', 'Percent Out-of-State Freshmen', 'Percent Pell Recipients', 'Percent White Freshmen', 'Percent Black Freshmen', 'Percent Asian Freshmen', 'Percent Hispanic Freshmen', 'Percent International Freshmen')
+colnames(univ_pop_df) <- rep(c('25th percentile', '50th percentile', '75th percentile'), 4)
+
+kable(univ_pop_df, caption = "Characteristics of universities in analysis sample compared to data collection sample", booktabs = T, escape = F, align = 'c', linesep = '') %>%
+  add_header_above(header = c(' ' = 1, 'Analysis sample (N=15)' = 3, 'Data collection sample (N=49)' = 3, 'Analysis sample (N=14)' = 3, 'Data collection sample (N=49)' = 3)) %>%
+  add_header_above(header = c(' ' = 1, 'Public research universities' = 6, 'Selective private universities' = 6)) %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down') 
+```
+
+\clearpage
+
+```{r pubu-percent-matrix}
+table_1mode_pubu <- readRDS(file = file.path(tables_dir, 'table_1mode_pubu.RDS'))
+rownames(table_1mode_pubu$onemode_pct_df) <- colnames(table_1mode_pubu$onemode_pct_df)
+
+kable(table_1mode_pubu$onemode_pct_df, caption = 'One-mode public university percent matrix', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(7, 9, 15), width = '5em') %>%
+  column_spec(c(4, 12), width = '5.5em') %>%
+  column_spec(c(6, 10, 16), width = '6em') %>%
+  column_spec(c(2, 11, 13), width = '6.5em') %>%
+  column_spec(c(3, 8), width = '7em') %>%
+  column_spec(c(5), width = '7.5em') %>%
+  column_spec(c(14), width = '8.8em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down') 
+```
+
+```{r privu-percent-matrix}
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+rownames(table_1mode_privu$onemode_pct_df) <- colnames(table_1mode_privu$onemode_pct_df)
+
+kable(table_1mode_privu$onemode_pct_df, caption = 'One-mode private university percent matrix', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(2, 3, 7:9, 11), width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em') %>% 
+  column_spec(14:15, width = '8.5em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down') 
+```
+
+\clearpage
+
+```{r privu-percent-visited-by-pubu-matrix}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
+rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
+
+kable(table_1mode_u$onemode_pct_df[c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29),c(2,3,4,5,6,8,10,11,12,14,15,19,20,26)], caption = 'For private universities, the percent of high schools visited by public universities', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(2, 3, 7:9, 11), width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em') %>% 
+  column_spec(14:15, width = '8.5em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down')
+```
+
+```{r pubu-percent-visited-by-privu-matrix}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
+rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
+
+kable(table_1mode_u$onemode_pct_df[c(2,3,4,5,6,8,10,11,12,14,15,19,20,26),c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29)], caption = 'For public universities, the percent of high schools visited by private universities', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(7, 9, 15), width = '5em') %>%
+  column_spec(c(4, 12), width = '5.5em') %>%
+  column_spec(c(6, 10, 16), width = '6em') %>%
+  column_spec(c(2, 11, 13), width = '6.5em') %>%
+  column_spec(c(3, 8), width = '7em') %>%
+  column_spec(c(5), width = '7.5em') %>%
+  column_spec(c(14), width = '8.8em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down')
+```
+
+\clearpage
+\newpage
+
+```{r nd-religion, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Order 2 ego network of University of Notre Dame, vertices colored by religion"}
+include_graphics(file.path(figures_dir, 'nd_religion.pdf'))
+```
+
+\newpage
+
+```{r events-hs-count-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Number of visits to public and private high schools by public research universities"}
+include_graphics(file.path(figures_dir, 'events_hs_count_pubu.pdf'))
+```
+
+\newpage
+
+```{r events-hs-count-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Number of visits to public and private high schools by selective private universities"}
+include_graphics(file.path(figures_dir, 'events_hs_count_privu.pdf'))
+```
+
+\newpage
+
+```{r actual-proportional-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Actual versus proportional number of private school visits, public research universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_pubu.pdf'))
+```
+
+\clearpage
+
+```{r actual-proportional-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Actual versus proportional number of private school visits, selective private universities"}
+include_graphics(file.path(figures_dir, 'events_hs_actual_proportional_privu.pdf'))
+```
+
+\newpage
+
+```{r plot-1mode-u, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for public and private universities, colored by cluster"}
+knitr::include_graphics(file.path(figures_dir, 'plot_1mode_u.pdf'))
+```
+
+\clearpage
+
+```{r region-pubu-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Geographic region of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_region_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r religion-pubu-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Religious affiliation of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_religion_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r rank-pubu-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "High school ranking of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_rank_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r race-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools vs. visited private high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'))
+```
+
+\newpage
+
+```{r race-privu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools vs. visited private high schools, selective private universities"}
+include_graphics(file.path(figures_dir, 'ego_network_race_privu_privhs_pubhs.pdf'))
+```
+
+
+\beginsupplement
+\clearpage
+\newpage
+
+```{r pubu-count-matrix}
+rownames(table_1mode_pubu$onemode_df) <- colnames(table_1mode_pubu$onemode_df)
+
+kable(table_1mode_pubu$onemode_df, caption = 'One-mode public university count matrix', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(7, 9, 15), width = '5em') %>%
+  column_spec(c(4, 12), width = '5.5em') %>%
+  column_spec(c(6, 10, 16), width = '6em') %>%
+  column_spec(c(2, 11, 13), width = '6.5em') %>%
+  column_spec(c(3, 8), width = '7em') %>%
+  column_spec(c(5), width = '7.5em') %>%
+  column_spec(c(14), width = '8.8em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down') 
+```
+
+```{r privu-count-matrix}
+table_1mode_privu <- readRDS(file = file.path(tables_dir, 'table_1mode_privu.RDS'))
+rownames(table_1mode_privu$onemode_df) <- colnames(table_1mode_privu$onemode_df)
+
+kable(table_1mode_privu$onemode_df, caption = 'One-mode private universities count matrix', booktabs = T, align = 'c', linesep = '') %>%
+  column_spec(c(2, 3, 7:9, 11), width = '7em') %>% 
+  column_spec(c(4:6, 10, 12, 13), width = '6em') %>% 
+  column_spec(14:15, width = '8.5em') %>%
+  kable_styling(font_size = 13, latex_options = 'scale_down') 
+```
+
+\newpage
+
+```{r events-count-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Number of visits by type and in-state vs. out-of-state, public research universities"}
+include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
+```
+
+\newpage
+
+```{r events-count-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Number of visits by type and in-state vs. out-of-state, selective private universities"}
+include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
+```
+
+\newpage
+
+```{r plot-1mode-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for public institutions, colored by cluster"}
+knitr::include_graphics(file.path(figures_dir, 'plot_1mode_pubu.pdf'))
+```
+
+```{r plot-1mode-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for private universities, colored by cluster"}
+knitr::include_graphics(file.path(figures_dir, 'plot_1mode_privu.pdf'))
+```
+
+\newpage
+
+
+```{r enroll-pubu-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "12th grade enrollment of visited private high schools"}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privu.pdf'))
+```
+
+\newpage
+
+```{r enroll-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "12th grade enrollment of visited private high schools vs. public high schools, public research universities"}
+include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privhs_pubhs.pdf'))
+```
+
+\end{landscape}
+
+\restoregeometry
