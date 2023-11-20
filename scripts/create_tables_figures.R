@@ -636,9 +636,8 @@ dev.off()
 # dev.off()
 
 # pubu to pubhs + privhs (race)
-a <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
-b <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
-
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
 
 pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
@@ -646,9 +645,8 @@ grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
 
 # privu to pubhs + privhs (race)
-a <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
-b <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
-
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
 
 pdf(file.path(figures_dir, str_c('ego_network_race_privu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
