@@ -275,6 +275,18 @@ include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'
 include_graphics(file.path(figures_dir, 'ego_network_race_privu_privhs_pubhs.pdf'))
 ```
 
+\newpage
+
+```{r race-comp-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools vs. visited private high schools in the South, public research universities"}
+include_graphics(file.path(figures_dir, 'race_comp_pubu_privhs_pubhs.pdf'))
+```
+
+\newpage
+
+```{r race-comp-privu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools vs. visited private high schools in the South, selective private universities"}
+include_graphics(file.path(figures_dir, 'race_comp_privu_privhs_pubhs.pdf'))
+```
+
 
 \beginsupplement
 \clearpage
@@ -307,6 +319,12 @@ kable(table_1mode_privu$onemode_df, caption = 'One-mode private universities cou
 
 \newpage
 
+```{r plot-2mode, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Two-mode network for private high schools and all visiting universities, colored by cluster"}
+include_graphics(file.path(figures_dir, 'plot_2mode_all.pdf'))
+```
+
+\newpage
+
 ```{r events-count-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Number of visits by type and in-state vs. out-of-state, public research universities"}
 include_graphics(file.path(figures_dir, 'events_count_pubu.pdf'))
 ```
@@ -319,11 +337,11 @@ include_graphics(file.path(figures_dir, 'events_count_privu.pdf'))
 
 \newpage
 
-```{r plot-1mode-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for public institutions, colored by cluster"}
+```{r plot-1mode-pubu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for public research institutions, colored by cluster"}
 knitr::include_graphics(file.path(figures_dir, 'plot_1mode_pubu.pdf'))
 ```
 
-```{r plot-1mode-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for private universities, colored by cluster"}
+```{r plot-1mode-privu, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "One-mode network for selective private universities, colored by cluster"}
 knitr::include_graphics(file.path(figures_dir, 'plot_1mode_privu.pdf'))
 ```
 

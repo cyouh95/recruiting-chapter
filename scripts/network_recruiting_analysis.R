@@ -92,9 +92,9 @@ enroll_title <- '12th grade enrollment'
   # mar: margin in lines (default: c(0, 0, 0, 0))
   # mai: margin in inches (default: c(0, 0, 0, 0))
 
-save_plot <- function(graph_object, plot_name, paper = 'a4r', mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0)) {
+save_plot <- function(graph_object, plot_name, paper = 'a4r', mar = c(0, 0, 0, 0), mai = c(0, 0, 0, 0), w = 1600, h = 1200) {
   
-  pdf(str_c('./assets/figures/', plot_name), paper = paper, width = 1600, height = 1200)
+  pdf(str_c('./assets/figures/', plot_name), paper = paper, w = 1600, h = 1200)
   par(mfrow = c(1, 1))
   par(mar = mar + 0.1, mai = mai)
   
@@ -426,6 +426,8 @@ plot_2mode_graph <- function(twomode_network, c_analysis, k = NULL, h = NULL, no
   plot(
     x = twomode_network, 
     vertex.label = if_else(V(twomode_network)$type, V(twomode_network)$school_name, ''),
+    vertex.label.cex = 0.6,
+    vertex.label.color = adjustcolor('black', 0.8),
     vertex.color = vertex_color,
     vertex.frame.color = 'lightgray',
     vertex.shape = 'circle',
@@ -470,7 +472,10 @@ plot_2mode_graph(g_2mode_pubu, c_analysis = 'fast', steps = 11, colors = c('red'
 # save_plot(plot_1mode_graph(g_2mode_u, mode = 'psi', c_analysis = 'hclust', k = 5, colors = c('lightblue', 'green', 'violet', 'yellow','coral')),
 #           plot_name = 'plot_1mode_u_k5.pdf')
 
-# Region characteristic
+save_plot(plot_2mode_graph(g_2mode_u, c_analysis = 'hclust', k = 4, margin = -0.6),
+          plot_name = 'plot_2mode_u.pdf')
+
+ # Region characteristic
 # save_plot(plot_2mode_graph(g_2mode, c_analysis = 'region', values = region_values, keys = region_keys, margin = -0.6),
 #           plot_name = 'plot_2mode_all_region.pdf')
 
@@ -487,10 +492,10 @@ plot_2mode_graph(g_2mode_pubu, c_analysis = 'fast', steps = 11, colors = c('red'
 #           plot_name = 'plot_2mode_pubu_outst.pdf')
 
 # All
-# save_plot(plot_2mode_graph(g_2mode, c_analysis = 'hclust', k = 4, margin = -0.74),
-#           plot_name = 'plot_2mode_all.pdf')
-
-# All, out-of-state public univs
+save_plot(plot_2mode_graph(g_2mode, c_analysis = 'hclust', k = 4, margin = -0.5),
+          plot_name = 'plot_2mode_all.pdf')
+ 
+   # All, out-of-state public univs
 # save_plot(plot_2mode_graph(g_2mode, pubu_visits = 'outofstate', c_analysis = 'hclust', k = 4, margin = -0.74),
 #           plot_name = 'plot_2mode_all_pubu_outst.pdf')
 

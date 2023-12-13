@@ -63,6 +63,7 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
   )
 
 color_palette <- c('#d1b38e', '#8eb9d1', '#b48ed1', '#afd18e')
+color_palette_2 <- c('#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00')
 
 
 ## -------------------
@@ -663,3 +664,129 @@ dev.off()
 # par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
 # grid.arrange(a, b, c, nrow = 3, ncol = 1)
 # dev.off()
+
+
+## --------------------------------------------------------
+## RACIAL COMPOSITION OF VISITED HIGH SCHOOLS IN THE SOUTH
+## --------------------------------------------------------
+
+southern_states <- c('AL', 'AR', 'DC', 'DE', 'FL', 'GA', 'KY', 'LA', 'MD', 'MS', 'NC', 'OK', 'SC', 'TN', 'TX', 'VA', 'WV')
+
+southern_pubhs <- pubhs_universe_df %>% 
+  filter(state_code %in% southern_states) %>% 
+  select(ncessch, g12, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces) %>% 
+  mutate(
+    cnt_white = pct_white / 100 * g12,
+    cnt_black = pct_black / 100 * g12,
+    cnt_hispanic = pct_hispanic / 100 * g12,
+    cnt_asian = pct_asian / 100 * g12,
+    cnt_amerindian = pct_amerindian / 100 * g12,
+    cnt_nativehawaii = pct_nativehawaii / 100 * g12,
+    cnt_tworaces = pct_tworaces / 100 * g12
+  )
+
+southern_privhs <- privhs_universe_df %>% 
+  filter(state_code %in% southern_states) %>% 
+  select(school_id, enroll, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces) %>% 
+  mutate(
+    cnt_white = pct_white / 100 * enroll,
+    cnt_black = pct_black / 100 * enroll,
+    cnt_hispanic = pct_hispanic / 100 * enroll,
+    cnt_asian = pct_asian / 100 * enroll,
+    cnt_amerindian = pct_amerindian / 100 * enroll,
+    cnt_nativehawaii = pct_nativehawaii / 100 * enroll,
+    cnt_tworaces = pct_tworaces / 100 * enroll
+  )
+
+southern_pubhs_comp <- rbind(
+  colMeans(southern_pubhs %>% select(starts_with('pct_'))),
+  colSums(southern_pubhs %>% select(starts_with('cnt_'))) / sum(southern_pubhs$g12) %>% sum() * 100
+) %>%
+  as.data.frame()
+
+southern_pubhs_comp$univ_abbrev <- c('Public HS, universe', 'Public HS, universe (wt)')
+
+southern_privhs_comp <- rbind(
+  colMeans(southern_privhs %>% select(starts_with('pct_'))),
+  colSums(southern_privhs %>% select(starts_with('cnt_'))) / sum(southern_privhs$enroll) %>% sum() * 100
+) %>%
+  as.data.frame()
+
+southern_privhs_comp$univ_abbrev <- c('Private HS, universe', 'Private HS, universe (wt)')
+
+plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) { 
+  southern_comp <- schools_df %>% 
+    filter(classification == univ_type, event_type == hs_type, event_state %in% southern_states) %>% 
+    group_by(univ_abbrev) %>%
+    summarise(
+      pct_white = mean(pct_white),
+      pct_black = mean(pct_black),
+      pct_hispanic = mean(pct_hispanic),
+      pct_asian = mean(pct_asian),
+      pct_amerindian = mean(pct_amerindian),
+      pct_nativehawaii = mean(pct_nativehawaii),
+      pct_tworaces = mean(pct_tworaces),
+      n = n()
+    ) %>% 
+    ungroup() %>% 
+    left_join(univ_sample_df %>% select(univ_abbrev, rank), by = 'univ_abbrev') %>% 
+    mutate(     
+      univ_abbrev = str_c(univ_abbrev, ' [N=', n, ']')
+    ) %>% 
+    arrange(rank)
+  
+  univ_order <- southern_comp$univ_abbrev
+  
+  southern_comp <- southern_comp %>% 
+    select(-n, -rank) %>% 
+    bind_rows(universe_df) %>% 
+    pivot_longer(
+      cols = -univ_abbrev,
+      names_prefix = 'pct_',
+      names_to = 'race',
+      values_to = 'pct'
+    )
+  
+  southern_comp$univ_abbrev <- factor(southern_comp$univ_abbrev, levels = rev(c(universe_df$univ_abbrev, univ_order)))
+  southern_comp$race <- factor(southern_comp$race, levels = c('white', 'black', 'hispanic', 'asian', 'amerindian', 'nativehawaii', 'tworaces'))
+  
+  print(southern_comp, n = 500)
+  
+  ggplot(southern_comp, aes(fill = race, y = pct, x = univ_abbrev)) +
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
+    xlab('') + ylab('') +
+    scale_fill_manual(labels = c('White', 'Black', 'Latinx', 'Asian', 'American Indian', 'Native Hawaiian', '2+ Races'), values = color_palette_2, name = 'Race') +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          text = element_text(size = 8)) +
+    guides(fill = guide_legend(nrow = 1)) +
+    coord_flip()
+}
+
+# Public universities
+a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'public_research', 'priv_hs')
+b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'public_research', 'pub_hs')
+
+pdf(file.path(figures_dir, str_c('race_comp_pubu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()
+
+# Private universities
+a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'private_national', 'priv_hs')
+b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'private_national', 'pub_hs')
+
+pdf(file.path(figures_dir, str_c('race_comp_privu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()
+
+# First row is universe of all southern HS unweighted and weighted by 12th grade enrollment
+# Following rows are all unweighted %, where each visited HS is counted once (not double count for multiple visits)
