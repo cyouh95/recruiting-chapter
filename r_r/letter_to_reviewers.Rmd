@@ -114,12 +114,12 @@ We considered an alternative to your analysis that focuses on visits to metropol
 
 > **Reviewer concern**. Can you walk us through why you used two different sources to choose colleges (Carnegie for publics and USNWR for privates)? If we want to examine samples of public and private colleges that are similar, wouldn't it make sense to use one classification method to pick schools? You get at this a little bit later, but I'd still like to know your logic.
 
-**Author response**: The revised Data and Sample section states that "The rationale for different criteria for inclusion across different university types is because these criteria reflected the interest of a foundation that funded the data collection." We agree with Reviewer 1<!--TODO: Is this comment by Reviewer 1 or 2? This is under the level-1 section "Response to Reviewer 2"--> that making comparisons between public and private universities would be more appropriate if we used the same classification method to define the data collection sample for all universities. The revised manuscript now includes a Limitations subsection that describes this limitation and its consequences.
+**Author response**: The revised Data and Sample section states that "The rationale for different criteria for inclusion across different university types is because these criteria reflected the interest of a foundation that funded the data collection." We agree with Reviewer 2 that making comparisons between public and private universities would be more appropriate if we used the same classification method to define the data collection sample for all universities. The revised manuscript now includes a Limitations subsection that describes this limitation and its consequences.
 
 
 > **Reviewer concern**. What are the drawbacks of a convenience sample? The authors do a great job breaking down network analysis techniques, so I want to ensure that they aren't assuming knowledge elsewhere.
 
-**Author response**: This is an excellent suggestion by Reviewer 1<!--TODO: Is this comment by Reviewer 1 or 2? This is under the level-1 section "Response to Reviewer 2"-->. The new Limitations section in the revised manuscript discusses the drawbacks of a convenience sample.
+**Author response**: This is an excellent suggestion by Reviewer 2. The new Limitations section in the revised manuscript discusses the drawbacks of a convenience sample.
 
 > **Reviewer concern**. How are you certain that the colleges in your final sample posted all of the recruiting events they hosted/took part in? Did you double-check with admissions offices?
 
