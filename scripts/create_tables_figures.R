@@ -676,12 +676,15 @@ southern_pubhs <- pubhs_universe_df %>%
   filter(state_code %in% southern_states) %>% 
   select(ncessch, g12, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces) %>% 
   mutate(
+    pct_native = pct_amerindian + pct_nativehawaii
+  ) %>% 
+  select(-pct_amerindian, -pct_nativehawaii) %>% 
+  mutate(
     cnt_white = pct_white / 100 * g12,
     cnt_black = pct_black / 100 * g12,
     cnt_hispanic = pct_hispanic / 100 * g12,
     cnt_asian = pct_asian / 100 * g12,
-    cnt_amerindian = pct_amerindian / 100 * g12,
-    cnt_nativehawaii = pct_nativehawaii / 100 * g12,
+    cnt_native = pct_native / 100 * g12,
     cnt_tworaces = pct_tworaces / 100 * g12
   )
 
@@ -689,12 +692,15 @@ southern_privhs <- privhs_universe_df %>%
   filter(state_code %in% southern_states) %>% 
   select(school_id, enroll, pct_white, pct_black, pct_hispanic, pct_asian, pct_amerindian, pct_nativehawaii, pct_tworaces) %>% 
   mutate(
+    pct_native = pct_amerindian + pct_nativehawaii
+  ) %>% 
+  select(-pct_amerindian, -pct_nativehawaii) %>% 
+  mutate(
     cnt_white = pct_white / 100 * enroll,
     cnt_black = pct_black / 100 * enroll,
     cnt_hispanic = pct_hispanic / 100 * enroll,
     cnt_asian = pct_asian / 100 * enroll,
-    cnt_amerindian = pct_amerindian / 100 * enroll,
-    cnt_nativehawaii = pct_nativehawaii / 100 * enroll,
+    cnt_native = pct_native / 100 * enroll,
     cnt_tworaces = pct_tworaces / 100 * enroll
   )
 
@@ -716,15 +722,18 @@ southern_privhs_comp$univ_abbrev <- c('Private HS, universe', 'Private HS, unive
 
 plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) { 
   southern_comp <- schools_df %>% 
-    filter(classification == univ_type, event_type == hs_type, event_state %in% southern_states) %>% 
+    filter(classification == univ_type, event_type == hs_type, event_state %in% southern_states) %>%
+    mutate(
+      pct_native = pct_amerindian + pct_nativehawaii
+    ) %>% 
+    select(-pct_amerindian, -pct_nativehawaii) %>% 
     group_by(univ_abbrev) %>%
     summarise(
       pct_white = mean(pct_white),
       pct_black = mean(pct_black),
       pct_hispanic = mean(pct_hispanic),
       pct_asian = mean(pct_asian),
-      pct_amerindian = mean(pct_amerindian),
-      pct_nativehawaii = mean(pct_nativehawaii),
+      pct_native = mean(pct_native),
       pct_tworaces = mean(pct_tworaces),
       n = n()
     ) %>% 
@@ -748,14 +757,14 @@ plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) {
     )
   
   southern_comp$univ_abbrev <- factor(southern_comp$univ_abbrev, levels = rev(c(universe_df$univ_abbrev, univ_order)))
-  southern_comp$race <- factor(southern_comp$race, levels = c('white', 'black', 'hispanic', 'asian', 'amerindian', 'nativehawaii', 'tworaces'))
+  southern_comp$race <- factor(southern_comp$race, levels = c('white', 'black', 'hispanic', 'native', 'asian', 'tworaces'))
   
   print(southern_comp, n = 500)
   
   ggplot(southern_comp, aes(fill = race, y = pct, x = univ_abbrev)) +
     geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
     xlab('') + ylab('') +
-    scale_fill_manual(labels = c('White', 'Black', 'Latinx', 'Asian', 'American Indian', 'Native Hawaiian', '2+ Races'), values = color_palette_2, name = 'Race') +
+    scale_fill_manual(labels = c('White', 'Black', 'Latinx', 'Native', 'Asian', '2+ Races'), values = color_palette_2, name = 'Race') +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),

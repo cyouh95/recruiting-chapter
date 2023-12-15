@@ -91,10 +91,17 @@ kable(univ_sample, caption = "Characteristics of universities in analysis sample
 # Also in methodology: https://emraresearch.org/methodology
 
 # 49 public research
-pop_pubu <- c('151351', '171100', '180461', '188030', '199193', '147703', '204857', '207388', '214777', '186380', '149222', '196088', '196097', '204796', '100751', '197036', '164155', '104179', '106397', '110635', '110644', '110653', '110662', '110671', '110680', '201885', '126614', '129020', '139959', '141574', '225511', '142285', '155317', '161253', '163286', '166629', '170976', '181464', '187985', '199120', '215293', '217484', '218663', '230764', '234076', '236948', '230728', '234030', '172644')
+# pop_pubu <- c('151351', '171100', '180461', '188030', '199193', '147703', '204857', '207388', '214777', '186380', '149222', '196088', '196097', '204796', '100751', '197036', '164155', '104179', '106397', '110635', '110644', '110653', '110662', '110671', '110680', '201885', '126614', '129020', '139959', '141574', '225511', '142285', '155317', '161253', '163286', '166629', '170976', '181464', '187985', '199120', '215293', '217484', '218663', '230764', '234076', '236948', '230728', '234030', '172644')
 
 # 49 private national
-pop_privu <- c('194824', '139658', '190150', '223232', '212054', '193900', '166027', '144050', '130794', '243744', '166683', '198419', '215062', '162928', '182670', '110404', '147767', '217156', '190415', '227757', '152080', '186131', '221999', '131496', '164988', '160755', '213543', '135726', '216597', '228246', '191241', '186867', '131159', '228875', '239105', '127060', '122436', '207971', '179159', '168148', '164924', '195030', '179867', '201645', '197708', '199847', '211440', '121150', '123961')
+# pop_privu <- c('194824', '139658', '190150', '223232', '212054', '193900', '166027', '144050', '130794', '243744', '166683', '198419', '215062', '162928', '182670', '110404', '147767', '217156', '190415', '227757', '152080', '186131', '221999', '131496', '164988', '160755', '213543', '135726', '216597', '228246', '191241', '186867', '131159', '228875', '239105', '127060', '122436', '207971', '179159', '168148', '164924', '195030', '179867', '201645', '197708', '199847', '211440', '121150', '123961')
+
+library(readxl)
+cc2000_edition_data <- read_excel(file.path(data_dir, 'cc2000_edition_data.xls'), sheet = 'Data')
+pop_pubu <- (cc2000_edition_data %>% filter(`Control (text)` == 'Public', `CC2000 (text)` == 'Doctoral/Research Universities—Extensive'))$UNITID %>% as.character()
+
+usnews_rankings <- read_csv(file.path(data_dir, 'usnews_rankings.csv'), col_select = c('source', 'control', 'rank', 'univ_id'))
+pop_privu <- (usnews_rankings %>% filter(source == 'national-universities', control == 'private', rank <= 100))$univ_id %>% as.character()
 
 sample_pubu <- (univ_sample_df %>% filter(classification == 'public_research'))$univ_id
 sample_privu <- (univ_sample_df %>% filter(classification == 'private_national'))$univ_id
@@ -147,7 +154,7 @@ rownames(univ_pop_df) <- c('25th Percentile SAT/ACT Composite Score', '75th Perc
 colnames(univ_pop_df) <- rep(c('25th percentile', '50th percentile', '75th percentile'), 4)
 
 kable(univ_pop_df, caption = "Characteristics of universities in analysis sample compared to data collection sample", booktabs = T, escape = F, align = 'c', linesep = '') %>%
-  add_header_above(header = c(' ' = 1, 'Analysis sample (N=15)' = 3, 'Data collection sample (N=49)' = 3, 'Analysis sample (N=14)' = 3, 'Data collection sample (N=49)' = 3)) %>%
+  add_header_above(header = c(' ' = 1, 'Analysis sample (N=15)' = 3, 'Data collection sample (N=102)' = 3, 'Analysis sample (N=14)' = 3, 'Data collection sample (N=57)' = 3)) %>%
   add_header_above(header = c(' ' = 1, 'Public research universities' = 6, 'Selective private universities' = 6)) %>%
   kable_styling(font_size = 13, latex_options = 'scale_down') 
 ```
