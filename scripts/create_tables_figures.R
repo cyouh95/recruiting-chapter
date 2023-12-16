@@ -464,7 +464,7 @@ unique_visited_schools <- events_df %>%
     values_fill = 0
   )
 
-plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ', loc = c('instate', 'outofstate')) {
+plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ', loc = c('instate', 'outofstate'), gg_title = '') {
   
   sub_df_visited <- pubhs_visited_df %>% group_by(get(var_name)) %>% 
     summarize(`Public HS, 1+ visit` = n()) %>% 
@@ -518,6 +518,7 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
     scale_fill_manual(labels = label_text, values = color_palette) +
     scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    ggtitle(gg_title) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),
           legend.text = element_text(size = 6),
@@ -526,12 +527,12 @@ plot_characteristic_pubhs <- function(plot_type, var_name, label, characteristic
           legend.key.size = unit(0.3, 'cm'),
           panel.background = element_blank(),
           axis.ticks.y = element_blank(),
-          text = element_text(size = 8),
-          plot.title = element_text(color = 'white')) +
+          plot.title = element_text(size = 8, hjust = 0.45),
+          text = element_text(size = 8)) +
     coord_flip()
 }
 
-plot_characteristic_privhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ') {
+plot_characteristic_privhs <- function(plot_type, var_name, label, characteristic, label_text, control = 'public', type = 'univ', gg_title = '') {
   
   sub_df_visited <- privhs_visited_df %>% group_by(get(var_name)) %>% 
     summarize(`Private HS, 1+ visit` = n()) %>% 
@@ -583,6 +584,7 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
     scale_fill_manual(labels = label_text, values = color_palette) +
     scale_x_discrete(labels = function(x) str_wrap(x, width = 40)) +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    ggtitle(gg_title) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),
           legend.text = element_text(size = 6),
@@ -591,8 +593,8 @@ plot_characteristic_privhs <- function(plot_type, var_name, label, characteristi
           legend.key.size = unit(0.3, 'cm'),
           panel.background = element_blank(),
           axis.ticks.y = element_blank(),
-          text = element_text(size = 8),
-          plot.title = element_text(color = 'white')) +
+          plot.title = element_text(size = 8, hjust = 0.45),
+          text = element_text(size = 8)) +
     coord_flip()
 }
 
@@ -637,8 +639,8 @@ dev.off()
 # dev.off()
 
 # pubu to pubhs + privhs (race)
-a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys)
-b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys)
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys, gg_title = 'Private high school visits')
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, gg_title = 'Public high school visits')
 
 pdf(file.path(figures_dir, str_c('ego_network_race_pubu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
@@ -646,8 +648,8 @@ grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
 
 # privu to pubhs + privhs (race)
-a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
-b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ')
+a <- plot_characteristic_privhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ', gg_title = 'Private high school visits')
+b <- plot_characteristic_pubhs('race', race_var, race_title, race_values, race_keys, control = 'private', type = 'univ', gg_title = 'Public high school visits')
 
 pdf(file.path(figures_dir, str_c('ego_network_race_privu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
@@ -720,7 +722,7 @@ southern_privhs_comp <- rbind(
 
 southern_privhs_comp$univ_abbrev <- c('Private HS, universe', 'Private HS, universe (wt)')
 
-plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) { 
+plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type, gg_title = '') { 
   southern_comp <- schools_df %>% 
     filter(classification == univ_type, event_type == hs_type, event_state %in% southern_states) %>%
     mutate(
@@ -766,6 +768,7 @@ plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) {
     xlab('') + ylab('') +
     scale_fill_manual(labels = c('White', 'Black', 'Latinx', 'Native', 'Asian', '2+ Races'), values = color_palette_2, name = 'Race') +
     scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    ggtitle(gg_title) +
     theme(legend.position = 'top',
           legend.title = element_text(size = 6, face = 'bold'),
           legend.text = element_text(size = 6),
@@ -774,28 +777,138 @@ plot_racial_comp <- function(universe_df, schools_df, univ_type, hs_type) {
           legend.key.size = unit(0.3, 'cm'),
           panel.background = element_blank(),
           axis.ticks.y = element_blank(),
+          plot.title = element_text(size = 8, hjust = 0.45),
           text = element_text(size = 8)) +
     guides(fill = guide_legend(nrow = 1)) +
     coord_flip()
 }
 
 # Public universities
-a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'public_research', 'priv_hs')
-b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'public_research', 'pub_hs')
+a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'public_research', 'priv_hs', 'Private high school visits')
+b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'public_research', 'pub_hs', 'Public high school visits')
 
-pdf(file.path(figures_dir, str_c('race_comp_pubu_privhs_pubhs.pdf')))
+pdf(file.path(figures_dir, str_c('south_race_comp_pubu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
 grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
-
+ 
 # Private universities
-a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'private_national', 'priv_hs')
-b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'private_national', 'pub_hs')
+a <- plot_racial_comp(southern_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'private_national', 'priv_hs', 'Private high school visits')
+b <- plot_racial_comp(southern_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'private_national', 'pub_hs', 'Public high school visits')
 
-pdf(file.path(figures_dir, str_c('race_comp_privu_privhs_pubhs.pdf')))
+pdf(file.path(figures_dir, str_c('south_race_comp_privu_privhs_pubhs.pdf')))
 par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
 grid.arrange(a, b, nrow = 2, ncol = 1)
 dev.off()
 
 # First row is universe of all southern HS unweighted and weighted by 12th grade enrollment
 # Following rows are all unweighted %, where each visited HS is counted once (not double count for multiple visits)
+
+southern_bln_pubhs <- southern_pubhs %>% 
+  mutate(
+    pct_blacklatinxnative = pct_black + pct_hispanic + pct_native,
+    cat_blacklatinxnative = case_when(
+      pct_blacklatinxnative < 10 ~ 'c1_lt10',
+      pct_blacklatinxnative < 20 ~ 'c2_10to20',
+      pct_blacklatinxnative < 50 ~ 'c3_20to50',
+      pct_blacklatinxnative >= 50 ~ 'c4_50+'
+    )
+  ) %>% 
+  select(ncessch, g12, cat_blacklatinxnative)
+
+southern_bln_privhs <- southern_privhs %>% 
+  mutate(
+    pct_blacklatinxnative = pct_black + pct_hispanic + pct_native,
+    cat_blacklatinxnative = case_when(
+      pct_blacklatinxnative < 10 ~ 'c1_lt10',
+      pct_blacklatinxnative < 20 ~ 'c2_10to20',
+      pct_blacklatinxnative < 50 ~ 'c3_20to50',
+      pct_blacklatinxnative >= 50 ~ 'c4_50+'
+    )
+  ) %>% 
+  select(school_id, enroll, cat_blacklatinxnative)
+
+southern_bln_pubhs_comp <- bind_rows(
+  southern_bln_pubhs %>% group_by(cat_blacklatinxnative) %>% summarise(n = n()) %>% ungroup() %>% mutate(univ_abbrev = 'Public HS, universe'),
+  southern_bln_pubhs %>% group_by(cat_blacklatinxnative) %>% summarise(n = sum(g12)) %>% ungroup() %>% mutate(univ_abbrev = 'Public HS, universe (wt)')
+)
+
+southern_bln_privhs_comp <- bind_rows(
+  southern_bln_privhs %>% group_by(cat_blacklatinxnative) %>% summarise(n = n()) %>% ungroup() %>% mutate(univ_abbrev = 'Private HS, universe'),
+  southern_bln_privhs %>% group_by(cat_blacklatinxnative) %>% summarise(n = sum(enroll)) %>% ungroup() %>% mutate(univ_abbrev = 'Private HS, universe (wt)')
+)
+
+plot_bln_racial_comp <- function(universe_df, schools_df, univ_type, hs_type, gg_title = '') { 
+  southern_comp_v1 <- schools_df %>% 
+    filter(classification == univ_type, event_type == hs_type, event_state %in% southern_states) %>%
+    mutate(
+      pct_blacklatinxnative = pct_black + pct_hispanic + pct_amerindian + pct_nativehawaii,
+      cat_blacklatinxnative = case_when(
+        pct_blacklatinxnative < 10 ~ 'c1_lt10',
+        pct_blacklatinxnative < 20 ~ 'c2_10to20',
+        pct_blacklatinxnative < 50 ~ 'c3_20to50',
+        pct_blacklatinxnative >= 50 ~ 'c4_50+'
+      )
+    )
+  
+  southern_comp <- southern_comp_v1 %>% 
+    group_by(univ_abbrev, cat_blacklatinxnative) %>%
+    summarise(
+      n = n()
+    ) %>% 
+    ungroup() %>% 
+    left_join(ego_df %>% select(univ_name, univ_race, univ_rank), by = c('univ_abbrev' = 'univ_name')) %>% 
+    left_join(southern_comp_v1 %>% group_by(univ_abbrev) %>% summarise(total = n()) %>% ungroup(), by = 'univ_abbrev') %>% 
+    mutate(     
+      univ_abbrev = str_c(univ_abbrev, ' (',  univ_race, ') [N=', total, ']')
+    ) %>% 
+    arrange(univ_rank)
+  
+  univ_order <- unique(southern_comp$univ_abbrev)
+  
+  southern_comp <- southern_comp %>% 
+    select(-univ_rank, -univ_race, -total) %>% 
+    bind_rows(universe_df)
+
+  southern_comp$univ_abbrev <- factor(southern_comp$univ_abbrev, levels = rev(c(unique(universe_df$univ_abbrev), univ_order)))
+  southern_comp$cat_blacklatinxnative <- factor(southern_comp$cat_blacklatinxnative, levels = race_values)
+  
+  print(southern_comp, n = 500)
+  
+  ggplot(southern_comp, aes(fill = cat_blacklatinxnative, y = n, x = univ_abbrev)) +
+    geom_bar(stat='identity', position = position_fill(reverse = TRUE), width = 0.7) +
+    xlab('') + ylab('') +
+    scale_fill_manual(labels = race_keys, values = color_palette  , name = race_title) +
+    scale_y_continuous(labels = scales::percent, expand = c(0, 0, 0.05, 0)) +
+    ggtitle(gg_title) +
+    theme(legend.position = 'top',
+          legend.title = element_text(size = 6, face = 'bold'),
+          legend.text = element_text(size = 6),
+          legend.margin = margin(0, 0, 0, 0),
+          legend.box.margin = margin(0, 0, -5, -30),
+          legend.key.size = unit(0.3, 'cm'),
+          panel.background = element_blank(),
+          axis.ticks.y = element_blank(),
+          plot.title = element_text(size = 8, hjust = 0.45),
+          text = element_text(size = 8)) +
+    guides(fill = guide_legend(nrow = 1)) +
+    coord_flip()
+}
+
+# Public universities
+a <- plot_bln_racial_comp(southern_bln_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'public_research', 'priv_hs', 'Private high school visits')
+b <- plot_bln_racial_comp(southern_bln_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'public_research', 'pub_hs', 'Public high school visits')
+
+pdf(file.path(figures_dir, str_c('south_race_pubu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()
+
+ # Private universities
+a <- plot_bln_racial_comp(southern_bln_privhs_comp, events_df %>% left_join(privhs_universe_df, by = 'school_id'), 'private_national', 'priv_hs', 'Private high school visits')
+b <- plot_bln_racial_comp(southern_bln_pubhs_comp, events_df %>% left_join(pubhs_universe_df, by = c('school_id' = 'ncessch')), 'private_national', 'pub_hs', 'Public high school visits')
+
+pdf(file.path(figures_dir, str_c('south_race_privu_privhs_pubhs.pdf')))
+par(mar = c(0, 0, 0, 0) + 0.1, mai = c(0, 0, 0, 0))
+grid.arrange(a, b, nrow = 2, ncol = 1)
+dev.off()

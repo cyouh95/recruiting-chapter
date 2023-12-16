@@ -387,7 +387,7 @@ events_df %>% filter(classification == 'public_research', event_type %in% c('pub
 ## RQ3: Characteristics of visited schools
 
 
-Figures \@ref(fig:region-pubu-privu) through \@ref(fig:race-comp-privu-privhs-pubhs) address research question 3, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?" Additionally, Appendix Figures \@ref(fig:enroll-pubu-privu) and \@ref(fig:enroll-pubu-privhs-pubhs) show the 12th grade enrollment size of visited high schools.
+Figures \@ref(fig:region-pubu-privu) through \@ref(fig:south-race-privu-privhs-pubhs) address research question 3, "How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?" Additionally, Appendix Figures \@ref(fig:enroll-pubu-privu) and \@ref(fig:enroll-pubu-privhs-pubhs) show the 12th grade enrollment size of visited high schools.
 
 
 Figure \@ref(fig:region-pubu-privu) shows the broad geographic region -- Northeast, Midwest, South, and West -- of visited private high schools, separately for public research universities (top panel) and selective private universities (bottom panel). Scholarship on the relationship between geographic proximity and student demand tends to find that nationally prestigious universities enjoy strong demand across the nation, while less prestigious universities rely primarily on demand from students located nearby [e.g., @RN2133]. The visit patterns for private universities are consistent with this finding; less prestigious universities tended to focus on private high schools in their home region, while more prestigious universities tended to visit many private high schools outside their home region.  Similarly, scholarship on student demand for out-of-state public universities finds that most public universities rely on demand from out-of-state students living in nearby states [@RN2536; @RN2535; @RN2546]. Most public research universities in our sample visited a disproportionate number of private high schools in their home geographic region. UC-Berkeley and CU-Boulder -- universities with strong national brand recognition -- visited a large number of private high schools outside their home region. 
@@ -417,9 +417,9 @@ Figure \@ref(fig:race-pubu-privhs-pubhs) focuses on public universities, showing
 
 Figure \@ref(fig:race-privu-privhs-pubhs) focuses on selective private universities, showing the racial composition of visited private high schools (top panel) to the racial composition of visited public high schools (bottom panel). Results are very similar to those of public universities. Visited private schools enrolled a much lower share of Black/Latinx/Native students than visited public schools. For Emory, Northwestern, Tufts, Tulane, Case Western Reserve, and University of Denver, at least 75% of visited private schools enrolled less than 20% Black/Latinx/Native students.
 
-Finally, Figure X examines the racial composition of private schools visited in the South (upper panel) and the racial composition of public schools visited in the South (lower panel) by public research universities in our sample. Figure X does the same for selective private universities. These figures are motivated by the finding that many universities in our sample visited a large number of private schools in the South, where private school enrollment growth has been the strongest [@RN4504]. For public research universities, Figure X shows that visited Southern private schools tended to enroll dramatically lower shares of Black/Latinx/Native students than visited Southern public schools. This was true for all public universities in our sample, and particularly for UNIVERSITY X, Y, Z. Results for selective private universities in Figure X mirror the results for public research universities. Quite simply, the racial composition of Southern private schools is dramatically different than the racial composition of Southern public schools and these differences are also reflected in schools that received visits. 
-<!--TODO: Supplemental figures \@ref(fig:race-comp-pubu-privhs-pubhs) AND \@ref(fig:race-comp-privu-privhs-pubhs) are now moved to appenidix-->
-INSERT FIGURES X AND X ABOUT HERE
+Finally, Figure \@ref(fig:south-race-pubu-privhs-pubhs) examines the racial composition of private schools visited in the South (upper panel) and the racial composition of public schools visited in the South (lower panel) by public research universities in our sample. Figure \@ref(fig:south-race-privu-privhs-pubhs) does the same for selective private universities. These figures are motivated by the finding that many universities in our sample visited a large number of private schools in the South, where private school enrollment growth has been the strongest [@RN4504]. For public research universities, Figure \@ref(fig:south-race-pubu-privhs-pubhs) shows that visited Southern private schools tended to enroll dramatically lower shares of Black/Latinx/Native students than visited Southern public schools. This was true for most public universities in our sample, and particularly for the University of Georgia, University of South Carolina, and University of Cincinnati. A notable exception is SUNY Stony Brook, though this university only visited 12 private universities in the South. Results for selective private universities in Figure \@ref(fig:south-race-privu-privhs-pubhs) (with the exception of Marquette) mirror the results for public research universities. Quite simply, the racial composition of Southern private schools is dramatically different than the racial composition of Southern public schools and these differences are also reflected in schools that received visits. Appendix Figures \@ref(fig:south-race-comp-pubu-privhs-pubhs) and \@ref(fig:south-race-comp-privu-privhs-pubhs) show the full racial composition of visited public and private schools in the South.
+
+INSERT FIGURES \@ref(fig:south-race-pubu-privhs-pubhs) AND \@ref(fig:south-race-privu-privhs-pubhs) ABOUT HERE
 
 # Discussion
 
@@ -435,7 +435,7 @@ Research question 3 asks about the characteristics of visited private high schoo
 
 With the exception of UC-Berkeley and UC-San Diego, the average academic rating of private schools visited by public universities was lower than the rating of those visited by most private universities. This finding is largely explained by our analysis sample, which included public research universities regardless of rank but only included private universities ranked in the top 100 National University by U.S. News. Nevertheless, the large number of visits to low-rated private schools by public universities, combined with the fact that the overwhelming majority of these visits were to out-of-state schools, is consistent with the idea that many public flagship universities visit private schools primarily in search of full-pay students rather than academic superstars.
 
-Across the universe of private high schools, most schools enroll relatively few students who identify as Black, Latinx, or Native. For the public and private universities in our sample, the set of visited private schools enrolled fewer Black, Latinx, and Native students than the national universe of private schools. By contrast, the public high schools visited by public universities tended to enroll a much higher share of students who identify as Black, Latinx, or Native. <!--TODO: [ADD A SENTENCE ABOUT RACIAL COMPOSITION OF VISITS TO SOUTH?]-->
+Across the universe of private high schools, most schools enroll relatively few students who identify as Black, Latinx, or Native. For the public and private universities in our sample, the set of visited private schools enrolled fewer Black, Latinx, and Native students than the national universe of private schools. By contrast, the public high schools visited by public universities tended to enroll a much higher share of students who identify as Black, Latinx, or Native. This is true of the visits to schools in the South as well.
 
 
 
@@ -752,6 +752,19 @@ include_graphics(file.path(figures_dir, 'ego_network_race_pubu_privhs_pubhs.pdf'
 include_graphics(file.path(figures_dir, 'ego_network_race_privu_privhs_pubhs.pdf'))
 ```
 
+\newpage
+
+```{r south-race-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools in the South vs. visited private high schools in the South, public research universities"}
+include_graphics(file.path(figures_dir, 'south_race_pubu_privhs_pubhs.pdf'))
+```
+
+\newpage
+
+```{r south-race-privu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Percentage of students who identify as Black, Latinx, or Native at visited public high schools in the South vs. visited private high schools in the South, selective private universities"}
+include_graphics(file.path(figures_dir, 'south_race_privu_privhs_pubhs.pdf'))
+```
+
+
 
 \beginsupplement
 \clearpage
@@ -828,14 +841,14 @@ include_graphics(file.path(figures_dir, 'ego_network_enroll_pubu_privhs_pubhs.pd
 
 \newpage
 
-```{r race-comp-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools vs. visited private high schools in the South, public research universities"}
-include_graphics(file.path(figures_dir, 'race_comp_pubu_privhs_pubhs.pdf'))
+```{r south-race-comp-pubu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools in the South vs. visited private high schools in the South, public research universities"}
+include_graphics(file.path(figures_dir, 'south_race_comp_pubu_privhs_pubhs.pdf'))
 ```
 
 \newpage
 
-```{r race-comp-privu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools vs. visited private high schools in the South, selective private universities"}
-include_graphics(file.path(figures_dir, 'race_comp_privu_privhs_pubhs.pdf'))
+```{r south-race-comp-privu-privhs-pubhs, echo = FALSE, fig.align = 'center', out.width = "200%", fig.cap = "Racial composition of students at visited public high schools in the South vs. visited private high schools in the South, selective private universities"}
+include_graphics(file.path(figures_dir, 'south_race_comp_privu_privhs_pubhs.pdf'))
 ```
 
 \end{landscape}
