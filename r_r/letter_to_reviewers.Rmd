@@ -11,7 +11,7 @@ csl: ./../other/apa.csl
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-XXXX X, 2023
+December 20, 2023
 
 Dear Editors,
 
