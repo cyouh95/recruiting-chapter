@@ -1,8 +1,9 @@
 ---
 #title: "Response to Editors and Reviewers"
 #author: "ozan"
-date: "`r Sys.Date()`"
-output: pdf_document
+#date: "`r Sys.Date()`"
+#output: pdf_document
+output: word_document
 bibliography: ./../other/burd_recruiting_chapter.bib
 csl: ./../other/apa.csl
 ---

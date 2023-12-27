@@ -5,12 +5,15 @@ title: "The Private School Network: Recruiting Visits to Private High Schools by
 #  - Crystal Han
 #  - Irma Castañeda
 bibliography: ./../other/burd_recruiting_chapter.bib
-output: 
+output:
+  #bookdown::word_document2:
   bookdown::pdf_document2:
     toc: FALSE
     pandoc_args: !expr rmdfiltr::add_wordcount_filter(rmdfiltr::add_citeproc_filter(args = NULL))
+    keep_tex: true
 csl: ./../other/apa.csl
 urlcolor: blue
+#always_allow_html: true
 header-includes:
       - \usepackage{pdflscape}
       - \usepackage{geometry}
