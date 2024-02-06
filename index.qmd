@@ -207,55 +207,55 @@ kable(table_1mode_u$onemode_pct_df[c(2,3,4,5,6,8,10,11,12,14,15,19,20,26),c(1,7,
 
 ## Order 2 ego network of University of Notre Dame
 
-![](/assets/figures/nd_religion.png)
+![](./assets/figures/nd_religion.png)
 
 ## Number of HS visits by public research universities
 
-![](/assets/figures/events_hs_count_pubu.png)
+![](./assets/figures/events_hs_count_pubu.png)
 
 ## Number of HS visits by selective private universities
 
-![](/assets/figures/events_hs_count_privu.png)
+![](./assets/figures/events_hs_count_privu.png)
 
 ## Proportional HS visits by public research universities
 
-![](/assets/figures/events_hs_actual_proportional_pubu.png)
+![](./assets/figures/events_hs_actual_proportional_pubu.png)
 
 ## Proportional HS visits by selective private universities
 
-![](/assets/figures/events_hs_actual_proportional_privu.png)
+![](./assets/figures/events_hs_actual_proportional_privu.png)
 
 ## One-mode network for all universities
 
-![](/assets/figures/plot_1mode_u.png)
+![](./assets/figures/plot_1mode_u.png)
 
 ## Geographic region of visited private high schools
 
-![](/assets/figures/ego_network_region_pubu_privu.png)
+![](./assets/figures/ego_network_region_pubu_privu.png)
 
 ## Religious affiliation of visited private high schools
 
-![](/assets/figures/ego_network_religion_pubu_privu.png)
+![](./assets/figures/ego_network_religion_pubu_privu.png)
 
 ## High school ranking of visited private high schools
 
-![](/assets/figures/ego_network_rank_pubu_privu.png)
+![](./assets/figures/ego_network_rank_pubu_privu.png)
 
 ## Racial composition of visited HS, public universities
 
-![](/assets/figures/ego_network_race_pubu_privhs_pubhs.png)
+![](./assets/figures/ego_network_race_pubu_privhs_pubhs.png)
 
 ## Racial composition of visited HS, private universities
 
-![](/assets/figures/ego_network_race_privu_privhs_pubhs.png)
+![](./assets/figures/ego_network_race_privu_privhs_pubhs.png)
 
 ## Racial composition in the South, public universities
 
-![](/assets/figures/south_race_pubu_privhs_pubhs.png)
+![](./assets/figures/south_race_pubu_privhs_pubhs.png)
 
 ## Racial composition in the South, private universities
 
-![](/assets/figures/south_race_privu_privhs_pubhs.png)
+![](./assets/figures/south_race_privu_privhs_pubhs.png)
 
 ## Slide w/ citation
 ### Subtitle

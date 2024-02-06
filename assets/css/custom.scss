@@ -14,7 +14,8 @@ $presentation-font-size-root: 30px;
 /*-- scss:rules --*/
 
 body {
-  background: url('/assets/images/bg.png') center / cover no-repeat fixed !important;
+  /* background: url('/assets/images/bg.png') center / cover no-repeat fixed !important; */
+  background: url('/recruiting-chapter/assets/images/bg.png') center / cover no-repeat fixed !important;
 }
 
 .reveal .slide {
