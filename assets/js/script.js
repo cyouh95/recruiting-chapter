@@ -1,6 +1,6 @@
 $(function() {
 
-  const modal = '<div class="modal"><span class="close">&times;</span><h3></h3><img /></div>';
+  const modal = '<div class="modal"><span class="close">&times;</span><img /></div>';
   
   $('.slides section').prepend(modal);
   
@@ -10,14 +10,17 @@ $(function() {
     var $slide = $(this).closest('.slide');
     $slide.find('.modal img').attr('src', src);
     
-    $(this).closest('.slide').find('.modal').fadeIn();
+    $(this).closest('.slide').find('.modal').fadeIn(600);
+    $(this).closest('.slide').find('p img').addClass('disabled');
   });
   
   $('.close').on('click', function() {
     $(this).closest('.slide').find('.modal').fadeOut();
+    $(this).closest('.slide').find('p img').removeClass('disabled');
   });
   
   Reveal.addEventListener('slidechanged', function() {
     $('.modal').fadeOut();
+    $('img').removeClass('disabled');
   });
 });
