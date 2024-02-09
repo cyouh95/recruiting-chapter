@@ -84,7 +84,7 @@ kbl(univ_sample, align = c('l', 'l', rep('r', 13)), escape = F) %>%
 
 ## Characteristics of universities in analysis sample compared to data collection sample
 
-<div class="table-wrapper">
+<div class="table-wrapper freeze-col">
 ```{r sample-population-characteristics}
 cc2000_edition_data <- read_excel(file.path(data_dir, 'cc2000_edition_data.xls'), sheet = 'Data')
 pop_pubu <- (cc2000_edition_data %>% filter(`Control (text)` == 'Public', `CC2000 (text)` == 'Doctoral/Research Universities—Extensive'))$UNITID %>% as.character()

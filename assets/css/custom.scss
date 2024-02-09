@@ -111,14 +111,13 @@ body {
 
 .reveal table {
   width: 100%;
-  line-height: 1.2em;
-  font-size: 13px;
+  line-height: 1.5em;
+  font-size: 15px;
   border-spacing: 0;
-  tbody tr:last-child {
-    border-bottom: 1px solid black;
-  }
   th {
+    border-bottom: 1px solid black;
     vertical-align: bottom;
+    empty-cells: show !important;
   }
   td {
     border-bottom: none;
@@ -128,10 +127,30 @@ body {
   }
 }
 
+.freeze-col {
+  border-collapse: separate;
+  tr {
+    th, td {
+      background-color: #f3f3f3;
+      &:nth-child(1) {
+        position: sticky;
+        left: 0;
+        border-right: 1px solid black;
+        z-index: 1;
+      }
+    }
+  }
+}
+
 #tbl-1 {
   tbody {
-    tr:nth-of-type(15) {
-      border-bottom: 1px solid;
+    tr {
+      &:nth-of-type(15) {
+        border-bottom: 1px solid;
+      }
+      &:last-child {
+        border-bottom: 1px solid black;
+      }
     }
   }
 }
