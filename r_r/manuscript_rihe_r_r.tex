@@ -66,28 +66,38 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{5}
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
 \newlength{\cslhangindent}
 \setlength{\cslhangindent}{1.5em}
 \newlength{\csllabelwidth}
 \setlength{\csllabelwidth}{3em}
-\newlength{\cslentryspacingunit} % times entry-spacing
-\setlength{\cslentryspacingunit}{\parskip}
-\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
- {% don't indent paragraphs
-  \setlength{\parindent}{0pt}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
   % turn on hanging indent if param 1 is 1
   \ifodd #1
-  \let\oldpar\par
-  \def\par{\hangindent=\cslhangindent\oldpar}
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
   \fi
   % set entry spacing
-  \setlength{\parskip}{#2\cslentryspacingunit}
- }%
- {}
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
 \usepackage{calc}
-\newcommand{\CSLBlock}[1]{#1\hfill\break}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \usepackage{pdflscape}
 \usepackage{geometry}
@@ -118,7 +128,7 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
@@ -148,26 +158,23 @@ Scholarship on nonresident enrollment by public research universities has develo
 \pagenumbering{gobble}
 \pagenumbering{arabic}
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
-\emph{During the 2017 calendar year, we tracked off-campus recruiting visits made by 14 selective private universities, 12 selective private liberal arts colleges, and 15 public research universities.\footnote{These institutions are: Northwestern, Notre Dame, Emory, Tufts, Boston College, Tulane, Case Western Reserve, Villanova, Southern Methodist University, Baylor, University of Denver, Texas Christian University, Stevens Institute of Technology, Marquette, Williams, Swarthmore, Middlebury, Smith, Harvey Mudd, Colorado College, Macalester, Scripps, Oberlin, Occidental, Sewanee, Connecticut College, UC-Berkeley, UC-San Diego, University of Georgia, University of Pittsburgh, Rutgers, University of Massachusetts-Amherst, UC-Riverside, SUNY Stony Brook, University of Colorado-Boulder, University of South Carolina, University of Kansas, University of Nebraska-Lincoln, University of Alabama, University of Cincinnati, and University of Arkansas.} We are still trying to figure out what happened.}
+Autumn is college recruiting season at Harpeth Hall, a nonsectarian private school for girls located in the affluent Green Hills neighborhood of Nashville, Tennessee. Founded in 1951, Harpeth is an ``A+'' school ranked 337 in the nation according to the 2020 \emph{Best Private High Schools in America} by Niche. Enrollment patterns at Nashville-area private schools reflect broader regional patterns, whereby ``efforts by the courts to desegregate public schools in the South resulted in White flight to private schools'' (Murnane \& Reardon, 2018, p. 14). In Fall 2017, about 85\% of Harpeth students were white and less than 5\% were Black or Latinx (Author calculations).
 
-\bigskip
-
-Autumn is college recruiting visit season at Harpeth Hall, a nonsectarian private school for girls located in the affluent Green Hills neighborhood of Nashville, Tennessee. Founded in 1951, Harpeth is an ``A+'' school ranked 337 in the nation according to the 2020 \emph{Best Private High Schools in America} by Niche. Enrollment patterns at Nashville-area private schools reflect broader regional patterns, whereby ``efforts by the courts to desegregate public schools in the South resulted in White flight to private schools'' (Murnane \& Reardon, 2018, p. 14). In Fall 2017, about 85\% of Harpeth students were white and less than 5\% were Black or Latinx (Author calculations).
-
-From September 6th through October 17th, Harpeth received recruiting visits from 11 private universities in our sample (Northwestern, Boston College, Tufts, Villanova, Case Western Reserve, University of Denver, Emory, Tulane, Baylor, Texas Christian University, Southern Methodist University), and three private liberal arts colleges (Harvey Mudd, Scripps, and Sewanee). Previous scholarship observes strong connections between private schools and selective private universities (Khan, 2011; Stevens, 2007). However, Harpeth also received visits from six out-of-state public research universities, the University of Cincinnati, University of South Carolina, the University of Alabama, University of Arkansas, University of Georgia, and CU Boulder.
+During the 2017 calendar year, we tracked off-campus recruiting visits made by 14 selective private universities, 12 selective private liberal arts colleges, and 15 public research universities.\footnote{These institutions are: Northwestern, Notre Dame, Emory, Tufts, Boston College, Tulane, Case Western Reserve, Villanova, Southern Methodist University, Baylor, University of Denver, Texas Christian University, Stevens Institute of Technology, Marquette, Williams, Swarthmore, Middlebury, Smith, Harvey Mudd, Colorado College, Macalester, Scripps, Oberlin, Occidental, Sewanee, Connecticut College, UC-Berkeley, UC-San Diego, University of Georgia, University of Pittsburgh, Rutgers, University of Massachusetts-Amherst, UC-Riverside, SUNY Stony Brook, University of Colorado-Boulder, University of South Carolina, University of Kansas, University of Nebraska-Lincoln, University of Alabama, University of Cincinnati, and University of Arkansas.} From September 6th through October 17th, Harpeth Hall received recruiting visits from 11 private universities in our sample (Northwestern, Boston College, Tufts, Villanova, Case Western Reserve, University of Denver, Emory, Tulane, Baylor, Texas Christian University, Southern Methodist University), and three private liberal arts colleges (Harvey Mudd, Scripps, and Sewanee). Previous scholarship observes strong connections between private schools and selective private universities (Khan, 2011; Stevens, 2007). However, Harpeth also received visits from six out-of-state public research universities, the University of Cincinnati, University of South Carolina, the University of Alabama, University of Arkansas, University of Georgia, and CU Boulder.
 
 The nonsectarian University School of Nashville was founded in 1975 and is located next door to Vanderbilt University. It is an ``A+'' school, ranked 127th in the nation, and is more racially diverse than Harpeth (64\% white, 11.5\% Black, 3.5\% Latinx, 10.0\% Asian). From August 22nd 2017 through October 18th, the University School received visits from nearly the same set of 11 private universities that visited Harpeth (Notre Dame visited and Baylor did not) and five liberal arts colleges (including Williams and Middlebury), but only two public research universities from our sample (University of Cincinnati, CU Boulder).
 
-Father Ryan High School is a Catholic school founded in 1925. Father Ryan is predominantly white (86\%, 7\% Black or Latinx) and received an ``A'' grade from Niche, meaning it is not ranked in the top 1,000 U.S. private schools. In Fall 2017, Father Ryan received visits from eight of the 14 private universities in our sample (including three of the four Catholic universities) and the same six public universities that visited Harpeth Hall, including two visits by the University of Alabama. Meanwhile, Christ Presbyterian Academy -- also not ranked in the top 1,000 private schools -- received visits from six private universities in our sample (including the three Christian universities Baylor, Texas Christian University, and Southern Methodist University). It also received visits from the University of Cincinnati, the University of South Carolina, the University of Alabama, University of Arkansas, and CU Boulder. Christ Presbyterian Academy was founded in 1985 and 94\% of its students are white.
+Christ Presbyterian Academy, located in the Forest Hills suburb southwest of Nashville, received an ``A'' grade from Niche, meaning it is not ranked in the top 1,000 U.S. private schools. In 2017, it received visits from six private universities in our sample (including the three Christian universities, Baylor, Texas Christian University, and Southern Methodist University). It also received visits from the University of Cincinnati, the University of South Carolina, the University of Alabama, University of Arkansas, and CU Boulder. Christ Presbyterian Academy was founded in 1985 and 94\% of its students are white.
 
-Theories of organizational behavior suggest that university recruiting behaviors -- those that require significant expenditure -- are indicators of organizational enrollment priorities. Large, public-facing organizations are beset by multiple, competing pressures from the external environment, but organizations have difficulty pursuing multiple goals (Pfeffer \& Salancik, 1978; Thompson, 1967). Thus, organizations respond by symbolically adopting some goals and substantively adopting others (Meyer \& Rowan, 1977). Under symbolic adoption, organizations adopt policies and structures that send signals to external constituents but do not substantively affect resource allocation inside the ``technical level'' of the organization.\footnote{Contingency theory states that organizations consist of ``technical levels'' responsible for processing inputs and producing outputs and ``managerial levels'' responsible for directing the technical level and tending to demands from the external environment (Thompson, 1967). The technical level achieves effectiveness by focusing on a small, stable set of goals.} Under substantive adoption, organizations direct resources in the technical level towards achieving the goal. Off-campus recruiting visits to local high schools and college fairs was the top-ranked recruiting expenditure item for both public and private universities, according to Ruffalo Noel-Levitz (2020a). Therefore, analyses of which schools a university visits -- and which schools they ignore -- can yield insights about university enrollment goals.
+This paper analyzes the social networks revealed by recruiting visits from universities to private high schools. Theories of organizational behavior suggest that university recruiting behaviors -- those that require significant expenditure -- are indicators of organizational enrollment priorities. Public-facing organizations are beset by multiple, competing pressures from the external environment, but organizations have difficulty pursuing multiple goals (Pfeffer \& Salancik, 1978; Thompson, 1967). Thus, organizations respond by symbolically adopting some goals and substantively adopting others (Meyer \& Rowan, 1977). Under symbolic adoption, organizations adopt policies and structures that send signals to external constituents but do not substantively affect resource allocation inside the ``technical level'' of the organization.\footnote{Contingency theory states that organizations consist of ``technical levels'' responsible for processing inputs and producing outputs and ``managerial levels'' responsible for directing the technical level and tending to demands from the external environment (Thompson, 1967). The technical level achieves effectiveness by focusing on a small, stable set of goals.} Under substantive adoption, organizations direct resources in the technical level towards achieving the goal. Off-campus recruiting visits to local high schools and college fairs was the top-ranked recruiting expenditure item for both public and private universities, according to Ruffalo Noel-Levitz (2020a). Therefore, analyses of which schools a university visits -- and which schools they ignore -- can yield insights about university enrollment goals.
 
-Author (XXXXa) analyzed recruiting visits to public high schools made by 15 public research universities in 2017. The authors found that 12 of the 15 universities made more visits to out-of-state schools than in-state schools. These out-of-state visits focused on affluent, predominantly white public schools. Set against the scholarship about declining state appropriations and growing nonresident enrollment (Author, XXXXb, XXXXc), these results suggest that many public research universities prioritize enrollment from wealthy out-of-state students who can afford to pay nonresident tuition prices.
+We situate this study within scholarship on nonresident enrollment at public universities. Author (XXXXa) analyzed recruiting visits to public high schools made by 15 public research universities in 2017. The authors found that 12 of the 15 universities made more visits to out-of-state schools than in-state schools. These out-of-state visits focused on affluent, predominantly white public schools. Set against the scholarship about declining state appropriations and growing nonresident enrollment (Author, XXXXb, XXXXc), these results suggest that many public research universities prioritize enrollment from wealthy out-of-state students who can afford to pay nonresident tuition prices.
 
-Within scholarship on social mobility and social stratification, a multidisciplinary literature analyzes the relationship between private school and college access (Bryk, Lee, \& Holland, 1993; Chetty, Deming, \& Friedman, 2023; Khan, 2011; Kingston \& Lewis, 1990). This research observes strong links -- and student flows -- between private high schools and selective private universities. Private schools enroll many students who can afford private university tuition (Stevens, 2007). To date, scholarship on nonresident enrollment by public universities has progressed in isolation from scholarship on links between private schools and colleges. We argue that these two stories have become connected because public research universities increasingly target out-of-state private schools, schools that have been the domain of selective private universities. Simply put, selective private universities and public research universities are increasingly competing for students from the same set of affluent households.
+A separate, multidisciplinary literature has analyzed linkages betwen private school and college access (Bryk, Lee, \& Holland, 1993; Chetty, Deming, \& Friedman, 2023; Khan, 2011; Kingston \& Lewis, 1990). This research observes strong links -- and student flows -- between private high schools and selective private universities. Private schools enroll many students who can afford private university tuition (Stevens, 2007). To date, scholarship on nonresident enrollment by public universities has progressed in isolation from scholarship on links between private schools and colleges.
+
+We argue that these two literatures have become connected because public research universities increasingly target out-of-state private schools, schools that have been the domain of selective private universities. Simply put, selective private universities and public research universities are increasingly competing for students from the same set of affluent households.
 
 This study analyzes recruiting visits to private high schools made in the 2017 calendar year by a sample of 15 public research universities and 14 selective private universities. We conceptualize recruiting visits as an indication the university and the school have a social relationship. This conceptualization motivates the use of social network methods, which analyze networks defined by ``network ties'' (i.e., visits) between actors (universities and schools). Comparing the recruiting networks of public research universities and selective private universities yields novel insights about the competition for affluent, ``full-pay'' students. Analyses are informed by three research questions:
 
@@ -184,13 +191,11 @@ This study analyzes recruiting visits to private high schools made in the 2017 c
 
 Both private and public universities in our sample made a disproportionate number of visits to private high schools. For public research universities, visited private schools were much more likely to be out-of-state than visited public schools. Network analyses revealed substantial overlap in the recruiting networks of universities in our sample. For several public universities (e.g., University of Alabama, University of South Carolina), their recruiting networks had more similarity to private universities (e.g., Southern Methodist University, Texas Christian University) than they did to other public universities in our sample. Results suggest that recruiting networks are substantially a function of geographic location. All universities visited a large number of private schools in their home region. However, most universities in our sample also visited a large number of private schools in the South, the region where private school enrollment has grown the most over the past three decades (Murnane \& Reardon, 2018). The private schools visited by public and private universities in our sample enrolled a much higher share of white students than the public schools visited by these universities. Surprisingly, several public universities visited sectarian private high schools at a rate similar to sectarian private universities.
 
-This manuscript yields practical implications for public and private universities concerned about racial and socioeconomic diversity. Following the Covid-19 Pandemic, off-campus recruiting visits have bounced back because they remain a fundamental means of maintaining relationships with high school guidance counselors (EAB \& NACAC, 2023; Ruffalo Noel-Levitz, 2022a, 2022b). Prior research finds that students are sensitive to recruiting interventions, including off-campus recruiting visits (Holland, 2019; Ruffalo Noel-Levitz, 2018). Therefore, which high schools a university chooses to visit affects the subsequent enrollment composition of the university. In the aftermath of the Supreme Court decision on race-conscious admissions, public and private universities are searching for ways to increase racial diversity without running afoul of the law. The U.S. Department of Education (2023, p. 9) recommends that universities expand ``outreach to high schools with substantial populations of low-income students and students of color.'' Most public and private universities in our sample visited a disproportionate number of private schools and these private schools tended to enroll mostly white students. We recommend that universities concerned about racial diversity should conduct an internal equity audit of their recruiting practices, for example, comparing the racial and socioeconomic characteristics of schools they visit versus schools they do not visit.
+The results yield practical implications for public and private universities concerned about racial and socioeconomic diversity. Following the Covid-19 Pandemic, off-campus recruiting visits have bounced back because they remain a fundamental means of maintaining relationships with high school guidance counselors (EAB \& NACAC, 2023; Ruffalo Noel-Levitz, 2022a, 2022b). Prior research finds that students are sensitive to recruiting interventions, including off-campus recruiting visits (Holland, 2019; Ruffalo Noel-Levitz, 2018). Therefore, which high schools a university chooses to visit affects the subsequent enrollment composition of the university. In the aftermath of the Supreme Court decision on race-conscious admissions, public and private universities are searching for ways to increase racial diversity without running afoul of the law. The U.S. Department of Education (2023, p. 9) recommends that universities expand ``outreach to high schools with substantial populations of low-income students and students of color.'' Most public and private universities in our sample visited a disproportionate number of private schools and these private schools tended to enroll mostly white students. We recommend that universities concerned about racial diversity should conduct an internal equity audit of their recruiting practices, for example, comparing the racial and socioeconomic characteristics of schools they visit versus schools they do not visit.
 
-\hypertarget{literature-review}{%
-\section{Literature Review}\label{literature-review}}
+\section{Literature Review}\label{literature-review}
 
-\hypertarget{nonresident-enrollment-at-public-universities}{%
-\subsection{Nonresident Enrollment at Public Universities}\label{nonresident-enrollment-at-public-universities}}
+\subsection{Nonresident Enrollment at Public Universities}\label{nonresident-enrollment-at-public-universities}
 
 We situate this study vis-a-vis scholarship on enrollment management behavior by public research universities and particularly the pursuit of affluent nonresident students, a population also targeted by selective private universities. The so-called ``iron triangle'' of enrollment management states that universities pursue the broad enrollment goals of access, academic profile, and revenue generation (Cheslock \& Kroc, 2012; DesJardins \& Bell, 2006). Because resources are scarce, the imagery of the iron triangle suggests that the pursuit of one enrollment goal may involve trade-offs with other goals. Cheslock \& Kroc (2012, p. 221) state that ``most enrollment management policies\ldots do not advance all three objectives; instead they lead to gains in some areas and declines in others.'' Scholarship argues that selective private universities prioritize academic profile and revenue generation, with funds generated from tuition and donation feeding the arms race for prestige (Killgore, 2009; Stevens, 2007; Winston, 1999). Historically, public research universities prioritize enrollment of high-performing state residents, often with an emphasis on social mobility for students who cannot afford private universities (Rudolph, 1962). However, scholarship on privatization argues that public research universities increasingly emphasize tuition revenue and rankings and de-emphasize access for state residents (Priest \& St. John, 2006; Slaughter \& Rhoades, 2004).
 
@@ -202,8 +207,7 @@ How did public research universities go about attracting all these nonresident s
 
 Earlier in the ``enrollment funnel,'' universities utilize marketing and recruiting interventions to attract nonresident applicants. One widely utilized intervention is off-campus recruiting visits by admissions counselors to local high schools. Author (XXXXa) analyzed off-campus recruiting visits to public high schools by 15 public research universities. Recruiting visits to in-state high schools tended to exhibit modest racial and socioeconomic bias. However, 12 of the 15 universities made more visits to out-of-state high schools than in-state high schools. These out-of-state visits focused on public schools in affluent, predominantly white communities. Salazar (2022) conducted geospatial analyses of out-of-state recruiting visits to Los Angeles and Dallas by four public research universities. She found that universities engage in ``recruitment redlining -- the circuitous avoidance of predominantly Black and Latinx communities along recruiting visit paths'' (p.~585). Although Author (XXXXa) and Salazar (2022) focused on visits to public high schools, prior research has not considered visits to private schools by public research universities. For example, what is the scale of these visits and what are the characteristics of visited schools?
 
-\hypertarget{linkages-between-private-schools-and-private-universities}{%
-\subsection{Linkages Between Private Schools and Private Universities}\label{linkages-between-private-schools-and-private-universities}}
+\subsection{Linkages Between Private Schools and Private Universities}\label{linkages-between-private-schools-and-private-universities}
 
 Separate from scholarship on nonresident enrollment at public universities, scholarship from economics and sociology analyzes linkages between private schools and colleges.
 
@@ -229,8 +233,7 @@ Khan (2010) analyzed recruiting from the perspective of an elite private boardin
 
 Additionally, scholarship on linkages between private high schools and private universities focuses on elite high schools and ultra-selective universities (Chetty et al., 2023; Cookson \& Persell, 1985; Khan, 2010; Kingston \& Lewis, 1990). With the exception of the single-institution ethnography by Stevens (2007), we know less about linkages between private schools and private universities that are selective but not elite. These merely-selective universities are self-conscious about their reputation, and have fewer resources and weaker student demand compared to Ivy Plus universities. Analyses of off-campus recruiting visits provide novel insights about the schools and student populations these institutions target.
 
-\hypertarget{synthesis}{%
-\subsection{Synthesis}\label{synthesis}}
+\subsection{Synthesis}\label{synthesis}
 
 We argue that a recruiting visit from a university to a private high school is an indicator of a social relationship. Empirically, Stevens (2007) finds that off-campus recruiting visits are important for the maintenance of strong relationships between a college and a high school. Logically, the fact that the college made the effort to visit suggests that the college wants to enroll students from the high school. Similarly, the fact that the high school hosted the visit suggests that the high school likely views the college as a desirable destination for some of its students. Moreover, the presence of the recruiting visit suggests the probability of additional interactions (e.g., phone calls) between the organizations. For example, Ruffalo Noel-Levitz (2022b) reports that ``calling after visits'' was the most effective strategy for high school guidance counselor outreach for both private universities and public universities. Conceptualizing a recruiting visit as an indicator of a relationship between a college and a high school motivates the use of social network methods, which analyze the network defined by ``network ties'' (i.e., visits) between actors (universities and schools).
 
@@ -238,11 +241,9 @@ Although the literature on nonresident enrollment developed in isolation from th
 
 Private schools tend to enroll a larger share of white students than public schools.\footnote{Evidence for this claim can be seen in Figure \ref{fig:race-pubu-privhs-pubhs}.} Over the past three decades, middle-income enrollment at Catholic schools has declined and private school students have become more affluent. In the South, private school enrollment has grown as a consequence of ``white flight'' from public schools facing desegregation orders (Murnane \& Reardon, 2018). Thus, in recruiting from private schools, universities may be targeting student bodies that are more affluent and racially homogeneous than public schools. We investigate the characteristics -- including geographic region and racial composition -- of private schools being targeted by university admissions officers because these characteristics have downstream implications for the racial composition of university campuses.
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
-\hypertarget{data-and-sample}{%
-\subsection{Data and Sample}\label{data-and-sample}}
+\subsection{Data and Sample}\label{data-and-sample}
 
 This manuscript draws from a broader project in which we collected data about off-campus recruiting visits made during the 2017 calendar year by a convenience sample of colleges and universities. For universities in our data collection sample, we investigated their admissions website for pages that posted their upcoming off-campus recruiting visits. For institutions that posted such pages, we scraped the pages once per week throughout 2017. Web-scraping was conducted using the Python programming language using the \emph{requests} library. Many universities in our data collection sample only posted certain kinds of events (e.g., hotel receptions and national college fairs) but not others (e.g., day-time visits to high schools). These institutions were excluded from the analysis sample.
 
@@ -256,8 +257,7 @@ INSERT TABLES \ref{tab:sample-characteristics} AND \ref{tab:sample-population-ch
 
 Analyses utilized several secondary data sources. The data on university characteristics come from the 2017 Integrated Postsecondary Education Data System (IPEDS) and 2020 Best Colleges ranking by U.S. News \& World Report. For the high schools in our analysis, we use secondary data from the 2017-18 NCES Common Core of Data (CCD) for public high schools, and the 2017-18 NCES Private School Universe Survey (PSS) and 2020 Best Private High Schools ranking by Niche for private high schools.\footnote{For both public and private high schools, we also used NCES data from previous years when the 2017-18 data was not available for a small number of schools.}
 
-\hypertarget{constructing-social-networks}{%
-\subsection{Constructing Social Networks}\label{constructing-social-networks}}
+\subsection{Constructing Social Networks}\label{constructing-social-networks}
 
 A social network consists of a set of actors -- referred to as ``vertices'' -- and the connections -- referred to as ``network ties'' or ``edges'' between these actors. ``One-mode'' networks consist of vertices of a ``type.'' For example, the social network of Facebook consists of users (vertices) who are connected to one another via friendship ties (edges). Similarly, the social network of \(X\) (formerly Twitter) consists of handles (vertices) who are connected to one another by following or being followed (edges).
 
@@ -269,8 +269,7 @@ Data about off-campus recruiting visits from universities to high schools form a
 
 We also created a one-mode high school network in which each vertex is a private high school. Private high schools \(i\) and \(j\) share an edge if at least one university visits both high schools. Cell \(s_{i,j}\) of the school-by-school matrix \(S\) indicates the number of universities that visited both school \(i\) and school \(j\).
 
-\hypertarget{analyses}{%
-\subsection{Analyses}\label{analyses}}
+\subsection{Analyses}\label{analyses}
 
 Analyses consist of simple descriptive statistics and descriptive social network analyses. All analyses were conducted using \emph{R} and network analyses were conducted using the \emph{igraph} package.
 
@@ -298,18 +297,15 @@ In our analyses of recruiting visits from colleges to private high schools, we a
 
 Our analyses focus on the following private school characteristics: geographic region, religious affiliation, academic reputation, racial composition, and enrollment size. Decisions about which private school characteristics to analyze were informed by logical argument and by prior research (e.g., Graham, 1999; Khan, 2010; Murnane \& Reardon, 2018; Purdy, 2018; Stevens, 2007). We analyze geographic region because, for most colleges and universities, enrollment demand is likely to be stronger at high schools in the same geographic region, but nationally prestigious colleges and universities may experience high demand throughout the country. We analyze religious affiliation because private colleges are more likely to have a relationship with private high schools with a similar religious affiliation. Although public universities are formally secular, we are interested in whether particular public universities tend to target religiously affiliated private high schools. We analyze academic reputation based on the idea that more highly ranked colleges are likely to target highly ranked private high schools. Racial composition is of substantive interest because the racial composition of visited high schools has consequences for the racial composition of colleges and universities. We would also like to analyze tuition price and household income, but these data are not available for private high schools.
 
-\hypertarget{limitations}{%
-\subsection{Limitations}\label{limitations}}
+\subsection{Limitations}\label{limitations}
 
 This article faces several limitations. First, our data collection sample consisted of public research-extensive universities as defined by the 2000 Carnegie Classification (N=102) and all private universities in the top 100 of U.S. News and World Report National Universities rankings (N=57). Making comparisons between public and private universities would be more appropriate if we used the same classification method to define the data collection sample for all universities. The process we used to define the data collection sample yielded a sample of public research universities with lower USNWR rankings than the analysis sample of selective private universities. However, the columns in Table \ref{tab:sample-characteristics} for 25th and 75th percentile SAT score of enrolled freshmen suggest that private universities ranked lower than 75 have test score ranges that are fairly similar to public research universities not ranked in the top 100.
 
 A related limitation is that our analysis sample consists of the subset of universities from the data collection sample that we believe posted all off-campus recruiting visits on their admissions website. This process for defining the analysis sample raises two concerns. First, including universities based on the completeness of recruiting events on their admissions website may yield an analysis sample that conducts more off-campus recruiting visits than the majority of the sample. Second -- and more broadly -- because our analysis sample is a convenience sample rather than a random sample, we cannot make inferences about the underlying populations of interest. This is an external validity concern. That said, we conceive of our research design as an exploratory comparative case study rather than a Large-N research design (Eisenhardt, 1989; Yin, 2009). From this perspective, we identify important variation in recruiting behavior but we cannot make strong claims about the prevalence of observed behaviors in the population. Additionally, because we lack longitudinal data about recruiting visits, we cannot make strong claims about which university is mimicking the recruiting behavior of which other university.
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
-\hypertarget{rq1-scale-of-visits}{%
-\subsection{RQ1: Scale of visits}\label{rq1-scale-of-visits}}
+\subsection{RQ1: Scale of visits}\label{rq1-scale-of-visits}
 
 Research question 1 asks, ``How does the scale of visits to private high schools by public research universities compare to the scale of visits to private high schools by selective private universities?'' This question can be answered by counting the number of visits to private high schools, which is equivalent to calculating the degree centrality for each university. In addition, we are also interested in the relative scale of visits to private high schools as compared to other types of visits. That is, the number of visits to private high schools as a proportion of all off-campus recruiting visits, or as a proportion of all recruiting visits to high schools.
 
@@ -329,8 +325,7 @@ Even though selective private universities tend to emphasize visits to private h
 
 INSERT FIGURE \ref{fig:actual-proportional-pubu} AND FIGURE \ref{fig:actual-proportional-privu} ABOUT HERE
 
-\hypertarget{rq2-overlapping-network-structure}{%
-\subsection{RQ2: Overlapping network structure}\label{rq2-overlapping-network-structure}}
+\subsection{RQ2: Overlapping network structure}\label{rq2-overlapping-network-structure}
 
 Research question 2 asks, ``To what extent do public research universities and selective private universities visit overlapping sets of private high schools?'' Answering this question requires social network analysis techniques. As described in the methods section, we began by constructing a two-mode social network of visits to private high schools (mode 1) by universities (mode 2). Each university and each private high school is a ``vertex.'' A visit from a university to a school is an ``edge.'' Because large two-mode networks like our school-university network are difficult to visualize, two-mode networks are often analyzed as one-mode networks (Borgatti, 2008; Davis et al., 2003). We transformed our two-mode school-university network into a one-mode university network in which each university is a vertex and two universities share an edge if both universities visited at least one high school in common. The \emph{weight} of an edge indicates the number of high schools that both universities visited. For example, Appendix Table \ref{tab:pubu-count-matrix} shows the matrix of weights for the set of public research universities. We created three separate one-mode university networks: a public university network; a private university network; a public and private university network.
 
@@ -368,8 +363,7 @@ The remaining two groups are larger and include universities with greater networ
 
 The allocation of universities to clusters appears to be correlated with the characteristics -- university characteristics and characteristics of the schools they visit -- of geographic location, religious affiliation, academic reputation, and also institutional control. Considering the identification of clusters, centrality, and proximity of vertices, we find substantial overlap in the sets of private schools visited by public universities and private universities. This overlap does not suggest uniformity across public and private universities. Rather, there exist several groups of public and private universities -- which can be defined by cluster analysis or more loosely by proximity -- that have more in common with one another than they do with other universities of the same institutional control.
 
-\hypertarget{rq3-characteristics-of-visited-schools}{%
-\subsection{RQ3: Characteristics of visited schools}\label{rq3-characteristics-of-visited-schools}}
+\subsection{RQ3: Characteristics of visited schools}\label{rq3-characteristics-of-visited-schools}
 
 Figures \ref{fig:region-pubu-privu} through \ref{fig:south-race-privu-privhs-pubhs} address research question 3, ``How do the characteristics of private high schools visited by public research universities compare to the characteristics of private high schools visited by selective private universities?'' Additionally, Appendix Figures \ref{fig:enroll-pubu-privu} and \ref{fig:enroll-pubu-privhs-pubhs} show the 12th grade enrollment size of visited high schools.
 
@@ -403,11 +397,9 @@ Finally, Figure \ref{fig:south-race-pubu-privhs-pubhs} examines the racial compo
 
 INSERT FIGURES \ref{fig:south-race-pubu-privhs-pubhs} AND \ref{fig:south-race-privu-privhs-pubhs} ABOUT HERE
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\section{Discussion}\label{discussion}
 
-\hypertarget{summary}{%
-\subsection{Summary}\label{summary}}
+\subsection{Summary}\label{summary}
 
 This chapter analyzes recruiting visits to private high schools, which were made during the 2017 calendar year, for a convenience sample of 15 public research universities and 14 private universities ranked in the top 100 of U.S. News and World Report National Universities rankings. Our goal was to learn about public research universities by analyzing their behavior and comparing their behavior to that of selective private universities.
 
@@ -421,8 +413,7 @@ With the exception of UC-Berkeley and UC-San Diego, the average academic rating 
 
 Across the universe of private high schools, most schools enroll relatively few students who identify as Black, Latinx, or Native. For the public and private universities in our sample, the set of visited private schools enrolled fewer Black, Latinx, and Native students than the national universe of private schools. By contrast, the public high schools visited by public universities tended to enroll a much higher share of students who identify as Black, Latinx, or Native. This is true of the visits to schools in the South as well.
 
-\hypertarget{implications-for-scholarship}{%
-\subsection{Implications for Scholarship}\label{implications-for-scholarship}}
+\subsection{Implications for Scholarship}\label{implications-for-scholarship}
 
 This study engages with two, previously disconnected literatures. Scholarship on nonresident enrollment observes that many public research universities began growing nonresident enrollment following declines in state appropriations (Author, XXXXb). Given that nonresident tuition price is often two- to three-times resident price, it is unsurprising that nonresident students tend to be more affluent than resident students, are less likely to be first-generation students, and are less likely to be Black or Latinx (Author, XXXXc). Public research universities recruit nonresident students using institutional financial aid packages (Leeds \& DesJardins, 2015) and through recruiting interventions that target earlier stages in the enrollment funnel. Using nearly the same sample of 15 public research universities used in this study, Author (XXXXa) found that 12 universities made more out-of-state visits than in-state visits and visits to out-of-state public high schools focused on affluent, predominantly white schools. Public research universities have a financial incentive to target private school students, who tend to come from affluent households that are able to pay nonresident tuition price without need-based aid. This study extends the literature on nonresident students by analyzing the scale of visits to private schools, the overlap and divergence in recruiting networks between public and private universities, and the characteristics of visited private schools.
 
@@ -436,8 +427,7 @@ However, public universities that made the greatest number of private school vis
 
 While public universities playing the private school game differ in terms of the set of schools they target, they all seem to be targeting schools that enroll mostly affluent students and few students who identify as Black, Latinx, or Native. To the extent that these recruiting efforts yield dividends in terms of incoming freshmen, playing the private school game is likely to change the enrollment composition of public research universities in ways that run contrary to racial and socioeconomic diversity.
 
-\hypertarget{implications-for-practice}{%
-\subsection{Implications for Practice}\label{implications-for-practice}}
+\subsection{Implications for Practice}\label{implications-for-practice}
 
 Market research suggests that off-campus recruiting visits will remain a vital means of connecting to students and guidance counselors, just as they were prior to the Covid pandemic. Ruffalo Noel-Levitz (2020a) found that ``travel'' was the top-ranked marketing/recruiting expenditure item for both public universities and private universities. During the height of Covid, off-campus recruiting visits ceased and were partially replaced by virtual counselor events (Ruffalo Noel-Levitz, 2020b). Admissions counselors are now traveling again. Ruffalo Noel-Levitz (2022a) found that travel was the fifth-ranked expenditure item for public universities and the second-ranked expenditure item for private universities. When asked about areas of future expenditure growth, travel was the top-ranked item for public universities and the second-ranked item for private universities (Ruffalo Noel-Levitz, 2022a), suggesting that universities are increasing travel following the decline of the pandemic.
 
@@ -459,424 +449,422 @@ We suspect that many universities may have incomplete knowledge about which scho
 
 For university leaders concerned about racial and socioeconomic equity in college access, we recommend conducting an internal audit of recruiting practices. How do the high schools and community colleges they visit differ racially, socioeconomically, and geographically from those they do not visit? How do the student list prospect profiles they purchase differ racially, socioeconomically, and geographically from those they do not purchase? We also recommend that students, faculty, and university stakeholders ask this question of the university president. It may be that the president is unaware and must ask the enrollment management office, which may begin a useful conversation. While universities may be aware of the composition of the schools they visit and the prospect profiles they purchase, we suspect that they may be less aware of how the composition of targeted schools/communities/students compares to the composition of not targeted schools/communities/students. If internal equity audits point to areas of inequity in recruiting behavior, university stakeholders can begin a discussion of how to address this issue.
 
-\hypertarget{conflict-of-interest-statement}{%
-\section{Conflict of Interest Statement}\label{conflict-of-interest-statement}}
+\section{Conflict of Interest Statement}\label{conflict-of-interest-statement}
 
 All authors declare that they have no conflicts of interest.
 
 \singlespacing
 
-\hypertarget{references}{%
-\section{References}\label{references}}
+\section{References}\label{references}
 
-\hypertarget{refs}{}
+\phantomsection\label{refs}
 \begin{CSLReferences}{1}{0}
-\leavevmode\vadjust pre{\hypertarget{ref-RN4758}{}}%
+\bibitem[\citeproctext]{ref-RN4758}
 Author. (XXXXa).
 
-\leavevmode\vadjust pre{\hypertarget{ref-list_biz}{}}%
+\bibitem[\citeproctext]{ref-list_biz}
 Author. (XXXXe).
 
-\leavevmode\vadjust pre{\hypertarget{ref-list_empirics}{}}%
+\bibitem[\citeproctext]{ref-list_empirics}
 Author. (XXXXf).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3753}{}}%
+\bibitem[\citeproctext]{ref-RN3753}
 Author. (XXXXb).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3685}{}}%
+\bibitem[\citeproctext]{ref-RN3685}
 Author. (XXXXc).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4290}{}}%
+\bibitem[\citeproctext]{ref-RN4290}
 Author. (XXXXd).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4953}{}}%
+\bibitem[\citeproctext]{ref-RN4953}
 Borgatti, S. P. (1998). Ego networks. Retrieved from \url{http://www.analytictech.com/networks/egonet.htm}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2457}{}}%
+\bibitem[\citeproctext]{ref-RN2457}
 Borgatti, S. P. (2008). 2-mode concepts in social network analysis. In \emph{Encyclopedia of complexity and system science}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN786}{}}%
+\bibitem[\citeproctext]{ref-RN786}
 Bryk, A. S., Lee, V. E., \& Holland, P. B. (1993). \emph{Catholic schools and the common good}. Cambridge: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN975}{}}%
+\bibitem[\citeproctext]{ref-RN975}
 Burt, R. S. (1992). \emph{Structural holes: The social structure of competition}. Cambridge, MA: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2772}{}}%
+\bibitem[\citeproctext]{ref-RN2772}
 Cheslock, J. J., \& Kroc, R. (2012). Managing college enrollments. In R. Howard, B. Knight, \& G. McLaughlin (Eds.), \emph{The handbook for institutional researchers} (pp. 221--236). San Francisco, CA: Jossey-Bass.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4935}{}}%
+\bibitem[\citeproctext]{ref-RN4935}
 Chetty, R., Deming, D. J., \& Friedman, J. N. (2023). Diversifying society's leaders? The causal effects of admission to highly selective private colleges. \emph{National Bureau of Economic Research Working Paper Series}, \emph{No. 31492}. \url{https://doi.org/10.3386/w31492}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4599}{}}%
+\bibitem[\citeproctext]{ref-RN4599}
 Clark, D., \& Del Bono, E. (2016). The long-run effects of attending an elite school: Evidence from the united kingdom. \emph{American Economic Journal-Applied Economics}, \emph{8}(1), 150--176. \url{https://doi.org/10.1257/app.20130505}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4677}{}}%
+\bibitem[\citeproctext]{ref-RN4677}
 Clauset, A., Newman, M. E. J., \& Moore, C. (2004). Finding community structure in very large networks. \emph{Physical Review E}, \emph{70}(6). \url{https://doi.org/10.1103/PhysRevE.70.066111}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4937}{}}%
+\bibitem[\citeproctext]{ref-RN4937}
 Coleman, J. S., \& Hoffer, T. (1987). \emph{Public and private high schools: The impact of communities} (pp. xxviii, 254 p.). New York: Basic Books.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4647}{}}%
+\bibitem[\citeproctext]{ref-RN4647}
 Cookson, P. W., \& Persell, C. H. (1985). \emph{Preparing for power : America's elite boarding schools} (pp. x, 260 p.). New York: Basic Books.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1791}{}}%
+\bibitem[\citeproctext]{ref-RN1791}
 Curs, B. R., \& Singell, L. D. (2002). An analysis of the application and enrollment processes for in-state and out-of-state students at a large public university. \emph{Economics of Education Review}, \emph{21}(2), 111--124. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000173740100002}{\textless Go to ISI\textgreater://000173740100002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2287}{}}%
+\bibitem[\citeproctext]{ref-RN2287}
 Curs, B. R., \& Singell, L. D. (2010). Aim high or go low? Pricing strategies and enrollment effects when the net price elasticity varis with need and ability. \emph{Journal of Higher Education}, \emph{81}(4), 515--543.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4663}{}}%
+\bibitem[\citeproctext]{ref-RN4663}
 Davis, G. F., Yoo, M., \& Baker, W. E. (2003). The small world of the american corporate elite, 1982-2001. \emph{Strategic Organization}, \emph{1}(3), 301--326. \url{https://doi.org/10.1177/14761270030013002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2271}{}}%
+\bibitem[\citeproctext]{ref-RN2271}
 Delaney, J. A., \& Doyle, W. R. (2011). State spending on higher education: Testing the balance wheel over time. \emph{Journal of Education Finance}, \emph{36}(4), 343--368. Journal Article.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3524}{}}%
+\bibitem[\citeproctext]{ref-RN3524}
 DesJardins, S. L., \& Bell, A. (2006). Using economic concepts to inform enrollment management. \emph{New Directions for Institutional Research}, \emph{2006}(132), 59--74. \url{https://doi.org/10.1002/ir.196}
 
-\leavevmode\vadjust pre{\hypertarget{ref-eab_nacac_counselor_2023}{}}%
+\bibitem[\citeproctext]{ref-eab_nacac_counselor_2023}
 EAB, \& NACAC. (2023). \emph{The counselor perspective: Insights from EAB's survey of high school counselors}. EAB. Retrieved from \url{https://www.nacacnet.org/wp-content/uploads/The-Counselor-Perspective-EAB-Survey.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4936}{}}%
+\bibitem[\citeproctext]{ref-RN4936}
 Eide, E. R., Goldhaber, D. D., \& Showalter, M. H. (2004). Does catholic high school attendance lead to attendance at a more selective college? \emph{Social Science Quarterly}, \emph{85}(5), 1335--1352. \url{https://doi.org/10.1111/j.0038-4941.2004.00279.x}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4116}{}}%
+\bibitem[\citeproctext]{ref-RN4116}
 Eisenhardt, K. M. (1989). Building theories from case study research. \emph{Academy of Management Review}, \emph{14}(4), 532--550. \url{https://doi.org/10.2307/258557}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4642}{}}%
+\bibitem[\citeproctext]{ref-RN4642}
 Falsey, B., \& Heyns, B. (1984). The college channel: Private and public schools reconsidered. \emph{Sociology of Education}, \emph{57}(2), 111--122. \url{https://doi.org/10.2307/2112633}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4724}{}}%
+\bibitem[\citeproctext]{ref-RN4724}
 Graham, L. (1999). \emph{Our kind of people: Inside america's black upper class} (1st ed., pp. xii, 418 pages, 16 unnumbered pages of plates). New York: HarperCollins.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4625}{}}%
+\bibitem[\citeproctext]{ref-RN4625}
 Hill, L. D. (2008). School strategies and the "college-linking" process: Reconsidering the effects of high schools on college enrollment. \emph{Sociology of Education}, \emph{81}(1), 53--76. Journal Article. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://WOS:000256634400003}{\textless Go to ISI\textgreater://WOS:000256634400003}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4324}{}}%
+\bibitem[\citeproctext]{ref-RN4324}
 Holland, M. M. (2019). \emph{Divergent paths to college: Race, class, and inequality in high schools}. Rutgers University Press. \url{https://doi.org/10.36019/9780813590288}
 
-\leavevmode\vadjust pre{\hypertarget{ref-em_burnout_hoover}{}}%
+\bibitem[\citeproctext]{ref-em_burnout_hoover}
 Hoover, E. (2023). A profession on the edge: Why enrollment leaders are wearing down, burning out, and leaving jobs they once loved. \emph{The Chronicle of Higher Education}, (April 5). Retrieved from \url{https://www.chronicle.com/article/a-profession-on-the-edge}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2133}{}}%
+\bibitem[\citeproctext]{ref-RN2133}
 Hoxby, C. M. (1997). \emph{How the changing market structure of u.s. Higher education explains college tuition} (No. Working Paper 6323). National Bureau of Economic Research. Retrieved from \url{http://www.nber.org/papers/W6323.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4495}{}}%
-Jack, A. A. (2019). \emph{The privileged poor: How elite colleges are failing disadvantaged students} (p. 276). Cambridge, Massachusetts: Harvard University Press,. Retrieved from \href{Restricted\%20to\%20UCLA.\%20Limited\%20to\%20three\%20concurrent\%20users.\%20Try\%20again\%20later\%20if\%20unavailable.\%20http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&__char_set=utf8\&isbn=9780674239647}{Restricted to UCLA. Limited to three concurrent users. Try again later if unavailable. http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&\_\_char\_set=utf8\&isbn=9780674239647}
+\bibitem[\citeproctext]{ref-RN4495}
+Jack, A. A. (2019). \emph{The privileged poor: How elite colleges are failing disadvantaged students} (p. 276). Cambridge, Massachusetts: Harvard University Press,. Retrieved from \href{Restricted\%20to\%20UCLA.\%20Limited\%20to\%20three\%20concurrent\%20users.\%20Try\%20again\%20later\%20if\%20unavailable.\%20http://openurl.cdlib.org?sid=UCLA:CAT&genre=book&__char_set=utf8&isbn=9780674239647}{Restricted to UCLA. Limited to three concurrent users. Try again later if unavailable. http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&\_\_char\_set=utf8\&isbn=9780674239647}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4596}{}}%
+\bibitem[\citeproctext]{ref-RN4596}
 Jerrim, J., Parker, P. D., Chmielewski, A. K., \& Anders, J. (2016). Private schooling, educational transitions, and early labour market outcomes: Evidence from three anglophone countries. \emph{European Sociological Review}, \emph{32}(2), 280--294. \url{https://doi.org/10.1093/esr/jcv098}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4321}{}}%
+\bibitem[\citeproctext]{ref-RN4321}
 Khan, S. R. (2010). \emph{Getting in: How elite schools play the college game} (pp. 97--113). Rowman \& Littlefield.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4407}{}}%
+\bibitem[\citeproctext]{ref-RN4407}
 Khan, S. R. (2011). \emph{Privilege: The making of an adolescent elite at st. Paul's school} (pp. 232 pages). Princeton, N.J.: Princeton University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3522}{}}%
+\bibitem[\citeproctext]{ref-RN3522}
 Killgore, L. (2009). Merit and competition in selective college admissions. \emph{Review of Higher Education}, \emph{32}(4), 469--488. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://WOS:000266737500002}{\textless Go to ISI\textgreater://WOS:000266737500002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1565}{}}%
+\bibitem[\citeproctext]{ref-RN1565}
 Kingston, P. W., \& Lewis, L. S. (1990). \emph{The high-status track: Studies of elite schools and stratification} (pp. xxxiv, 261 p.). Albany: State University of New York Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4614}{}}%
+\bibitem[\citeproctext]{ref-RN4614}
 Klugman, J. (2012). How resource inequalities among high schools reproduce class advantages in college destinations. \emph{Research in Higher Education}, \emph{53}(8), 803--830. Journal Article. \url{https://doi.org/10.1007/s11162-012-9261-8}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4725}{}}%
+\bibitem[\citeproctext]{ref-RN4725}
 Kolaczyk, E. D., \& Csárdi, G. (2020). \emph{Statistical analysis of network data with r} (2nd ed, p. 235). Cham: Springer,. \url{https://doi.org/10.1007/978-3-030-44129-6}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3762}{}}%
+\bibitem[\citeproctext]{ref-RN3762}
 Leeds, D. M., \& DesJardins, S. L. (2015). The effect of merit aid on enrollment: A regression discontinuity analysis of iowa's national scholars award. \emph{Research in Higher Education}, \emph{56}(7), 471--495. \url{https://doi.org/10.1007/s11162-014-9359-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4643}{}}%
+\bibitem[\citeproctext]{ref-RN4643}
 Levine, S. B. (1980). The rise of american boarding schools and the development of a national upper-class. \emph{Social Problems}, \emph{28}(1), 63--94. \url{https://doi.org/10.1525/sp.1980.28.1.03a00050}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2546}{}}%
+\bibitem[\citeproctext]{ref-RN2546}
 Mak, J., \& Moncur, J. E. T. (2003). Interstate migration of college freshmen. \emph{Annals of Regional Science}, \emph{37}(4), 603--612. \url{https://doi.org/10.1007/s00168-003-0130-4}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1722}{}}%
+\bibitem[\citeproctext]{ref-RN1722}
 McPherson, M., Smith-Lovin, L., \& Cook, J. M. (2001). Birds of a feather: Homophily in social networks. \emph{Annual Review of Sociology}, \emph{27}, 415--444. Journal Article. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000170748100017}{\textless Go to ISI\textgreater://000170748100017}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN513}{}}%
+\bibitem[\citeproctext]{ref-RN513}
 Meyer, J. W., \& Rowan, B. (1977). Institutionalized organizations: Formal structure as myth and ceremony. \emph{The American Journal of Sociology}, \emph{83}(2), 340--363.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2536}{}}%
+\bibitem[\citeproctext]{ref-RN2536}
 Mixon, F. G., \& Hsing, Y. (1994). The determinants of out-of-state enrollments in higher education: A tobit analysis. \emph{Economics of Education Review}, \emph{13}(4), 295--335.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4504}{}}%
+\bibitem[\citeproctext]{ref-RN4504}
 Murnane, R. J., \& Reardon, S. F. (2018). Long-term trends in private school enrollments by family income. \emph{AERA Open}, \emph{4}(1), 1--24. \url{https://doi.org/10.1177/2332858417751355}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4938}{}}%
+\bibitem[\citeproctext]{ref-RN4938}
 Neal, D. (1997). The effects of catholic secondary schooling on educational achievement. \emph{Journal of Labor Economics}, \emph{15}(1), 98--123. \url{https://doi.org/10.1086/209848}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4634}{}}%
+\bibitem[\citeproctext]{ref-RN4634}
 Persell, C. H., Catsambis, S., \& Cookson, P. W. (1992). Differential asset conversion: Class and gendered pathways to selective colleges. \emph{Sociology of Education}, \emph{65}(3), 208--225. \url{https://doi.org/10.2307/2112809}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4640}{}}%
+\bibitem[\citeproctext]{ref-RN4640}
 Persell, C. H., \& Cookson, P. W. (1985). Chartering and bartering: Elite education and social reproduction. \emph{Social Problems}, \emph{33}(2), 114--129. \url{https://doi.org/10.1525/sp.1985.33.2.03a00030}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN959}{}}%
+\bibitem[\citeproctext]{ref-RN959}
 Pfeffer, J., \& Salancik, G. R. (1978). \emph{The external control of organizations: A resource dependence perspective} (pp. xiii, 300 p.). New York: Harper \& Row.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1577}{}}%
+\bibitem[\citeproctext]{ref-RN1577}
 Priest, D. M., \& St. John, E. P. (2006). \emph{Privatization and public universities} (pp. 299 p.). Bloomington: Indiana University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4588}{}}%
+\bibitem[\citeproctext]{ref-RN4588}
 Purdy, M. A. (2018). \emph{Transforming the elite: Black students and the desegregation of private schools} (pp. 1--243). \url{https://doi.org/10.5149/northcarolina/9781469643496.001.0001}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4589}{}}%
+\bibitem[\citeproctext]{ref-RN4589}
 Reeves, A., Friedman, S., Rahal, C., \& Flemmen, M. (2017). The decline and persistence of the old boy: Private schools and elite recruitment 1897 to 2016. \emph{American Sociological Review}, \emph{82}(6), 1139--1166. \url{https://doi.org/10.1177/0003122417735742}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4911}{}}%
-Rivard, R. (2013). Micro-targeting students: Increasingly sophisticated data slicing tools are changing student recruitment. Who benefits? \emph{InsideHigherEd}, (Oct 24). Retrieved from \url{https://www.insidehighered.com/news/2013/10/24/political-campaign-style-targeting-comes-student-search?width=775\&height=500\&iframe=true}
+\bibitem[\citeproctext]{ref-RN4911}
+Rivard, R. (2013). Micro-targeting students: Increasingly sophisticated data slicing tools are changing student recruitment. Who benefits? \emph{InsideHigherEd}, (Oct 24). Retrieved from \url{https://www.insidehighered.com/news/2013/10/24/political-campaign-style-targeting-comes-student-search?width=775&height=500&iframe=true}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3608}{}}%
+\bibitem[\citeproctext]{ref-RN3608}
 Rudolph, F. (1962). \emph{The american college and university: A history} (1st ed., pp. 516 p.). New York: Alfred A. Knopf.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4402}{}}%
+\bibitem[\citeproctext]{ref-RN4402}
 Ruffalo Noel-Levitz. (2018). \emph{2018 marketing and student recruitment report of effective practices}. Ruffalo Noel-Levitz. Retrieved from \url{http://learn.ruffalonl.com/rs/395-EOG-977/images/RNL_2018_Student_Recruitment_Marketing_Report_EM-19.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4664}{}}%
+\bibitem[\citeproctext]{ref-RN4664}
 Ruffalo Noel-Levitz. (2020a). \emph{2020 cost of recruiting an undergraduate student report} (Report). Ruffalo Noel-Levitz. Retrieved from \url{https://learn.ruffalonl.com/rs/395-EOG-977/images/2020_CostRecruiting_Report.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-parents_covid_rnl}{}}%
+\bibitem[\citeproctext]{ref-parents_covid_rnl}
 Ruffalo Noel-Levitz. (2020b). \emph{College planning and the perceptions of parents after covid-19}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/thank-you/download-college-planning-and-the-perceptions-of-parents-after-covid-19/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4896}{}}%
+\bibitem[\citeproctext]{ref-RN4896}
 Ruffalo Noel-Levitz. (2022a). \emph{2022 cost of recruiting an undergraduate student report}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/thank-you/download-the-2022-cost-of-recruiting-an-undergraduate-student-report/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4895}{}}%
+\bibitem[\citeproctext]{ref-RN4895}
 Ruffalo Noel-Levitz. (2022b). \emph{2022 marketing and recruitment practices for undergraduate students report}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/papers-research-higher-education-fundraising/marketing-and-recruitment-practices-for-undergraduate-students/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4934}{}}%
+\bibitem[\citeproctext]{ref-RN4934}
 Salazar, K. G. (2022). Recruitment redlining by public research universities in the los angeles and dallas metropolitan areas. \emph{The Journal of Higher Education}, \emph{93}(4), 585--621. \url{https://doi.org/10.1080/00221546.2021.2004811}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1118}{}}%
+\bibitem[\citeproctext]{ref-RN1118}
 Slaughter, S., \& Rhoades, G. (2004). \emph{Academic capitalism and the new economy} (pp. xii, 370 p.). Baltimore: Johns Hopkins University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3519}{}}%
+\bibitem[\citeproctext]{ref-RN3519}
 Stevens, M. L. (2007). \emph{Creating a class: College admissions and the education of elites} (pp. 308 p.). Cambridge, MA: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4648}{}}%
+\bibitem[\citeproctext]{ref-RN4648}
 Stone, T. (2018). Social network theory: A literature review for understanding innovation programs. Retrieved from \url{https://medium.com/swlh/social-network-theory-a-literature-review-for-understanding-innovation-programs-7f1c214e9a77}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN531}{}}%
+\bibitem[\citeproctext]{ref-RN531}
 Thompson, J. D. (1967). \emph{Organizations in action}. New York: McGraw Hill.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4954}{}}%
+\bibitem[\citeproctext]{ref-RN4954}
 U.S. Department of Education. (2023). \emph{Strategies for increasing diversity and opportunity in higher education}. U.S. Department of Education. Retrieved from \url{https://sites.ed.gov/ous/files/2023/09/Diversity-and-Opportunity-in-Higher-Education.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1549}{}}%
+\bibitem[\citeproctext]{ref-RN1549}
 Winston, G. C. (1999). Subsidies, hierarchy and peers: The awkward economics of higher education. \emph{Journal of Economic Perspectives}, \emph{13}(1), 13--36. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000078904300002}{\textless Go to ISI\textgreater://000078904300002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4011}{}}%
+\bibitem[\citeproctext]{ref-RN4011}
 Yin, R. K. (2009). \emph{Case study research: Design and methods} (4th ed., pp. xiv, 219 p.). Los Angeles: Sage Publications.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2535}{}}%
+\bibitem[\citeproctext]{ref-RN2535}
 Zhang, L. A. (2007). Nonresident enrollment demand in public higher education: An analysis at national, state, and institutional levels. \emph{Review of Higher Education}, \emph{31}(1), 1--25. \url{https://doi.org/10.1353/rhe.2007.0057}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4758}{}}%
+\bibitem[\citeproctext]{ref-RN4758}
 Author. (XXXXa).
 
-\leavevmode\vadjust pre{\hypertarget{ref-list_biz}{}}%
+\bibitem[\citeproctext]{ref-list_biz}
 Author. (XXXXe).
 
-\leavevmode\vadjust pre{\hypertarget{ref-list_empirics}{}}%
+\bibitem[\citeproctext]{ref-list_empirics}
 Author. (XXXXf).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3753}{}}%
+\bibitem[\citeproctext]{ref-RN3753}
 Author. (XXXXb).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3685}{}}%
+\bibitem[\citeproctext]{ref-RN3685}
 Author. (XXXXc).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4290}{}}%
+\bibitem[\citeproctext]{ref-RN4290}
 Author. (XXXXd).
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4953}{}}%
+\bibitem[\citeproctext]{ref-RN4953}
 Borgatti, S. P. (1998). Ego networks. Retrieved from \url{http://www.analytictech.com/networks/egonet.htm}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2457}{}}%
+\bibitem[\citeproctext]{ref-RN2457}
 Borgatti, S. P. (2008). 2-mode concepts in social network analysis. In \emph{Encyclopedia of complexity and system science}.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN786}{}}%
+\bibitem[\citeproctext]{ref-RN786}
 Bryk, A. S., Lee, V. E., \& Holland, P. B. (1993). \emph{Catholic schools and the common good}. Cambridge: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN975}{}}%
+\bibitem[\citeproctext]{ref-RN975}
 Burt, R. S. (1992). \emph{Structural holes: The social structure of competition}. Cambridge, MA: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2772}{}}%
+\bibitem[\citeproctext]{ref-RN2772}
 Cheslock, J. J., \& Kroc, R. (2012). Managing college enrollments. In R. Howard, B. Knight, \& G. McLaughlin (Eds.), \emph{The handbook for institutional researchers} (pp. 221--236). San Francisco, CA: Jossey-Bass.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4935}{}}%
+\bibitem[\citeproctext]{ref-RN4935}
 Chetty, R., Deming, D. J., \& Friedman, J. N. (2023). Diversifying society's leaders? The causal effects of admission to highly selective private colleges. \emph{National Bureau of Economic Research Working Paper Series}, \emph{No. 31492}. \url{https://doi.org/10.3386/w31492}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4599}{}}%
+\bibitem[\citeproctext]{ref-RN4599}
 Clark, D., \& Del Bono, E. (2016). The long-run effects of attending an elite school: Evidence from the united kingdom. \emph{American Economic Journal-Applied Economics}, \emph{8}(1), 150--176. \url{https://doi.org/10.1257/app.20130505}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4677}{}}%
+\bibitem[\citeproctext]{ref-RN4677}
 Clauset, A., Newman, M. E. J., \& Moore, C. (2004). Finding community structure in very large networks. \emph{Physical Review E}, \emph{70}(6). \url{https://doi.org/10.1103/PhysRevE.70.066111}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4937}{}}%
+\bibitem[\citeproctext]{ref-RN4937}
 Coleman, J. S., \& Hoffer, T. (1987). \emph{Public and private high schools: The impact of communities} (pp. xxviii, 254 p.). New York: Basic Books.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4647}{}}%
+\bibitem[\citeproctext]{ref-RN4647}
 Cookson, P. W., \& Persell, C. H. (1985). \emph{Preparing for power : America's elite boarding schools} (pp. x, 260 p.). New York: Basic Books.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1791}{}}%
+\bibitem[\citeproctext]{ref-RN1791}
 Curs, B. R., \& Singell, L. D. (2002). An analysis of the application and enrollment processes for in-state and out-of-state students at a large public university. \emph{Economics of Education Review}, \emph{21}(2), 111--124. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000173740100002}{\textless Go to ISI\textgreater://000173740100002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2287}{}}%
+\bibitem[\citeproctext]{ref-RN2287}
 Curs, B. R., \& Singell, L. D. (2010). Aim high or go low? Pricing strategies and enrollment effects when the net price elasticity varis with need and ability. \emph{Journal of Higher Education}, \emph{81}(4), 515--543.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4663}{}}%
+\bibitem[\citeproctext]{ref-RN4663}
 Davis, G. F., Yoo, M., \& Baker, W. E. (2003). The small world of the american corporate elite, 1982-2001. \emph{Strategic Organization}, \emph{1}(3), 301--326. \url{https://doi.org/10.1177/14761270030013002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2271}{}}%
+\bibitem[\citeproctext]{ref-RN2271}
 Delaney, J. A., \& Doyle, W. R. (2011). State spending on higher education: Testing the balance wheel over time. \emph{Journal of Education Finance}, \emph{36}(4), 343--368. Journal Article.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3524}{}}%
+\bibitem[\citeproctext]{ref-RN3524}
 DesJardins, S. L., \& Bell, A. (2006). Using economic concepts to inform enrollment management. \emph{New Directions for Institutional Research}, \emph{2006}(132), 59--74. \url{https://doi.org/10.1002/ir.196}
 
-\leavevmode\vadjust pre{\hypertarget{ref-eab_nacac_counselor_2023}{}}%
+\bibitem[\citeproctext]{ref-eab_nacac_counselor_2023}
 EAB, \& NACAC. (2023). \emph{The counselor perspective: Insights from EAB's survey of high school counselors}. EAB. Retrieved from \url{https://www.nacacnet.org/wp-content/uploads/The-Counselor-Perspective-EAB-Survey.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4936}{}}%
+\bibitem[\citeproctext]{ref-RN4936}
 Eide, E. R., Goldhaber, D. D., \& Showalter, M. H. (2004). Does catholic high school attendance lead to attendance at a more selective college? \emph{Social Science Quarterly}, \emph{85}(5), 1335--1352. \url{https://doi.org/10.1111/j.0038-4941.2004.00279.x}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4116}{}}%
+\bibitem[\citeproctext]{ref-RN4116}
 Eisenhardt, K. M. (1989). Building theories from case study research. \emph{Academy of Management Review}, \emph{14}(4), 532--550. \url{https://doi.org/10.2307/258557}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4642}{}}%
+\bibitem[\citeproctext]{ref-RN4642}
 Falsey, B., \& Heyns, B. (1984). The college channel: Private and public schools reconsidered. \emph{Sociology of Education}, \emph{57}(2), 111--122. \url{https://doi.org/10.2307/2112633}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4724}{}}%
+\bibitem[\citeproctext]{ref-RN4724}
 Graham, L. (1999). \emph{Our kind of people: Inside america's black upper class} (1st ed., pp. xii, 418 pages, 16 unnumbered pages of plates). New York: HarperCollins.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4625}{}}%
+\bibitem[\citeproctext]{ref-RN4625}
 Hill, L. D. (2008). School strategies and the "college-linking" process: Reconsidering the effects of high schools on college enrollment. \emph{Sociology of Education}, \emph{81}(1), 53--76. Journal Article. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://WOS:000256634400003}{\textless Go to ISI\textgreater://WOS:000256634400003}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4324}{}}%
+\bibitem[\citeproctext]{ref-RN4324}
 Holland, M. M. (2019). \emph{Divergent paths to college: Race, class, and inequality in high schools}. Rutgers University Press. \url{https://doi.org/10.36019/9780813590288}
 
-\leavevmode\vadjust pre{\hypertarget{ref-em_burnout_hoover}{}}%
+\bibitem[\citeproctext]{ref-em_burnout_hoover}
 Hoover, E. (2023). A profession on the edge: Why enrollment leaders are wearing down, burning out, and leaving jobs they once loved. \emph{The Chronicle of Higher Education}, (April 5). Retrieved from \url{https://www.chronicle.com/article/a-profession-on-the-edge}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2133}{}}%
+\bibitem[\citeproctext]{ref-RN2133}
 Hoxby, C. M. (1997). \emph{How the changing market structure of u.s. Higher education explains college tuition} (No. Working Paper 6323). National Bureau of Economic Research. Retrieved from \url{http://www.nber.org/papers/W6323.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4495}{}}%
-Jack, A. A. (2019). \emph{The privileged poor: How elite colleges are failing disadvantaged students} (p. 276). Cambridge, Massachusetts: Harvard University Press,. Retrieved from \href{Restricted\%20to\%20UCLA.\%20Limited\%20to\%20three\%20concurrent\%20users.\%20Try\%20again\%20later\%20if\%20unavailable.\%20http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&__char_set=utf8\&isbn=9780674239647}{Restricted to UCLA. Limited to three concurrent users. Try again later if unavailable. http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&\_\_char\_set=utf8\&isbn=9780674239647}
+\bibitem[\citeproctext]{ref-RN4495}
+Jack, A. A. (2019). \emph{The privileged poor: How elite colleges are failing disadvantaged students} (p. 276). Cambridge, Massachusetts: Harvard University Press,. Retrieved from \href{Restricted\%20to\%20UCLA.\%20Limited\%20to\%20three\%20concurrent\%20users.\%20Try\%20again\%20later\%20if\%20unavailable.\%20http://openurl.cdlib.org?sid=UCLA:CAT&genre=book&__char_set=utf8&isbn=9780674239647}{Restricted to UCLA. Limited to three concurrent users. Try again later if unavailable. http://openurl.cdlib.org?sid=UCLA:CAT\&genre=book\&\_\_char\_set=utf8\&isbn=9780674239647}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4596}{}}%
+\bibitem[\citeproctext]{ref-RN4596}
 Jerrim, J., Parker, P. D., Chmielewski, A. K., \& Anders, J. (2016). Private schooling, educational transitions, and early labour market outcomes: Evidence from three anglophone countries. \emph{European Sociological Review}, \emph{32}(2), 280--294. \url{https://doi.org/10.1093/esr/jcv098}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4321}{}}%
+\bibitem[\citeproctext]{ref-RN4321}
 Khan, S. R. (2010). \emph{Getting in: How elite schools play the college game} (pp. 97--113). Rowman \& Littlefield.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4407}{}}%
+\bibitem[\citeproctext]{ref-RN4407}
 Khan, S. R. (2011). \emph{Privilege: The making of an adolescent elite at st. Paul's school} (pp. 232 pages). Princeton, N.J.: Princeton University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3522}{}}%
+\bibitem[\citeproctext]{ref-RN3522}
 Killgore, L. (2009). Merit and competition in selective college admissions. \emph{Review of Higher Education}, \emph{32}(4), 469--488. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://WOS:000266737500002}{\textless Go to ISI\textgreater://WOS:000266737500002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1565}{}}%
+\bibitem[\citeproctext]{ref-RN1565}
 Kingston, P. W., \& Lewis, L. S. (1990). \emph{The high-status track: Studies of elite schools and stratification} (pp. xxxiv, 261 p.). Albany: State University of New York Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4614}{}}%
+\bibitem[\citeproctext]{ref-RN4614}
 Klugman, J. (2012). How resource inequalities among high schools reproduce class advantages in college destinations. \emph{Research in Higher Education}, \emph{53}(8), 803--830. Journal Article. \url{https://doi.org/10.1007/s11162-012-9261-8}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4725}{}}%
+\bibitem[\citeproctext]{ref-RN4725}
 Kolaczyk, E. D., \& Csárdi, G. (2020). \emph{Statistical analysis of network data with r} (2nd ed, p. 235). Cham: Springer,. \url{https://doi.org/10.1007/978-3-030-44129-6}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3762}{}}%
+\bibitem[\citeproctext]{ref-RN3762}
 Leeds, D. M., \& DesJardins, S. L. (2015). The effect of merit aid on enrollment: A regression discontinuity analysis of iowa's national scholars award. \emph{Research in Higher Education}, \emph{56}(7), 471--495. \url{https://doi.org/10.1007/s11162-014-9359-2}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4643}{}}%
+\bibitem[\citeproctext]{ref-RN4643}
 Levine, S. B. (1980). The rise of american boarding schools and the development of a national upper-class. \emph{Social Problems}, \emph{28}(1), 63--94. \url{https://doi.org/10.1525/sp.1980.28.1.03a00050}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2546}{}}%
+\bibitem[\citeproctext]{ref-RN2546}
 Mak, J., \& Moncur, J. E. T. (2003). Interstate migration of college freshmen. \emph{Annals of Regional Science}, \emph{37}(4), 603--612. \url{https://doi.org/10.1007/s00168-003-0130-4}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1722}{}}%
+\bibitem[\citeproctext]{ref-RN1722}
 McPherson, M., Smith-Lovin, L., \& Cook, J. M. (2001). Birds of a feather: Homophily in social networks. \emph{Annual Review of Sociology}, \emph{27}, 415--444. Journal Article. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000170748100017}{\textless Go to ISI\textgreater://000170748100017}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN513}{}}%
+\bibitem[\citeproctext]{ref-RN513}
 Meyer, J. W., \& Rowan, B. (1977). Institutionalized organizations: Formal structure as myth and ceremony. \emph{The American Journal of Sociology}, \emph{83}(2), 340--363.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2536}{}}%
+\bibitem[\citeproctext]{ref-RN2536}
 Mixon, F. G., \& Hsing, Y. (1994). The determinants of out-of-state enrollments in higher education: A tobit analysis. \emph{Economics of Education Review}, \emph{13}(4), 295--335.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4504}{}}%
+\bibitem[\citeproctext]{ref-RN4504}
 Murnane, R. J., \& Reardon, S. F. (2018). Long-term trends in private school enrollments by family income. \emph{AERA Open}, \emph{4}(1), 1--24. \url{https://doi.org/10.1177/2332858417751355}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4938}{}}%
+\bibitem[\citeproctext]{ref-RN4938}
 Neal, D. (1997). The effects of catholic secondary schooling on educational achievement. \emph{Journal of Labor Economics}, \emph{15}(1), 98--123. \url{https://doi.org/10.1086/209848}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4634}{}}%
+\bibitem[\citeproctext]{ref-RN4634}
 Persell, C. H., Catsambis, S., \& Cookson, P. W. (1992). Differential asset conversion: Class and gendered pathways to selective colleges. \emph{Sociology of Education}, \emph{65}(3), 208--225. \url{https://doi.org/10.2307/2112809}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4640}{}}%
+\bibitem[\citeproctext]{ref-RN4640}
 Persell, C. H., \& Cookson, P. W. (1985). Chartering and bartering: Elite education and social reproduction. \emph{Social Problems}, \emph{33}(2), 114--129. \url{https://doi.org/10.1525/sp.1985.33.2.03a00030}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN959}{}}%
+\bibitem[\citeproctext]{ref-RN959}
 Pfeffer, J., \& Salancik, G. R. (1978). \emph{The external control of organizations: A resource dependence perspective} (pp. xiii, 300 p.). New York: Harper \& Row.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1577}{}}%
+\bibitem[\citeproctext]{ref-RN1577}
 Priest, D. M., \& St. John, E. P. (2006). \emph{Privatization and public universities} (pp. 299 p.). Bloomington: Indiana University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4588}{}}%
+\bibitem[\citeproctext]{ref-RN4588}
 Purdy, M. A. (2018). \emph{Transforming the elite: Black students and the desegregation of private schools} (pp. 1--243). \url{https://doi.org/10.5149/northcarolina/9781469643496.001.0001}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4589}{}}%
+\bibitem[\citeproctext]{ref-RN4589}
 Reeves, A., Friedman, S., Rahal, C., \& Flemmen, M. (2017). The decline and persistence of the old boy: Private schools and elite recruitment 1897 to 2016. \emph{American Sociological Review}, \emph{82}(6), 1139--1166. \url{https://doi.org/10.1177/0003122417735742}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4911}{}}%
-Rivard, R. (2013). Micro-targeting students: Increasingly sophisticated data slicing tools are changing student recruitment. Who benefits? \emph{InsideHigherEd}, (Oct 24). Retrieved from \url{https://www.insidehighered.com/news/2013/10/24/political-campaign-style-targeting-comes-student-search?width=775\&height=500\&iframe=true}
+\bibitem[\citeproctext]{ref-RN4911}
+Rivard, R. (2013). Micro-targeting students: Increasingly sophisticated data slicing tools are changing student recruitment. Who benefits? \emph{InsideHigherEd}, (Oct 24). Retrieved from \url{https://www.insidehighered.com/news/2013/10/24/political-campaign-style-targeting-comes-student-search?width=775&height=500&iframe=true}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3608}{}}%
+\bibitem[\citeproctext]{ref-RN3608}
 Rudolph, F. (1962). \emph{The american college and university: A history} (1st ed., pp. 516 p.). New York: Alfred A. Knopf.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4402}{}}%
+\bibitem[\citeproctext]{ref-RN4402}
 Ruffalo Noel-Levitz. (2018). \emph{2018 marketing and student recruitment report of effective practices}. Ruffalo Noel-Levitz. Retrieved from \url{http://learn.ruffalonl.com/rs/395-EOG-977/images/RNL_2018_Student_Recruitment_Marketing_Report_EM-19.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4664}{}}%
+\bibitem[\citeproctext]{ref-RN4664}
 Ruffalo Noel-Levitz. (2020a). \emph{2020 cost of recruiting an undergraduate student report} (Report). Ruffalo Noel-Levitz. Retrieved from \url{https://learn.ruffalonl.com/rs/395-EOG-977/images/2020_CostRecruiting_Report.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-parents_covid_rnl}{}}%
+\bibitem[\citeproctext]{ref-parents_covid_rnl}
 Ruffalo Noel-Levitz. (2020b). \emph{College planning and the perceptions of parents after covid-19}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/thank-you/download-college-planning-and-the-perceptions-of-parents-after-covid-19/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4896}{}}%
+\bibitem[\citeproctext]{ref-RN4896}
 Ruffalo Noel-Levitz. (2022a). \emph{2022 cost of recruiting an undergraduate student report}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/thank-you/download-the-2022-cost-of-recruiting-an-undergraduate-student-report/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4895}{}}%
+\bibitem[\citeproctext]{ref-RN4895}
 Ruffalo Noel-Levitz. (2022b). \emph{2022 marketing and recruitment practices for undergraduate students report}. Ruffalo Noel-Levitz. Retrieved from \url{https://www.ruffalonl.com/papers-research-higher-education-fundraising/marketing-and-recruitment-practices-for-undergraduate-students/}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4934}{}}%
+\bibitem[\citeproctext]{ref-RN4934}
 Salazar, K. G. (2022). Recruitment redlining by public research universities in the los angeles and dallas metropolitan areas. \emph{The Journal of Higher Education}, \emph{93}(4), 585--621. \url{https://doi.org/10.1080/00221546.2021.2004811}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1118}{}}%
+\bibitem[\citeproctext]{ref-RN1118}
 Slaughter, S., \& Rhoades, G. (2004). \emph{Academic capitalism and the new economy} (pp. xii, 370 p.). Baltimore: Johns Hopkins University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN3519}{}}%
+\bibitem[\citeproctext]{ref-RN3519}
 Stevens, M. L. (2007). \emph{Creating a class: College admissions and the education of elites} (pp. 308 p.). Cambridge, MA: Harvard University Press.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4648}{}}%
+\bibitem[\citeproctext]{ref-RN4648}
 Stone, T. (2018). Social network theory: A literature review for understanding innovation programs. Retrieved from \url{https://medium.com/swlh/social-network-theory-a-literature-review-for-understanding-innovation-programs-7f1c214e9a77}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN531}{}}%
+\bibitem[\citeproctext]{ref-RN531}
 Thompson, J. D. (1967). \emph{Organizations in action}. New York: McGraw Hill.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4954}{}}%
+\bibitem[\citeproctext]{ref-RN4954}
 U.S. Department of Education. (2023). \emph{Strategies for increasing diversity and opportunity in higher education}. U.S. Department of Education. Retrieved from \url{https://sites.ed.gov/ous/files/2023/09/Diversity-and-Opportunity-in-Higher-Education.pdf}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN1549}{}}%
+\bibitem[\citeproctext]{ref-RN1549}
 Winston, G. C. (1999). Subsidies, hierarchy and peers: The awkward economics of higher education. \emph{Journal of Economic Perspectives}, \emph{13}(1), 13--36. Retrieved from \href{\%3CGo\%20to\%20ISI\%3E://000078904300002}{\textless Go to ISI\textgreater://000078904300002}
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN4011}{}}%
+\bibitem[\citeproctext]{ref-RN4011}
 Yin, R. K. (2009). \emph{Case study research: Design and methods} (4th ed., pp. xiv, 219 p.). Los Angeles: Sage Publications.
 
-\leavevmode\vadjust pre{\hypertarget{ref-RN2535}{}}%
+\bibitem[\citeproctext]{ref-RN2535}
 Zhang, L. A. (2007). Nonresident enrollment demand in public higher education: An analysis at national, state, and institutional levels. \emph{Review of Higher Education}, \emph{31}(1), 1--25. \url{https://doi.org/10.1353/rhe.2007.0057}
 
 \end{CSLReferences}
