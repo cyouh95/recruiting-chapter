@@ -8,7 +8,7 @@
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.4.549">
+  <meta name="generator" content="quarto-1.3.433">
 
   <title>The Private School Network</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,7 +32,6 @@
     div.csl-bib-body { }
     div.csl-entry {
       clear: both;
-      margin-bottom: 0em;
     }
     .hanging-indent div.csl-entry {
       margin-left:2em;
@@ -175,8 +174,7 @@
   }
 
   .callout.callout-titled .callout-body > .callout-content > :last-child {
-    padding-bottom: 0.5rem;
-    margin-bottom: 0;
+    margin-bottom: 0.5rem;
   }
 
   .callout.callout-titled .callout-icon::before {
@@ -341,6 +339,7 @@
   </style>
   <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
   <script src="./assets/js/script.js"></script>
+  
   <script src="index_files/libs/kePrint-0.0.1/kePrint.js"></script>
   <link href="index_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 </head>
@@ -357,21 +356,24 @@
 
 </section>
 <section>
-<section id="motivation" class="title-slide slide level1 center">
-<h1>Motivation</h1>
+<section id="introduction" class="title-slide slide level1 center">
+<h1>Introduction</h1>
 
 </section>
-<section id="motivation-1" class="slide level3">
-<h3>Motivation</h3>
-<h4 id="off-campus-recruiting-visits-to-high-schools-in-nashville">Off-campus recruiting visits to high schools in Nashville</h4>
+<section id="off-campus-recruiting-visits-to-high-schools-in-nashville" class="slide level3">
+<h3>Off-campus recruiting visits to high schools in Nashville</h3>
 <p>CRYSTAL: INSERT MAP HERE</p>
 </section>
-<section id="motivation-2" class="slide level3">
-<h3>Motivation</h3>
+<section id="setup" class="slide level3">
+<h3>Setup</h3>
+<p>Recruiting visit indicates university and school have social relationship</p>
 <ul>
-<li>Recruiting visit indicates university and school have social relationship</li>
-<li>Visits (edges) from university (mode 1) to high school (mode 2) yields a two-mode social network</li>
-<li>Comparing recruiting network of public research and selective private universities gives insight about competition for affluent students</li>
+<li>The university wants to enroll some students from the school</li>
+<li>The school wants to send some students to the university</li>
+</ul>
+<p>Visits from universities to schools yields a two-mode social network</p>
+<ul>
+<li>“Edges” = visits; “Vertices” = schools (mode 1) and universities (mode 2)</li>
 </ul>
 <p>Research questions</p>
 <ol type="1">
@@ -385,16 +387,17 @@
 <h1>Literature Review</h1>
 
 </section>
-<section id="research-on-nonresident-enrollment-at-public-universities" class="slide level3">
-<h3>Research on nonresident enrollment at public universities</h3>
+<section id="literature-review-1" class="slide level3">
+<h3>Literature Review</h3>
+<h4 id="nonresident-enrollment-at-public-universities">Nonresident enrollment at public universities</h4>
 <ul>
 <li>Increase nonresident enrollment in response to declines in state funding <span class="citation" data-cites="RN3753">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette and Curs 2015</a>)</span></li>
 <li>Nonresident students more affluent, less likely to be Black or Latinx <span class="citation" data-cites="RN3685">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette, Curs, and Posselt 2016</a>)</span></li>
 </ul>
 <p>Interventions to attract nonresident students</p>
 <ul>
-<li>Institutional financial aid <span class="citation" data-cites="RN3762">(<a href="#/references" role="doc-biblioref" onclick="">Leeds and DesJardins 2015</a>)</span></li>
-<li>Recruiting to solicit ‘inquiries’ and applications
+<li>Institutional financial aid to convert admits <span class="citation" data-cites="RN3762">(<a href="#/references" role="doc-biblioref" onclick="">Leeds and DesJardins 2015</a>)</span></li>
+<li>Recruiting interventions at earlier stages of enrollment funnel
 <ul>
 <li>“Student list” purchases <span class="citation" data-cites="RN4985">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette and Salazar, online first</a>)</span></li>
 <li>Off-campus recruiting visits <span class="citation" data-cites="RN4758 RN4934">(<a href="#/references" role="doc-biblioref" onclick="">Salazar, Jaquette, and Han 2021</a>; <a href="#/references" role="doc-biblioref" onclick="">Salazar 2022</a>)</span>
@@ -404,33 +407,44 @@
 </ul></li>
 </ul>
 </section>
-<section id="research-on-links-between-private-schools-and-private-universities" class="slide level3">
-<h3>Research on links between private schools and private universities</h3>
+<section id="literature-review-2" class="slide level3">
+<h3>Literature Review</h3>
+<h4 id="linkages-between-private-schools-and-private-universities">Linkages between private schools and private universities</h4>
+<hr>
 <p>Studies find attending private school increases college access, selectivity</p>
 <ul>
 <li>Public school students: 5% attend “top 100” public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)</li>
-<li>Private school: 11% attend top 100 public; 17% attend top 100 private</li>
-<li>Nonsectarian private: 11% attend top 100 public; 40% attend top 100 private</li>
+<li>Private school: 11% <code>@</code> top 100 public; 17% <code>@</code> top 100 private</li>
+<li>Nonsectarian private: 11% <code>@</code> top 100 public; 40% <code>@</code> top 100 private</li>
 </ul>
-<p>Research from economics <span class="citation" data-cites="RN4935">(<a href="#/references" role="doc-biblioref" onclick="">Chetty, Deming, and Friedman 2023</a>)</span></p>
+<p><span class="citation" data-cites="RN4935">Chetty, Deming, and Friedman (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span> study Ivy Plus admissions decisions</p>
 <ul>
-<li>Rich students have higher non-academic ratings because they attend elite private schools (extracurricular activities, recommendations)</li>
+<li>Rich students have higher non-academic ratings because they attend elite private schools (extracurriculars, recommendations)</li>
 </ul>
-<p>Research from sociology highlights organizational linkages <span class="citation" data-cites="RN4935">(<a href="#/references" role="doc-biblioref" onclick="">Chetty, Deming, and Friedman 2023</a>)</span></p>
+<p>Sociology highlights school-college organizational linkages</p>
+<ul>
+<li>Visits maintain relations with counselors at feeder schools <span class="citation" data-cites="RN3519">(<a href="#/references" role="doc-biblioref" onclick="">Stevens 2007</a>)</span></li>
+<li>Private school counselors lobby for marginal candidates <span class="citation" data-cites="RN4407">(<a href="#/references" role="doc-biblioref" onclick="">Khan 2011</a>)</span></li>
+</ul>
 </section>
-<section id="slide-title" class="slide level3">
-<h3>slide title</h3>
-<h4 id="slide-sub-title">slide sub-title</h4>
+<section id="literature-review-3" class="slide level3">
+<h3>Literature Review</h3>
+<h4 id="synthesis">Synthesis</h4>
 <hr>
-<p>Here’s some text:</p>
+<p>These two literatures have developed in isolation</p>
 <ul>
-<li><span class="citation" data-cites="RN4504">Murnane and Reardon (<a href="#/references" role="doc-biblioref" onclick="">2018</a>)</span> said blah…</li>
-<li>Parenthetical citation <span class="citation" data-cites="RN4625">(<a href="#/references" role="doc-biblioref" onclick="">Hill 2008</a>)</span>.</li>
-<li><strong>Bold</strong> and <em>italic</em> text</li>
+<li>Pursuing out-of-state private school students by public research univs encroaches on historic territory of selective private univs</li>
 </ul>
-<p>More things:</p>
+<p>Analyzing network of recruiting visits to private schools gives insight about competition for affluent students</p>
 <ul>
-<li>Blah</li>
+<li>Public and private universities may be targeting similar sets of schools
+<ul>
+<li>Direct competition or vying to be second choice for rejected applicant</li>
+</ul></li>
+</ul>
+<p>Private school students more likely to be affluent, white than public school students <span class="citation" data-cites="RN4504">(<a href="#/references" role="doc-biblioref" onclick="">Murnane and Reardon 2018</a>)</span></p>
+<ul>
+<li>Competitive recruiting of private school students has downstream effects on racial and socioeconomic composition of colleges</li>
 </ul>
 </section></section>
 <section>
@@ -438,14 +452,36 @@
 <h1>Methods</h1>
 
 </section>
-<section id="data-and-sample" class="title-slide slide level2 center">
-<h2>Data and Sample</h2>
-
+<section id="methods-1" class="slide level3">
+<h3>Methods</h3>
+<h4 id="data-and-sample">Data and Sample</h4>
+<p>Data collection (see <span class="citation" data-cites="RN4758">Salazar, Jaquette, and Han (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span>)</p>
+<ul>
+<li>2017 off-campus recruiting visits scraped from univ admissions websites</li>
+</ul>
+<p>Data collection sample</p>
+<ul>
+<li>Public “research-extensive” universities from 2000 Carnegie (N=102)</li>
+<li>Private universities in top 100 of U.S. News <em>National Universities</em> (N=57)</li>
+<li>Private colleges in top 50 of <em>National Liberal Arts Colleges</em> (N=47)</li>
+</ul>
+<p>Analysis sample: univs that posted complete recruiting visits on website</p>
+<ul>
+<li>15 public research, 14 private universities, 12 private liberal arts (omitted)</li>
+</ul>
+<p>Secondary data</p>
+<ul>
+<li>IPEDS; CCD; Private School Survey; Niche <em>Best Private High Schools</em></li>
+</ul>
 </section>
 <section id="characteristics-of-universities-in-analysis-sample" class="slide level3">
 <h3>Characteristics of universities in analysis sample</h3>
-<div id="tbl-1" class="table-wrapper">
-<div class="cell">
+<div id="tbl-1" class="table-wrapper tbl-parent quarto-layout-panel">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="cell-output-display">
 <table style="width:100%;" data-quarto-postprocess="true">
 <colgroup>
@@ -487,7 +523,7 @@ Out-of-State Freshmen</th>
 </thead>
 <tbody>
 <tr class="odd">
-<td rowspan="15" style="text-align: left; vertical-align: middle !important;">Public Research</td>
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">UC Berkeley</td>
 <td style="text-align: right;">22</td>
 <td style="text-align: right; min-width: 1.2in;">1,316</td>
@@ -504,14 +540,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">9.3%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">UC San Diego</td>
 <td style="text-align: right;">35</td>
-<td style="text-align: right;">1,193</td>
-<td style="text-align: right; min-width: 1.2in;">1,455</td>
-<td style="text-align: right;">$13,946</td>
-<td style="text-align: right; min-width: 1in;">$41,215</td>
-<td style="text-align: right;">5,748</td>
-<td style="text-align: right; min-width: 1in;">26.5%</td>
+<td style="text-align: right; min-width: 1.2in;">1,193</td>
+<td style="text-align: right;">1,455</td>
+<td style="text-align: right; min-width: 1in;">$13,946</td>
+<td style="text-align: right;">$41,215</td>
+<td style="text-align: right; min-width: 1in;">5,748</td>
+<td style="text-align: right;">26.5%</td>
 <td style="text-align: right;">30.7%</td>
 <td style="text-align: right;">15.5%</td>
 <td style="text-align: right;">1.5%</td>
@@ -520,14 +557,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">21.6%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Georgia</td>
 <td style="text-align: right;">47</td>
-<td style="text-align: right;">1,165</td>
-<td style="text-align: right; min-width: 1.2in;">1,360</td>
-<td style="text-align: right;">$11,890</td>
-<td style="text-align: right; min-width: 1in;">$30,502</td>
-<td style="text-align: right;">5,433</td>
-<td style="text-align: right; min-width: 1in;">12.3%</td>
+<td style="text-align: right; min-width: 1.2in;">1,165</td>
+<td style="text-align: right;">1,360</td>
+<td style="text-align: right; min-width: 1in;">$11,890</td>
+<td style="text-align: right;">$30,502</td>
+<td style="text-align: right; min-width: 1in;">5,433</td>
+<td style="text-align: right;">12.3%</td>
 <td style="text-align: right;">20.3%</td>
 <td style="text-align: right;">68.0%</td>
 <td style="text-align: right;">8.1%</td>
@@ -536,14 +574,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">1.6%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Pitt</td>
 <td style="text-align: right;">58</td>
-<td style="text-align: right;">1,202</td>
-<td style="text-align: right; min-width: 1.2in;">1,395</td>
-<td style="text-align: right;">$19,028</td>
-<td style="text-align: right; min-width: 1in;">$30,414</td>
-<td style="text-align: right;">5,644</td>
-<td style="text-align: right; min-width: 1in;">30.6%</td>
+<td style="text-align: right; min-width: 1.2in;">1,202</td>
+<td style="text-align: right;">1,395</td>
+<td style="text-align: right; min-width: 1in;">$19,028</td>
+<td style="text-align: right;">$30,414</td>
+<td style="text-align: right; min-width: 1in;">5,644</td>
+<td style="text-align: right;">30.6%</td>
 <td style="text-align: right;">20.3%</td>
 <td style="text-align: right;">68.5%</td>
 <td style="text-align: right;">7.3%</td>
@@ -552,14 +591,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">3.6%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">Rutgers</td>
 <td style="text-align: right;">63</td>
-<td style="text-align: right;">1,110</td>
-<td style="text-align: right; min-width: 1.2in;">1,350</td>
-<td style="text-align: right;">$14,689</td>
-<td style="text-align: right; min-width: 1in;">$30,684</td>
-<td style="text-align: right;">6,465</td>
-<td style="text-align: right; min-width: 1in;">17.8%</td>
+<td style="text-align: right; min-width: 1.2in;">1,110</td>
+<td style="text-align: right;">1,350</td>
+<td style="text-align: right; min-width: 1in;">$14,689</td>
+<td style="text-align: right;">$30,684</td>
+<td style="text-align: right; min-width: 1in;">6,465</td>
+<td style="text-align: right;">17.8%</td>
 <td style="text-align: right;">27.0%</td>
 <td style="text-align: right;">35.5%</td>
 <td style="text-align: right;">6.0%</td>
@@ -568,14 +608,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">10.4%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">UMass Amherst</td>
 <td style="text-align: right;">66</td>
-<td style="text-align: right;">1,135</td>
-<td style="text-align: right; min-width: 1.2in;">1,332</td>
-<td style="text-align: right;">$15,301</td>
-<td style="text-align: right; min-width: 1in;">$32,914</td>
-<td style="text-align: right;">4,679</td>
-<td style="text-align: right; min-width: 1in;">26.9%</td>
+<td style="text-align: right; min-width: 1.2in;">1,135</td>
+<td style="text-align: right;">1,332</td>
+<td style="text-align: right; min-width: 1in;">$15,301</td>
+<td style="text-align: right;">$32,914</td>
+<td style="text-align: right; min-width: 1in;">4,679</td>
+<td style="text-align: right;">26.9%</td>
 <td style="text-align: right;">21.5%</td>
 <td style="text-align: right;">61.0%</td>
 <td style="text-align: right;">3.8%</td>
@@ -584,14 +625,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">8.1%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">UC Riverside</td>
 <td style="text-align: right;">88</td>
-<td style="text-align: right;">956</td>
-<td style="text-align: right; min-width: 1.2in;">1,200</td>
-<td style="text-align: right;">$13,880</td>
-<td style="text-align: right; min-width: 1in;">$41,150</td>
-<td style="text-align: right;">5,358</td>
-<td style="text-align: right; min-width: 1in;">2.2%</td>
+<td style="text-align: right; min-width: 1.2in;">956</td>
+<td style="text-align: right;">1,200</td>
+<td style="text-align: right; min-width: 1in;">$13,880</td>
+<td style="text-align: right;">$41,150</td>
+<td style="text-align: right; min-width: 1in;">5,358</td>
+<td style="text-align: right;">2.2%</td>
 <td style="text-align: right;">56.6%</td>
 <td style="text-align: right;">10.1%</td>
 <td style="text-align: right;">4.0%</td>
@@ -600,14 +642,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">2.5%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">SUNY Stony Brook</td>
 <td style="text-align: right;">88</td>
-<td style="text-align: right;">1,163</td>
-<td style="text-align: right; min-width: 1.2in;">1,373</td>
-<td style="text-align: right;">$9,197</td>
-<td style="text-align: right; min-width: 1in;">$26,817</td>
-<td style="text-align: right;">2,934</td>
-<td style="text-align: right; min-width: 1in;">25.8%</td>
+<td style="text-align: right; min-width: 1.2in;">1,163</td>
+<td style="text-align: right;">1,373</td>
+<td style="text-align: right; min-width: 1in;">$9,197</td>
+<td style="text-align: right;">$26,817</td>
+<td style="text-align: right; min-width: 1in;">2,934</td>
+<td style="text-align: right;">25.8%</td>
 <td style="text-align: right;">34.6%</td>
 <td style="text-align: right;">27.8%</td>
 <td style="text-align: right;">5.9%</td>
@@ -616,14 +659,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">16.5%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">CU Boulder</td>
 <td style="text-align: right;">103</td>
-<td style="text-align: right;">1,126</td>
-<td style="text-align: right; min-width: 1.2in;">1,331</td>
-<td style="text-align: right;">$11,785</td>
-<td style="text-align: right; min-width: 1in;">$35,852</td>
-<td style="text-align: right;">6,421</td>
-<td style="text-align: right; min-width: 1in;">47.2%</td>
+<td style="text-align: right; min-width: 1.2in;">1,126</td>
+<td style="text-align: right;">1,331</td>
+<td style="text-align: right; min-width: 1in;">$11,785</td>
+<td style="text-align: right;">$35,852</td>
+<td style="text-align: right; min-width: 1in;">6,421</td>
+<td style="text-align: right;">47.2%</td>
 <td style="text-align: right;">14.6%</td>
 <td style="text-align: right;">66.3%</td>
 <td style="text-align: right;">1.5%</td>
@@ -632,14 +676,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">7.5%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of S.Carolina</td>
 <td style="text-align: right;">118</td>
-<td style="text-align: right;">1,135</td>
-<td style="text-align: right; min-width: 1.2in;">1,321</td>
-<td style="text-align: right;">$11,706</td>
-<td style="text-align: right; min-width: 1in;">$31,562</td>
-<td style="text-align: right;">5,110</td>
-<td style="text-align: right; min-width: 1in;">53.2%</td>
+<td style="text-align: right; min-width: 1.2in;">1,135</td>
+<td style="text-align: right;">1,321</td>
+<td style="text-align: right; min-width: 1in;">$11,706</td>
+<td style="text-align: right;">$31,562</td>
+<td style="text-align: right; min-width: 1in;">5,110</td>
+<td style="text-align: right;">53.2%</td>
 <td style="text-align: right;">15.4%</td>
 <td style="text-align: right;">82.1%</td>
 <td style="text-align: right;">5.0%</td>
@@ -648,14 +693,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">1.2%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Kansas</td>
 <td style="text-align: right;">124</td>
-<td style="text-align: right;">1,070</td>
-<td style="text-align: right; min-width: 1.2in;">1,300</td>
-<td style="text-align: right;">$10,781</td>
-<td style="text-align: right; min-width: 1in;">$26,503</td>
-<td style="text-align: right;">4,233</td>
-<td style="text-align: right; min-width: 1in;">42.8%</td>
+<td style="text-align: right; min-width: 1.2in;">1,070</td>
+<td style="text-align: right;">1,300</td>
+<td style="text-align: right; min-width: 1in;">$10,781</td>
+<td style="text-align: right;">$26,503</td>
+<td style="text-align: right; min-width: 1in;">4,233</td>
+<td style="text-align: right;">42.8%</td>
 <td style="text-align: right;">23.4%</td>
 <td style="text-align: right;">72.1%</td>
 <td style="text-align: right;">4.3%</td>
@@ -664,14 +710,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">4.6%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">UNL</td>
 <td style="text-align: right;">133</td>
-<td style="text-align: right;">1,027</td>
-<td style="text-align: right; min-width: 1.2in;">1,262</td>
-<td style="text-align: right;">$8,725</td>
-<td style="text-align: right; min-width: 1in;">$23,558</td>
-<td style="text-align: right;">4,860</td>
-<td style="text-align: right; min-width: 1in;">29.9%</td>
+<td style="text-align: right; min-width: 1.2in;">1,027</td>
+<td style="text-align: right;">1,262</td>
+<td style="text-align: right; min-width: 1in;">$8,725</td>
+<td style="text-align: right;">$23,558</td>
+<td style="text-align: right; min-width: 1in;">4,860</td>
+<td style="text-align: right;">29.9%</td>
 <td style="text-align: right;">23.9%</td>
 <td style="text-align: right;">75.6%</td>
 <td style="text-align: right;">3.1%</td>
@@ -680,14 +727,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">6.3%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Alabama</td>
 <td style="text-align: right;">143</td>
-<td style="text-align: right;">1,053</td>
-<td style="text-align: right; min-width: 1.2in;">1,351</td>
-<td style="text-align: right;">$10,701</td>
-<td style="text-align: right; min-width: 1in;">$27,544</td>
-<td style="text-align: right;">7,559</td>
-<td style="text-align: right; min-width: 1in;">68.1%</td>
+<td style="text-align: right; min-width: 1.2in;">1,053</td>
+<td style="text-align: right;">1,351</td>
+<td style="text-align: right; min-width: 1in;">$10,701</td>
+<td style="text-align: right;">$27,544</td>
+<td style="text-align: right; min-width: 1in;">7,559</td>
+<td style="text-align: right;">68.1%</td>
 <td style="text-align: right;">17.0%</td>
 <td style="text-align: right;">80.6%</td>
 <td style="text-align: right;">8.0%</td>
@@ -696,14 +744,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">0.8%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Cincinnati</td>
 <td style="text-align: right;">143</td>
-<td style="text-align: right;">1,063</td>
-<td style="text-align: right; min-width: 1.2in;">1,265</td>
-<td style="text-align: right;">$11,242</td>
-<td style="text-align: right; min-width: 1in;">$26,914</td>
-<td style="text-align: right;">6,913</td>
-<td style="text-align: right; min-width: 1in;">13.1%</td>
+<td style="text-align: right; min-width: 1.2in;">1,063</td>
+<td style="text-align: right;">1,265</td>
+<td style="text-align: right; min-width: 1in;">$11,242</td>
+<td style="text-align: right;">$26,914</td>
+<td style="text-align: right; min-width: 1in;">6,913</td>
+<td style="text-align: right;">13.1%</td>
 <td style="text-align: right;">26.7%</td>
 <td style="text-align: right;">74.9%</td>
 <td style="text-align: right;">9.0%</td>
@@ -712,14 +761,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">2.4%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Public Research</td>
 <td style="text-align: left;">U of Arkansas</td>
 <td style="text-align: right;">160</td>
-<td style="text-align: right;">1,057</td>
-<td style="text-align: right; min-width: 1.2in;">1,283</td>
-<td style="text-align: right;">$9,014</td>
-<td style="text-align: right; min-width: 1in;">$23,678</td>
-<td style="text-align: right;">4,972</td>
-<td style="text-align: right; min-width: 1in;">51.0%</td>
+<td style="text-align: right; min-width: 1.2in;">1,057</td>
+<td style="text-align: right;">1,283</td>
+<td style="text-align: right; min-width: 1in;">$9,014</td>
+<td style="text-align: right;">$23,678</td>
+<td style="text-align: right; min-width: 1in;">4,972</td>
+<td style="text-align: right;">51.0%</td>
 <td style="text-align: right;">19.5%</td>
 <td style="text-align: right;">78.7%</td>
 <td style="text-align: right;">3.9%</td>
@@ -728,7 +778,7 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">1.0%</td>
 </tr>
 <tr class="even">
-<td rowspan="14" style="text-align: left; vertical-align: middle !important;">Private National</td>
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Northwestern</td>
 <td style="text-align: right;">9</td>
 <td style="text-align: right; min-width: 1.2in;">1,413</td>
@@ -745,14 +795,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">9.7%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Notre Dame</td>
 <td style="text-align: right;">19</td>
-<td style="text-align: right;">1,395</td>
-<td style="text-align: right; min-width: 1.2in;">1,553</td>
-<td style="text-align: right;">$50,780</td>
+<td style="text-align: right; min-width: 1.2in;">1,395</td>
+<td style="text-align: right;">1,553</td>
 <td style="text-align: right; min-width: 1in;">$50,780</td>
-<td style="text-align: right;">2,046</td>
-<td style="text-align: right; min-width: 1in;">94.5%</td>
+<td style="text-align: right;">$50,780</td>
+<td style="text-align: right; min-width: 1in;">2,046</td>
+<td style="text-align: right;">94.5%</td>
 <td style="text-align: right;">11.9%</td>
 <td style="text-align: right;">67.8%</td>
 <td style="text-align: right;">4.5%</td>
@@ -761,14 +812,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">5.9%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Emory</td>
 <td style="text-align: right;">21</td>
-<td style="text-align: right;">1,313</td>
-<td style="text-align: right; min-width: 1.2in;">1,481</td>
-<td style="text-align: right;">$49,011</td>
+<td style="text-align: right; min-width: 1.2in;">1,313</td>
+<td style="text-align: right;">1,481</td>
 <td style="text-align: right; min-width: 1in;">$49,011</td>
-<td style="text-align: right;">1,358</td>
-<td style="text-align: right; min-width: 1in;">85.5%</td>
+<td style="text-align: right;">$49,011</td>
+<td style="text-align: right; min-width: 1in;">1,358</td>
+<td style="text-align: right;">85.5%</td>
 <td style="text-align: right;">17.5%</td>
 <td style="text-align: right;">40.9%</td>
 <td style="text-align: right;">7.1%</td>
@@ -777,14 +829,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">16.1%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Tufts</td>
 <td style="text-align: right;">30</td>
-<td style="text-align: right;">1,375</td>
-<td style="text-align: right; min-width: 1.2in;">1,515</td>
-<td style="text-align: right;">$53,585</td>
+<td style="text-align: right; min-width: 1.2in;">1,375</td>
+<td style="text-align: right;">1,515</td>
 <td style="text-align: right; min-width: 1in;">$53,585</td>
-<td style="text-align: right;">1,336</td>
-<td style="text-align: right; min-width: 1in;">80.2%</td>
+<td style="text-align: right;">$53,585</td>
+<td style="text-align: right; min-width: 1in;">1,336</td>
+<td style="text-align: right;">80.2%</td>
 <td style="text-align: right;">10.2%</td>
 <td style="text-align: right;">54.9%</td>
 <td style="text-align: right;">4.8%</td>
@@ -793,14 +846,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">11.4%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Boston Coll.</td>
 <td style="text-align: right;">35</td>
-<td style="text-align: right;">1,297</td>
-<td style="text-align: right; min-width: 1.2in;">1,460</td>
-<td style="text-align: right;">$52,426</td>
+<td style="text-align: right; min-width: 1.2in;">1,297</td>
+<td style="text-align: right;">1,460</td>
 <td style="text-align: right; min-width: 1in;">$52,426</td>
-<td style="text-align: right;">2,254</td>
-<td style="text-align: right; min-width: 1in;">76.6%</td>
+<td style="text-align: right;">$52,426</td>
+<td style="text-align: right; min-width: 1in;">2,254</td>
+<td style="text-align: right;">76.6%</td>
 <td style="text-align: right;">12.8%</td>
 <td style="text-align: right;">61.4%</td>
 <td style="text-align: right;">2.8%</td>
@@ -809,14 +863,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">6.8%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Tulane</td>
 <td style="text-align: right;">41</td>
-<td style="text-align: right;">1,277</td>
-<td style="text-align: right; min-width: 1.2in;">1,416</td>
-<td style="text-align: right;">$52,134</td>
+<td style="text-align: right; min-width: 1.2in;">1,277</td>
+<td style="text-align: right;">1,416</td>
 <td style="text-align: right; min-width: 1in;">$52,134</td>
-<td style="text-align: right;">1,856</td>
-<td style="text-align: right; min-width: 1in;">87.6%</td>
+<td style="text-align: right;">$52,134</td>
+<td style="text-align: right; min-width: 1in;">1,856</td>
+<td style="text-align: right;">87.6%</td>
 <td style="text-align: right;">7.8%</td>
 <td style="text-align: right;">76.0%</td>
 <td style="text-align: right;">4.3%</td>
@@ -825,14 +880,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">4.3%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Case Western Res.</td>
 <td style="text-align: right;">42</td>
-<td style="text-align: right;">1,314</td>
-<td style="text-align: right; min-width: 1.2in;">1,501</td>
-<td style="text-align: right;">$47,020</td>
+<td style="text-align: right; min-width: 1.2in;">1,314</td>
+<td style="text-align: right;">1,501</td>
 <td style="text-align: right; min-width: 1in;">$47,020</td>
-<td style="text-align: right;">1,265</td>
-<td style="text-align: right; min-width: 1in;">75.7%</td>
+<td style="text-align: right;">$47,020</td>
+<td style="text-align: right; min-width: 1in;">1,265</td>
+<td style="text-align: right;">75.7%</td>
 <td style="text-align: right;">10.0%</td>
 <td style="text-align: right;">48.1%</td>
 <td style="text-align: right;">4.3%</td>
@@ -841,14 +897,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">15.6%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Villanova</td>
 <td style="text-align: right;">53</td>
-<td style="text-align: right;">1,280</td>
-<td style="text-align: right; min-width: 1.2in;">1,420</td>
-<td style="text-align: right;">$50,366</td>
+<td style="text-align: right; min-width: 1.2in;">1,280</td>
+<td style="text-align: right;">1,420</td>
 <td style="text-align: right; min-width: 1in;">$50,366</td>
-<td style="text-align: right;">1,678</td>
-<td style="text-align: right; min-width: 1in;">83.1%</td>
+<td style="text-align: right;">$50,366</td>
+<td style="text-align: right; min-width: 1in;">1,678</td>
+<td style="text-align: right;">83.1%</td>
 <td style="text-align: right;">9.7%</td>
 <td style="text-align: right;">76.0%</td>
 <td style="text-align: right;">4.7%</td>
@@ -857,14 +914,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">1.5%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">SMU</td>
 <td style="text-align: right;">66</td>
-<td style="text-align: right;">1,244</td>
-<td style="text-align: right; min-width: 1.2in;">1,416</td>
-<td style="text-align: right;">$51,467</td>
+<td style="text-align: right; min-width: 1.2in;">1,244</td>
+<td style="text-align: right;">1,416</td>
 <td style="text-align: right; min-width: 1in;">$51,467</td>
-<td style="text-align: right;">1,522</td>
-<td style="text-align: right; min-width: 1in;">61.6%</td>
+<td style="text-align: right;">$51,467</td>
+<td style="text-align: right; min-width: 1in;">1,522</td>
+<td style="text-align: right;">61.6%</td>
 <td style="text-align: right;">10.2%</td>
 <td style="text-align: right;">66.4%</td>
 <td style="text-align: right;">5.6%</td>
@@ -873,14 +931,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">6.3%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Baylor</td>
 <td style="text-align: right;">76</td>
-<td style="text-align: right;">1,163</td>
-<td style="text-align: right; min-width: 1.2in;">1,329</td>
-<td style="text-align: right;">$42,931</td>
+<td style="text-align: right; min-width: 1.2in;">1,163</td>
+<td style="text-align: right;">1,329</td>
 <td style="text-align: right; min-width: 1in;">$42,931</td>
-<td style="text-align: right;">3,503</td>
-<td style="text-align: right; min-width: 1in;">35.3%</td>
+<td style="text-align: right;">$42,931</td>
+<td style="text-align: right; min-width: 1in;">3,503</td>
+<td style="text-align: right;">35.3%</td>
 <td style="text-align: right;">17.4%</td>
 <td style="text-align: right;">65.4%</td>
 <td style="text-align: right;">6.2%</td>
@@ -889,14 +948,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">2.9%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">U of Denver</td>
 <td style="text-align: right;">80</td>
-<td style="text-align: right;">1,166</td>
-<td style="text-align: right; min-width: 1.2in;">1,359</td>
-<td style="text-align: right;">$47,445</td>
+<td style="text-align: right; min-width: 1.2in;">1,166</td>
+<td style="text-align: right;">1,359</td>
 <td style="text-align: right; min-width: 1in;">$47,445</td>
-<td style="text-align: right;">1,399</td>
-<td style="text-align: right; min-width: 1in;">67.5%</td>
+<td style="text-align: right;">$47,445</td>
+<td style="text-align: right; min-width: 1in;">1,399</td>
+<td style="text-align: right;">67.5%</td>
 <td style="text-align: right;">14.6%</td>
 <td style="text-align: right;">73.5%</td>
 <td style="text-align: right;">2.0%</td>
@@ -905,14 +965,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">5.6%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">TCU</td>
 <td style="text-align: right;">80</td>
-<td style="text-align: right;">1,125</td>
-<td style="text-align: right; min-width: 1.2in;">1,321</td>
-<td style="text-align: right;">$43,610</td>
+<td style="text-align: right; min-width: 1.2in;">1,125</td>
+<td style="text-align: right;">1,321</td>
 <td style="text-align: right; min-width: 1in;">$43,610</td>
-<td style="text-align: right;">1,888</td>
-<td style="text-align: right; min-width: 1in;">56.6%</td>
+<td style="text-align: right;">$43,610</td>
+<td style="text-align: right; min-width: 1in;">1,888</td>
+<td style="text-align: right;">56.6%</td>
 <td style="text-align: right;">11.2%</td>
 <td style="text-align: right;">72.9%</td>
 <td style="text-align: right;">4.7%</td>
@@ -921,14 +982,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">3.7%</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Stevens Ins. Tech</td>
 <td style="text-align: right;">80</td>
-<td style="text-align: right;">1,274</td>
-<td style="text-align: right; min-width: 1.2in;">1,447</td>
-<td style="text-align: right;">$49,914</td>
+<td style="text-align: right; min-width: 1.2in;">1,274</td>
+<td style="text-align: right;">1,447</td>
 <td style="text-align: right; min-width: 1in;">$49,914</td>
-<td style="text-align: right;">737</td>
-<td style="text-align: right; min-width: 1in;">38.8%</td>
+<td style="text-align: right;">$49,914</td>
+<td style="text-align: right; min-width: 1in;">737</td>
+<td style="text-align: right;">38.8%</td>
 <td style="text-align: right;">15.5%</td>
 <td style="text-align: right;">65.4%</td>
 <td style="text-align: right;">2.7%</td>
@@ -937,14 +999,15 @@ Out-of-State Freshmen</th>
 <td style="text-align: right;">4.6%</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Private National</td>
 <td style="text-align: left;">Marquette</td>
 <td style="text-align: right;">88</td>
-<td style="text-align: right;">1,101</td>
-<td style="text-align: right; min-width: 1.2in;">1,296</td>
-<td style="text-align: right;">$39,318</td>
+<td style="text-align: right; min-width: 1.2in;">1,101</td>
+<td style="text-align: right;">1,296</td>
 <td style="text-align: right; min-width: 1in;">$39,318</td>
-<td style="text-align: right;">2,005</td>
-<td style="text-align: right; min-width: 1in;">71.4%</td>
+<td style="text-align: right;">$39,318</td>
+<td style="text-align: right; min-width: 1in;">2,005</td>
+<td style="text-align: right;">71.4%</td>
 <td style="text-align: right;">19.0%</td>
 <td style="text-align: right;">68.0%</td>
 <td style="text-align: right;">4.9%</td>
@@ -959,11 +1022,16 @@ Out-of-State Freshmen</th>
 </div>
 </div>
 </div>
+</div>
 </section>
 <section id="characteristics-of-universities-in-analysis-sample-compared-to-data-collection-sample" class="slide level3">
 <h3>Characteristics of universities in analysis sample compared to data collection sample</h3>
-<div id="tbl-2" class="table-wrapper">
-<div class="cell">
+<div id="tbl-2" class="table-wrapper tbl-parent quarto-layout-panel">
+<div class="panel-caption table-caption">
+<p><strong>?(caption)</strong></p>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 <div class="cell-output-display">
 <table style="width:100%;" data-quarto-postprocess="true">
 <colgroup>
@@ -1210,18 +1278,38 @@ Data collection sample (N=57)
 </div>
 </div>
 </div>
+</div>
 </section>
-
-<section id="constructing-social-networks" class="title-slide slide level2 center">
-<h2>Constructing Social Networks</h2>
-
+<section id="methods-2" class="slide level3">
+<h3>Methods</h3>
+<h4 id="constructing-social-networks">Constructing social networks</h4>
+<p>text - Transform two-mode network to one-mode university network showing number of schools visited by both university <span class="math inline">\(i\)</span> and university <span class="math inline">\(j\)</span></p>
 </section>
-
-<section id="analyses" class="title-slide slide level2 center">
-<h2>Analyses</h2>
-
-</section>
-</section>
+<section id="methods-3" class="slide level3">
+<h3>Methods</h3>
+<h4 id="analyses-by-research-question">Analyses by research question</h4>
+<ol type="1">
+<li>How does the scale of visits to private high schools vary for the public research universities and selective private universities?
+<ul>
+<li>Simple descriptive statistics</li>
+</ul></li>
+</ol>
+<ol start="2" type="1">
+<li>To what extent do public research universities and selective private universities visit overlapping sets of private high schools?
+<ul>
+<li>Graph one-mode university network; universities allocated to categories based on cluster analysis</li>
+</ul></li>
+</ol>
+<ol start="3" type="1">
+<li>What are the characteristics of private schools that receive visits from public research universities and selective private research universities?
+<ul>
+<li>Descriptive statistics of characteristics of university order-1 “ego network” (schools the university visited):
+<ul>
+<li>Geographic region, religion, racial composition, academic reputation</li>
+</ul></li>
+</ul></li>
+</ol>
+</section></section>
 <section>
 <section id="results" class="title-slide slide level1 center">
 <h1>Results</h1>
@@ -2346,7 +2434,7 @@ Data collection sample (N=57)
 </section>
 <section id="references" class="slide level3 smaller scrollable">
 <h3>References</h3>
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
 <div id="ref-RN4935" class="csl-entry" role="listitem">
 Chetty, Raj, David J. Deming, and John N. Friedman. 2023. <span>“Diversifying Society’s Leaders? The Causal Effects of Admission to Highly Selective Private Colleges.”</span> <em>National Bureau of Economic Research Working Paper Series</em> No. 31492. <a href="https://doi.org/10.3386/w31492">https://doi.org/10.3386/w31492</a>.
 </div>
@@ -2362,6 +2450,9 @@ Jaquette, Ozan, Bradley R. Curs, and Julie Renee Posselt. 2016. <span>“Tuition
 <div id="ref-RN4985" class="csl-entry" role="listitem">
 Jaquette, Ozan, and Karina G. Salazar. Online first. <span>“A Sociological Analysis of Structural Racism in <span>‘Student List’</span> Lead Generation Products.”</span> Journal Article. <em>Educational Evaluation and Policy Analysis</em> 0 (0): 01623737231210894. <a href="https://doi.org/10.3102/01623737231210894">https://doi.org/10.3102/01623737231210894</a>.
 </div>
+<div id="ref-RN4407" class="csl-entry" role="listitem">
+Khan, Shamus Rahman. 2011. <em>Privilege: The Making of an Adolescent Elite at St. Paul’s School</em>. Princeton Studies in Cultural Sociology. Princeton, N.J.: Princeton University Press.
+</div>
 <div id="ref-RN3762" class="csl-entry" role="listitem">
 Leeds, Daniel M., and Stephen L. DesJardins. 2015. <span>“The Effect of Merit Aid on Enrollment: A Regression Discontinuity Analysis of Iowa’s National Scholars Award.”</span> <em>Research in Higher Education</em> 56 (7): 471–95. <a href="https://doi.org/10.1007/s11162-014-9359-2">https://doi.org/10.1007/s11162-014-9359-2</a>.
 </div>
@@ -2373,6 +2464,9 @@ Salazar, Karina G. 2022. <span>“Recruitment Redlining by Public Research Unive
 </div>
 <div id="ref-RN4758" class="csl-entry" role="listitem">
 Salazar, Karina G., Ozan Jaquette, and Crystal Han. 2021. <span>“Coming Soon to a Neighborhood Near You? Off-Campus Recruiting by Public Research Universities.”</span> <em>American Educational Research Journal</em> 58 (6): 1270–1314. <a href="https://doi.org/10.3102/00028312211001810">https://doi.org/10.3102/00028312211001810</a>.
+</div>
+<div id="ref-RN3519" class="csl-entry" role="listitem">
+Stevens, Mitchell L. 2007. <em>Creating a Class: College Admissions and the Education of Elites</em>. Cambridge, MA: Harvard University Press.
 </div>
 </div>
 </section></section>
@@ -3699,10 +3793,8 @@ Salazar, Karina G., Ozan Jaquette, and Crystal Han. 2021. <span>“Coming Soon t
 <section id="racial-composition-in-the-south-private-universities" class="slide level3">
 <h3>Racial composition in the South, private universities</h3>
 <p><img data-src="./assets/figures/south_race_privu_privhs_pubhs.png"></p>
-<div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
-</div>
 </div>
 </section>
 </section>
@@ -3732,6 +3824,7 @@ Salazar, Karina G., Ozan Jaquette, and Crystal Han. 2021. <span>“Coming Soon t
       Reveal.initialize({
 'controlsAuto': false,
 'previewLinksAuto': false,
+'smaller': false,
 'pdfSeparateFragments': false,
 'autoAnimateEasing': "ease",
 'autoAnimateDuration': 1,
@@ -4030,9 +4123,10 @@ Salazar, Karina G., Ozan Jaquette, and Crystal Han. 2021. <span>“Coming Soon t
         // clear code selection
         e.clearSelection();
       });
-      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      function tippyHover(el, contentFn) {
         const config = {
           allowHTML: true,
+          content: contentFn,
           maxWidth: 500,
           delay: 100,
           arrow: false,
@@ -4042,17 +4136,8 @@ Salazar, Karina G., Ozan Jaquette, and Crystal Han. 2021. <span>“Coming Soon t
           interactive: true,
           interactiveBorder: 10,
           theme: 'light-border',
-          placement: 'bottom-start',
+          placement: 'bottom-start'
         };
-        if (contentFn) {
-          config.content = contentFn;
-        }
-        if (onTriggerFn) {
-          config.onTrigger = onTriggerFn;
-        }
-        if (onUntriggerFn) {
-          config.onUntrigger = onUntriggerFn;
-        }
           config['offset'] = [0,0];
           config['maxWidth'] = 700;
         window.tippy(el, config); 

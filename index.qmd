@@ -46,19 +46,22 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
   )
 ```
 
-# Motivation
+# Introduction
 
-### Motivation
-
-#### Off-campus recruiting visits to high schools in Nashville
+### Off-campus recruiting visits to high schools in Nashville
 
 CRYSTAL: INSERT MAP HERE
 
-### Motivation
+### Setup
 
--   Recruiting visit indicates university and school have social relationship
--   Visits (edges) from university (mode 1) to high school (mode 2) yields a two-mode social network
--   Comparing recruiting network of public research and selective private universities gives insight about competition for affluent students
+Recruiting visit indicates university and school have social relationship
+
+- The university wants to enroll some students from the school
+- The school wants to send some students to the university
+
+Visits from universities to schools yields a two-mode social network
+
+- "Edges" = visits; "Vertices" = schools (mode 1) and universities (mode 2)
 
 Research questions
 
@@ -68,51 +71,76 @@ Research questions
 
 # Literature Review
 
-### Research on nonresident enrollment at public universities
+### Literature Review
+#### Nonresident enrollment at public universities
 
 - Increase nonresident enrollment in response to declines in state funding  [@RN3753]
 - Nonresident students more affluent, less likely to be Black or Latinx [@RN3685]
 
 Interventions to attract nonresident students
 
-- Institutional financial aid [@RN3762]
-- Recruiting to solicit 'inquiries' and applications
+- Institutional financial aid to convert admits [@RN3762]
+- Recruiting interventions at earlier stages of enrollment funnel
   - "Student list" purchases [@RN4985]
   - Off-campus recruiting visits [@RN4758; @RN4934]
     - Out-of state visits to public high schools focus on affluent public schools, avoid non-white communities
 
-### Research on links between private schools and private universities
-
+### Literature Review
+#### Linkages between private schools and private universities
+<hr>
 Studies find attending private school increases college access, selectivity
 
 - Public school students: 5% attend "top 100" public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)
-- Private school: 11% attend top 100 public; 17% attend top 100 private
-- Nonsectarian private: 11% attend top 100 public; 40% attend top 100 private
+- Private school: 11% `@` top 100 public; 17% `@` top 100 private
+- Nonsectarian private: 11% `@` top 100 public; 40% `@` top 100 private
 
-Research from economics [@RN4935]
+@RN4935 study Ivy Plus admissions decisions
 
-- Rich students have higher non-academic ratings because they attend elite private schools (extracurricular activities, recommendations)
+- Rich students have higher non-academic ratings because they attend elite private schools (extracurriculars, recommendations)
 
-Research from sociology highlights organizational linkages [@RN4935]
+Sociology highlights school-college organizational linkages
 
-### slide title
-#### slide sub-title
+- Visits maintain relations with counselors at feeder schools [@RN3519]
+- Private school counselors lobby for marginal candidates [@RN4407]
 
+### Literature Review
+#### Synthesis
 <hr>
+These two literatures have developed in isolation
 
-Here's some text:
+- Pursuing out-of-state private school students by public research univs encroaches on historic territory of selective private univs
 
--   @RN4504 said blah...
--   Parenthetical citation [@RN4625].
--   **Bold** and *italic* text
+Analyzing network of recruiting visits to private schools gives insight about competition for affluent students
 
-More things:
+- Public and private universities may be targeting similar sets of schools
+  - Direct competition or vying to be second choice for rejected applicant
 
--   Blah
+Private school students more likely to be affluent, white than public school students [@RN4504]
+
+- Competitive recruiting of private school students has downstream effects on racial and socioeconomic composition of colleges
 
 # Methods
 
-## Data and Sample
+### Methods
+#### Data and Sample
+
+Data collection (see @RN4758)
+
+- 2017 off-campus recruiting visits scraped from univ admissions websites
+
+Data collection sample
+
+- Public "research-extensive" universities from 2000 Carnegie (N=102)
+- Private universities in top 100 of U.S. News *National Universities* (N=57)
+- Private colleges in top 50 of *National Liberal Arts Colleges* (N=47)
+
+Analysis sample: univs that posted complete recruiting visits on website
+
+- 15 public research, 14 private universities, 12 private liberal arts (omitted)
+
+Secondary data
+
+- IPEDS; CCD; Private School Survey; Niche *Best Private High Schools*
 
 ### Characteristics of universities in analysis sample
 
@@ -220,9 +248,30 @@ kbl(univ_pop_df, align = 'r', escape = F) %>%
 ```
 :::
 
-## Constructing Social Networks
+### Methods
+#### Constructing social networks
 
-## Analyses
+text
+- Transform two-mode network to one-mode university network showing number of schools visited by both university $i$ and university $j$
+
+### Methods
+#### Analyses by research question
+
+
+1.  How does the scale of visits to private high schools vary for the public research universities and selective private universities?
+    - Simple descriptive statistics
+    
+\medskip
+
+2.  To what extent do public research universities and selective private universities visit overlapping sets of private high schools?
+    - Graph one-mode university network; universities allocated to categories based on cluster analysis
+    
+\medskip
+
+3.  What are the characteristics of private schools that receive visits from public research universities and selective private research universities?
+    - Descriptive statistics of characteristics of university order-1 "ego network" (schools the university visited):
+      - Geographic region, religion, racial composition, academic reputation
+
 
 # Results
 
