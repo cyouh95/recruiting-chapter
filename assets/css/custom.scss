@@ -114,6 +114,10 @@ body {
   line-height: 1.5em;
   font-size: 15px;
   border-spacing: 0;
+  border-collapse: separate;
+  th, td {
+    background-color: #f3f3f3;
+  }
   th {
     border-bottom: 1px solid black;
     vertical-align: bottom;
@@ -127,11 +131,49 @@ body {
   }
 }
 
-.freeze-col table {
-  border-collapse: separate;
+.cell-output-display:not(.no-overflow-x) {
+  overflow-x: inherit !important;
+}
+
+#tbl-1 {
+  tr th:nth-child(n+1):nth-child(-n+2) {
+    z-index: 2;
+  }
+  tr th:nth-child(1),
+  tr:nth-child(1) td:nth-child(1),
+  tr:nth-child(16) td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+  }
+  tr th:nth-child(2),
+  tr:nth-child(1) td:nth-child(2),
+  tr:not(:nth-child(16)):not(:nth-child(1)) td:nth-child(1),
+  tr:nth-child(16) td:nth-child(2) {
+    position: sticky;
+    left: 116px;
+    border-right: 1px solid black;
+    z-index: 1;
+  }
+  tr th {
+    position: sticky;
+    top: 0;
+  }
+  tbody {
+    tr:first-child td:first-child,
+    tr:nth-of-type(15) td {
+      border-bottom: 1px solid #666666;
+    }
+    tr:nth-child(16) td:first-child,
+    tr:last-child td {
+      border-bottom: 1px solid black;
+    }
+  }
+}
+
+#tbl-2, .tbl-1mode {
   tr {
     th, td {
-      background-color: #f3f3f3;
       &:nth-child(1) {
         position: sticky;
         left: 0;
@@ -142,19 +184,13 @@ body {
   }
 }
 
-#tbl-1 {
-  tbody {
-    tr {
-      &:nth-of-type(15) {
-        border-bottom: 1px solid;
-      }
-      &:last-child {
-        border-bottom: 1px solid black;
-      }
-    }
+.tbl-1mode {
+  th {
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
   }
-}
-
-.tbl-1mode th {
-  white-space: nowrap;
+  tr th:first-child {
+    z-index: 2;
+  }
 }

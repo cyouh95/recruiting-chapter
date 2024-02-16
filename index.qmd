@@ -147,14 +147,14 @@ names(univ_sample) <- c('Classification', 'University', 'Rank', '25th Percentile
 kbl(univ_sample, align = c('l', 'l', rep('r', 13)), escape = F) %>% 
   collapse_rows(columns = 1, valign = 'middle') %>% 
   column_spec(4, width_min = '1.2in') %>% 
-  column_spec(6, width_min = '0.9in') %>% 
-  column_spec(8, width_min = '0.9in')
+  column_spec(6, width_min = '1in') %>% 
+  column_spec(8, width_min = '1in')
 ```
 :::
 
 ### Characteristics of universities in analysis sample compared to data collection sample
 
-::: {.table-wrapper .freeze-col}
+::: {#tbl-2 .table-wrapper}
 ```{r sample-population-characteristics}
 cc2000_edition_data <- read_excel(file.path(data_dir, 'cc2000_edition_data.xls'), sheet = 'Data')
 pop_pubu <- (cc2000_edition_data %>% filter(`Control (text)` == 'Public', `CC2000 (text)` == 'Doctoral/Research Universities—Extensive'))$UNITID %>% as.character()
@@ -248,7 +248,18 @@ kbl(univ_pop_df, align = 'r', escape = F) %>%
 
 ### One-mode percent matrix, all universities
 
-CRYSTAL: CREATE ONE-MODE PERCENT MATRIX FOR ALL UNIVERSITIES; FREEZING PANES FOR FIRST COLUMN AND FIRST ROW
+::: {.table-wrapper .tbl-1mode}
+```{r pubu-privu-1mode}
+table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
+rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
+
+names(table_1mode_u$onemode_pct_df) <- str_replace(names(table_1mode_u$onemode_pct_df), ' \\(', '<br>(')
+
+kable(table_1mode_u$onemode_pct_df, align = 'r', escape = F) %>%
+  column_spec(1, bold = T) %>% 
+  column_spec(2:30, width_min = '0.9in')
+```
+:::
 
 ### One-mode network for all universities
 
