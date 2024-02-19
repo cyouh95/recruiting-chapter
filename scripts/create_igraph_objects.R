@@ -104,7 +104,7 @@ table(events_data$event_type, useNA = 'always')
 
 # Clean up events data (drop visits to HS not meeting criteria - 45533 to 44660 obs)
 events_df <- events_data %>% 
-  select(univ_id, univ_state, event_type, school_id, event_state, event_loc)
+  select(univ_id, univ_state, event_type, school_id, event_date, event_state, event_loc)
 
 # Override school_id with updated 2017-18 PSS ID
 get_pss_override <- function(x) {
