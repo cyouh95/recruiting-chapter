@@ -48,7 +48,7 @@ ego_df <- readRDS(file.path(tables_dir, 'table_ego_all.RDS')) %>%
 
 # Introduction
 
-### Off-campus recruiting visits to high schools in Nashville
+### Off-campus recruiting visits to high schools in Nashville {.caption}
 
 <iframe src="./assets/maps/intro_map.html" width=100% height=100% allowtransparency="true"></iframe>
 
@@ -87,7 +87,7 @@ Interventions to attract nonresident students
 
 ### Literature Review
 #### Linkages between private schools and private universities
-<hr>
+
 Studies find attending private school increases college access, selectivity
 
 - Public school students: 5% attend "top 100" public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)
@@ -105,7 +105,7 @@ Sociology highlights school-college organizational linkages
 
 ### Literature Review
 #### Synthesis
-<hr>
+
 These two literatures have developed in isolation
 
 - Pursuing out-of-state private school students by public research univs encroaches on historic territory of selective private univs
@@ -142,7 +142,7 @@ Secondary data
 
 - IPEDS; CCD; Private School Survey; Niche *Best Private High Schools*
 
-### Characteristics of universities in analysis sample
+### Characteristics of universities in analysis sample {.caption}
 
 ::: {#tbl-1 .table-wrapper}
 ```{r sample-characteristics}
@@ -174,13 +174,13 @@ names(univ_sample) <- c('Classification', 'University', 'Rank', '25th Percentile
 
 kbl(univ_sample, align = c('l', 'l', rep('r', 13)), escape = F) %>% 
   collapse_rows(columns = 1, valign = 'middle') %>% 
-  column_spec(4, width_min = '1.2in') %>% 
+  column_spec(4, width_min = '1.4in') %>% 
   column_spec(6, width_min = '1in') %>% 
   column_spec(8, width_min = '1in')
 ```
 :::
 
-### Characteristics of universities in analysis sample compared to data collection sample
+### Characteristics of universities in analysis sample compared to data collection sample {.caption}
 
 ::: {#tbl-2 .table-wrapper}
 ```{r sample-population-characteristics}
@@ -277,25 +277,25 @@ text
 
 ## RQ1: Scale of Visits
 
-### Number of HS visits by public research universities
+### Number of HS visits by public research universities {.caption}
 
 ![](./assets/figures/events_hs_count_pubu.png)
 
-### Number of HS visits by selective private universities
+### Number of HS visits by selective private universities {.caption}
 
 ![](./assets/figures/events_hs_count_privu.png)
 
-### Proportional HS visits by public research universities
+### Proportional HS visits by public research universities {.caption}
 
 ![](./assets/figures/events_hs_actual_proportional_pubu.png)
 
-### Proportional HS visits by selective private universities
+### Proportional HS visits by selective private universities {.caption}
 
 ![](./assets/figures/events_hs_actual_proportional_privu.png)
 
 ## RQ2: Overlap of Visits
 
-### One-mode percent matrix, all universities
+### One-mode percent matrix, all universities {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r pubu-privu-1mode}
@@ -310,33 +310,33 @@ kable(table_1mode_u$onemode_pct_df, align = 'r', escape = F) %>%
 ```
 :::
 
-### One-mode network for all universities
+### One-mode network for all universities {.caption}
 
 ![](./assets/figures/plot_1mode_u.png)
 
 ## RQ3: Characteristics of Visited Schools
 
-### Order 2 ego network of University of Notre Dame
+### Order 2 ego network of University of Notre Dame {.caption}
 
 ![](./assets/figures/nd_religion.png)
 
-### Geographic region of visited private high schools
+### Geographic region of visited private high schools {.caption}
 
 ![](./assets/figures/ego_network_region_pubu_privu.png)
 
-### Religious affiliation of visited private high schools
+### Religious affiliation of visited private high schools {.caption}
 
 ![](./assets/figures/ego_network_religion_pubu_privu.png)
 
-### Racial composition of visited HS, public universities
+### Racial composition of visited HS, public universities {.caption}
 
 ![](./assets/figures/ego_network_race_pubu_privhs_pubhs.png)
 
-### Racial composition of visited HS, private universities
+### Racial composition of visited HS, private universities {.caption}
 
 ![](./assets/figures/ego_network_race_privu_privhs_pubhs.png)
 
-### High school ranking of visited private high schools
+### High school ranking of visited private high schools {.caption}
 
 ![](./assets/figures/ego_network_rank_pubu_privu.png)
 
@@ -345,8 +345,6 @@ kable(table_1mode_u$onemode_pct_df, align = 'r', escape = F) %>%
 ### Slide w/ citation
 
 #### Subtitle
-
-<hr>
 
 Here's some text:
 
@@ -367,17 +365,17 @@ More things:
 
 ## RQ1: Scale of Visits
 
-### All recruiting visits, public research universities
+### All recruiting visits, public research universities {.caption}
 
 ![](./assets/figures/events_count_pubu.png)
 
-### All recruiting visits, public research universities
+### All recruiting visits, public research universities {.caption}
 
 ![](./assets/figures/events_count_privu.png)
 
 ## RQ2: Overlap of Visits
 
-### One-mode public university percent matrix
+### One-mode public university percent matrix {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r pubu-percent-matrix}
@@ -392,15 +390,15 @@ kable(table_1mode_pubu$onemode_pct_df, align = 'r', escape = F) %>%
 ```
 :::
 
-### One-mode network, public universities
+### One-mode network, public universities {.caption}
 
 ![](./assets/figures/plot_1mode_pubu.png)
 
-### One-mode network, public universities
+### One-mode network, public universities {.caption}
 
 ![](./assets/figures/plot_1mode_privu.png)
 
-### One-mode private university percent matrix
+### One-mode private university percent matrix {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r privu-percent-matrix}
@@ -415,7 +413,7 @@ kable(table_1mode_privu$onemode_pct_df, align = 'r', escape = F) %>%
 ```
 :::
 
-### For private universities, the percent of high schools visited by public universities
+### For private universities, the percent of high schools visited by public universities {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r privu-percent-visited-by-pubu-matrix}
@@ -430,7 +428,7 @@ kable(table_1mode_u$onemode_pct_df[c(1,7,9,13,16,17,18,21,22,23,24,25,27,28,29),
 ```
 :::
 
-### For public universities, the percent of high schools visited by private universities
+### For public universities, the percent of high schools visited by private universities {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r pubu-percent-visited-by-privu-matrix}
@@ -442,10 +440,10 @@ kable(table_1mode_u$onemode_pct_df[c(2,3,4,5,6,8,10,11,12,14,15,19,20,26),c(1,7,
 
 ## RQ3: Characteristics of Visited Schools
 
-### Racial composition in the South, public universities
+### Racial composition in the South, public universities {.caption}
 
 ![](./assets/figures/south_race_pubu_privhs_pubhs.png)
 
-### Racial composition in the South, private universities
+### Racial composition in the South, private universities {.caption}
 
 ![](./assets/figures/south_race_privu_privhs_pubhs.png)

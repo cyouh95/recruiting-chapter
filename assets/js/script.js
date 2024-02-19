@@ -19,6 +19,9 @@ $(function() {
     $(this).closest('.slide').find('p img').removeClass('disabled');
   });
   
+  $('<hr>').insertAfter('.reveal .slide h4');
+  $('<hr>').insertAfter('.reveal .slide:not(.caption) h3:not(:has(+ h4))');
+  
   Reveal.addEventListener('slidechanged', function() {
     $('.modal').fadeOut();
     $('img').removeClass('disabled');
