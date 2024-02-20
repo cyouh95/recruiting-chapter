@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Kulim+Park:wght@200;400;600;700&family=Manrope:wght@200;400;600;700&display=swap');
 
 // colors
-$link-color: #887c62;
+$link-color: #909090;
 
 // fonts
 $font-family-sans-serif: 'Manrope', Helvetica, sans-serif;
@@ -13,9 +13,24 @@ $presentation-font-size-root: 30px;
 
 /*-- scss:rules --*/
 
-body {
-  /* background: url('/assets/images/bg.png') center / cover no-repeat fixed !important; */
-  background: url('/recruiting-chapter/assets/images/bg.png') center / cover no-repeat fixed !important;
+.slide-background .slide-background-content {
+  background: url('/assets/images/bg1.png') center / cover no-repeat fixed !important;
+  /* background: url('/recruiting-chapter/assets/images/bg1.png') center / cover no-repeat fixed !important; */
+}
+
+.bg1 .slide-background .slide-background-content {
+  background: url('/assets/images/bg1.png') center / cover no-repeat fixed !important;
+  /* background: url('/recruiting-chapter/assets/images/bg1.png') center / cover no-repeat fixed !important; */
+}
+
+.bg2 .slide-background .slide-background-content {
+  background: url('/assets/images/bg2.png') center / cover no-repeat fixed !important;
+  /* background: url('/recruiting-chapter/assets/images/bg2.png') center / cover no-repeat fixed !important; */
+}
+
+.slide-background.level3 .slide-background-content {
+  filter: blur(5px) grayscale(50%);
+  -webkit-filter: blur(5px) grayscale(50%);
 }
 
 .reveal {
@@ -25,7 +40,7 @@ body {
       font-weight: 300;
     }
     h2, h3 {
-      color: #664b34;
+      color: #56275a;
       font-size: 50px;
       text-transform: none;
     }
@@ -33,7 +48,7 @@ body {
       margin-top: -10px;
     }
     h4 {
-      color: #444444;
+      color: #827250;
       font-size: 40px;
       
     }
@@ -45,7 +60,7 @@ body {
         content: '\25B9';
         margin-left: -1em;
         position: absolute;
-        color: #e2b0a6;
+        color: #a98078;
       }
     }
     .quarto-layout-panel > .table-caption {
@@ -54,7 +69,7 @@ body {
   }
   .caption {
     h3 {
-      color: #887c62;
+      color: #824545;
       font-size: 45px;
     }
   }
@@ -132,7 +147,7 @@ body {
   border-spacing: 0;
   border-collapse: separate;
   th, td {
-    background-color: #f3f3f3;
+    background-color: #fefcfd;
   }
   th {
     border-bottom: 1px solid black;

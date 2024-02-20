@@ -12,6 +12,8 @@ format:
     background-transition: fade
     auto-stretch: false
     slide-level: 3
+    template-partials:
+      - ./assets/html/title-slide.html
 include-in-header: ./assets/html/header.html
 # https://github.com/quarto-dev/quarto-cli/discussions/5853#discussioncomment-6126603
 # filters:

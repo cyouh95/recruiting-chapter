@@ -26,4 +26,8 @@ $(function() {
     $('.modal').fadeOut();
     $('img').removeClass('disabled');
   });
+  
+  $('.bg').on('click', function(e) {
+    $('.backgrounds').attr('class', 'backgrounds ' + $(this).attr('id'))
+  })
 });
