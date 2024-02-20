@@ -253,8 +253,22 @@ kbl(univ_pop_df, align = 'r', escape = F) %>%
 ### Methods
 #### Constructing social networks
 
+Construct two-mode network
+
+- "Edge" or "network tie" = off-campus recruiting vist
+- "Vertices” = schools $i$ (mode 1) and universities $j$ (mode 2)
 text
-- Transform two-mode network to one-mode university network showing number of schools visited by both university $i$ and university $j$
+- School-by-university matrix; cell $a_{i,j}$ shows number of visits school $i$ received from univ $j$
+
+Transform two-mode network into one-mode university network
+
+- university $i$ and university $j$ share an edge if they visit at least one high school in common
+- "Weight" of the edge is number of high schools visited by both $i$ and $j$
+
+### Visualizing two-mode recruiting network {.caption}
+
+![](./assets/figures/plot_2mode_u.png)
+
 
 ### Methods
 #### Analyses by research question
@@ -344,19 +358,24 @@ kable(table_1mode_u$onemode_pct_df, align = 'r', escape = F) %>%
 
 # Discussion
 
-### Slide w/ citation
+### Discussion
 
-#### Subtitle
+Key findings (for analysis sample)
 
-Here's some text:
+- **RQ1**. Disproportionate number of visits to private schools
+- **RQ2**. Substantial overlap in recruiting networks of public and private univs
+- **RQ3**. For public univs, visit schools: in the South; Catholic/Christian; enrollment mostly white
 
--   @RN4504 said blah...
--   Parenthetical citation [@RN4625].
--   **Bold** and *italic* text
+Practical implications
 
-More things:
+- Universities should conduct an internal equity audit of recruiting practices
 
--   Blah
+Implications for scholarship
+
+- Selective private, public flagship compete for same affluent households
+- @RN4935 study Ivy Plus admissions; focuses on student/household behavior
+  - Ignore organizational linkages between privileged schools and univs
+  - These orgs interact to increase flow of students between one another
 
 ### References
 
