@@ -61,7 +61,7 @@ Recruiting visit indicates university and school have social relationship
 - The university wants to enroll some students from the school
 - The school wants to send some students to the university
 
-Visits from universities to schools yields a two-mode social network
+Visits from universities to schools yield a two-mode social network
 
 - "Edges" = visits; "Vertices" = schools (mode 1) and universities (mode 2)
 
@@ -76,8 +76,8 @@ Research questions
 ### Literature Review
 #### Nonresident enrollment at public universities
 
-- Increase nonresident enrollment in response to declines in state funding  [@RN3753]
-- Nonresident students more affluent, less likely to be Black or Latinx [@RN3685]
+- Increased nonresident enrollment in response to declines in state funding  [@RN3753]
+- Nonresident students are more affluent, less likely to be Black or Latinx [@RN3685]
 
 Interventions to attract nonresident students
 
@@ -85,16 +85,16 @@ Interventions to attract nonresident students
 - Recruiting interventions at earlier stages of enrollment funnel
   - "Student list" purchases [@RN4985]
   - Off-campus recruiting visits [@RN4758; @RN4934]
-    - Out-of state visits to public high schools focus on affluent public schools, avoid non-white communities
+    - Out-of-state visits to public high schools focus on affluent public schools, avoid non-white communities
 
 ### Literature Review
 #### Linkages between private schools and private universities
 
 Studies find attending private school increases college access, selectivity
 
-- Public school students: 5% attend "top 100" public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)
-- Private school: 11% `@` top 100 public; 17% `@` top 100 private
-- Nonsectarian private: 11% `@` top 100 public; 40% `@` top 100 private
+- **Public school students**: 5% attend "top 100" public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)
+- **Private school**: 11% `@` top 100 public; 17% `@` top 100 private
+- **Nonsectarian private**: 11% `@` top 100 public; 40% `@` top 100 private
 
 @RN4935 study Ivy Plus admissions decisions
 
@@ -115,7 +115,7 @@ These two literatures have developed in isolation
 Analyzing network of recruiting visits to private schools gives insight about competition for affluent students
 
 - Public and private universities may be targeting similar sets of schools
-  - Direct competition or vying to be second choice for rejected applicant
+  - Direct competition or vying to be second choice for rejected applicants
 
 Private school students more likely to be affluent, white than public school students [@RN4504]
 
@@ -255,15 +255,14 @@ kbl(univ_pop_df, align = 'r', escape = F) %>%
 
 Construct two-mode network
 
-- "Edge" or "network tie" = off-campus recruiting vist
+- "Edge" or "network tie" = off-campus recruiting visit
 - "Vertices” = schools $i$ (mode 1) and universities $j$ (mode 2)
-text
 - School-by-university matrix; cell $a_{i,j}$ shows number of visits school $i$ received from univ $j$
 
 Transform two-mode network into one-mode university network
 
-- university $i$ and university $j$ share an edge if they visit at least one high school in common
-- "Weight" of the edge is number of high schools visited by both $i$ and $j$
+- university $j_1$ and university $j_2$ share an edge if they visit at least one high school in common
+- "Weight" of the edge is number of high schools visited by both $j_1$ and $j_2$
 
 ### Visualizing two-mode recruiting network {.caption}
 
@@ -386,11 +385,11 @@ Implications for scholarship
 
 ## RQ1: Scale of Visits
 
-### All recruiting visits, public research universities {.caption}
+### All recruiting visits, public universities {.caption}
 
 ![](./assets/figures/events_count_pubu.png)
 
-### All recruiting visits, public research universities {.caption}
+### All recruiting visits, private universities {.caption}
 
 ![](./assets/figures/events_count_privu.png)
 
@@ -415,7 +414,7 @@ kable(table_1mode_pubu$onemode_pct_df, align = 'r', escape = F) %>%
 
 ![](./assets/figures/plot_1mode_pubu.png)
 
-### One-mode network, public universities {.caption}
+### One-mode network, private universities {.caption}
 
 ![](./assets/figures/plot_1mode_privu.png)
 

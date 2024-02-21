@@ -8,7 +8,7 @@
 <link href="index_files/libs/quarto-html/light-border.css" rel="stylesheet">
 <link href="index_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="index_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.3.433">
+  <meta name="generator" content="quarto-1.3.450">
 
   <title>The Private School Network</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -370,7 +370,7 @@
 <li>The university wants to enroll some students from the school</li>
 <li>The school wants to send some students to the university</li>
 </ul>
-<p>Visits from universities to schools yields a two-mode social network</p>
+<p>Visits from universities to schools yield a two-mode social network</p>
 <ul>
 <li>“Edges” = visits; “Vertices” = schools (mode 1) and universities (mode 2)</li>
 </ul>
@@ -390,8 +390,8 @@
 <h3>Literature Review</h3>
 <h4 id="nonresident-enrollment-at-public-universities">Nonresident enrollment at public universities</h4>
 <ul>
-<li>Increase nonresident enrollment in response to declines in state funding <span class="citation" data-cites="RN3753">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette and Curs 2015</a>)</span></li>
-<li>Nonresident students more affluent, less likely to be Black or Latinx <span class="citation" data-cites="RN3685">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette, Curs, and Posselt 2016</a>)</span></li>
+<li>Increased nonresident enrollment in response to declines in state funding <span class="citation" data-cites="RN3753">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette and Curs 2015</a>)</span></li>
+<li>Nonresident students are more affluent, less likely to be Black or Latinx <span class="citation" data-cites="RN3685">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette, Curs, and Posselt 2016</a>)</span></li>
 </ul>
 <p>Interventions to attract nonresident students</p>
 <ul>
@@ -401,7 +401,7 @@
 <li>“Student list” purchases <span class="citation" data-cites="RN4985">(<a href="#/references" role="doc-biblioref" onclick="">Jaquette and Salazar, online first</a>)</span></li>
 <li>Off-campus recruiting visits <span class="citation" data-cites="RN4758 RN4934">(<a href="#/references" role="doc-biblioref" onclick="">Salazar, Jaquette, and Han 2021</a>; <a href="#/references" role="doc-biblioref" onclick="">Salazar 2022</a>)</span>
 <ul>
-<li>Out-of state visits to public high schools focus on affluent public schools, avoid non-white communities</li>
+<li>Out-of-state visits to public high schools focus on affluent public schools, avoid non-white communities</li>
 </ul></li>
 </ul></li>
 </ul>
@@ -411,9 +411,9 @@
 <h4 id="linkages-between-private-schools-and-private-universities">Linkages between private schools and private universities</h4>
 <p>Studies find attending private school increases college access, selectivity</p>
 <ul>
-<li>Public school students: 5% attend “top 100” public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)</li>
-<li>Private school: 11% <code>@</code> top 100 public; 17% <code>@</code> top 100 private</li>
-<li>Nonsectarian private: 11% <code>@</code> top 100 public; 40% <code>@</code> top 100 private</li>
+<li><strong>Public school students</strong>: 5% attend “top 100” public univ; 2% attend top 100 private univ (Author calculations from HSLS 2009)</li>
+<li><strong>Private school</strong>: 11% <code>@</code> top 100 public; 17% <code>@</code> top 100 private</li>
+<li><strong>Nonsectarian private</strong>: 11% <code>@</code> top 100 public; 40% <code>@</code> top 100 private</li>
 </ul>
 <p><span class="citation" data-cites="RN4935">Chetty, Deming, and Friedman (<a href="#/references" role="doc-biblioref" onclick="">2023</a>)</span> study Ivy Plus admissions decisions</p>
 <ul>
@@ -436,7 +436,7 @@
 <ul>
 <li>Public and private universities may be targeting similar sets of schools
 <ul>
-<li>Direct competition or vying to be second choice for rejected applicant</li>
+<li>Direct competition or vying to be second choice for rejected applicants</li>
 </ul></li>
 </ul>
 <p>Private school students more likely to be affluent, white than public school students <span class="citation" data-cites="RN4504">(<a href="#/references" role="doc-biblioref" onclick="">Murnane and Reardon 2018</a>)</span></p>
@@ -1255,14 +1255,14 @@ Data collection sample (N=57)
 <h4 id="constructing-social-networks">Constructing social networks</h4>
 <p>Construct two-mode network</p>
 <ul>
-<li>“Edge” or “network tie” = off-campus recruiting vist</li>
-<li>“Vertices” = schools <span class="math inline">\(i\)</span> (mode 1) and universities <span class="math inline">\(j\)</span> (mode 2) text</li>
+<li>“Edge” or “network tie” = off-campus recruiting visit</li>
+<li>“Vertices” = schools <span class="math inline">\(i\)</span> (mode 1) and universities <span class="math inline">\(j\)</span> (mode 2)</li>
 <li>School-by-university matrix; cell <span class="math inline">\(a_{i,j}\)</span> shows number of visits school <span class="math inline">\(i\)</span> received from univ <span class="math inline">\(j\)</span></li>
 </ul>
 <p>Transform two-mode network into one-mode university network</p>
 <ul>
-<li>university <span class="math inline">\(i\)</span> and university <span class="math inline">\(j\)</span> share an edge if they visit at least one high school in common</li>
-<li>“Weight” of the edge is number of high schools visited by both <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></li>
+<li>university <span class="math inline">\(j_1\)</span> and university <span class="math inline">\(j_2\)</span> share an edge if they visit at least one high school in common</li>
+<li>“Weight” of the edge is number of high schools visited by both <span class="math inline">\(j_1\)</span> and <span class="math inline">\(j_2\)</span></li>
 </ul>
 </section>
 <section id="visualizing-two-mode-recruiting-network" class="slide level3 caption">
@@ -2467,12 +2467,12 @@ Stevens, Mitchell L. 2007. <em>Creating a Class: College Admissions and the Educ
 <h2>RQ1: Scale of Visits</h2>
 
 </section>
-<section id="all-recruiting-visits-public-research-universities" class="slide level3 caption">
-<h3>All recruiting visits, public research universities</h3>
+<section id="all-recruiting-visits-public-universities" class="slide level3 caption">
+<h3>All recruiting visits, public universities</h3>
 <p><img data-src="./assets/figures/events_count_pubu.png"></p>
 </section>
-<section id="all-recruiting-visits-public-research-universities-1" class="slide level3 caption">
-<h3>All recruiting visits, public research universities</h3>
+<section id="all-recruiting-visits-private-universities" class="slide level3 caption">
+<h3>All recruiting visits, private universities</h3>
 <p><img data-src="./assets/figures/events_count_privu.png"></p>
 </section>
 
@@ -2822,8 +2822,8 @@ Stevens, Mitchell L. 2007. <em>Creating a Class: College Admissions and the Educ
 <h3>One-mode network, public universities</h3>
 <p><img data-src="./assets/figures/plot_1mode_pubu.png"></p>
 </section>
-<section id="one-mode-network-public-universities-1" class="slide level3 caption">
-<h3>One-mode network, public universities</h3>
+<section id="one-mode-network-private-universities" class="slide level3 caption">
+<h3>One-mode network, private universities</h3>
 <p><img data-src="./assets/figures/plot_1mode_privu.png"></p>
 </section>
 <section id="one-mode-private-university-percent-matrix" class="slide level3 caption">
