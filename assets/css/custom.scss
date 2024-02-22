@@ -29,6 +29,38 @@ $presentation-font-size-root: 30px;
 }
 
 .reveal {
+  #title-slide .title {
+    margin-top: 100px;
+    background: linear-gradient(-45deg, #81cbc4, #b088c4, #c47ca4, #bda372), #333;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  #title-slide .subtitle {
+    margin-bottom: 7rem;
+    color: #777;
+  }
+  .author {
+    font-size: 20px;
+    color: #827250;
+  }
+  .bg {
+    cursor: pointer;
+    position: absolute;
+    color: lightgray;
+    transform: translateX(-50%);
+    font-size: 20px;
+  }
+  #bg1 {
+    left: 47%;
+  }
+  #bg2 {
+    left: 53%;
+  }
+  &[data-navigation-mode=linear] .title-slide h1 {
+    background: linear-gradient(#ffb38a, #555), #333;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
   .slide {
     h2, h3, h4 {
       letter-spacing: -2px;

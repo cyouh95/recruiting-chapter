@@ -1,6 +1,7 @@
 ---
 title: "The Private School Network"
 subtitle: "Recruiting Visits to Private High Schools by Public and Private Universities"
+author: ["Ozan Jaquette (UCLA)", "Crystal Han (NASA GeneLab)", "Irma Castañeda (MEF Associates)"]
 bibliography: ./other/burd_recruiting_chapter.bib
 format:
   revealjs: 
