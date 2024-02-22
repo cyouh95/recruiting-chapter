@@ -44,16 +44,13 @@ visits_data <- events_data %>%
     values_from = visit
   )
 
-# https://www.zillow.com/browse/homes/tn/davidson-county/
-davidson_zips <- c('37013', '37211', '37027', '37115', '37221', '37207', '37086', '37076', '37209', '37217', '37072', '37214', '37138', '37205', '37206', '37215', '37203', '37216', '37212', '37208', '37204', '37210', '37218', '37080', '37220', '37189', '37143', '37248', '37245', '37228', '37247', '37237', '37213', '37201', '37219', '37232', '37246', '37243', '37249', '37202', '37011', '37024', '37070', '37116', '37222', '37227', '37224', '37229', '37230', '37235', '37234', '37236', '37240', '37238', '37242', '37241', '37244', '37250')
-
 pubhs_data <- pubhs_universe_df %>% 
-  left_join(ccd_1718 %>% select(ncessch, sch_name, lzip, latitude, longitude), by = 'ncessch') %>% 
-  filter(lzip %in% davidson_zips, !ncessch %in% c('470453001894', '470453001946', '470369001987')) %>% 
+  left_join(ccd_1718 %>% select(ncessch, sch_name, latitude, longitude), by = 'ncessch') %>% 
+  filter(state_code == 'TN') %>% 
   left_join(visits_data, by = c('ncessch' = 'school_id'))
 
 privhs_data <- privhs_universe_df %>% 
-  filter(zip_code %in% davidson_zips | ncessch == 'A1503590', !ncessch %in% c('A1703353', '01296403', '01296811', intro_schools)) %>% 
+  filter(state_code == 'TN') %>% 
   left_join(visits_data, by = c('ncessch' = 'school_id'))
 
 intro_schools_data <- privhs_universe_df %>% 
@@ -62,20 +59,21 @@ intro_schools_data <- privhs_universe_df %>%
 
 # Create marker popups
 pubhs_data$popup <- paste0(
-  '<div style="max-height: 400px; overflow-y: scroll;"><b>', pubhs_data$sch_name, '</b><br>',
+  '<div style="max-height: 400px; overflow-y: scroll;font-size: 15px;"><b>', pubhs_data$sch_name, '</b><br>',
   '<br>Grade 12 Enrollment: ', pubhs_data$g12,
   '<br>% White: ', sprintf('%.1f', pubhs_data$pct_white),
   '<br>% Asian: ', sprintf('%.1f', pubhs_data$pct_asian),
   '<br>% Latinx: ', sprintf('%.1f', pubhs_data$pct_hispanic),
   '<br>% Black: ', sprintf('%.1f', pubhs_data$pct_black),
-  '<br>% Other: ', sprintf('%.1f', pubhs_data$pct_amerindian + pubhs_data$pct_nativehawaii + pubhs_data$pct_tworaces),
+  '<br>% AIAN/NHPI: ', sprintf('%.1f', pubhs_data$pct_amerindian + pubhs_data$pct_nativehawaii),
+  '<br>% 2+ races: ', sprintf('%.1f', pubhs_data$pct_tworaces),
   if_else(!is.na(pubhs_data$private_national), paste0('<br><br><b>Private national visits</b><br>', pubhs_data$private_national), ''),
   if_else(!is.na(pubhs_data$private_libarts), paste0('<br><br><b>Private liberal arts visits</b><br>', pubhs_data$private_libarts), ''),
   if_else(!is.na(pubhs_data$public_research), paste0('<br><br><b>Public research visits</b><br>', pubhs_data$public_research), ''),
   '</div>'
 )
 privhs_data$popup <- paste0(
-  '<div style="max-height: 400px; overflow-y: scroll;"><b>', str_to_title(privhs_data$name), '</b><br>',
+  '<div style="max-height: 400px; overflow-y: scroll;font-size: 15px;"><b>', str_to_title(privhs_data$name), '</b><br>',
   '<br>Grade 12 Enrollment: ', privhs_data$total_12,
   '<br>Niche ranking: ', privhs_data$overall_niche_letter_grade, if_else(!is.na(privhs_data$rank_within_category), paste0(' (', privhs_data$rank_within_category, ')'), ''),
   '<br>Religious affiliation: ', str_to_title(privhs_data$religion),
@@ -83,14 +81,15 @@ privhs_data$popup <- paste0(
   '<br>% Asian: ', sprintf('%.1f', privhs_data$pct_asian),
   '<br>% Latinx: ', sprintf('%.1f', privhs_data$pct_hispanic),
   '<br>% Black: ', sprintf('%.1f', privhs_data$pct_black),
-  '<br>% Other: ', sprintf('%.1f', privhs_data$pct_amerindian + privhs_data$pct_nativehawaii + privhs_data$pct_tworaces),
+  '<br>% AIAN/NHPI: ', sprintf('%.1f', privhs_data$pct_amerindian + privhs_data$pct_nativehawaii),
+  '<br>% 2+ races: ', sprintf('%.1f', privhs_data$pct_tworaces),
   if_else(!is.na(privhs_data$private_national), paste0('<br><br><b>Private national visits</b><br>', privhs_data$private_national), ''),
   if_else(!is.na(privhs_data$private_libarts), paste0('<br><br><b>Private liberal arts visits</b><br>', privhs_data$private_libarts), ''),
   if_else(!is.na(privhs_data$public_research), paste0('<br><br><b>Public research visits</b><br>', privhs_data$public_research), ''),
   '</div>'
 )
 intro_schools_data$popup <- paste0(
-  '<div style="max-height: 400px; overflow-y: scroll;"><b>', str_to_title(intro_schools_data$name), '</b> (est. ', c(1985, 1951, 1975), ')<br>',
+  '<div style="max-height: 400px; overflow-y: scroll;font-size: 15px;"><b>', str_to_title(intro_schools_data$name), '</b> (est. ', c(1985, 1951, 1975), ')<br>',
   '<br>Grade 12 Enrollment: ', intro_schools_data$total_12,
   '<br>Niche ranking: ', intro_schools_data$overall_niche_letter_grade, if_else(!is.na(intro_schools_data$rank_within_category), paste0(' (', intro_schools_data$rank_within_category, ')'), ''),
   '<br>Religious affiliation: ', str_to_title(intro_schools_data$religion),
@@ -98,7 +97,8 @@ intro_schools_data$popup <- paste0(
   '<br>% Asian: ', sprintf('%.1f', intro_schools_data$pct_asian),
   '<br>% Latinx: ', sprintf('%.1f', intro_schools_data$pct_hispanic),
   '<br>% Black: ', sprintf('%.1f', intro_schools_data$pct_black),
-  '<br>% Other: ', sprintf('%.1f', intro_schools_data$pct_amerindian + intro_schools_data$pct_nativehawaii + intro_schools_data$pct_tworaces),
+  '<br>% AIAN/NHPI: ', sprintf('%.1f', intro_schools_data$pct_amerindian + intro_schools_data$pct_nativehawaii),
+  '<br>% 2+ races: ', sprintf('%.1f', intro_schools_data$pct_tworaces),
   if_else(!is.na(intro_schools_data$private_national), paste0('<br><br><b>Private national visits</b><br>', intro_schools_data$private_national), ''),
   if_else(!is.na(intro_schools_data$private_libarts), paste0('<br><br><b>Private liberal arts visits</b><br>', intro_schools_data$private_libarts), ''),
   if_else(!is.na(intro_schools_data$public_research), paste0('<br><br><b>Public research visits</b><br>', intro_schools_data$public_research), ''),
@@ -107,9 +107,10 @@ intro_schools_data$popup <- paste0(
 
 # Load ACS data
 acs_data <- read_csv(file.path(data_dir, 'acs_tracts_TN_2017.csv'), na = c('-666666666'), col_types = c('fips_state_code' = 'c')) %>% 
-  filter(fips_county_code == '037') %>%  # Davidson County
   mutate(
-    NAMELSAD = str_extract(tract_name, 'Census Tract [^,]+'),
+    county_tract = str_c(fips_county_code, tract),
+    tract = str_split(tract_name, ', ', simplify = T)[,1],
+    county = str_split(tract_name, ', ', simplify = T)[,2],
     median_inc_2564 = if_else(is.na(median_inc_2544) | is.na(median_inc_4564), coalesce(median_inc_2544, median_inc_4564), (median_inc_2544 + median_inc_4564) / 2),
     pop_white_1519 = `pop_white_m_15-17` + `pop_white_m_18-19` + `pop_white_f_15-17` + `pop_white_f_18-19`,
     pop_black_1519 = `pop_black_m_15-17` + `pop_black_m_18-19` + `pop_black_f_15-17` + `pop_black_f_18-19`,
@@ -130,14 +131,17 @@ acs_data <- read_csv(file.path(data_dir, 'acs_tracts_TN_2017.csv'), na = c('-666
     pct_hispanic_1519 = pop_hispanic_1519 / pop_total_1519 * 100,
     pct_poc_1519 = if_else(pop_total_1519 == 0, NA, pct_black_1519 + pct_hispanic_1519 + pct_amerindian_1519)
   ) %>% 
-  select(NAMELSAD, pop_total, median_inc_2564, pct_poc_1519)
+  select(county_tract, tract, county, pop_total, median_inc_2564, pct_poc_1519)
 
 # Load shape data
-tn_counties <- counties('TN', year = 2017)
-davidson_tracts <- tracts('TN', 'Davidson', year = 2017)
+cbsas <- core_based_statistical_areas(cb = T, year = 2017)
+tn_tracts <- tracts('TN', cb = T, year = 2017)
 
-tract_data <- davidson_tracts %>%
-  left_join(acs_data, by = 'NAMELSAD')
+tract_data <- tn_tracts %>%
+  mutate(
+    county_tract = str_c(COUNTYFP, TRACTCE)
+  ) %>% 
+  left_join(acs_data, by = 'county_tract')
 
 # Create color legends
 color_pop <- colorNumeric('YlGnBu', tract_data$pop_total, n = 5)
@@ -157,9 +161,9 @@ tract_data$inc_brks <- cut(
 color_race <- colorFactor('YlGnBu', tract_data$race_brks)
 
 # Create overlay popups
-tract_data$popup_pop <- paste0('<b>', tract_data$NAMELSAD, '</b><br>Total Population: ', trimws(format(tract_data$pop_total, big.mark = ',')))
-tract_data$popup_income <- paste0('<b>', tract_data$NAMELSAD, '</b><br>Median Household Income: ', currency(tract_data$median_inc_2564, digits = 0L))
-tract_data$popup_race <- paste0('<b>', tract_data$NAMELSAD, '</b><br>% Black, Latinx, and Native American: ', sprintf('%.1f', tract_data$pct_poc_1519))
+tract_data$popup_pop <- paste0('<div style="font-size: 15px;"><b>', tract_data$tract, ' (', tract_data$county, ')</b><br>Total Population: ', trimws(format(tract_data$pop_total, big.mark = ',')), '</div>')
+tract_data$popup_income <- paste0('<div style="font-size: 15px;"><b>', tract_data$tract, ' (', tract_data$county, ')</b><br>Median Household Income: ', currency(tract_data$median_inc_2564, digits = 0L), '</div>')
+tract_data$popup_race <- paste0('<div style="font-size: 15px;"><b>', tract_data$tract, ' (', tract_data$county, ')</b><br>% Black, Latinx, and Native American: ', sprintf('%.1f', tract_data$pct_poc_1519), '</div>')
 
 # Create Vanderbilt icon
 vanderbilt <- ipeds_1718 %>% 
@@ -170,8 +174,10 @@ vanderbilt_icon <- makeIcon(iconUrl = file.path(imgs_dir, 'vanderbilt.png'), ico
 
 # Generate map
 m <- leaflet() %>%
+  setView(lat = vanderbilt$latitude, lng = vanderbilt$longitude, zoom = 10) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
-  addPolygons(data = tn_counties %>% filter(NAME == 'Davidson'), stroke = T, weight = 3, color = 'black', fillOpacity = 0, group = 'MSA') %>% 
+  addPolygons(data = cbsas %>% filter(NAME == 'Nashville-Davidson--Murfreesboro--Franklin, TN'), stroke = T, weight = 3, color = 'black', fillOpacity = 0, group = 'MSA') %>% 
+  addPolylines(data = cbsas %>% filter(NAME == 'Nashville-Davidson--Murfreesboro--Franklin, TN'), stroke = T, weight = 3, color = 'black', fillOpacity = 0) %>% 
   addPolygons(data = tract_data, stroke = T, weight = 1, color = 'lightgray', fillColor = ~color_pop(pop_total), fillOpacity = 0.8, smoothFactor = 0.2, popup = ~popup_pop, group = 'MSA by Population Total') %>% 
   addPolygons(data = tract_data, stroke = T, weight = 1, color = 'lightgray', fillColor = ~color_income(inc_brks), fillOpacity = 0.8, smoothFactor = 0.2, popup = ~popup_income, group = 'MSA by Median Household Income') %>% 
   addPolygons(data = tract_data, stroke = T, weight = 1, color = 'lightgray', fillColor = ~color_race(race_brks), fillOpacity = 0.8, smoothFactor = 0.2, popup = ~popup_race, group = 'MSA by Race/Ethnicity') %>% 
