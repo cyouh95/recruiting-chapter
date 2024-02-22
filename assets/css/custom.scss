@@ -61,6 +61,12 @@ $presentation-font-size-root: 30px;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
+  .link {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    font-size: 13px;
+  }
   .slide {
     h2, h3, h4 {
       letter-spacing: -2px;

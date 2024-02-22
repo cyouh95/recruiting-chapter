@@ -1,8 +1,10 @@
 $(function() {
 
   const modal = '<div class="modal"><span class="close">&times;</span><img /></div>';
-  
   $('.slides section').prepend(modal);
+  
+  const link = '<a class="link" href="https://cyouh95.github.io/recruiting-chapter/">cyouh95.github.io/recruiting-chapter</a>';
+  $('.slides section.level3').prepend(link);
   
   $('.slides section img').on('click', function() {
     let src = $(this).attr('src');
