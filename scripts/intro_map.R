@@ -174,7 +174,7 @@ vanderbilt_icon <- makeIcon(iconUrl = file.path(imgs_dir, 'vanderbilt.png'), ico
 
 # Generate map
 m <- leaflet() %>%
-  setView(lat = vanderbilt$latitude, lng = vanderbilt$longitude, zoom = 10) %>%
+  setView(lat = 36.0526, lng = -82.85674, zoom = 5.5) %>%
   addProviderTiles(providers$CartoDB.Positron) %>% 
   addPolygons(data = cbsas %>% filter(NAME == 'Nashville-Davidson--Murfreesboro--Franklin, TN'), stroke = T, weight = 3, color = 'black', fillOpacity = 0, group = 'MSA') %>% 
   addPolylines(data = cbsas %>% filter(NAME == 'Nashville-Davidson--Murfreesboro--Franklin, TN'), stroke = T, weight = 3, color = 'black', fillOpacity = 0) %>% 
