@@ -14,13 +14,15 @@ $presentation-font-size-root: 30px;
 /*-- scss:rules --*/
 
 .slide-background .slide-background-content {
-  /* background: url('/assets/images/bg1.png') center / cover no-repeat fixed !important; */
-  background: url('/recruiting-chapter/assets/images/bg1.png') center / cover no-repeat fixed !important;
+  background:
+    url('/recruiting-chapter/assets/images/bg1.png') center / cover no-repeat fixed,
+    url('/assets/images/bg1.png') center / cover no-repeat fixed !important;
 }
 
 .bg2 .slide-background .slide-background-content {
-  /* background: url('/assets/images/bg2.png') center / cover no-repeat fixed !important; */
-  background: url('/recruiting-chapter/assets/images/bg2.png') center / cover no-repeat fixed !important;
+  background:
+    url('/recruiting-chapter/assets/images/bg2.png') center / cover no-repeat fixed,
+    url('/assets/images/bg2.png') center / cover no-repeat fixed !important;
 }
 
 .slide-background.level3 .slide-background-content {
@@ -36,8 +38,20 @@ $presentation-font-size-root: 30px;
     -webkit-text-fill-color: transparent;
   }
   #title-slide .subtitle {
-    margin-bottom: 7rem;
+    margin-bottom: 0;
     color: #777;
+  }
+  .url {
+    display: inline-block;
+    margin: 4rem 0 4rem;
+    font-size: 0.8em;
+    color: #91adcb;
+    opacity: 1;
+    transition: opacity .15s ease;
+    &:hover {
+      color: #91adcb;
+      opacity: 0.7;
+    }
   }
   .author {
     font-size: 20px;
@@ -49,6 +63,10 @@ $presentation-font-size-root: 30px;
     color: lightgray;
     transform: translateX(-50%);
     font-size: 20px;
+    transition: color .15s ease;
+    &:hover {
+      color: #c0c0c0;
+    }
   }
   #bg1 {
     left: 47%;
