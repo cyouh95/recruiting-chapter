@@ -311,16 +311,16 @@ Transform two-mode network into one-mode university network
 
 ## RQ2: Overlap of Visits
 
-### One-mode percent matrix, all universities {.caption}
+### One-mode count matrix, all universities {.caption}
 
 ::: {.table-wrapper .tbl-1mode}
 ```{r pubu-privu-1mode}
 table_1mode_u <- readRDS(file = file.path(tables_dir, 'table_1mode_u.RDS'))
-rownames(table_1mode_u$onemode_pct_df) <- colnames(table_1mode_u$onemode_pct_df)
+rownames(table_1mode_u$onemode_df) <- colnames(table_1mode_u$onemode_df)
 
-names(table_1mode_u$onemode_pct_df) <- str_replace(names(table_1mode_u$onemode_pct_df), ' \\(', '<br>(')
+names(table_1mode_u$onemode_df) <- str_replace(names(table_1mode_u$onemode_df), ' \\(', '<br>(')
 
-kable(table_1mode_u$onemode_pct_df, align = 'r', escape = F) %>%
+kable(table_1mode_u$onemode_df, align = 'r', escape = F) %>%
   column_spec(1, bold = T) %>% 
   column_spec(2:30, width_min = '0.9in')
 ```
