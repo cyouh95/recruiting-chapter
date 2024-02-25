@@ -84,7 +84,7 @@ Interventions to attract nonresident students
 
 - Institutional financial aid to convert admits [@RN3762]
 - Recruiting interventions at earlier stages of enrollment funnel
-  - "Student list" purchases [@RN4985]
+  - "Student list" purchases [@list_biz; @RN4985]
   - Off-campus recruiting visits [@RN4758; @RN4934]
     - Out-of-state visits to public high schools focus on affluent public schools, avoid non-white communities
 
