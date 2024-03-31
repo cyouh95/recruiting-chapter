@@ -6,5 +6,4 @@
 .DS_Store
 *.log
 
-data/archive/ccd_school_membership_1718.csv
 data/ccd_membership_1718.csv

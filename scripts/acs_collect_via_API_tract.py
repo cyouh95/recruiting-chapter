@@ -58,7 +58,7 @@ def get_data(region, headings, cols):
     url = 'https://api.census.gov/data/2017/acs/acs5'
 
     params = {
-        'key': 'ab3870e2d20fc643fefe2e23361c8c2d40fbd0e1',
+        'key': 'API_KEY',
         'for': 'tract:*',
         'in': 'state:{}'.format(region),
         'get': cols
