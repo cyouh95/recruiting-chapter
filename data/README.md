@@ -30,7 +30,7 @@ This directory contains both raw data and cleaned datasets generated from [`scri
 - `ccd_membership_1718.csv` *
 - `EDGE_GEOCODE_PUBLICSCH_1718.xlsx` ([CCD Geographic Data](https://nces.ed.gov/programs/edge/Geographic/SchoolLocations))
 
-* _File is too large to upload to GitHub._
+\* _File is too large to upload to GitHub._
 
 
 **NCES Private School Universe Survey (PSS)**
