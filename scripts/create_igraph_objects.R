@@ -14,14 +14,15 @@ library(labelled)
   # Wellesley college; data seem suspect
   # NC State; univ_id ==199193
     # rationale: data seem suspect
-  # UC Irvine: univ_id == 110653
+  # UC Irvine: univ_id == 110653 [5/23/2025 -- keeping this now]
     # rationale: we have four UCs: berkeley; san diego; irvine; riverside; don't want so many; Irvine and San Diego have same ranking but San Diego has more out-of-state visits and more private hs visits so keep that one; and keep riverside because it has very different rank
 
 #events_data <- read.csv('./data/events_data_2020-07-27.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data_temp1 <- read.csv('./data/events_data_2020-10-20.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data_marquette <- read.csv('./data/events_data_marquette.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'univ_id_req' = 'character', 'school_id' = 'character', 'event_type' = 'character')) %>% as_tibble()
 events_data <- events_data_temp1 %>% bind_rows(events_data_marquette) %>% 
-  filter(!(univ_id %in% c('168218','199193','110653')))  # Wellesley, NCSU, UCI
+  #filter(!(univ_id %in% c('168218','199193','110653')))  # Wellesley, NCSU, UCI
+  filter(!(univ_id %in% c('168218','199193')))  # Wellesley, NCSU, UCI
 rm(events_data_marquette,events_data_temp1)
 
 # University data from IPEDS
@@ -29,7 +30,7 @@ univ_data <- readRDS('./data/ipeds_1718.RDS')
 univ_ipeds <- read.csv('./data/ipeds_data.csv', header = TRUE, na.strings = c('', 'NULL', 'NA'), stringsAsFactors = FALSE, colClasses = c('unitid' = 'character')) %>% as_tibble() %>%
   filter(endyear == 2017)
 univ_info <- read.csv('./data/univ_data.csv', header = TRUE, na.strings = '', stringsAsFactors = FALSE, colClasses = c('univ_id' = 'character', 'zip_code' = 'character')) %>% as_tibble() %>% 
-  filter(!(univ_id %in% c('168218','199193','110653','149222')))  # Wellesley, NCSU, UCI, SIU-Carbondale
+  filter(!(univ_id %in% c('168218','199193','149222')))  # Wellesley, NCSU, UCI, SIU-Carbondale
 
 # Public HS data from CCD
 pubhs_data_1718 <- readRDS('./data/ccd_1718.RDS')
@@ -146,14 +147,15 @@ ccd_missing_ncessch <- setdiff(events_df$school_id[events_df$event_type == 'pub_
 ccd_meet_criteria_1718 <- pubhs_data_1718 %>%
   filter(g_12_offered == 'Yes', g12 >= 10, virtual %in% c('NOTVIRTUAL', 'SUPPVIRTUAL'), fipst < 60, updated_status %in% c('1', '3', '8')) %>% 
   mutate(year = '1718') %>% 
-  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white)
+  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white,latitude,longitude,sch_name)
 
 # Verify no unmerged ccd id
 setdiff(ccd_missing_ncessch, pubhs_data_1415$ncessch)
 ccd_meet_criteria_1415 <- pubhs_data_1415 %>%
   filter(g12offered == 1, g12 >= 10, virtual == 0, state_fips_code < 60, updated_status %in% c(1, 3, 8)) %>% 
   mutate(year = '1415') %>% 
-  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white)
+  select(year, ncessch, state_code, g12, pct_amerindian, pct_asian, pct_black, pct_hispanic, pct_nativehawaii, pct_tworaces, pct_white,latitude,longitude,name) %>% 
+  rename(sch_name = name)
 
 # Universe of public HS meeting criteria (20809 obs)
 pubhs_data <- ccd_meet_criteria_1718 %>%
